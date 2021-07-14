@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
+      <PackageReference Include="Dapper.FluentMap" Version="2.0.0" />
+      <PackageReference Include="dbup-mysql" Version="4.5.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
+      <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Config\Config.csproj" />
+      <ProjectReference Include="..\L2Logger\L2Logger.csproj" />
+      <ProjectReference Include="..\Security\Security.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginService", "LoginService\LoginService.csproj", "{AA9392BE-C81B-4F94-8135-A08B77DC88D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataBase", "DataBase\DataBase.csproj", "{2F802B1E-E223-4D93-A717-5AF0873CB482}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Config", "Config\Config.csproj", "{D6E5820F-CC4D-4B60-A9C4-D31C062B72A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L2Logger", "L2Logger\L2Logger.csproj", "{EEB7516F-09E1-42FA-B708-B2DAECACE32D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security", "Security\Security.csproj", "{09163463-1152-4675-BD54-165F838B18C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "Helpers\Helpers.csproj", "{024FBC0E-57C0-474A-974D-1699E5C31ED3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Network", "Network\Network.csproj", "{C3AD2B81-D4A2-46EA-BF5C-23F13F119BAF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA9392BE-C81B-4F94-8135-A08B77DC88D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA9392BE-C81B-4F94-8135-A08B77DC88D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA9392BE-C81B-4F94-8135-A08B77DC88D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA9392BE-C81B-4F94-8135-A08B77DC88D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F802B1E-E223-4D93-A717-5AF0873CB482}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F802B1E-E223-4D93-A717-5AF0873CB482}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F802B1E-E223-4D93-A717-5AF0873CB482}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F802B1E-E223-4D93-A717-5AF0873CB482}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6E5820F-CC4D-4B60-A9C4-D31C062B72A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6E5820F-CC4D-4B60-A9C4-D31C062B72A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6E5820F-CC4D-4B60-A9C4-D31C062B72A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6E5820F-CC4D-4B60-A9C4-D31C062B72A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEB7516F-09E1-42FA-B708-B2DAECACE32D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEB7516F-09E1-42FA-B708-B2DAECACE32D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEB7516F-09E1-42FA-B708-B2DAECACE32D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEB7516F-09E1-42FA-B708-B2DAECACE32D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09163463-1152-4675-BD54-165F838B18C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09163463-1152-4675-BD54-165F838B18C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09163463-1152-4675-BD54-165F838B18C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09163463-1152-4675-BD54-165F838B18C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{024FBC0E-57C0-474A-974D-1699E5C31ED3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{024FBC0E-57C0-474A-974D-1699E5C31ED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{024FBC0E-57C0-474A-974D-1699E5C31ED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{024FBC0E-57C0-474A-974D-1699E5C31ED3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3AD2B81-D4A2-46EA-BF5C-23F13F119BAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3AD2B81-D4A2-46EA-BF5C-23F13F119BAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3AD2B81-D4A2-46EA-BF5C-23F13F119BAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3AD2B81-D4A2-46EA-BF5C-23F13F119BAF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
