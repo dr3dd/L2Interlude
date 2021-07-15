@@ -14,6 +14,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "Helpers\Helpers.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Network", "Network\Network.csproj", "{C3AD2B81-D4A2-46EA-BF5C-23F13F119BAF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameService", "GameService\GameService.csproj", "{897C3E56-67F2-4F93-9C35-31697774A509}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{A6CA8647-5DDE-4A06-B671-95AAB2F77D48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +52,13 @@ Global
 		{C3AD2B81-D4A2-46EA-BF5C-23F13F119BAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3AD2B81-D4A2-46EA-BF5C-23F13F119BAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3AD2B81-D4A2-46EA-BF5C-23F13F119BAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{897C3E56-67F2-4F93-9C35-31697774A509}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{897C3E56-67F2-4F93-9C35-31697774A509}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{897C3E56-67F2-4F93-9C35-31697774A509}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{897C3E56-67F2-4F93-9C35-31697774A509}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6CA8647-5DDE-4A06-B671-95AAB2F77D48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6CA8647-5DDE-4A06-B671-95AAB2F77D48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6CA8647-5DDE-4A06-B671-95AAB2F77D48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6CA8647-5DDE-4A06-B671-95AAB2F77D48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

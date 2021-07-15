@@ -5,7 +5,7 @@ using L2Logger;
 
 namespace Network
 {
-    internal sealed class NetworkWriter
+    public sealed class NetworkWriter
     {
         private BufferBlock<PacketStream> _bufferBlock;
         

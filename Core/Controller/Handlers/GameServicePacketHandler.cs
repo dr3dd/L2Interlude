@@ -1,0 +1,62 @@
+﻿using System;
+using System.Collections.Concurrent;
+using Core.Module.GameService.Request;
+using L2Logger;
+using Network;
+
+namespace Core.Controller.Handlers
+{
+    public class GameServicePacketHandler
+    {
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ConcurrentDictionary<byte, Type> _clientPackets;
+        private readonly ConcurrentDictionary<short, Type> _clientPacketsD0;
+
+        public GameServicePacketHandler(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+            _clientPackets = new ConcurrentDictionary<byte, Type>();
+            _clientPacketsD0 = new ConcurrentDictionary<short, Type>();
+            
+            _clientPackets.TryAdd(0x00, typeof(ProtocolVersion));
+            _clientPackets.TryAdd(0x08, typeof(AuthLogin));
+        }
+        
+        public void HandlePacket(Packet packet, GameServiceController controller)
+        {
+            byte opCode = packet.FirstOpcode();
+            
+            LoggerManager.Info($"Received packet with Opcode:{opCode:X2}");
+
+            PacketBase packetBase = null;
+            if (opCode != 0xD0 && _clientPackets.ContainsKey(opCode))
+            {
+                LoggerManager.Info($"Received packet of type: {_clientPackets[opCode].Name}");
+                packetBase = (PacketBase)Activator.CreateInstance(_clientPackets[opCode], _serviceProvider, packet, controller);
+            }
+            else if (opCode == 0xD0)
+            {
+                short opCode2 = packet.ReadShort();
+                LoggerManager.Info($"Received packet with Opcode 0xD0 of type: {opCode2:X2}");
+
+                if (_clientPacketsD0.ContainsKey(opCode2))
+                {
+                    packetBase = (PacketBase)Activator.CreateInstance(_clientPacketsD0[opCode2], _serviceProvider, packet, controller);
+                }
+            }
+
+            if (controller.IsDisconnected)
+            {
+                return;
+            }
+
+            if (packetBase == null)
+            {
+                throw new ArgumentNullException(nameof(packetBase), $"Packet with opcode: {opCode:X2} doesn't exist in the dictionary.");
+            }
+
+            packetBase.Execute();
+        }
+        
+    }
+}
