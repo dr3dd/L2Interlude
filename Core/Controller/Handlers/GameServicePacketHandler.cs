@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using Core.Module.GameService.Request;
+using Core.Module.Player.CharacterData.Request;
 using L2Logger;
 using Network;
 
@@ -20,6 +21,7 @@ namespace Core.Controller.Handlers
             
             _clientPackets.TryAdd(0x00, typeof(ProtocolVersion));
             _clientPackets.TryAdd(0x08, typeof(AuthLogin));
+            _clientPackets.TryAdd(0x0E, typeof(NewCharacter));
         }
         
         public void HandlePacket(Packet packet, GameServiceController controller)

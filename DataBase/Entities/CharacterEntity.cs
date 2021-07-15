@@ -38,7 +38,7 @@ namespace DataBase.Entities
         public int StFeet { get; set; }
         public int StBack { get; set; }
         public int StBothHand { get; set; }
-        public byte QuestFlag { get; set; }
+        public string QuestFlag { get; set; }
         public string Nickname { get; set; }
         public int MaxCp { get; set; }
         public int MaxHp { get; set; }

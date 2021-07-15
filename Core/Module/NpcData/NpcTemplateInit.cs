@@ -13,11 +13,6 @@ namespace Core.Module.NpcData
         {
             _stat = new NpcStat();
             _stat.Id = ToInt(setStats["npc_id"]);
-            if (_stat.Id == 32111)
-            {
-                var d = 1;
-            }
-            
             _stat.Type = (string) setStats["npc_type"];
             _stat.Name = (string) setStats["npc_name"];
             _stat.Level = ToByte(setStats["level"]);

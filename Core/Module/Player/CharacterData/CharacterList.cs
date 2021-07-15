@@ -1,4 +1,6 @@
-﻿using DataBase.Interfaces;
+﻿using System.Collections.Generic;
+using DataBase.Entities;
+using DataBase.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player.CharacterData
@@ -9,6 +11,12 @@ namespace Core.Module.Player.CharacterData
         public CharacterList()
         {
             _characterRepository = Initializer.ServiceProvider.GetRequiredService<IUnitOfWork>().Characters;
+        }
+
+        public List<CharacterEntity> GetCharacterList(string accountName)
+        {
+            var list = _characterRepository.GetCharactersByAccountNameAsync(accountName);
+            return list.Result;
         }
     }
 }
