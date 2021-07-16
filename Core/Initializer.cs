@@ -1,5 +1,6 @@
 ﻿using System;
 using Config;
+using Core.Module.CharacterData.Template;
 using Core.Module.NpcData;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +28,7 @@ namespace Core
             LoggerManager.Info("----Html Cache----");
             LoggerManager.Info("----Json Teleports----");
             LoggerManager.Info("----Players----");
+            ServiceProvider.GetService<TemplateInit>();
             LoggerManager.Info("----Bonus Stats----");
             LoggerManager.Info("----Items----");
             //ServiceProvider.GetService<ItemInit>();

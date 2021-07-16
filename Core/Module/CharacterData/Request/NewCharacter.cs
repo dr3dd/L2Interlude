@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Controller;
-using Core.Module.Player.CharacterData.Response;
-using Microsoft.Extensions.DependencyInjection;
+using Core.Module.CharacterData.Response;
 using Network;
 
-namespace Core.Module.Player.CharacterData.Request
+namespace Core.Module.CharacterData.Request
 {
     public class NewCharacter : PacketBase
     {

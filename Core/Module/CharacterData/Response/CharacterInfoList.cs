@@ -1,6 +1,6 @@
 ﻿using Network;
 
-namespace Core.Module.Player.CharacterData.Response
+namespace Core.Module.CharacterData.Response
 {
     public class CharacterInfoList : ServerPacket
     {

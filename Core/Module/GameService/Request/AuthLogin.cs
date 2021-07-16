@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Core.Controller;
+using Core.Module.CharacterData.Response;
 using Core.Module.GameService.Response;
-using Core.Module.Player.CharacterData.Response;
 using Network;
 using Security;
 

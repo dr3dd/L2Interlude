@@ -3,7 +3,7 @@ using DataBase.Entities;
 using DataBase.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Core.Module.Player.CharacterData
+namespace Core.Module.CharacterData
 {
     public class CharacterList
     {

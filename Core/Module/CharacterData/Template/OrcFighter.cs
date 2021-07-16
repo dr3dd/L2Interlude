@@ -1,4 +1,4 @@
-﻿namespace Core.Module.Player.Template
+﻿namespace Core.Module.CharacterData.Template
 {
     public class OrcFighter
     {
