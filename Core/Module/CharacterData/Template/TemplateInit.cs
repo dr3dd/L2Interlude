@@ -7,22 +7,22 @@ namespace Core.Module.CharacterData.Template
 {
     public class TemplateInit
     {
-        private readonly IDictionary<int, ITemplateHandler> _handlers;
+        private readonly IDictionary<byte, ITemplateHandler> _handlers;
 
         public TemplateInit()
         {
-            _handlers = new Dictionary<int, ITemplateHandler>();
+            _handlers = new Dictionary<byte, ITemplateHandler>();
             RegisterTemplateHandler(new Fighter());
             RegisterTemplateHandler(new Mage());
         }
 
         private void RegisterTemplateHandler(ITemplateHandler templateHandler)
         {
-            int classId = templateHandler.GetClassId();
+            byte classId = templateHandler.GetClassId();
             _handlers.Add(classId, templateHandler);
         }
 
-        public ITemplateHandler GetTemplateByClassId(int classId)
+        public ITemplateHandler GetTemplateByClassId(byte classId)
         {
             try
             {

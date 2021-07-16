@@ -2,8 +2,8 @@
 {
     public class Mage : HumanMagician, ITemplateHandler
     {
-        private const int ClassId = 10;
-        public int GetClassId()
+        private const byte ClassId = 10;
+        public byte GetClassId()
         {
             return ClassId;
         }

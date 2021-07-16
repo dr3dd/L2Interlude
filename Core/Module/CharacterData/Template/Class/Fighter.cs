@@ -2,9 +2,9 @@
 {
     public class Fighter : HumanFighter, ITemplateHandler
     {
-        private const int ClassId = 0;
+        private const byte ClassId = 0;
 
-        public int GetClassId()
+        public byte GetClassId()
         {
             return ClassId;
         }

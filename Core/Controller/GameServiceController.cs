@@ -21,6 +21,7 @@ namespace Core.Controller
         public SessionKey SessionKey { get; set; }
         public bool IsDisconnected { get; set; }
         public string AccountName { get; set; }
+        public GameServiceHelper GameServiceHelper { get; }
 
         private readonly BufferBlock<PacketStream> _bufferBlock;
 
@@ -32,6 +33,7 @@ namespace Core.Controller
         public GameServiceController(ClientManager clientManager, TcpClient tcpClient,
             GameServicePacketHandler gameServicePacketHandler, BufferBlock<PacketStream> bufferBlock)
         {
+            GameServiceHelper = new GameServiceHelper(this);
             Address = tcpClient.Client.RemoteEndPoint;
             _gameServicePacketHandler = gameServicePacketHandler;
             _clientManager = clientManager;

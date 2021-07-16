@@ -2,6 +2,7 @@
 using Config;
 using Core.Module.CharacterData.Template;
 using Core.Module.NpcData;
+using DataBase.Interfaces;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,6 +20,16 @@ namespace Core
         public static GameConfig Config()
         {
             return ServiceProvider.GetService<GameConfig>();
+        }
+
+        public static IUnitOfWork UnitOfWork()
+        {
+            return ServiceProvider.GetService<IUnitOfWork>();
+        }
+
+        public static TemplateInit TemplateInit()
+        {
+            return ServiceProvider.GetService<TemplateInit>();
         }
 
         public void Load()

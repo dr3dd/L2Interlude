@@ -1,4 +1,5 @@
-﻿using Network;
+﻿using Core.Controller;
+using Network;
 
 namespace Core.Module.CharacterData.Response
 {
@@ -7,10 +8,12 @@ namespace Core.Module.CharacterData.Response
         private readonly string _accountName;
         private readonly int _sessionId;
         private readonly CharacterList _characterList;
+        private readonly GameServiceController _controller;
 
-        public CharacterInfoList(string accountName, int sessionId)
+        public CharacterInfoList(string accountName, GameServiceController controller)
         {
-            _sessionId = sessionId;
+            _controller = controller;
+            _sessionId = controller.SessionKey.PlayOkId1;
             _accountName = accountName;
             _characterList = new CharacterList();
         }
@@ -18,6 +21,8 @@ namespace Core.Module.CharacterData.Response
         public override void Write()
         {
             var list = _characterList.GetCharacterList(_accountName);
+            _controller.GameServiceHelper.SetCharSelection(list);
+
             WriteByte(0x13);
             WriteInt(list.Count);
             list.ForEach(entity =>

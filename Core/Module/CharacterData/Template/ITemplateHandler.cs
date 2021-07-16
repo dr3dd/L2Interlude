@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace Core.Module.CharacterData.Template
+﻿namespace Core.Module.CharacterData.Template
 {
     public interface ITemplateHandler
     {
-        int GetClassId();
-        int GetRaceId();
+        byte GetClassId();
+        byte GetRaceId();
         int GetInt();
         int GetStr();
         int GetCon();

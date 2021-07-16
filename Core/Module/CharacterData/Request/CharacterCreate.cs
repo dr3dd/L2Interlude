@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Core.Controller;
 using Core.Module.CharacterData.Template;
+using Core.Module.Player;
 using Microsoft.Extensions.DependencyInjection;
 using Network;
 
@@ -10,9 +11,10 @@ namespace Core.Module.CharacterData.Request
     public class CharacterCreate : PacketBase
     {
         private readonly GameServiceController _controller;
-        private readonly IServiceProvider _serviceProvider;
-        
+        private readonly TemplateInit _templateInit;
+
         private readonly string _characterName;
+        private readonly string _accountName;
         private readonly byte _race;
         private readonly byte _gender;
         private readonly byte _classId;
@@ -23,8 +25,8 @@ namespace Core.Module.CharacterData.Request
         public CharacterCreate(IServiceProvider serviceProvider, Packet packet, GameServiceController controller) : base(serviceProvider)
         {
             _controller = controller;
-            _serviceProvider = serviceProvider;
-          
+            _templateInit = serviceProvider.GetRequiredService<TemplateInit>();
+            _accountName = _controller.AccountName;
             _characterName = packet.ReadString();
             _race = (byte)packet.ReadInt();
             _gender = (byte)packet.ReadInt();
@@ -42,8 +44,11 @@ namespace Core.Module.CharacterData.Request
 
         public override async Task Execute()
         {
-            ITemplateHandler template = _serviceProvider.GetRequiredService<TemplateInit>().GetTemplateByClassId(_classId);
-            
+            ITemplateHandler template = _templateInit.GetTemplateByClassId(_classId);
+            PlayerAppearance playerAppearance = new PlayerAppearance(_accountName, _characterName, _face, _hairColor, _hairStyle, _gender);
+            PlayerInstance playerInstance = new PlayerInstance(template, playerAppearance);
+            await playerInstance.PlayerModel().CreateCharacter();
+
         }
    }
 }

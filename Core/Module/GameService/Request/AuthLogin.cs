@@ -34,7 +34,7 @@ namespace Core.Module.GameService.Request
             _controller.AccountName = _accountName;
             
             await _controller.SendPacketAsync(new AccountInGame(_accountName, true));
-            await _controller.SendPacketAsync(new CharacterInfoList(_accountName, _controller.SessionKey.PlayOkId1));
+            await _controller.SendPacketAsync(new CharacterInfoList(_accountName, _controller));
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace DataBase.Entities
 {
-    [Dapper.Contrib.Extensions.Table("characters")]
+    [Dapper.Contrib.Extensions.Table("user_data")]
     public class CharacterEntity
     {
         public string CharacterName { get; set; }
@@ -44,8 +44,8 @@ namespace DataBase.Entities
         public int MaxHp { get; set; }
         public int MaxMp { get; set; }
         public string QuestMemo { get; set; }
-        public int Face { get; set; }
-        public int HairStyle { get; set; }
-        public int HairColor { get; set; }
+        public byte Face { get; set; }
+        public byte HairStyle { get; set; }
+        public byte HairColor { get; set; }
     }
 }

@@ -2,9 +2,9 @@
 {
     public abstract class Human
     {
-        private const int RaceId = 0;
+        private const byte RaceId = 0;
 
-        public int GetRaceId()
+        public byte GetRaceId()
         {
             return RaceId;
         }
