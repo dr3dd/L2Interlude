@@ -27,6 +27,7 @@ namespace Core.Controller.Handlers
             _clientPackets.TryAdd(0x0E, typeof(NewCharacter));
             _clientPackets.TryAdd(0x0B, typeof(CharacterCreate));
             _clientPackets.TryAdd(0x0D, typeof(CharacterSelected));
+            _clientPackets.TryAdd(0x48, typeof(ValidatePosition));
             
             _clientPacketsD0.TryAdd(0x08, typeof(RequestManorList));
         }

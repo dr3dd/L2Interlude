@@ -1,4 +1,6 @@
-﻿using Core.Module.Player;
+﻿using Core.Controller;
+using Core.Module.Player;
+using Microsoft.Extensions.DependencyInjection;
 using Network;
 
 namespace Core.Module.CharacterData.Response
@@ -7,11 +9,13 @@ namespace Core.Module.CharacterData.Response
     {
         private readonly PlayerInstance _playerInstance;
         private readonly int _sessionId;
+        private readonly GameTimeController _gameTimeController;
 
         public CharSelected(PlayerInstance playerInstance, int sessionId)
         {
             _playerInstance = playerInstance;
             _sessionId = sessionId;
+            _gameTimeController = Initializer.ServiceProvider.GetService<GameTimeController>();
         }
         
         public override void Write()
@@ -19,7 +23,7 @@ namespace Core.Module.CharacterData.Response
             WriteByte(0x15);
 		
             WriteString(_playerInstance.PlayerAppearance().CharacterName);
-            WriteInt(0); // ??
+            WriteInt(_playerInstance.CharacterId); // ??
             WriteString("");
             WriteInt(_sessionId);
             WriteInt(0);
@@ -28,12 +32,12 @@ namespace Core.Module.CharacterData.Response
             WriteInt(_playerInstance.TemplateHandler().GetRaceId());
             WriteInt(_playerInstance.TemplateHandler().GetClassId());
             WriteInt(0x01); // active ??
-            WriteInt(0);
-            WriteInt(0);
-            WriteInt(0);
+            WriteInt(-71338);
+            WriteInt(258271);
+            WriteInt(-3104);
 		
-            WriteInt(0);//_player.getCurrentHp()
-            WriteInt(0);//_player.getCurrentMp()
+            WriteInt(100);//_player.getCurrentHp()
+            WriteInt(100);//_player.getCurrentMp()
             WriteInt(1);//_player.getSp()
             WriteLong(1);//_player.getExp()
             WriteInt(1);//_player.getLevel()
@@ -53,7 +57,7 @@ namespace Core.Module.CharacterData.Response
             WriteInt(0x00); // c3 work
 		
             // extra info
-            WriteInt(0);//WriteInt(GameTimeController.getInstance().getGameTime()); // in-game time
+            WriteInt(_gameTimeController.GetGameTime());//WriteInt(GameTimeController.getInstance().getGameTime()); // in-game time
             
 		
             WriteInt(0x00); //

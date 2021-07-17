@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Core.Controller;
 using Core.Module.CharacterData.Template;
+using Core.Module.Player.Response;
 using Network;
 
 namespace Core.Module.Player
@@ -11,6 +12,7 @@ namespace Core.Module.Player
         private readonly PlayerModel _playerModel;
         private readonly ITemplateHandler _templateHandler;
         private static PlayerLoader _playerLoader;
+        public int CharacterId { get; set; }
         public GameServiceController Controller { get; set; }
         public PlayerInstance(ITemplateHandler template, PlayerAppearance playerAppearance)
         {
@@ -38,6 +40,11 @@ namespace Core.Module.Player
             if (Controller is null)
                 return Task.CompletedTask;
             return Controller.SendPacketAsync(serverPacket);
+        }
+        
+        public async Task SendActionFailedPacketAsync()
+        {
+            await Controller.SendPacketAsync(new ActionFailed());
         }
         
     }

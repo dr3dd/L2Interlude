@@ -1,4 +1,5 @@
-﻿using Core.Module.CharacterData.Template;
+﻿using Core.Controller;
+using Core.Module.CharacterData.Template;
 using Core.Module.NpcData;
 using Microsoft.Extensions.DependencyInjection;
 using Network;
@@ -12,6 +13,7 @@ namespace Core
             services.AddSingleton<NetworkWriter>();
             services.AddTransient<ClientManager>();
             services.AddSingleton<TemplateInit>();
+            services.AddSingleton<GameTimeController>();
             services.AddSingleton<NpcDataInit>();
         }
     }

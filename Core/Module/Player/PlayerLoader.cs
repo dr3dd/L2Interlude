@@ -28,6 +28,7 @@ namespace Core.Module.Player
                 characterEntity.HairStyle, characterEntity.Gender);
             
             PlayerInstance playerInstance = new PlayerInstance(template, playerAppearance);
+            playerInstance.CharacterId = characterEntity.CharacterId;
             return playerInstance;
         }
     }

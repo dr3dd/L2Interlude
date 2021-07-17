@@ -1,5 +1,6 @@
 ﻿using System;
 using Config;
+using Core.Controller;
 using Core.Module.CharacterData.Template;
 using Core.Module.NpcData;
 using DataBase.Interfaces;
@@ -30,6 +31,11 @@ namespace Core
         public static TemplateInit TemplateInit()
         {
             return ServiceProvider.GetService<TemplateInit>();
+        }
+        
+        public static GameTimeController TimeController()
+        {
+            return ServiceProvider.GetService<GameTimeController>();
         }
 
         public void Load()

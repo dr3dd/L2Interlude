@@ -17,9 +17,10 @@ namespace Core.Module.Player.Request
 
         public override async Task Execute()
         {
+            await _playerInstance.SendActionFailedPacketAsync();
             await _playerInstance.SendPacketAsync(new EtcStatusUpdate(_playerInstance));
-            //await _playerInstance.SendPacketAsync(new UserInfo(_playerInstance));
-            //await _playerInstance.SendPacketAsync(new ClientSetTime()); // SetClientTime
+            await _playerInstance.SendPacketAsync(new UserInfo(_playerInstance));
+            await _playerInstance.SendPacketAsync(new ClientSetTime()); // SetClientTime
             //await _playerInstance.SendPacketAsync(new ItemList(_playerInstance, false));
             //await _playerInstance.SendPacketAsync(new ShortCutInit(_playerInstance)); // SetClientTime
             await _playerInstance.SendPacketAsync(new SystemMessage(SystemMessageId.WelcomeToLineage));
