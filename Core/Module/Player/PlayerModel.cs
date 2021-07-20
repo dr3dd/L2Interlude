@@ -29,29 +29,32 @@ namespace Core.Module.Player
 
         private CharacterEntity PrepareEntity()
         {
+            var location = _playerInstance.TemplateHandler().GetInitialStartPoint();
+            var template = _playerInstance.TemplateHandler();
+            var appearance = _playerInstance.PlayerAppearance();
             return new CharacterEntity
             {
-                AccountName = _playerInstance.PlayerAppearance().AccountName,
+                AccountName = appearance.AccountName,
                 AccountId = 1,
-                CharacterName = _playerInstance.PlayerAppearance().CharacterName,
-                Face = _playerInstance.PlayerAppearance().Face,
-                HairStyle = _playerInstance.PlayerAppearance().HairStyle,
-                HairColor = _playerInstance.PlayerAppearance().HairColor,
-                Gender = _playerInstance.PlayerAppearance().Gender,
-                Race = _playerInstance.TemplateHandler().GetRaceId(),
-                ClassId = _playerInstance.TemplateHandler().GetClassId(),
+                CharacterName = appearance.CharacterName,
+                Face = appearance.Face,
+                HairStyle = appearance.HairStyle,
+                HairColor = appearance.HairColor,
+                Gender = appearance.Gender,
+                Race = template.GetRaceId(),
+                ClassId = template.GetClassId(),
                 Level = 1,
-                Cp = 100,
+                Cp = template.GetCpBegin(1),
+                Hp = template.GetHpBegin(1),
+                Mp = template.GetMpBegin(1),
                 Duel = 0,
                 Exp = 0,
-                Hp = 100,
-                Mp = 100,
+                Sp = 0,
                 Nickname = "",
                 Pk = 0,
-                Sp = 0,
-                MaxCp = 100,
-                MaxHp = 100,
-                MaxMp = 100,
+                MaxCp = (int) template.GetCpBegin(1),
+                MaxHp = (int) template.GetHpBegin(1),
+                MaxMp = (int) template.GetMpBegin(1),
                 QuestFlag = "",
                 QuestMemo = "",
                 StBack = 0,
@@ -69,10 +72,13 @@ namespace Core.Module.Player
                 StRightFinger = 0,
                 StRightHand = 0,
                 StUnderwear = 0,
+                StFace = 0,
+                StHair = 0,
+                StHairAll = 0,
                 IsInVehicle = false,
-                XLoc = 0,
-                YLoc = 0,
-                ZLoc = 0,
+                XLoc = location.GetX(),
+                YLoc = location.GetY(),
+                ZLoc = location.GetZ(),
             };
         }
     }

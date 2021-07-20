@@ -40,5 +40,10 @@ namespace Core.Module.CharacterData.Template
         {
             return Wit;
         }
+        
+        public Location GetInitialStartPoint()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

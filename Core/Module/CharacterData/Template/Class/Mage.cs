@@ -7,5 +7,20 @@
         {
             return ClassId;
         }
+
+        public float GetCpBegin(int level)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public float GetHpBegin(int level)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public float GetMpBegin(int level)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

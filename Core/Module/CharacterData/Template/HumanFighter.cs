@@ -1,8 +1,10 @@
-﻿using Core.Module.CharacterData.Template.Race;
+﻿using System.Collections.Generic;
+using Core.Module.CharacterData.Template.Race;
+using Helpers;
 
 namespace Core.Module.CharacterData.Template
 {
-    public class HumanFighter : Human
+    public abstract class HumanFighter : Human
     {
         public const int BasePhysicalAttack = 4;
         public const int BaseCritical = 4;
@@ -21,6 +23,38 @@ namespace Core.Module.CharacterData.Template
         private const int Men = 25;
         private const int Dex = 30;
         private const int Wit = 11;
+
+        private IList<string> _initialEquipment;
+        private IList<Location> _initialStartPoint;
+
+        protected HumanFighter()
+        {
+            InitialEquipment();
+            InitialStartPoint();
+        }
+
+        private void InitialStartPoint()
+        {
+            _initialStartPoint = new List<Location>
+            {
+                new Location(-71338, 258271, -3104),
+                new Location(-71417, 258270, -3104),
+                new Location(-71453, 258305, -3104),
+                new Location(-71467, 258378, -3104),
+            };
+        }
+
+        private void InitialEquipment()
+        {
+            _initialEquipment = new List<string>
+            {
+                "squire_s_sword",
+                "dagger",
+                "squire_s_shirt",
+                "squire_s_pants",
+                "tutorial_guide"
+            };
+        }
 
         public int GetInt()
         {
@@ -45,6 +79,17 @@ namespace Core.Module.CharacterData.Template
         public int GetWit()
         {
             return Wit;
+        }
+
+        public IList<string> GetInitialEquipment()
+        {
+            return _initialEquipment;
+        }
+
+        public Location GetInitialStartPoint()
+        {
+            var rndItem = Rnd.Next(3);
+            return _initialStartPoint[rndItem];
         }
     }
 }
