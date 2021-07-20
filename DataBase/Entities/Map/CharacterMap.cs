@@ -9,7 +9,9 @@ namespace DataBase.Entities.Map
             Map(i => i.AccountName).ToColumn("account_name");
             Map(i => i.CharacterId).ToColumn("char_id");
             Map(i => i.CharacterName).ToColumn("char_name");
+            Map(i => i.MaxCp).ToColumn("max_cp");
             Map(i => i.MaxHp).ToColumn("max_hp");
+            Map(i => i.Cp).ToColumn("cp");
             Map(i => i.Hp).ToColumn("hp");
             Map(i => i.MaxMp).ToColumn("max_mp");
             Map(i => i.Mp).ToColumn("mp");
@@ -39,6 +41,9 @@ namespace DataBase.Entities.Map
             Map(i => i.StFeet).ToColumn("st_feet");
             Map(i => i.StBack).ToColumn("st_back");
             Map(i => i.StBothHand).ToColumn("st_both_hand");
+            Map(i => i.StHair).ToColumn("st_hair");
+            Map(i => i.StFace).ToColumn("st_face");
+            Map(i => i.StHairAll).ToColumn("st_hairall");
             Map(i => i.QuestFlag).ToColumn("quest_flag");
             Map(i => i.Nickname).ToColumn("nickname");
             Map(i => i.QuestMemo).ToColumn("quest_memo");
