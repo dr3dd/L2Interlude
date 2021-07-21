@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using Core.Module.LoginService.Response;
+using Core.NetworkPacket.ClientPacket.LoginServicePacket;
 using L2Logger;
 using Network;
 

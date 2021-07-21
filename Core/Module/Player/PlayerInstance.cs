@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Core.Controller;
 using Core.Module.CharacterData.Template;
-using Core.Module.Player.Response;
+using Core.NetworkPacket.ServerPacket;
 using Network;
 
 namespace Core.Module.Player
@@ -13,6 +13,7 @@ namespace Core.Module.Player
         private readonly PlayerModel _playerModel;
         private readonly ITemplateHandler _templateHandler;
         private static PlayerLoader _playerLoader;
+        private readonly PlayerMoveToLocation _toLocation;
         public GameServiceController Controller { get; set; }
         public PlayerInstance(ITemplateHandler template, PlayerAppearance playerAppearance)
         {
@@ -20,6 +21,7 @@ namespace Core.Module.Player
             _playerModel = new PlayerModel(this);
             _playerCharacterInfo = new PlayerCharacterInfo(this);
             _playerAppearance = playerAppearance;
+            _toLocation = new PlayerMoveToLocation(this);
         }
 
         public ITemplateHandler TemplateHandler() => _templateHandler;
@@ -47,6 +49,11 @@ namespace Core.Module.Player
         public async Task SendActionFailedPacketAsync()
         {
             await Controller.SendPacketAsync(new ActionFailed());
+        }
+        
+        public PlayerMoveToLocation Location()
+        {
+            return _toLocation;
         }
         
     }

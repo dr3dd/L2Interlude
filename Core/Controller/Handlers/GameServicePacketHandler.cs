@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using Core.Module.CharacterData.Request;
-using Core.Module.GameService.Request;
-using Core.Module.Manor.Request;
-using Core.Module.Player.Request;
+using Core.NetworkPacket.ClientPacket;
+using Core.NetworkPacket.ClientPacket.CharacterPacket;
 using L2Logger;
 using Network;
 
@@ -22,6 +20,7 @@ namespace Core.Controller.Handlers
             _clientPacketsD0 = new ConcurrentDictionary<short, Type>();
             
             _clientPackets.TryAdd(0x00, typeof(ProtocolVersion));
+            _clientPackets.TryAdd(0x01, typeof(MoveBackwardToLocation));
             _clientPackets.TryAdd(0x03, typeof(EnterWorld));
             _clientPackets.TryAdd(0x08, typeof(AuthLogin));
             _clientPackets.TryAdd(0x0E, typeof(NewCharacter));

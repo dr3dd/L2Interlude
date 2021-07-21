@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using Config;
 using Core.Controller.Handlers;
-using Core.Module.LoginService.Request;
+using Core.NetworkPacket.ServerPacket.LoginServicePacket;
 using Microsoft.Extensions.DependencyInjection;
 using L2Logger;
 using Network;
