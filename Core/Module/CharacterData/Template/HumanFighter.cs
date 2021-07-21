@@ -6,16 +6,16 @@ namespace Core.Module.CharacterData.Template
 {
     public abstract class HumanFighter : Human
     {
-        public const int BasePhysicalAttack = 4;
-        public const int BaseCritical = 4;
-        public const string BaseAttackType = "fist";
-        public const int BaseAttackSpeed = 300;
-        public const int BaseDefend = 0;
-        public const int BaseMagicAttack = 6;
-        public const int BaseMagicDefend = 0;
-        public const int BaseAttackRange = 20;
-        public const int BaseDamageRange = 0;
-        public const int BaseRandDam = 10;
+        private const int BasePhysicalAttack = 4;
+        private const int BaseCritical = 4;
+        private const string BaseAttackType = "fist";
+        private const int BaseAttackSpeed = 300;
+        private const int BaseDefend = 80; //{Upper body; Lower body; Pitch; Boots; Gloves; Underwear; Mantle} {31;18;12;7;8;3;1}
+        private const int BaseMagicAttack = 6;
+        private const int BaseMagicDefend = 41; //{The earring which rises; Left earring; The ring which rises; Left ring; Neck} {9;9;5;5;13}
+        private const int BaseAttackRange = 20;
+        private const int BaseDamageRange = 0;
+        private const int BaseRandDam = 10;
 
         private const int Int = 21;
         private const int Str = 40;
@@ -90,6 +90,41 @@ namespace Core.Module.CharacterData.Template
         {
             var rndItem = Rnd.Next(3);
             return _initialStartPoint[rndItem];
+        }
+
+        public int GetBasePhysicalAttack()
+        {
+            return BasePhysicalAttack;
+        }
+
+        public int GetBaseAttackSpeed()
+        {
+            return BaseAttackSpeed;
+        }
+
+        public int GetBaseCritical()
+        {
+            return BaseCritical;
+        }
+
+        public int GetBaseDefend()
+        {
+            return BaseDefend;
+        }
+
+        public int GetBaseMagicAttack()
+        {
+            return BaseMagicAttack;
+        }
+
+        public int GetBaseMagicDefend()
+        {
+            return BaseMagicDefend;
+        }
+
+        public int GetBaseAttackRange()
+        {
+            return BaseAttackRange;
         }
     }
 }

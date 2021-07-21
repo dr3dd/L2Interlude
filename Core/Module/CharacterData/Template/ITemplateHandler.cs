@@ -13,6 +13,14 @@
         float GetCpBegin(int level);
         float GetHpBegin(int level);
         float GetMpBegin(int level);
+        int GetBasePhysicalAttack();
+        int GetBaseAttackSpeed();
+        int GetBaseCritical();
+        int GetBaseDefend();
+        int GetBaseMagicAttack();
+        int GetBaseMagicDefend();
+        int GetBaseAttackRange();
+        
         public Location GetInitialStartPoint();
     }
 }

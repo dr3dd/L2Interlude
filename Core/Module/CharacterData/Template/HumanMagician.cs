@@ -45,5 +45,39 @@ namespace Core.Module.CharacterData.Template
         {
             throw new System.NotImplementedException();
         }
+
+        public int GetBasePhysicalAttack()
+        {
+            return 1;
+        }
+        public int GetBaseAttackSpeed()
+        {
+            return 1;
+        }
+
+        public int GetBaseCritical()
+        {
+            return 1;
+        }
+
+        public int GetBaseDefend()
+        {
+            return 1;
+        }
+
+        public int GetBaseMagicAttack()
+        {
+            return 1;
+        }
+
+        public int GetBaseMagicDefend()
+        {
+            return 1;
+        }
+
+        public int GetBaseAttackRange()
+        {
+            return 1;
+        }
     }
 }

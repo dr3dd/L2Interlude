@@ -13,7 +13,6 @@ namespace Core.Module.Player
         private readonly PlayerModel _playerModel;
         private readonly ITemplateHandler _templateHandler;
         private static PlayerLoader _playerLoader;
-        public int CharacterId { get; set; }
         public GameServiceController Controller { get; set; }
         public PlayerInstance(ITemplateHandler template, PlayerAppearance playerAppearance)
         {

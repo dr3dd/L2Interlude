@@ -45,8 +45,8 @@ namespace Core.Module.Player.Response
             WriteInt(_location.GetX());
             WriteInt(_location.GetY());
             WriteInt(_location.GetZ());
-            WriteInt(0);
-            WriteInt(_playerInstance.CharacterId);
+            WriteInt(0); //heading
+            WriteInt(_characterInfo.CharacterId);
             
             WriteString(_playerAppearance.CharacterName);
             
@@ -118,16 +118,16 @@ namespace Core.Module.Player.Response
             
             WriteInt(_characterInfo.GetPAtk()); //_playerInstance.Stat.GetPAtk()
             WriteInt(_characterInfo.GetPAtkSpd()); //_playerInstance.Stat.GetPAtkSpd()
-            WriteInt(1); //_playerInstance.Stat.GetPDef()
+            WriteInt(_characterInfo.GetPDef()); //_playerInstance.Stat.GetPDef()
             WriteInt(1); //_playerInstance.Stat.GetEvasionRate()
             WriteInt(1); //_playerInstance.Stat.GetAccuracy()
             WriteInt(1); //_playerInstance.Stat.GetCriticalHit()
-            WriteInt(1); //_playerInstance.Stat.GetMAtk()
+            WriteInt(_characterInfo.GetMAtk()); //_playerInstance.Stat.GetMAtk()
 		
-            WriteInt(1); //_playerInstance.Stat.GetMAtkSpd()
-            WriteInt(1); //_playerInstance.Stat.GetPAtkSpd()
+            WriteInt(_characterInfo.GetMAtkSpd()); //_playerInstance.Stat.GetMAtkSpd()
+            WriteInt(_characterInfo.GetPAtkSpd()); //_playerInstance.Stat.GetPAtkSpd()
 		
-            WriteInt(1); //_playerInstance.Stat.GetMDef()
+            WriteInt(_characterInfo.GetMDef()); //_playerInstance.Stat.GetMDef()
 		
             WriteInt(0); // getPvpFlag 0-non-pvp 1-pvp = violett name
             WriteInt(0); //getKarma
@@ -200,7 +200,7 @@ namespace Core.Module.Player.Response
             WriteInt(0); // fishing x
             WriteInt(0); // fishing y
             WriteInt(0); // fishing z
-            WriteInt(0); //_playerInstance.PlayerAppearance().NameColor
+            WriteInt(0xFFFFFF); //_playerInstance.PlayerAppearance().NameColor /** The hexadecimal Color of players name (white is 0xFFFFFF) */
 		
             // new c5
             WriteByte(0x01); //_playerInstance.Movement().IsRunning() changes the Speed display on Status Window
@@ -208,7 +208,7 @@ namespace Core.Module.Player.Response
             WriteInt(0); // _player.getPledgeClass() changes the text above CP on Status Window
             WriteInt(0); //_player.getPledgeType()
 		
-            WriteInt(16777079); //_playerInstance.PlayerAppearance().TitleColor
+            WriteInt(0); //_playerInstance.PlayerAppearance().TitleColor
 		
             WriteInt(0x00); //_player.isCursedWeaponEquiped()
         }

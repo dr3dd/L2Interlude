@@ -35,7 +35,7 @@ namespace Core.Module.CharacterData.Response
             WriteByte(0x15);
 		
             WriteString(_playerAppearance.CharacterName);
-            WriteInt(_playerInstance.CharacterId); // ??
+            WriteInt(_characterInfo.CharacterId); // ??
             WriteString("");
             WriteInt(_sessionId);
             WriteInt(0);

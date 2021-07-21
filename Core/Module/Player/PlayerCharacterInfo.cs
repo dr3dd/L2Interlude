@@ -1,4 +1,5 @@
 ﻿using Core.Module.CharacterData;
+using Core.Module.CharacterData.Template;
 
 namespace Core.Module.Player
 {
@@ -14,21 +15,42 @@ namespace Core.Module.Player
         public byte Level { get; set; } = 1;
         public Location Location { get; set; }
 
-        private PlayerInstance _playerInstance;
+        private readonly PlayerInstance _playerInstance;
+        private readonly ITemplateHandler _templateHandler;
 
         public PlayerCharacterInfo(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
+            _templateHandler = _playerInstance.TemplateHandler();
         }
 
         public int GetPAtk()
         {
-            return 1;
+            return _templateHandler.GetBasePhysicalAttack();
+        }
+        public int GetMAtk()
+        {
+            return _templateHandler.GetBaseMagicAttack();
         }
 
         public int GetPAtkSpd()
         {
-            return 1;
+            return _templateHandler.GetBaseAttackSpeed();
+        }
+        
+        public int GetMAtkSpd()
+        {
+            return _templateHandler.GetBaseAttackSpeed();
+        }
+
+        public int GetPDef()
+        {
+            return _templateHandler.GetBaseDefend();
+        }
+
+        public int GetMDef()
+        {
+            return _templateHandler.GetBaseMagicDefend();
         }
     }
 }
