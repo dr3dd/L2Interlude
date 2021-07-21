@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Module.CharacterData;
+using Core.Module.CharacterData.Template;
 using Network;
 
 namespace Core.Module.Player.Response
@@ -12,10 +13,20 @@ namespace Core.Module.Player.Response
         private readonly int _flyRunSpd;
         private readonly int _flyWalkSpd;
         private readonly int _relation;
+        private readonly int _level;
+        private readonly ITemplateHandler _template;
+        private readonly PlayerCharacterInfo _characterInfo;
+        private readonly Location _location;
+        private readonly PlayerAppearance _playerAppearance;
 
         public UserInfo(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
+            _characterInfo = _playerInstance.PlayerCharacterInfo();
+            _level = _characterInfo.Level;
+            _template = _playerInstance.TemplateHandler();
+            _location = _characterInfo.Location;
+            _playerAppearance = _playerInstance.PlayerAppearance();
             //_moveMultiplier = playerInstance.Stat.GetMovementSpeedMultiplier();
             //_runSpd = Convert.ToInt32(Math.Round(playerInstance.Stat.GetRunSpeed() / _moveMultiplier));
             //_walkSpd = Convert.ToInt32(Math.Round(playerInstance.Stat.GetWalkSpeed() / _moveMultiplier));
@@ -31,33 +42,33 @@ namespace Core.Module.Player.Response
         {
             WriteByte(0x04);
             
-            WriteInt(-71338);
-            WriteInt(258271);
-            WriteInt(-3104);
+            WriteInt(_location.GetX());
+            WriteInt(_location.GetY());
+            WriteInt(_location.GetZ());
             WriteInt(0);
             WriteInt(_playerInstance.CharacterId);
             
-            WriteString(_playerInstance.PlayerAppearance().CharacterName);
+            WriteString(_playerAppearance.CharacterName);
             
-            WriteInt(_playerInstance.TemplateHandler().GetRaceId());
-            WriteInt(_playerInstance.PlayerAppearance().Gender);
-            WriteInt(_playerInstance.TemplateHandler().GetClassId());
-            WriteInt(1); //level
-            WriteLong(0); //exp
+            WriteInt(_template.GetRaceId());
+            WriteInt(_playerAppearance.Gender);
+            WriteInt(_template.GetClassId());
+            WriteInt(_level); //level
+            WriteLong(_characterInfo.Exp); //exp
 
             //stats
-            WriteInt(_playerInstance.TemplateHandler().GetStr());
-            WriteInt(_playerInstance.TemplateHandler().GetDex());
-            WriteInt(_playerInstance.TemplateHandler().GetCon());
-            WriteInt(_playerInstance.TemplateHandler().GetInt());
-            WriteInt(_playerInstance.TemplateHandler().GetWit());
-            WriteInt(_playerInstance.TemplateHandler().GetMen());
+            WriteInt(_template.GetStr());
+            WriteInt(_template.GetDex());
+            WriteInt(_template.GetCon());
+            WriteInt(_template.GetInt());
+            WriteInt(_template.GetWit());
+            WriteInt(_template.GetMen());
             
-            WriteInt(100); //maxHp
-            WriteInt(100); //_playerInstance.Status.GetCurrentHp()
-            WriteInt(100); //_playerInstance.Stat.GetMaxMp()
-            WriteInt(100); //_playerInstance.Status.GetCurrentMp()
-            WriteInt(0); //_playerInstance.Stat.Sp
+            WriteInt(_template.GetHpBegin(_level)); //maxHp
+            WriteInt(_characterInfo.CurrentHp); //_playerInstance.Status.GetCurrentHp()
+            WriteInt(_template.GetMpBegin(_level)); //_playerInstance.Stat.GetMaxMp()
+            WriteInt(_characterInfo.CurrentMp); //_playerInstance.Status.GetCurrentMp()
+            WriteInt(_characterInfo.Sp); //_playerInstance.Stat.Sp
             WriteInt(0); //_playerInstance.PlayerInventory().GetCurrentLoad()
             WriteInt(100); //_playerInstance.Stat.GetMaxLoad()
 
@@ -105,8 +116,8 @@ namespace Core.Module.Player.Response
             WriteShort(0x00);    
             // end of c6 new h's
             
-            WriteInt(1); //_playerInstance.Stat.GetPAtk()
-            WriteInt(1); //_playerInstance.Stat.GetPAtkSpd()
+            WriteInt(_characterInfo.GetPAtk()); //_playerInstance.Stat.GetPAtk()
+            WriteInt(_characterInfo.GetPAtkSpd()); //_playerInstance.Stat.GetPAtkSpd()
             WriteInt(1); //_playerInstance.Stat.GetPDef()
             WriteInt(1); //_playerInstance.Stat.GetEvasionRate()
             WriteInt(1); //_playerInstance.Stat.GetAccuracy()
@@ -137,9 +148,9 @@ namespace Core.Module.Player.Response
             WriteDouble(7); //getCollisionRadius
             WriteDouble(24); //getCollisionHeight
             
-            WriteInt(_playerInstance.PlayerAppearance().HairStyle);
-            WriteInt(_playerInstance.PlayerAppearance().HairColor);
-            WriteInt(_playerInstance.PlayerAppearance().Face);
+            WriteInt(_playerAppearance.HairStyle);
+            WriteInt(_playerAppearance.HairColor);
+            WriteInt(_playerAppearance.Face);
             WriteInt(0); // _playerInstance.isGM() builder level
             
             WriteString(""); //_playerInstance.Stat.Title
@@ -173,10 +184,10 @@ namespace Core.Module.Player.Response
             WriteInt(0x00); // _player.getMountNpcId() > 0 ? _player.getMountNpcId() + 1000000 : 0
             WriteShort(80); //_player.getInventoryLimit()
             
-            WriteInt(_playerInstance.TemplateHandler().GetClassId());
+            WriteInt(_template.GetClassId());
             WriteInt(0x00); // special effects? circles around player...
-            WriteInt(100); //_playerInstance.Stat.GetMaxCp()
-            WriteInt(100); //_playerInstance.Status.GetCurrentCp()
+            WriteInt(_template.GetCpBegin(_level)); //_playerInstance.Stat.GetMaxCp()
+            WriteInt(_characterInfo.CurrentCp); //_playerInstance.Status.GetCurrentCp()
             WriteByte(0); //_player.isMounted() ? 0 : _player.getEnchantEffect()
 		
             WriteByte(0x00); // team circle around feet 1= Blue, 2 = red

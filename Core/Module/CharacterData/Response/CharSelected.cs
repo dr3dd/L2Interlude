@@ -1,4 +1,5 @@
 ﻿using Core.Controller;
+using Core.Module.CharacterData.Template;
 using Core.Module.Player;
 using Microsoft.Extensions.DependencyInjection;
 using Network;
@@ -8,12 +9,23 @@ namespace Core.Module.CharacterData.Response
     public class CharSelected : ServerPacket
     {
         private readonly PlayerInstance _playerInstance;
+        private readonly PlayerAppearance _playerAppearance;
+        private readonly int _level;
+        private readonly ITemplateHandler _template;
+        private readonly PlayerCharacterInfo _characterInfo;
+        private readonly Location _location;
         private readonly int _sessionId;
         private readonly GameTimeController _gameTimeController;
 
         public CharSelected(PlayerInstance playerInstance, int sessionId)
         {
             _playerInstance = playerInstance;
+            
+            _characterInfo = _playerInstance.PlayerCharacterInfo();
+            _level = _characterInfo.Level;
+            _template = _playerInstance.TemplateHandler();
+            _location = _characterInfo.Location;
+            _playerAppearance = _playerInstance.PlayerAppearance();
             _sessionId = sessionId;
             _gameTimeController = Initializer.ServiceProvider.GetService<GameTimeController>();
         }
@@ -22,33 +34,33 @@ namespace Core.Module.CharacterData.Response
         {
             WriteByte(0x15);
 		
-            WriteString(_playerInstance.PlayerAppearance().CharacterName);
+            WriteString(_playerAppearance.CharacterName);
             WriteInt(_playerInstance.CharacterId); // ??
             WriteString("");
             WriteInt(_sessionId);
             WriteInt(0);
             WriteInt(0x00); // ??
-            WriteInt(_playerInstance.PlayerAppearance().Gender);
-            WriteInt(_playerInstance.TemplateHandler().GetRaceId());
-            WriteInt(_playerInstance.TemplateHandler().GetClassId());
+            WriteInt(_playerAppearance.Gender);
+            WriteInt(_template.GetRaceId());
+            WriteInt(_template.GetClassId());
             WriteInt(0x01); // active ??
-            WriteInt(-71338);
-            WriteInt(258271);
-            WriteInt(-3104);
+            WriteInt(_location.GetX());
+            WriteInt(_location.GetY());
+            WriteInt(_location.GetZ());
 		
-            WriteInt(100);//_player.getCurrentHp()
-            WriteInt(100);//_player.getCurrentMp()
-            WriteInt(1);//_player.getSp()
-            WriteLong(1);//_player.getExp()
-            WriteInt(1);//_player.getLevel()
+            WriteInt(_characterInfo.CurrentHp);//_player.getCurrentHp()
+            WriteInt(_characterInfo.CurrentMp);//_player.getCurrentMp()
+            WriteInt(_characterInfo.Sp);//_player.getSp()
+            WriteLong(_characterInfo.Exp);//_player.getExp()
+            WriteInt(_level);//_player.getLevel()
             WriteInt(0); // _player.getKarma()
             WriteInt(0x0); // ?
-            WriteInt(_playerInstance.TemplateHandler().GetInt());//_player.getINT()
-            WriteInt(_playerInstance.TemplateHandler().GetStr());//_player.getSTR()
-            WriteInt(_playerInstance.TemplateHandler().GetCon());//_player.getCON()
-            WriteInt(_playerInstance.TemplateHandler().GetMen());//_player.getMEN()
-            WriteInt(_playerInstance.TemplateHandler().GetDex());//_player.getDEX()
-            WriteInt(_playerInstance.TemplateHandler().GetWit());//_player.getWIT()
+            WriteInt(_template.GetInt());//_player.getINT()
+            WriteInt(_template.GetStr());//_player.getSTR()
+            WriteInt(_template.GetCon());//_player.getCON()
+            WriteInt(_template.GetMen());//_player.getMEN()
+            WriteInt(_template.GetDex());//_player.getDEX()
+            WriteInt(_template.GetWit());//_player.getWIT()
             for (int i = 0; i < 30; i++)
             {
                 WriteInt(0x00);

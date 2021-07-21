@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Core.Module.CharacterData;
 using Core.Module.CharacterData.Template;
 using DataBase.Interfaces;
 
@@ -28,7 +29,15 @@ namespace Core.Module.Player
                 characterEntity.HairStyle, characterEntity.Gender);
             
             PlayerInstance playerInstance = new PlayerInstance(template, playerAppearance);
-            playerInstance.CharacterId = characterEntity.CharacterId;
+            var characterInfo = playerInstance.PlayerCharacterInfo();
+            characterInfo.CharacterId = characterEntity.CharacterId;
+            characterInfo.Location = new Location(characterEntity.XLoc, characterEntity.YLoc, characterEntity.ZLoc);
+            characterInfo.CurrentCp = characterEntity.Cp;
+            characterInfo.CurrentHp = characterEntity.Hp;
+            characterInfo.CurrentMp = characterEntity.Mp;
+            characterInfo.Exp = characterEntity.Exp;
+            characterInfo.Sp = characterEntity.Sp;
+            characterInfo.Level = characterEntity.Level;
             return playerInstance;
         }
     }

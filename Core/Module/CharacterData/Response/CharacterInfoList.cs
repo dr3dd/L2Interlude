@@ -37,9 +37,9 @@ namespace Core.Module.CharacterData.Response
                 WriteInt(entity.Race);
                 WriteInt(entity.ClassId);
                 WriteInt(0x01); // active ??
-                WriteInt(0x00); // x
-                WriteInt(0x00); // y
-                WriteInt(0x00); // z
+                WriteInt(entity.XLoc); // x
+                WriteInt(entity.YLoc); // y
+                WriteInt(entity.ZLoc); // z
                 WriteDouble(entity.Hp); // hp cur
                 WriteDouble(entity.Mp); // mp cur
                 WriteInt(entity.Sp);

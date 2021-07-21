@@ -9,6 +9,7 @@ namespace Core.Module.Player
     public sealed class PlayerInstance
     {
         private readonly PlayerAppearance _playerAppearance;
+        private readonly PlayerCharacterInfo _playerCharacterInfo;
         private readonly PlayerModel _playerModel;
         private readonly ITemplateHandler _templateHandler;
         private static PlayerLoader _playerLoader;
@@ -18,12 +19,14 @@ namespace Core.Module.Player
         {
             _templateHandler = template;
             _playerModel = new PlayerModel(this);
+            _playerCharacterInfo = new PlayerCharacterInfo(this);
             _playerAppearance = playerAppearance;
         }
 
         public ITemplateHandler TemplateHandler() => _templateHandler;
         public PlayerAppearance PlayerAppearance() => _playerAppearance;
         public PlayerModel PlayerModel() => _playerModel;
+        public PlayerCharacterInfo PlayerCharacterInfo() => _playerCharacterInfo;
         
         public static PlayerLoader PlayerLoader()
         {
