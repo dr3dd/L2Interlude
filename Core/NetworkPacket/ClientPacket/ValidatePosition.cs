@@ -28,9 +28,12 @@ namespace Core.NetworkPacket.ClientPacket
 
         public override async Task Execute()
         {
-            
+            await PlayerLocation().ValidatePositionAsync(_x, _y, _z, _heading);
         }
         
-        
+        private PlayerMoveToLocation PlayerLocation()
+        {
+            return _playerInstance.Location();
+        }
     }
 }

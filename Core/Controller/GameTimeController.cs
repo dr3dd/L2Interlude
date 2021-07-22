@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Core.Module.CharacterData;
+using Core.Module.Player;
 using Helpers;
 using L2Logger;
 
@@ -13,10 +17,11 @@ namespace Core.Controller
         public int GameTicks { get; private set; }
         private long GameStartTime { get; set; }
         public bool IsNight { get; set; } = false;
-
+        private readonly List<PlayerInstance> _movingObjects;
 
         public GameTimeController()
         {
+            _movingObjects = new List<PlayerInstance>();
             MillisInTick = 1000 / TicksPerSecond;
         }
 
@@ -72,8 +77,69 @@ namespace Core.Controller
                 long runtime = DateTimeHelper.CurrentUnixTimeMillis() - GameStartTime; // from server boot to now
         
                 GameTicks = (int) (runtime / MillisInTick); // new ticks value (ticks now)
+                
+                if (oldTicks != GameTicks)
+                {
+                    MoveObjects();
+                }
         
                 //LoggerManager.Info("TICK:" + GameTicks);
+            }
+        }
+        
+        private void MoveObjects()
+        {
+            try
+            {
+                PlayerInstance[] PlayerInstances = _movingObjects.ToArray();
+                // Create an ArrayList to contain all Creature that are arrived to destination
+                List<PlayerInstance> ended = null;
+
+                foreach (var l2Character in PlayerInstances)
+                {
+                    if (l2Character is null)
+                        continue;
+                    // Update the position of the Creature and return True if the movement is finished
+                    bool end = l2Character.PlayerMovement().UpdatePosition(GameTicks);
+                    // If movement is finished, the Creature is removed from movingObjects and added to the ArrayList ended
+                    if (end)
+                    {
+                        _movingObjects.Remove(l2Character);
+                        if (ended == null)
+                        {
+                            ended = new List<PlayerInstance>();
+                        }
+                        ended.Add(l2Character);
+                    }
+                }
+
+                if (ended != null)
+                {
+                    foreach (Character character in ended)
+                    {
+                        //character.GetKnownList().UpdateKnownObjects();
+                        //character.AI.NotifyEvent(CtrlEvent.EvtArrived);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggerManager.Info(GetType().Name + ": " + ex.Message);
+            }
+        }
+        
+        public void RegisterMovingObject(PlayerInstance playerInstance)
+        {
+            try
+            {
+                if (!_movingObjects.Contains(playerInstance))
+                {
+                    _movingObjects.Add(playerInstance);
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggerManager.Info(ex.Message);
             }
         }
     }
