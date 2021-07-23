@@ -25,7 +25,7 @@ namespace Core.Controller
             MillisInTick = 1000 / TicksPerSecond;
         }
 
-        public void Init()
+        public void Run()
         {
             GameStartTime = DateTimeHelper.CurrentUnixTimeMillis() - 3600000; // offset so that the server starts a day begin
             GameTicks = 3600000 / MillisInTick;

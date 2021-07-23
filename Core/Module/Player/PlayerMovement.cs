@@ -2,6 +2,7 @@
 using Core.Controller;
 using Core.Module.CharacterData;
 using Helpers;
+using L2Logger;
 
 namespace Core.Module.Player
 {
@@ -24,12 +25,12 @@ namespace Core.Module.Player
             // Get the Move Speed of the Creature
             int speed = 125;
             
-            
             // Get current position of the Creature
             int curX = _playerInstance.PlayerCharacterInfo().Location.GetX();
             int curY = _playerInstance.PlayerCharacterInfo().Location.GetY();
             int curZ = _playerInstance.PlayerCharacterInfo().Location.GetZ();
 
+            LoggerManager.Info($"curX: {curX} curY: {curY} curZ:{curZ} distX{x} distY{y} distZ{z}");
             
             double dx = (x - curX);
             double dy = (y - curY);
@@ -39,40 +40,9 @@ namespace Core.Module.Player
             double cos;
             double sin;
             
-            // Check if a movement offset is defined or no distance to go through
-            if ((offset > 0) || (distance < 1))
-            {
-                // approximation for moving closer when z coordinates are different
-                // TODO: handle Z axis movement better
-                offset -= (int)Math.Abs(dz);
-                if (offset < 5)
-                {
-                    offset = 5;
-                }
-			
-                // If no distance to go through, the movement is canceled
-                if ((distance < 1) || ((distance - offset) <= 0))
-                {
-                    // Notify the AI that the Creature is arrived at destination
-                    //_character.AI.NotifyEvent(CtrlEvent.EvtArrived, null);
-                    return;
-                }
-			
-                // Calculate movement angles needed
-                sin = dy / distance;
-                cos = dx / distance;
-                distance -= (offset - 5); // due to rounding error, we have to move a bit closer to be in range
-			
-                // Calculate the new destination with offset included
-                x = curX + (int) (distance * cos);
-                y = curY + (int) (distance * sin);
-            }
-            else
-            {
-                // Calculate movement angles needed
-                sin = dy / distance;
-                cos = dx / distance;
-            }
+            // Calculate movement angles needed
+            sin = dy / distance;
+            cos = dx / distance;
             
             // Create and Init a MoveData object
             // GEODATA MOVEMENT CHECKS AND PATHFINDING
@@ -83,24 +53,6 @@ namespace Core.Module.Player
             int originalX = x;
             int originalY = y;
             int originalZ = z;
-            bool verticalMovementOnly = false;
-            // Pathfinding checks.
-            if (((originalDistance - distance) > 30))
-            {
-                m.OnGeodataPathIndex = 0; // on first segment
-                m.GeoPathAccurateTx = originalX;
-                m.GeoPathAccurateTy = originalY;
-                x = m.GeoPath[m.OnGeodataPathIndex].GetX();
-                y = m.GeoPath[m.OnGeodataPathIndex].GetY();
-                z = m.GeoPath[m.OnGeodataPathIndex].GetZ();
-                dx = x - curX;
-                dy = y - curY;
-                dz = z - curZ;
-                distance = verticalMovementOnly ? Math.Pow(dz, 2) : Utility.Hypot(dx, dy);
-                sin = dy / distance;
-                cos = dx / distance;
-            }
-
 
             int ticksToMove = 1 + (int) ((_timeController.TicksPerSecond * distance) / speed);
             m.XDestination = x;
@@ -110,10 +62,7 @@ namespace Core.Module.Player
             m.Heading = 0; // initial value for coordinate sync
             
             // Does not break heading on vertical movements
-            if (!verticalMovementOnly)
-            {
-                _playerInstance.Heading = CalculateRange.CalculateHeadingFrom(cos, sin);
-            }
+            _playerInstance.Heading = CalculateRange.CalculateHeadingFrom(cos, sin);
             
             m.MoveStartTime = _timeController.GetGameTicks();
             
@@ -193,6 +142,7 @@ namespace Core.Module.Player
             
             if (distFraction > 1)
             {
+                _playerInstance.PlayerCharacterInfo().Location.SetXYZ(m.XDestination, m.YDestination, m.ZDestination);
                 // Set the position of the Creature to the destination
                 //_character.SetXYZ(m.XDestination, m.YDestination, m.ZDestination);
             }
@@ -203,6 +153,7 @@ namespace Core.Module.Player
                 
                 // Set the position of the Creature to estimated after parcial move
                 //_character.SetXYZ((int) m.XAccurate, (int) m.YAccurate, zPrev + (int) ((dz * distFraction) + 0.5));
+                _playerInstance.PlayerCharacterInfo().Location.SetXYZ((int) m.XAccurate, (int) m.YAccurate, zPrev + (int) ((dz * distFraction) + 0.5));
             }
             // Set the timer of last position update to now
             m.MoveTimestamp = gameTicks;

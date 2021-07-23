@@ -61,5 +61,12 @@
         {
             _heading = head;
         }
+
+        public void SetXYZ(int mXDestination, int mYDestination, int mZDestination)
+        {
+            _x = mXDestination;
+            _y = mYDestination;
+            _z = mZDestination;
+        }
     }
 }

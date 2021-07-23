@@ -40,6 +40,7 @@ namespace Core
 
         public void Load()
         {
+            ServiceProvider.GetRequiredService<GameTimeController>().Run();
             ServiceProvider.GetRequiredService<NpcDataInit>().Run();
             //ServiceProvider.GetRequiredService<NpcPosInit>().Run();
             LoggerManager.Info("----Html Cache----");

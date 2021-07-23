@@ -31,7 +31,7 @@ namespace Core.NetworkPacket.ServerPacket
             //_runSpd = Convert.ToInt32(Math.Round(playerInstance.Stat.GetRunSpeed() / _moveMultiplier));
             //_walkSpd = Convert.ToInt32(Math.Round(playerInstance.Stat.GetWalkSpeed() / _moveMultiplier));
             _moveMultiplier = 1;
-            _runSpd = 115;
+            _runSpd = 125;
             _walkSpd = 80;
             _flyRunSpd = 0;
             _flyWalkSpd = 0;
