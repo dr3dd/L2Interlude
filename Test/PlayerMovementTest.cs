@@ -24,9 +24,12 @@ namespace Test
             PlayerAppearance playerAppearance = new PlayerAppearance("Test", "Test", 0, 0, 0, 0);
             
             //var test1 = serviceProvider.GetService<GameTimeController>();
-            
-            PlayerInstance playerInstance = new PlayerInstance(templateInit.GetTemplateByClassId(0), playerAppearance, _serviceProvider);
-            playerInstance.PlayerCharacterInfo().Location = new Location(-71453, 258305, -3104);
+
+            PlayerInstance playerInstance =
+                new PlayerInstance(templateInit.GetTemplateByClassId(0), playerAppearance, _serviceProvider)
+                {
+                    Location = new Location(-71453, 258305, -3104)
+                };
             playerInstance.PlayerMovement().MoveToLocation(-71953, 258905, -3154, 0);
             
             Assert.Equal(-71953, playerInstance.PlayerMovement().GetXDestination());

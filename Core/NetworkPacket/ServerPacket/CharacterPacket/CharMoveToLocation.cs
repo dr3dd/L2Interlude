@@ -15,9 +15,9 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
         public CharMoveToLocation(PlayerInstance playerInstance)
         {
             _objectId = playerInstance.PlayerCharacterInfo().CharacterId;
-            _x = playerInstance.PlayerCharacterInfo().Location.GetX();
-            _y = playerInstance.PlayerCharacterInfo().Location.GetY();
-            _z = playerInstance.PlayerCharacterInfo().Location.GetZ();
+            _x = playerInstance.Location.GetX();
+            _y = playerInstance.Location.GetY();
+            _z = playerInstance.Location.GetZ();
             _xDst = playerInstance.PlayerMovement().GetXDestination();
             _yDst = playerInstance.PlayerMovement().GetYDestination();
             _zDst = playerInstance.PlayerMovement().GetZDestination();

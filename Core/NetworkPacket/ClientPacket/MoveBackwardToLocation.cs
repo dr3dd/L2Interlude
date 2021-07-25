@@ -43,7 +43,7 @@ namespace Core.NetworkPacket.ClientPacket
 
         private PlayerMoveToLocation PlayerLocation()
         {
-            return _playerInstance.Location();
+            return _playerInstance.PlayerLocation();
         }
     }
 }

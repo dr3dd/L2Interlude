@@ -24,7 +24,7 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
             _characterInfo = _playerInstance.PlayerCharacterInfo();
             _level = _characterInfo.Level;
             _template = _playerInstance.TemplateHandler();
-            _location = _characterInfo.Location;
+            _location = _playerInstance.Location;
             _playerAppearance = _playerInstance.PlayerAppearance();
             _sessionId = sessionId;
             _gameTimeController = Initializer.ServiceProvider.GetService<GameTimeController>();

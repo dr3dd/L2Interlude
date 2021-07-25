@@ -18,7 +18,8 @@ namespace Core.Module.Player
         private readonly PlayerMoveToLocation _toLocation;
         private readonly PlayerMovement _playerMovement;
         private readonly PlayerDesire _playerDesire;
-        public IServiceProvider ServiceProvider { get; set; }
+        public Location Location { get; set; }
+        public IServiceProvider ServiceProvider { get; }
         public int Heading { get; set; }
         public GameServiceController Controller { get; set; }
         public PlayerInstance(ITemplateHandler template, PlayerAppearance playerAppearance, IServiceProvider provider)
@@ -39,8 +40,8 @@ namespace Core.Module.Player
         public PlayerCharacterInfo PlayerCharacterInfo() => _playerCharacterInfo;
         public PlayerMovement PlayerMovement() => _playerMovement;
         public PlayerDesire PlayerDesire() => _playerDesire;
-        
-        public static PlayerLoader PlayerLoader(IServiceProvider serviceProvider)
+
+        private static PlayerLoader PlayerLoader(IServiceProvider serviceProvider)
         {
             return _playerLoader ??= new PlayerLoader(serviceProvider);
         }
@@ -62,10 +63,9 @@ namespace Core.Module.Player
             await Controller.SendPacketAsync(new ActionFailed());
         }
         
-        public PlayerMoveToLocation Location()
+        public PlayerMoveToLocation PlayerLocation()
         {
             return _toLocation;
         }
-        
     }
 }

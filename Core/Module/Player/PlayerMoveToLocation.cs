@@ -22,8 +22,8 @@ namespace Core.Module.Player
                 await _playerInstance.SendActionFailedPacketAsync();
             }
 
-            double dx = targetX - _playerInstance.PlayerCharacterInfo().Location.GetX();
-            double dy = targetY - _playerInstance.PlayerCharacterInfo().Location.GetY();
+            double dx = targetX - _playerInstance.Location.GetX();
+            double dy = targetY - _playerInstance.Location.GetY();
 
             if (((dx * dx) + (dy * dy)) > 98010000)
             {
@@ -36,9 +36,9 @@ namespace Core.Module.Player
 
         public async Task ValidatePositionAsync(int x, int y, int z, int heading)
         {
-            int realX = _playerInstance.PlayerCharacterInfo().Location.GetX();
-            int realY = _playerInstance.PlayerCharacterInfo().Location.GetY();
-            int realZ = _playerInstance.PlayerCharacterInfo().Location.GetZ();
+            int realX = _playerInstance.Location.GetX();
+            int realY = _playerInstance.Location.GetY();
+            int realZ = _playerInstance.Location.GetZ();
             
             LoggerManager.Info($"Validate Location: X: {realX}, Y: {realY} Z: {realZ}");
 

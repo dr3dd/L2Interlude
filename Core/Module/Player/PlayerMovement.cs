@@ -27,9 +27,9 @@ namespace Core.Module.Player
             int speed = 125;
             
             // Get current position of the Creature
-            int curX = _playerInstance.PlayerCharacterInfo().Location.GetX();
-            int curY = _playerInstance.PlayerCharacterInfo().Location.GetY();
-            int curZ = _playerInstance.PlayerCharacterInfo().Location.GetZ();
+            int curX = _playerInstance.Location.GetX();
+            int curY = _playerInstance.Location.GetY();
+            int curZ = _playerInstance.Location.GetZ();
 
             LoggerManager.Info($"curX: {curX} curY: {curY} curZ: {curZ} distX: {x} distY: {y} distZ: {z}");
             
@@ -85,8 +85,8 @@ namespace Core.Module.Player
             if (m.MoveTimestamp == 0)
             {
                 m.MoveTimestamp = m.MoveStartTime;
-                m.XAccurate = _playerInstance.PlayerCharacterInfo().Location.GetX();
-                m.YAccurate = _playerInstance.PlayerCharacterInfo().Location.GetY();
+                m.XAccurate = _playerInstance.Location.GetX();
+                m.YAccurate = _playerInstance.Location.GetY();
             }
             // Check if the position has already be calculated
             if (m.MoveTimestamp == gameTicks)
@@ -94,9 +94,9 @@ namespace Core.Module.Player
                 return false;
             }
             
-            int xPrev = _playerInstance.PlayerCharacterInfo().Location.GetX();
-            int yPrev = _playerInstance.PlayerCharacterInfo().Location.GetY();
-            int zPrev = _playerInstance.PlayerCharacterInfo().Location.GetZ(); // the z coordinate may be modified by coordinate synchronizations
+            int xPrev = _playerInstance.Location.GetX();
+            int yPrev = _playerInstance.Location.GetY();
+            int zPrev = _playerInstance.Location.GetZ(); // the z coordinate may be modified by coordinate synchronizations
             double dx;
             double dy;
             double dz;
@@ -143,7 +143,7 @@ namespace Core.Module.Player
             
             if (distFraction > 1)
             {
-                _playerInstance.PlayerCharacterInfo().Location.SetXYZ(m.XDestination, m.YDestination, m.ZDestination);
+                _playerInstance.Location.SetXYZ(m.XDestination, m.YDestination, m.ZDestination);
                 // Set the position of the Creature to the destination
                 //_character.SetXYZ(m.XDestination, m.YDestination, m.ZDestination);
             }
@@ -154,7 +154,7 @@ namespace Core.Module.Player
                 
                 // Set the position of the Creature to estimated after parcial move
                 //_character.SetXYZ((int) m.XAccurate, (int) m.YAccurate, zPrev + (int) ((dz * distFraction) + 0.5));
-                _playerInstance.PlayerCharacterInfo().Location.SetXYZ((int) m.XAccurate, (int) m.YAccurate, zPrev + (int) ((dz * distFraction) + 0.5));
+                _playerInstance.Location.SetXYZ((int) m.XAccurate, (int) m.YAccurate, zPrev + (int) ((dz * distFraction) + 0.5));
             }
             // Set the timer of last position update to now
             m.MoveTimestamp = gameTicks;
@@ -169,7 +169,7 @@ namespace Core.Module.Player
             {
                 return m.XDestination;
             }
-            return _playerInstance.PlayerCharacterInfo().Location.GetX();
+            return _playerInstance.Location.GetX();
         }
         
         public int GetYDestination()
@@ -179,7 +179,7 @@ namespace Core.Module.Player
             {
                 return m.YDestination;
             }
-            return _playerInstance.PlayerCharacterInfo().Location.GetY();
+            return _playerInstance.Location.GetY();
         }
         
         public int GetZDestination()
@@ -189,7 +189,7 @@ namespace Core.Module.Player
             {
                 return m.ZDestination;
             }
-            return _playerInstance.PlayerCharacterInfo().Location.GetZ();
+            return _playerInstance.Location.GetZ();
         }
     }
 }

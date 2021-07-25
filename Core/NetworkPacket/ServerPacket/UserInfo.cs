@@ -25,7 +25,7 @@ namespace Core.NetworkPacket.ServerPacket
             _characterInfo = _playerInstance.PlayerCharacterInfo();
             _level = _characterInfo.Level;
             _template = _playerInstance.TemplateHandler();
-            _location = _characterInfo.Location;
+            _location = _playerInstance.Location;
             _playerAppearance = _playerInstance.PlayerAppearance();
             //_moveMultiplier = playerInstance.Stat.GetMovementSpeedMultiplier();
             //_runSpd = Convert.ToInt32(Math.Round(playerInstance.Stat.GetRunSpeed() / _moveMultiplier));

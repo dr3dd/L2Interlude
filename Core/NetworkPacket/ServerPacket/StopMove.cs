@@ -13,8 +13,8 @@ namespace Core.NetworkPacket.ServerPacket
         private PlayerInstance _playerInstance;
 
         public StopMove(PlayerInstance playerInstance) : this(playerInstance.PlayerCharacterInfo().CharacterId,
-            playerInstance.PlayerCharacterInfo().Location.GetX(), playerInstance.PlayerCharacterInfo().Location.GetY(),
-            playerInstance.PlayerCharacterInfo().Location.GetZ(), playerInstance.Heading)
+            playerInstance.Location.GetX(), playerInstance.Location.GetY(),
+            playerInstance.Location.GetZ(), playerInstance.Heading)
         {
             _playerInstance = playerInstance;
         }
