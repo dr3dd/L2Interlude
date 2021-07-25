@@ -22,7 +22,7 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
             _playerInstance = playerInstance;
             
             _characterInfo = _playerInstance.PlayerCharacterInfo();
-            _level = _characterInfo.Level;
+            _level = _playerInstance.PlayerStatus().Level;
             _template = _playerInstance.TemplateHandler();
             _location = _playerInstance.Location;
             _playerAppearance = _playerInstance.PlayerAppearance();
@@ -48,8 +48,8 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
             WriteInt(_location.GetY());
             WriteInt(_location.GetZ());
 		
-            WriteInt(_characterInfo.CurrentHp);//_player.getCurrentHp()
-            WriteInt(_characterInfo.CurrentMp);//_player.getCurrentMp()
+            WriteInt(_playerInstance.PlayerStatus().CurrentHp);//_player.getCurrentHp()
+            WriteInt(_playerInstance.PlayerStatus().CurrentMp);//_player.getCurrentMp()
             WriteInt(_characterInfo.Sp);//_player.getSp()
             WriteLong(_characterInfo.Exp);//_player.getExp()
             WriteInt(_level);//_player.getLevel()

@@ -1,18 +1,13 @@
-﻿using Core.Module.CharacterData;
-using Core.Module.CharacterData.Template;
+﻿using Core.Module.CharacterData.Template;
 
 namespace Core.Module.Player
 {
     public class PlayerCharacterInfo
     {
         public int CharacterId { get; set; }
-        public float CurrentCp { get; set; }
-        public float CurrentHp { get; set; }
-        public float CurrentMp { get; set; }
         
         public long Exp { get; set; }
         public int Sp { get; set; }
-        public byte Level { get; set; } = 1;
 
         private readonly PlayerInstance _playerInstance;
         private readonly ITemplateHandler _templateHandler;

@@ -23,7 +23,7 @@ namespace Core.NetworkPacket.ServerPacket
         {
             _playerInstance = playerInstance;
             _characterInfo = _playerInstance.PlayerCharacterInfo();
-            _level = _characterInfo.Level;
+            _level = _playerInstance.PlayerStatus().Level;
             _template = _playerInstance.TemplateHandler();
             _location = _playerInstance.Location;
             _playerAppearance = _playerInstance.PlayerAppearance();
@@ -65,9 +65,9 @@ namespace Core.NetworkPacket.ServerPacket
             WriteInt(_template.GetMen());
             
             WriteInt(_playerInstance.PlayerStatus().GetMaxHp()); //maxHp
-            WriteInt(_characterInfo.CurrentHp); //_playerInstance.Status.GetCurrentHp()
+            WriteInt(_playerInstance.PlayerStatus().CurrentHp); //_playerInstance.Status.GetCurrentHp()
             WriteInt(_playerInstance.PlayerStatus().GetMaxMp()); //_playerInstance.Stat.GetMaxMp()
-            WriteInt(_characterInfo.CurrentMp); //_playerInstance.Status.GetCurrentMp()
+            WriteInt(_playerInstance.PlayerStatus().CurrentMp); //_playerInstance.Status.GetCurrentMp()
             WriteInt(_characterInfo.Sp); //_playerInstance.Stat.Sp
             WriteInt(0); //_playerInstance.PlayerInventory().GetCurrentLoad()
             WriteInt(100); //_playerInstance.Stat.GetMaxLoad()
@@ -187,7 +187,7 @@ namespace Core.NetworkPacket.ServerPacket
             WriteInt(_template.GetClassId());
             WriteInt(0x00); // special effects? circles around player...
             WriteInt(_playerInstance.PlayerStatus().GetMaxCp()); //_playerInstance.Stat.GetMaxCp()
-            WriteInt(_characterInfo.CurrentCp); //_playerInstance.Status.GetCurrentCp()
+            WriteInt(_playerInstance.PlayerStatus().CurrentCp); //_playerInstance.Status.GetCurrentCp()
             WriteByte(0); //_player.isMounted() ? 0 : _player.getEnchantEffect()
 		
             WriteByte(0x00); // team circle around feet 1= Blue, 2 = red

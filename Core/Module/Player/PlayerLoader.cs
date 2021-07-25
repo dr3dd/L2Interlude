@@ -36,12 +36,12 @@ namespace Core.Module.Player
             var characterInfo = playerInstance.PlayerCharacterInfo();
             characterInfo.CharacterId = characterEntity.CharacterId;
             playerInstance.Location = new Location(characterEntity.XLoc, characterEntity.YLoc, characterEntity.ZLoc);
-            characterInfo.CurrentCp = characterEntity.Cp;
-            characterInfo.CurrentHp = characterEntity.Hp;
-            characterInfo.CurrentMp = characterEntity.Mp;
+            playerInstance.PlayerStatus().CurrentCp = characterEntity.Cp;
+            playerInstance.PlayerStatus().CurrentHp = characterEntity.Hp;
+            playerInstance.PlayerStatus().CurrentMp = characterEntity.Mp;
             characterInfo.Exp = characterEntity.Exp;
             characterInfo.Sp = characterEntity.Sp;
-            characterInfo.Level = characterEntity.Level;
+            playerInstance.PlayerStatus().Level = characterEntity.Level;
             return playerInstance;
         }
     }
