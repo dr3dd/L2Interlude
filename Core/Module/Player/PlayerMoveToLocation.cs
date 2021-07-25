@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Core.Module.CharacterData;
 using Core.NetworkPacket.ServerPacket;
+using L2Logger;
 
 namespace Core.Module.Player
 {
@@ -38,6 +39,8 @@ namespace Core.Module.Player
             int realX = _playerInstance.PlayerCharacterInfo().Location.GetX();
             int realY = _playerInstance.PlayerCharacterInfo().Location.GetY();
             int realZ = _playerInstance.PlayerCharacterInfo().Location.GetZ();
+            
+            LoggerManager.Info($"Validate Location: X: {realX}, Y: {realY} Z: {realZ}");
 
             if ((x == 0) && (y == 0) && (realX != 0))
             {

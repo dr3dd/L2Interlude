@@ -46,7 +46,7 @@ namespace Core.NetworkPacket.ClientPacket.CharacterPacket
         {
             ITemplateHandler template = _templateInit.GetTemplateByClassId(_classId);
             PlayerAppearance playerAppearance = new PlayerAppearance(_accountName, _characterName, _face, _hairColor, _hairStyle, _gender);
-            PlayerInstance playerInstance = new PlayerInstance(template, playerAppearance);
+            PlayerInstance playerInstance = new PlayerInstance(template, playerAppearance, ServiceProvider);
             await playerInstance.PlayerModel().CreateCharacter();
 
         }

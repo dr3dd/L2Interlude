@@ -11,7 +11,6 @@ namespace Core.NetworkPacket.ClientPacket.CharacterPacket
     public class CharacterSelected : PacketBase
     {
         private readonly GameServiceController _controller;
-        private readonly IServiceProvider _serviceProvider;
         
         private readonly int _charSlot;
         private int _unk1; // new in C4
@@ -22,7 +21,6 @@ namespace Core.NetworkPacket.ClientPacket.CharacterPacket
         public CharacterSelected(IServiceProvider serviceProvider, Packet packet, GameServiceController controller) : base(serviceProvider)
         {
             _controller = controller;
-            _serviceProvider = serviceProvider;
             
             _charSlot = packet.ReadInt();
             _unk1 = packet.ReadShort();
@@ -36,7 +34,7 @@ namespace Core.NetworkPacket.ClientPacket.CharacterPacket
             try
             {
                 var player = _controller.GameServiceHelper.GetCharacterBySlot(_charSlot);
-                PlayerInstance playerInstance = await PlayerInstance.Load(player.CharacterId);
+                PlayerInstance playerInstance = await PlayerInstance.Load(player.CharacterId, ServiceProvider);
                 _controller.GameServiceHelper.CurrentPlayer = playerInstance;
                 playerInstance.Controller = _controller;
                 await _controller.SendPacketAsync(new CharSelected(playerInstance, _controller.SessionKey.PlayOkId1));

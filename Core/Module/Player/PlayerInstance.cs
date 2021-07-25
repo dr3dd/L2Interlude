@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Core.Controller;
 using Core.Module.CharacterData;
 using Core.Module.CharacterData.Template;
@@ -17,10 +18,12 @@ namespace Core.Module.Player
         private readonly PlayerMoveToLocation _toLocation;
         private readonly PlayerMovement _playerMovement;
         private readonly PlayerDesire _playerDesire;
+        public IServiceProvider ServiceProvider { get; set; }
         public int Heading { get; set; }
         public GameServiceController Controller { get; set; }
-        public PlayerInstance(ITemplateHandler template, PlayerAppearance playerAppearance)
+        public PlayerInstance(ITemplateHandler template, PlayerAppearance playerAppearance, IServiceProvider provider)
         {
+            ServiceProvider = provider;
             _templateHandler = template;
             _playerModel = new PlayerModel(this);
             _playerCharacterInfo = new PlayerCharacterInfo(this);
@@ -37,14 +40,14 @@ namespace Core.Module.Player
         public PlayerMovement PlayerMovement() => _playerMovement;
         public PlayerDesire PlayerDesire() => _playerDesire;
         
-        public static PlayerLoader PlayerLoader()
+        public static PlayerLoader PlayerLoader(IServiceProvider serviceProvider)
         {
-            return _playerLoader ??= new PlayerLoader();
+            return _playerLoader ??= new PlayerLoader(serviceProvider);
         }
 
-        public static Task<PlayerInstance> Load(int objectId)
+        public static Task<PlayerInstance> Load(int objectId, IServiceProvider serviceProvider)
         {
-            return PlayerLoader().Load(objectId);
+            return PlayerLoader(serviceProvider).Load(objectId);
         }
         
         public Task SendPacketAsync(ServerPacket serverPacket)

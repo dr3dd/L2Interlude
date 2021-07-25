@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Core.Module.CharacterData;
 using Core.Module.CharacterData.Template;
 using DataBase.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player
 {
@@ -9,10 +11,12 @@ namespace Core.Module.Player
     {
         private readonly ICharacterRepository _characterRepository;
         private readonly TemplateInit _templateInit;
-        public PlayerLoader()
+        private readonly IServiceProvider _serviceProvider;
+        public PlayerLoader(IServiceProvider serviceProvider)
         {
-            _characterRepository = Initializer.UnitOfWork().Characters;
-            _templateInit = Initializer.TemplateInit();
+            _serviceProvider = serviceProvider;
+            _characterRepository = serviceProvider.GetRequiredService<IUnitOfWork>().Characters;
+            _templateInit = serviceProvider.GetRequiredService<TemplateInit>();
         }
         
         public async Task<PlayerInstance> Load(int charId)
@@ -28,7 +32,7 @@ namespace Core.Module.Player
                 characterEntity.CharacterName, characterEntity.Face, characterEntity.HairColor,
                 characterEntity.HairStyle, characterEntity.Gender);
             
-            PlayerInstance playerInstance = new PlayerInstance(template, playerAppearance);
+            PlayerInstance playerInstance = new PlayerInstance(template, playerAppearance, _serviceProvider);
             var characterInfo = playerInstance.PlayerCharacterInfo();
             characterInfo.CharacterId = characterEntity.CharacterId;
             characterInfo.Location = new Location(characterEntity.XLoc, characterEntity.YLoc, characterEntity.ZLoc);

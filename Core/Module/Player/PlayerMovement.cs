@@ -3,6 +3,7 @@ using Core.Controller;
 using Core.Module.CharacterData;
 using Helpers;
 using L2Logger;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player
 {
@@ -16,7 +17,7 @@ namespace Core.Module.Player
         public PlayerMovement(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
-            _timeController = Initializer.TimeController();
+            _timeController = playerInstance.ServiceProvider.GetRequiredService<GameTimeController>();
         }
         
         
@@ -30,7 +31,7 @@ namespace Core.Module.Player
             int curY = _playerInstance.PlayerCharacterInfo().Location.GetY();
             int curZ = _playerInstance.PlayerCharacterInfo().Location.GetZ();
 
-            LoggerManager.Info($"curX: {curX} curY: {curY} curZ:{curZ} distX{x} distY{y} distZ{z}");
+            LoggerManager.Info($"curX: {curX} curY: {curY} curZ: {curZ} distX: {x} distY: {y} distZ: {z}");
             
             double dx = (x - curX);
             double dy = (y - curY);
