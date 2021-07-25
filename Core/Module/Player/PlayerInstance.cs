@@ -18,6 +18,7 @@ namespace Core.Module.Player
         private readonly PlayerMoveToLocation _toLocation;
         private readonly PlayerMovement _playerMovement;
         private readonly PlayerDesire _playerDesire;
+        private readonly PlayerStatus _playerStatus;
         public Location Location { get; set; }
         public IServiceProvider ServiceProvider { get; }
         public int Heading { get; set; }
@@ -26,12 +27,13 @@ namespace Core.Module.Player
         {
             ServiceProvider = provider;
             _templateHandler = template;
+            _playerAppearance = playerAppearance;
             _playerModel = new PlayerModel(this);
             _playerCharacterInfo = new PlayerCharacterInfo(this);
-            _playerAppearance = playerAppearance;
             _toLocation = new PlayerMoveToLocation(this);
             _playerMovement = new PlayerMovement(this);
             _playerDesire = new PlayerDesire(this);
+            _playerStatus = new PlayerStatus(this);
         }
 
         public ITemplateHandler TemplateHandler() => _templateHandler;
@@ -40,6 +42,7 @@ namespace Core.Module.Player
         public PlayerCharacterInfo PlayerCharacterInfo() => _playerCharacterInfo;
         public PlayerMovement PlayerMovement() => _playerMovement;
         public PlayerDesire PlayerDesire() => _playerDesire;
+        public PlayerStatus PlayerStatus() => _playerStatus;
 
         private static PlayerLoader PlayerLoader(IServiceProvider serviceProvider)
         {

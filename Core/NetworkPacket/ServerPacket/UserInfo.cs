@@ -64,9 +64,9 @@ namespace Core.NetworkPacket.ServerPacket
             WriteInt(_template.GetWit());
             WriteInt(_template.GetMen());
             
-            WriteInt(_template.GetHpBegin(_level)); //maxHp
+            WriteInt(_playerInstance.PlayerStatus().GetMaxHp()); //maxHp
             WriteInt(_characterInfo.CurrentHp); //_playerInstance.Status.GetCurrentHp()
-            WriteInt(_template.GetMpBegin(_level)); //_playerInstance.Stat.GetMaxMp()
+            WriteInt(_playerInstance.PlayerStatus().GetMaxMp()); //_playerInstance.Stat.GetMaxMp()
             WriteInt(_characterInfo.CurrentMp); //_playerInstance.Status.GetCurrentMp()
             WriteInt(_characterInfo.Sp); //_playerInstance.Stat.Sp
             WriteInt(0); //_playerInstance.PlayerInventory().GetCurrentLoad()
@@ -186,7 +186,7 @@ namespace Core.NetworkPacket.ServerPacket
             
             WriteInt(_template.GetClassId());
             WriteInt(0x00); // special effects? circles around player...
-            WriteInt(_template.GetCpBegin(_level)); //_playerInstance.Stat.GetMaxCp()
+            WriteInt(_playerInstance.PlayerStatus().GetMaxCp()); //_playerInstance.Stat.GetMaxCp()
             WriteInt(_characterInfo.CurrentCp); //_playerInstance.Status.GetCurrentCp()
             WriteByte(0); //_player.isMounted() ? 0 : _player.getEnchantEffect()
 		
