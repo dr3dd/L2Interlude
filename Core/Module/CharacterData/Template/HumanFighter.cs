@@ -17,12 +17,12 @@ namespace Core.Module.CharacterData.Template
         private const int BaseDamageRange = 0;
         private const int BaseRandDam = 10;
 
-        private const int Int = 21;
-        private const int Str = 40;
-        private const int Con = 43;
-        private const int Men = 25;
-        private const int Dex = 30;
-        private const int Wit = 11;
+        private const short Int = 21;
+        private const short Str = 40;
+        private const short Con = 43;
+        private const short Men = 25;
+        private const short Dex = 30;
+        private const short Wit = 11;
 
         private IList<string> _initialEquipment;
         private IList<Location> _initialStartPoint;

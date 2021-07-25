@@ -1,8 +1,12 @@
-﻿namespace Core.Module.Player
+﻿using Core.Module.CharacterData.Template;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Core.Module.Player
 {
     public class PlayerStatus
     {
         private readonly PlayerInstance _playerInstance;
+        private readonly BasicStatBonusInit _statBonusInit;
         public float CurrentCp { get; set; }
         public float CurrentHp { get; set; }
         public float CurrentMp { get; set; }
@@ -10,6 +14,7 @@
         public PlayerStatus(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
+            _statBonusInit = playerInstance.ServiceProvider.GetRequiredService<BasicStatBonusInit>();
         }
 
         /// <summary>
@@ -19,7 +24,8 @@
         public int GetMaxCp()
         {
             var cpBegin = _playerInstance.TemplateHandler().GetCpBegin(Level);
-            return (int) (cpBegin + (cpBegin * 58 / 100));
+            var conStat = _playerInstance.TemplateHandler().GetCon();
+            return (int) (cpBegin + (cpBegin * _statBonusInit.GetConBonus(conStat) / 100));
         }
 
         /// <summary>
@@ -29,7 +35,8 @@
         public int GetMaxHp()
         {
             var hpBegin = _playerInstance.TemplateHandler().GetHpBegin(Level);
-            return (int) (hpBegin + (hpBegin * 58 / 100));
+            var conStat =  _playerInstance.TemplateHandler().GetCon();
+            return (int) (hpBegin + (hpBegin * _statBonusInit.GetConBonus(conStat) / 100));
         }
         
         /// <summary>
@@ -39,7 +46,8 @@
         public int GetMaxMp()
         {
             var mpBegin = _playerInstance.TemplateHandler().GetMpBegin(Level);
-            return (int) (mpBegin + (mpBegin * 28 / 100));
+            var menStat =  _playerInstance.TemplateHandler().GetMen();
+            return (int) (mpBegin + (mpBegin * _statBonusInit.GetMenBonus(menStat) / 100));
         }
     }
 }

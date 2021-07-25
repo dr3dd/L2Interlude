@@ -14,6 +14,7 @@ namespace Test
         {
             var services = new ServiceCollection();
             services.AddTransient<GameTimeController>();
+            services.AddTransient<BasicStatBonusInit>();
             ServiceProvider = services.BuildServiceProvider();
         }
 

@@ -13,6 +13,7 @@ namespace Core
             services.AddSingleton<NetworkWriter>();
             services.AddTransient<ClientManager>();
             services.AddSingleton<TemplateInit>();
+            services.AddSingleton<BasicStatBonusInit>();
             services.AddSingleton<GameTimeController>();
             services.AddSingleton<NpcDataInit>();
         }
