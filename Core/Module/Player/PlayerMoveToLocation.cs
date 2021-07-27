@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Core.GeoEngine;
 using Core.Module.CharacterData;
 using Core.NetworkPacket.ServerPacket;
 using L2Logger;
@@ -8,9 +9,11 @@ namespace Core.Module.Player
     public sealed class PlayerMoveToLocation
     {
         private readonly PlayerInstance _playerInstance;
+        private readonly GeoEngineInit _geoEngine;
         public PlayerMoveToLocation(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
+            _geoEngine = Initializer.GeoEngineInit();
         }
         
         public async Task MoveToLocationAsync(int targetX, int targetY, int targetZ, int originX, int originY, int originZ)
@@ -30,6 +33,9 @@ namespace Core.Module.Player
                 await _playerInstance.SendActionFailedPacketAsync();
                 return;
             }
+
+            //_geoEngine.CanMoveToTarget(originX, originY, originZ, targetX, targetY, targetZ);
+            
             _playerInstance.PlayerDesire().AddDesire(Desire.MoveToDesire, new Location(targetX, targetY, targetZ));
         }
         

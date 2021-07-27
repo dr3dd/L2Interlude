@@ -1,6 +1,7 @@
 ﻿using System;
 using Config;
 using Core.Controller;
+using Core.GeoEngine;
 using Core.Module.CharacterData.Template;
 using Core.Module.NpcData;
 using DataBase.Interfaces;
@@ -38,10 +39,16 @@ namespace Core
             return ServiceProvider.GetService<GameTimeController>();
         }
 
+        public static GeoEngineInit GeoEngineInit()
+        {
+            return ServiceProvider.GetService<GeoEngineInit>();
+        }
+
         public void Load()
         {
             ServiceProvider.GetRequiredService<GameTimeController>().Run();
             ServiceProvider.GetRequiredService<NpcDataInit>().Run();
+            ServiceProvider.GetRequiredService<GeoEngineInit>().Run();
             //ServiceProvider.GetRequiredService<NpcPosInit>().Run();
             LoggerManager.Info("----Html Cache----");
             LoggerManager.Info("----Json Teleports----");

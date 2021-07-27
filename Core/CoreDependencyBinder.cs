@@ -1,4 +1,5 @@
 ﻿using Core.Controller;
+using Core.GeoEngine;
 using Core.Module.CharacterData.Template;
 using Core.Module.NpcData;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,7 @@ namespace Core
             services.AddSingleton<NetworkWriter>();
             services.AddTransient<ClientManager>();
             services.AddSingleton<TemplateInit>();
+            services.AddSingleton<GeoEngineInit>();
             services.AddSingleton<BasicStatBonusInit>();
             services.AddSingleton<GameTimeController>();
             services.AddSingleton<NpcDataInit>();
