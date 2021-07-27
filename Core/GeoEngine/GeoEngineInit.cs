@@ -155,7 +155,7 @@ namespace Core.GeoEngine
         }
         
         
-        public byte GetNsweNearest(int geoX, int geoY, int worldZ)
+        public sbyte GetNsweNearest(int geoX, int geoY, int worldZ)
         {
             ABlock block = GetBlock(geoX, geoY);
             if (block == null)

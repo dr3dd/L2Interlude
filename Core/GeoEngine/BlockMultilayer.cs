@@ -6,8 +6,8 @@ namespace Core.GeoEngine
 {
     public class BlockMultilayer : ABlock
     {
-        private static readonly int MaxLayers = byte.MaxValue;
-        private readonly byte[] _buffer;
+        private static readonly int MaxLayers = sbyte.MaxValue;
+        private readonly sbyte[] _buffer;
 	
         private static MemoryStream _temp;
 
@@ -26,11 +26,11 @@ namespace Core.GeoEngine
         {
             for (int cell = 0; cell < GeoStructure.BlockCells; cell++)
             {
-                byte layers = (byte) binaryReader.ReadInt16();
+                sbyte layers = (sbyte) binaryReader.ReadInt16();
                 // Add layers count.
-                _temp.WriteByte(layers);
+                _temp.WriteByte((byte) layers);
                 // Loop over layers.
-                for (byte layer = 0; layer < layers; layer++)
+                for (sbyte layer = 0; layer < layers; layer++)
                 {
                     // Get data.
                     short data = binaryReader.ReadInt16();
@@ -39,7 +39,7 @@ namespace Core.GeoEngine
                     _temp.WriteByte((byte) ((short) (data & 0xFFF0) >> 1));
                 }
             }
-            _buffer = new byte[_temp.Position];
+            _buffer = new sbyte[_temp.Position];
             // Initialize buffer.
             Array.Copy(_temp.ToArray(), _buffer, _temp.Position);
             _temp.SetLength(0);
@@ -55,7 +55,7 @@ namespace Core.GeoEngine
             return (short) ((_buffer[index + 1] & 0x00FF) | (_buffer[index + 2] << 8));
         }
 
-        public override byte GetNsweNearest(int geoX, int geoY, int worldZ)
+        public override sbyte GetNsweNearest(int geoX, int geoY, int worldZ)
         {
             // Get cell index.
             int index = GetIndexNearest(geoX, geoY, worldZ);
@@ -78,7 +78,7 @@ namespace Core.GeoEngine
                 }
 
                 // Get layers count and shift to last layer data (first from bottom).
-                byte layers = _buffer[index++];
+                byte layers = (byte) _buffer[index++];
 
                 // Loop though all cell layers, find closest layer to given worldZ.
                 int limit = int.MaxValue;
@@ -121,7 +121,7 @@ namespace Core.GeoEngine
             }
 		
             // Get layers count and shift to last layer data (first from bottom).
-            byte layers = _buffer[index++];
+            byte layers = (byte) _buffer[index++];
             index += (layers - 1) * 3;
 		
             // Loop though all layers, find first layer above worldZ.
@@ -155,7 +155,7 @@ namespace Core.GeoEngine
             }
 		
             // Get layers count and shift to first layer data (first from top).
-            byte layers = _buffer[index++];
+            byte layers = (byte) _buffer[index++];
 		
             // Loop though all layers, find first layer below worldZ.
             while (layers-- > 0)
@@ -183,7 +183,7 @@ namespace Core.GeoEngine
             return (short) ((_buffer[index + 1] & 0x00FF) | (_buffer[index + 2] << 8));
         }
 
-        public override byte GetNswe(int index)
+        public override sbyte GetNswe(int index)
         {
             // Get nswe.
             return _buffer[index];

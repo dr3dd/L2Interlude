@@ -3,12 +3,12 @@
     internal static class GeoStructure
     {
         // Geo cell direction (nswe) flags.
-        public static byte CellFlagNone = 0x00;
-        public static byte CellFlagE = 0x01;
-        public static byte CellFlagW = 0x02;
-        public static byte CellFlagS = 0x04;
-        public static byte CellFlagN = 0x08;
-        public static byte CellFlagAll = 0x0F;
+        public static sbyte CellFlagNone = 0x00;
+        public static sbyte CellFlagE = 0x01;
+        public static sbyte CellFlagW = 0x02;
+        public static sbyte CellFlagS = 0x04;
+        public static sbyte CellFlagN = 0x08;
+        public static sbyte CellFlagAll = 0x0F;
         
         // Geo cell height constants.
         public static readonly int CellSize = 16;

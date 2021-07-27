@@ -5,7 +5,7 @@ namespace Core.GeoEngine
     public class BlockFlat : ABlock
     {
         private readonly short _height;
-        private readonly byte _nswe;
+        private readonly sbyte _nswe;
         public BlockFlat(BinaryReader binaryReader)
         {
             // Get height and nswe.
@@ -20,7 +20,7 @@ namespace Core.GeoEngine
 
         public override short GetHeightNearest(int geoX, int geoY, int worldZ) => _height;
 
-        public override byte GetNsweNearest(int geoX, int geoY, int worldZ) => _nswe;
+        public override sbyte GetNsweNearest(int geoX, int geoY, int worldZ) => _nswe;
 
         public override int GetIndexNearest(int geoX, int geoY, int worldZ) => 0;
 
@@ -30,6 +30,6 @@ namespace Core.GeoEngine
 
         public override short GetHeight(int index) => _height;
 
-        public override byte GetNswe(int index) => _nswe;
+        public override sbyte GetNswe(int index) => _nswe;
     }
 }

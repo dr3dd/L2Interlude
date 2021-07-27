@@ -24,7 +24,7 @@
 		 * @param worldZ : Cell world Z coordinate.
 		 * @return short : Cell NSWE flag byte, nearest to given coordinates.
 		 */
-		public abstract byte GetNsweNearest(int geoX, int geoY, int worldZ);
+		public abstract sbyte GetNsweNearest(int geoX, int geoY, int worldZ);
 		
 		/**
 		 * Returns index to data of the cell, which is closes layer to given coordinates.<br>
@@ -65,6 +65,6 @@
 		 * @param index : Index of the cell.
 		 * @return short : Cell geodata Z coordinate, below given coordinates.
 		 */
-		public abstract byte GetNswe(int index);
+		public abstract sbyte GetNswe(int index);
     }
 }
