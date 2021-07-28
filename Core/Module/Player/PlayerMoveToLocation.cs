@@ -34,9 +34,10 @@ namespace Core.Module.Player
                 return;
             }
 
-            _geoEngine.CanMoveToTarget(originX, originY, originZ, targetX, targetY, targetZ);
-            
-            _playerInstance.PlayerDesire().AddDesire(Desire.MoveToDesire, new Location(targetX, targetY, targetZ));
+            var loc = _geoEngine.GetValidLocation(originX, originY, originZ, targetX, targetY, targetZ);
+
+            _playerInstance.PlayerDesire().AddDesire(Desire.MoveToDesire, new Location(loc.GetX(), loc.GetY(), loc.GetZ()));
+
         }
         
 

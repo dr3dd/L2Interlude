@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.MemoryMappedFiles;
 using Core.Module.CharacterData;
 using Core.Module.WorldData;
+using Helpers;
 using L2Logger;
 
 namespace Core.GeoEngine
@@ -212,15 +213,169 @@ namespace Core.GeoEngine
             }
             // Get nswe flag.
             int nswe = GetNsweNearest(gox, goy, goz);
-            int nswe2 = GetNsweNearest(gtx, gty, goz);
 		
             // Get delta coordinates, slope of line and direction data.
             int dx = targetX - originX;
             int dy = targetY - originY;
             double m = (double) dy / dx;
 
+            MoveDirection mdt = MoveDirection.GetDirection(gtx - gox, gty - goy);
+            // Get cell grid coordinates.
+            int gridX = (originX & 0xFFFFFF0);
+            int gridY = (originY & 0xFFFFFF0);
+		
+            // Run loop.
+            sbyte dir;
+            int nx = gox;
+            int ny = goy;
 
-            return true;
+            
+            while ((gox != gtx) || (goy != gty))
+            {
+
+                // Calculate intersection with cell's X border.
+                int checkX = gridX + mdt.OffsetX;
+                int checkY = (int) (originY + (m * (checkX - originX)));
+
+                if ((mdt.StepX != 0) && (GetGeoY(checkY) == goy))
+                {
+                    // Set next cell is in X direction.
+                    gridX += mdt.StepX;
+                    nx += mdt.SignumX;
+                    dir = mdt.DirectionX;
+                }
+                else
+                {
+                    // Calculate intersection with cell's Y border.
+                    checkY = gridY + mdt.OffsetY;
+                    checkX = (int) (originX + ((checkY - originY) / m));
+
+                    // Set next cell in Y direction.
+                    gridY += mdt.StepY;
+                    ny += mdt.SignumY;
+                    dir = mdt.DirectionY;
+                }
+
+                // Check point heading into obstacle, if so return current point.
+                if ((nswe & dir) == 0)
+                {
+                    return false;
+                }
+
+                block = GetBlock(nx, ny);
+                if ((block == null) || !block.HasGeoPos())
+                {
+                    return true; // No Geodata found.
+                }
+
+                // Check next point for extensive Z difference, if so return current point.
+                int i = block.GetIndexBelow(nx, ny, goz + GeoStructure.CellIgnoreHeight);
+                if (i < 0)
+                {
+                    return false;
+                }
+
+                // Update current point's coordinates and nswe.
+                gox = nx;
+                goy = ny;
+                goz = block.GetHeight(i);
+                nswe = block.GetNswe(i);
+            }
+            return goz == GetHeight(targetX, targetY, targetZ);
+        }
+
+        public Location GetValidLocation(int ox, int oy, int oz, int tx, int ty, int tz)
+        {
+            // Get geodata coordinates.
+			int gox = GetGeoX(ox);
+			int goy = GetGeoY(oy);
+			ABlock block = GetBlock(gox, goy);
+			if ((block == null) || !block.HasGeoPos())
+			{
+				return new Location(tx, ty, tz); // No Geodata found.
+			}
+			int gtx = GetGeoX(tx);
+			int gty = GetGeoY(ty);
+			int gtz = GetHeightNearest(gtx, gty, tz);
+			int goz = GetHeightNearest(gox, goy, oz);
+			int nswe = GetNsweNearest(gox, goy, goz);
+			
+			// Get delta coordinates, slope of line and direction data.
+			int dx = tx - ox;
+			int dy = ty - oy;
+			double m = (double) dy / dx;
+			MoveDirection mdt = MoveDirection.GetDirection(gtx - gox, gty - goy);
+			
+			// Get cell grid coordinates.
+			int gridX = ox;
+			int gridY = oy;
+			
+			// Run loop.
+			sbyte dir;
+			int nx = gox;
+			int ny = goy;
+			while ((gox != gtx) || (goy != gty))
+			{
+				// Calculate intersection with cell's X border.
+				int checkX = gridX + mdt.OffsetX;
+				int checkY = (int) (oy + (m * (checkX - ox)));
+				
+				if ((mdt.StepX != 0) && (GetGeoY(checkY) == goy))
+				{
+					// Set next cell is in X direction.
+					gridX += mdt.StepX;
+					nx += mdt.SignumX;
+					dir = mdt.DirectionX;
+				}
+				else
+				{
+					// Calculate intersection with cell's Y border.
+					checkY = gridY + mdt.OffsetY;
+					checkX = (int) (ox + ((checkY - oy) / m));
+					checkX = Utility.Limit(checkX, gridX, gridX + 15);
+					
+					// Set next cell in Y direction.
+					gridY += mdt.StepY;
+					ny += mdt.SignumY;
+					dir = mdt.DirectionY;
+				}
+				
+				// Check target cell is out of geodata grid (world coordinates).
+				if ((nx < 0) || (nx >= GeoStructure.GeoCellsX) || (ny < 0) || (ny >= GeoStructure.GeoCellsY))
+				{
+					return new Location(checkX, checkY, goz);
+				}
+				
+				// Check point heading into obstacle, if so return current (border) point.
+				if ((nswe & dir) == 0)
+				{
+					return new Location(checkX, checkY, goz);
+				}
+				
+				block = GetBlock(nx, ny);
+				if ((block == null) || !block.HasGeoPos())
+				{
+					return new Location(tx, ty, tz); // No Geodata found.
+				}
+				
+				// Check next point for extensive Z difference, if so return current (border) point.
+				int i = block.GetIndexBelow(nx, ny, goz + GeoStructure.CellIgnoreHeight);
+				if (i < 0)
+				{
+					return new Location(checkX, checkY, goz);
+				}
+				
+				// Update current point's coordinates and nswe.
+				gox = nx;
+				goy = ny;
+				goz = block.GetHeight(i);
+				nswe = block.GetNswe(i);
+			}
+			
+			// Compare Z coordinates:
+			// If same, path is okay, return target point and fix its Z geodata coordinate.
+			// If not same, path is does not exist, return origin point.
+			return goz == gtz ? new Location(tx, ty, gtz) : new Location(ox, oy, oz);
         }
     }
 }

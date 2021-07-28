@@ -27,5 +27,10 @@ namespace Helpers
         {
             return (Math.PI / 180) * val;
         }
+        
+        public static int Limit(int numToTest, int min, int max)
+        {
+            return (numToTest > max) ? max : ((numToTest < min) ? min : numToTest);
+        }
     }
 }
