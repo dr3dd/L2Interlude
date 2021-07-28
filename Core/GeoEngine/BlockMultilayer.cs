@@ -36,12 +36,14 @@ namespace Core.GeoEngine
                     short data = binaryReader.ReadInt16();
                     // Add nswe and height.
                     _temp.WriteByte((byte) (data & 0x000F));
-                    _temp.WriteByte((byte) ((short) (data & 0xFFF0) >> 1));
+                    var bytes = (short) ((short) (data & 0xFFF0) >> 1);
+                    _temp.Write(BitConverter.GetBytes(bytes));
+                    //_temp.WriteByte((byte) d);
                 }
             }
             _buffer = new sbyte[_temp.Position];
             // Initialize buffer.
-            Array.Copy(_temp.ToArray(), _buffer, _temp.Position);
+            Array.Copy((sbyte[])(object) _temp.ToArray(), _buffer, _temp.Position);
             _temp.SetLength(0);
         }
         
@@ -78,7 +80,7 @@ namespace Core.GeoEngine
                 }
 
                 // Get layers count and shift to last layer data (first from bottom).
-                byte layers = (byte) _buffer[index++];
+                sbyte layers = _buffer[index++];
 
                 // Loop though all cell layers, find closest layer to given worldZ.
                 int limit = int.MaxValue;
@@ -121,7 +123,7 @@ namespace Core.GeoEngine
             }
 		
             // Get layers count and shift to last layer data (first from bottom).
-            byte layers = (byte) _buffer[index++];
+            sbyte layers = _buffer[index++];
             index += (layers - 1) * 3;
 		
             // Loop though all layers, find first layer above worldZ.
@@ -155,7 +157,7 @@ namespace Core.GeoEngine
             }
 		
             // Get layers count and shift to first layer data (first from top).
-            byte layers = (byte) _buffer[index++];
+            sbyte layers = _buffer[index++];
 		
             // Loop though all layers, find first layer below worldZ.
             while (layers-- > 0)

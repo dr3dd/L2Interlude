@@ -212,6 +212,7 @@ namespace Core.GeoEngine
             }
             // Get nswe flag.
             int nswe = GetNsweNearest(gox, goy, goz);
+            int nswe2 = GetNsweNearest(gtx, gty, goz);
 		
             // Get delta coordinates, slope of line and direction data.
             int dx = targetX - originX;
