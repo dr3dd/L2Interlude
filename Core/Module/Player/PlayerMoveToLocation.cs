@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Core.GeoEngine;
 using Core.Module.CharacterData;
 using Core.NetworkPacket.ServerPacket;
@@ -34,10 +35,13 @@ namespace Core.Module.Player
                 return;
             }
 
-            var loc = _geoEngine.GetValidLocation(originX, originY, originZ, targetX, targetY, targetZ);
-
-            _playerInstance.PlayerDesire().AddDesire(Desire.MoveToDesire, new Location(loc.GetX(), loc.GetY(), loc.GetZ()));
-
+            //var loc = _geoEngine.GetValidLocation(originX, originY, originZ, targetX, targetY, targetZ);
+            var d =_geoEngine.FindPath(originX, originY, originZ, targetX, targetY, targetZ);
+            foreach (var path in d)
+            {
+                _playerInstance.PlayerDesire().AddDesire(Desire.MoveToDesire, new Location(path.GetX(), path.GetY(), path.GetZ()));
+                Thread.Sleep(500);
+            }
         }
         
 

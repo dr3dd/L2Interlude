@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.MemoryMappedFiles;
+using System.Linq;
+using Core.GeoEngine.PathFinding;
 using Core.Module.CharacterData;
 using Core.Module.WorldData;
 using Helpers;
@@ -13,6 +16,8 @@ namespace Core.GeoEngine
         private readonly string _basePath;
         protected byte[] _buffer;
         private readonly ABlock[,] _blocks;
+        // Pre-allocated buffers.
+        private BufferHolder[] _buffers;
         public GeoEngineInit()
         {
             _basePath = Initializer.Config().ServerConfig.StaticData;
@@ -50,6 +55,27 @@ namespace Core.GeoEngine
             }
             LoggerManager.Info("GeoEngine: Loaded " + loaded + " GeoData files.");
             BlockMultilayer.Release();
+            
+            String[] array = "500x10;1000x10;3000x5;5000x3;10000x3".Split(";");
+            _buffers = new BufferHolder[array.Length];
+		
+            int count = 0;
+            for (int i = 0; i < array.Length; i++)
+            {
+	            String buf = array[i];
+	            String[] args = buf.Split("x");
+			
+	            try
+	            {
+		            int size = int.Parse(args[1]);
+		            count += size;
+		            _buffers[i] = new BufferHolder(int.Parse(args[0]), size);
+	            }
+	            catch (Exception e)
+	            {
+		            //LOGGER.warning("Could not load buffer setting:" + buf + ". " + e);
+	            }
+            }
         }
 
         private bool LoadGeoBlocks(int regionX, int regionY, string geoFileName)
@@ -190,6 +216,109 @@ namespace Core.GeoEngine
         public static int GetWorldY(int geoY)
         {
             return (geoY << 4) + World.WorldYMin + 8;
+        }
+
+        public LinkedList<Location> FindPath(int ox, int oy, int oz, int tx, int ty, int tz)
+        {
+	        // Get origin and check existing geo coords.
+	        int gox = GetGeoX(ox);
+	        int goy = GetGeoY(oy);
+	        if (!HasGeoPos(gox, goy))
+	        {
+		        return new LinkedList<Location>();
+	        }
+		
+	        int goz = GetHeightNearest(gox, goy, oz);
+		
+	        // Get target and check existing geo coords.
+	        int gtx = GetGeoX(tx);
+	        int gty = GetGeoY(ty);
+	        if (!HasGeoPos(gtx, gty))
+	        {
+		        return new LinkedList<Location>();
+	        }
+		
+	        int gtz = GetHeightNearest(gtx, gty, tz);
+		
+	        // Prepare buffer for pathfinding calculations.
+	        NodeBuffer buffer = GetBuffer(300 + (10 * (Math.Abs(gox - gtx) + Math.Abs(goy - gty) + Math.Abs(goz - gtz))));
+	        if (buffer == null)
+	        {
+		        return new LinkedList<Location>();
+	        }
+		
+	        // Find path.
+	        LinkedList<Location> path = null;
+	        try
+	        {
+		        path = buffer.FindPath(gox, goy, goz, gtx, gty, gtz);
+		        if (!path.Any())
+		        {
+			        return new LinkedList<Location>();
+		        }
+	        }
+	        catch (Exception e)
+	        {
+		        return new LinkedList<Location>();
+	        }
+	        finally
+	        {
+		        buffer.Free();
+	        }
+		
+	        // Check path.
+	        if (path.Count < 3)
+	        {
+		        return path;
+	        }
+	        return path;
+        }
+        
+        private class BufferHolder
+        {
+	        public int _size;
+	        public List<NodeBuffer> _buffer;
+		
+	        public BufferHolder(int size, int count)
+	        {
+		        _size = size;
+		        _buffer = new List<NodeBuffer>(count);
+			
+		        for (int i = 0; i < count; i++)
+		        {
+			        _buffer.Add(new NodeBuffer(size));
+		        }
+	        }
+        }
+        
+        private NodeBuffer GetBuffer(int size)
+        {
+	        NodeBuffer current = null;
+	        foreach (BufferHolder holder in _buffers)
+	        {
+		        // Find proper size of buffer.
+		        if (holder._size < size)
+		        {
+			        continue;
+		        }
+			
+		        // Find unlocked NodeBuffer.
+		        foreach (NodeBuffer buffer in holder._buffer)
+		        {
+			        if (!buffer.IsLocked())
+			        {
+				        continue;
+			        }
+				
+			        return buffer;
+		        }
+			
+		        // NodeBuffer not found, allocate temporary buffer.
+		        current = new NodeBuffer(holder._size);
+		        current.IsLocked();
+	        }
+		
+	        return current;
         }
 
         public bool CanMoveToTarget(int originX, int originY, int originZ, int targetX, int targetY, int targetZ)

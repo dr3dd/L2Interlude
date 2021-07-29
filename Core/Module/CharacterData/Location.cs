@@ -61,12 +61,37 @@
         {
             _heading = head;
         }
+        
+        public Location Clone()
+        {
+            return new (_x, _y, _z);
+        }
 
         public void SetXYZ(int mXDestination, int mYDestination, int mZDestination)
         {
             _x = mXDestination;
             _y = mYDestination;
             _z = mZDestination;
+        }
+
+        protected void Clean()
+        {
+            _z = 0;
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (obj is Location)
+            {
+                Location loc = (Location) obj;
+                return (GetX() == loc.GetX()) && (GetY() == loc.GetY()) && (GetZ() == loc.GetZ()) && (GetHeading() == loc.GetHeading());
+            }
+            return false;
+        }
+        
+        public override string ToString()
+        {
+            return "[" + GetType().Name + "] X: " + _x + " Y: " + _y + " Z: " + _z + " Heading: " + _heading;
         }
     }
 }
