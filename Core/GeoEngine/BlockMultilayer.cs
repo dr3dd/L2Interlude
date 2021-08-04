@@ -54,7 +54,9 @@ namespace Core.GeoEngine
             // Get cell index.
             int index = GetIndexNearest(geoX, geoY, worldZ);
             // Get height.
-            return (short) ((_buffer[index + 1] & 0x00FF) | (_buffer[index + 2] << 8));
+            var height = (short) ((_buffer[index + 1] & 0x00FF) | (_buffer[index + 2] << 8));
+            var loc = (short) ((_buffer[index + 1] & 0x00FF) | (_buffer[index + 2] << 1));
+            return height;
         }
 
         public override sbyte GetNsweNearest(int geoX, int geoY, int worldZ)

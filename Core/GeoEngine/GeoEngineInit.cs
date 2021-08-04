@@ -237,6 +237,9 @@ namespace Core.GeoEngine
 	        {
 		        return new LinkedList<Location>();
 	        }
+
+	        var oBlock = GetBlock(gox, goy);
+	        var tBlock = GetBlock(gtx, gty);
 		
 	        int gtz = GetHeightNearest(gtx, gty, tz);
 		

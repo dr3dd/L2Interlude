@@ -4,6 +4,7 @@ using Core.GeoEngine;
 using Core.Module.CharacterData;
 using Core.NetworkPacket.ServerPacket;
 using L2Logger;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player
 {
@@ -14,7 +15,7 @@ namespace Core.Module.Player
         public PlayerMoveToLocation(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
-            _geoEngine = Initializer.GeoEngineInit();
+            //_geoEngine = playerInstance.ServiceProvider.GetRequiredService<GeoEngineInit>();
         }
         
         public async Task MoveToLocationAsync(int targetX, int targetY, int targetZ, int originX, int originY, int originZ)
@@ -37,11 +38,7 @@ namespace Core.Module.Player
 
             //var loc = _geoEngine.GetValidLocation(originX, originY, originZ, targetX, targetY, targetZ);
             var d =_geoEngine.FindPath(originX, originY, originZ, targetX, targetY, targetZ);
-            foreach (var path in d)
-            {
-                _playerInstance.PlayerDesire().AddDesire(Desire.MoveToDesire, new Location(path.GetX(), path.GetY(), path.GetZ()));
-                Thread.Sleep(500);
-            }
+            _playerInstance.PlayerDesire().AddDesire(Desire.MoveToDesire, new Location(targetX, targetY, targetZ));
         }
         
 

@@ -11,10 +11,10 @@ namespace Core
     {
         public static void Bind(IServiceCollection services)
         {
+            services.UseGeoEngine();
             services.AddSingleton<NetworkWriter>();
             services.AddTransient<ClientManager>();
             services.AddSingleton<TemplateInit>();
-            services.AddSingleton<GeoEngineInit>();
             services.AddSingleton<BasicStatBonusInit>();
             services.AddSingleton<GameTimeController>();
             services.AddSingleton<NpcDataInit>();

@@ -1,6 +1,4 @@
 using Core.Module.CharacterData;
-using Core.Module.CharacterData.Template;
-using Core.Module.Player;
 using Xunit;
 
 namespace Test
