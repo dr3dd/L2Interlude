@@ -60,11 +60,6 @@ namespace Core.Module.CharacterData.Template
             return 1;
         }
 
-        public int GetBaseDefend()
-        {
-            return 1;
-        }
-
         public int GetBaseMagicAttack()
         {
             return 1;
@@ -78,6 +73,76 @@ namespace Core.Module.CharacterData.Template
         public int GetBaseAttackRange()
         {
             return 1;
+        }
+        
+        public int GetBaseDefendUpperBody()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetBaseDefendLowerBody()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetBaseDefendPitch()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetBaseDefendBoots()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetBaseDefendGloves()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetBaseDefendUnderwear()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetBaseDefendMantle()
+        {
+            throw new System.NotImplementedException();
+        }
+        
+        public int GetBaseGroundHighSpeed()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetBaseGroundLowSpeed()
+        {
+            throw new System.NotImplementedException();
+        }
+        
+        public int GetBaseMagicDefendLeftEarring()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetBaseMagicDefendRightEarring()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetBaseMagicDefendLeftRing()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetBaseMagicDefendRightRing()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetBaseMagicDefendNecklace()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

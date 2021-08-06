@@ -16,10 +16,22 @@
         int GetBasePhysicalAttack();
         int GetBaseAttackSpeed();
         int GetBaseCritical();
-        int GetBaseDefend();
+        int GetBaseDefendUpperBody();
+        int GetBaseDefendLowerBody();
+        int GetBaseDefendPitch();
+        int GetBaseDefendBoots();
+        int GetBaseDefendGloves();
+        int GetBaseDefendUnderwear();
+        int GetBaseDefendMantle();
         int GetBaseMagicAttack();
-        int GetBaseMagicDefend();
+        int GetBaseMagicDefendLeftEarring();
+        int GetBaseMagicDefendRightEarring();
+        int GetBaseMagicDefendLeftRing();
+        int GetBaseMagicDefendRightRing();
+        int GetBaseMagicDefendNecklace();
         int GetBaseAttackRange();
+        int GetBaseGroundHighSpeed();
+        int GetBaseGroundLowSpeed();
         
         public Location GetInitialStartPoint();
     }

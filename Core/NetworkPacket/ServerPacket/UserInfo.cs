@@ -1,4 +1,5 @@
-﻿using Core.Module.CharacterData;
+﻿using System;
+using Core.Module.CharacterData;
 using Core.Module.CharacterData.Template;
 using Core.Module.Player;
 
@@ -30,9 +31,9 @@ namespace Core.NetworkPacket.ServerPacket
             //_moveMultiplier = playerInstance.Stat.GetMovementSpeedMultiplier();
             //_runSpd = Convert.ToInt32(Math.Round(playerInstance.Stat.GetRunSpeed() / _moveMultiplier));
             //_walkSpd = Convert.ToInt32(Math.Round(playerInstance.Stat.GetWalkSpeed() / _moveMultiplier));
-            _moveMultiplier = 1;
-            _runSpd = 125;
-            _walkSpd = 80;
+            _moveMultiplier = _playerInstance.PlayerCombat().GetMovementSpeedMultiplier();
+            _runSpd = (int) (Math.Round(_playerInstance.PlayerCombat().GetGroundHighSpeed() / _moveMultiplier));
+            _walkSpd = (int) (Math.Round(_playerInstance.PlayerCombat().GetGroundLowSpeed() / _moveMultiplier));
             _flyRunSpd = 0;
             _flyWalkSpd = 0;
             _relation = 0;
@@ -116,18 +117,18 @@ namespace Core.NetworkPacket.ServerPacket
             WriteShort(0x00);    
             // end of c6 new h's
             
-            WriteInt(_characterInfo.GetPAtk()); //_playerInstance.Stat.GetPAtk()
-            WriteInt(_characterInfo.GetPAtkSpd()); //_playerInstance.Stat.GetPAtkSpd()
-            WriteInt(_characterInfo.GetPDef()); //_playerInstance.Stat.GetPDef()
-            WriteInt(1); //_playerInstance.Stat.GetEvasionRate()
-            WriteInt(1); //_playerInstance.Stat.GetAccuracy()
-            WriteInt(1); //_playerInstance.Stat.GetCriticalHit()
-            WriteInt(_characterInfo.GetMAtk()); //_playerInstance.Stat.GetMAtk()
+            WriteInt(_playerInstance.PlayerCombat().GetPhysicalAttack()); //_playerInstance.Stat.GetPAtk()
+            WriteInt(_playerInstance.PlayerCombat().GetPhysicalAttackSpeed()); //_playerInstance.Stat.GetPAtkSpd()
+            WriteInt(_playerInstance.PlayerCombat().GetPhysicalDefence()); //_playerInstance.Stat.GetPDef()
+            WriteInt(_playerInstance.PlayerCombat().GetEvasion()); //_playerInstance.Stat.GetEvasionRate()
+            WriteInt(_playerInstance.PlayerCombat().GetAccuracy()); //_playerInstance.Stat.GetAccuracy()
+            WriteInt(_playerInstance.PlayerCombat().GetCriticalRate()); //_playerInstance.Stat.GetCriticalHit()
+            WriteInt(_playerInstance.PlayerCombat().GetMagicalAttack()); //_playerInstance.Stat.GetMAtk()
 		
-            WriteInt(_characterInfo.GetMAtkSpd()); //_playerInstance.Stat.GetMAtkSpd()
-            WriteInt(_characterInfo.GetPAtkSpd()); //_playerInstance.Stat.GetPAtkSpd()
+            WriteInt(_playerInstance.PlayerCombat().GetCastSpeed()); //_playerInstance.Stat.GetMAtkSpd()
+            WriteInt(_playerInstance.PlayerCombat().GetPhysicalAttackSpeed()); //_playerInstance.Stat.GetPAtkSpd()
 		
-            WriteInt(_characterInfo.GetMDef()); //_playerInstance.Stat.GetMDef()
+            WriteInt(_playerInstance.PlayerCombat().GetMagicalDefence()); //_playerInstance.Stat.GetMDef()
 		
             WriteInt(0); // getPvpFlag 0-non-pvp 1-pvp = violett name
             WriteInt(0); //getKarma
@@ -140,7 +141,7 @@ namespace Core.NetworkPacket.ServerPacket
             WriteInt(0);
             WriteInt(_flyRunSpd);
             WriteInt(_flyWalkSpd);
-            WriteDouble(1.09); // _playerInstance.Stat.GetMovementSpeedMultiplier() run speed multiplier
+            WriteDouble(_moveMultiplier); // _playerInstance.Stat.GetMovementSpeedMultiplier() run speed multiplier
             
             //this is very mandatory option. To avoid player paralyzed when trying to physical attack
             WriteDouble(1.21); //_playerInstance.Stat.GetAttackSpeedMultiplier() attack speed multiplier 

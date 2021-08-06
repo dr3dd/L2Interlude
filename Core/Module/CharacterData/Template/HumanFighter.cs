@@ -10,12 +10,31 @@ namespace Core.Module.CharacterData.Template
         private const int BaseCritical = 4;
         private const string BaseAttackType = "fist";
         private const int BaseAttackSpeed = 300;
-        private const int BaseDefend = 80; //{Upper body; Lower body; Pitch; Boots; Gloves; Underwear; Mantle} {31;18;12;7;8;3;1}
+        //private const int BaseDefend = 80; //{Upper body; Lower body; Pitch; Boots; Gloves; Underwear; Mantle} {31;18;12;7;8;3;1}
+        private const int BaseDefendUpperBody = 31;
+        private const int BaseDefendLowerBody = 18;
+        private const int BaseDefendPitch = 12;
+        private const int BaseDefendBoots = 7;
+        private const int BaseDefendGloves = 8;
+        private const int BaseDefendUnderwear = 3;
+        private const int BaseDefendMantle = 1;
+
         private const int BaseMagicAttack = 6;
-        private const int BaseMagicDefend = 41; //{The earring which rises; Left earring; The ring which rises; Left ring; Neck} {9;9;5;5;13}
+        //private const int BaseMagicDefend = 41; //{The earring which rises; Left earring; The ring which rises; Left ring; Neck} {9;9;5;5;13}
+        private const int BaseMagicDefendLeftEarring = 9;
+        private const int BaseMagicDefendRightEarring = 9;
+        private const int BaseMagicDefendLeftRing = 5;
+        private const int BaseMagicDefendRightRing = 5;
+        private const int BaseMagicDefendNecklace = 13;
+
         private const int BaseAttackRange = 20;
         private const int BaseDamageRange = 0;
         private const int BaseRandDam = 10;
+
+        private const int BaseGroundLowSpeed = 80;
+        private const int BaseGroundHighSpeed = 115;
+        private const int BaseUnderWaterLowSpeed = 50;
+        private const int BaseUnderWaterHighSpeed = 50;
 
         private const short Int = 21;
         private const short Str = 40;
@@ -106,10 +125,64 @@ namespace Core.Module.CharacterData.Template
         {
             return BaseCritical;
         }
-
-        public int GetBaseDefend()
+        public int GetBaseDefendUpperBody()
         {
-            return BaseDefend;
+            return BaseDefendUpperBody;
+        }
+
+        public int GetBaseDefendLowerBody()
+        {
+            return BaseDefendLowerBody;
+        }
+
+        public int GetBaseDefendPitch()
+        {
+            return BaseDefendPitch;
+        }
+
+        public int GetBaseDefendBoots()
+        {
+            return BaseDefendBoots;
+        }
+
+        public int GetBaseDefendGloves()
+        {
+            return BaseDefendGloves;
+        }
+
+        public int GetBaseDefendUnderwear()
+        {
+            return BaseDefendUnderwear;
+        }
+
+        public int GetBaseDefendMantle()
+        {
+            return BaseDefendMantle;
+        }
+
+        public int GetBaseMagicDefendLeftEarring()
+        {
+            return BaseMagicDefendLeftEarring;
+        }
+
+        public int GetBaseMagicDefendRightEarring()
+        {
+            return BaseMagicDefendRightEarring;
+        }
+
+        public int GetBaseMagicDefendLeftRing()
+        {
+            return BaseMagicDefendLeftRing;
+        }
+
+        public int GetBaseMagicDefendRightRing()
+        {
+            return BaseMagicDefendRightRing;
+        }
+
+        public int GetBaseMagicDefendNecklace()
+        {
+            return BaseMagicDefendNecklace;
         }
 
         public int GetBaseMagicAttack()
@@ -117,14 +190,19 @@ namespace Core.Module.CharacterData.Template
             return BaseMagicAttack;
         }
 
-        public int GetBaseMagicDefend()
-        {
-            return BaseMagicDefend;
-        }
-
         public int GetBaseAttackRange()
         {
             return BaseAttackRange;
+        }
+
+        public int GetBaseGroundHighSpeed()
+        {
+            return BaseGroundHighSpeed;
+        }
+
+        public int GetBaseGroundLowSpeed()
+        {
+            return BaseGroundLowSpeed;
         }
     }
 }

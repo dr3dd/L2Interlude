@@ -10,6 +10,7 @@ namespace Core.Module.CharacterData.Template
         private readonly IDictionary<int, short> _conBonus;
         private readonly IDictionary<int, short> _menBonus;
         private readonly IDictionary<int, short> _dexBonus;
+        private readonly IDictionary<int, short> _witBonus;
 
         public BasicStatBonusInit()
         {
@@ -19,14 +20,15 @@ namespace Core.Module.CharacterData.Template
             _conBonus = new Dictionary<int, short>();
             _menBonus = new Dictionary<int, short>();
             _dexBonus = new Dictionary<int, short>();
+            _witBonus = new Dictionary<int, short>();
             LevelBonusInit();
             StrBonusInit();
             IntBonusInit();
             ConBonusInit();
             MenBonusInit();
             DexBonusInit();
+            WitBonusInit();
         }
-        
         private void LevelBonusInit()
         {
             _levelBonus.Add(1, 0.9f);
@@ -59,6 +61,18 @@ namespace Core.Module.CharacterData.Template
 
         private void IntBonusInit()
         {
+            _intBonus.Add(20, -20);
+            _intBonus.Add(21, -19);
+            _intBonus.Add(22, -17);
+            _intBonus.Add(23, -15);
+            _intBonus.Add(24, -14);
+            _intBonus.Add(25, -12);
+            _intBonus.Add(26, -10);
+            _intBonus.Add(27, -8);
+            _intBonus.Add(28, -6);
+            _intBonus.Add(29, -5);
+            _intBonus.Add(30, -3);
+            _intBonus.Add(31, -1);
             _intBonus.Add(32, 1);
             _intBonus.Add(33, 3);
             _intBonus.Add(34, 5);
@@ -156,6 +170,29 @@ namespace Core.Module.CharacterData.Template
             _dexBonus.Add(44, 25);
             _dexBonus.Add(45, 26);
         }
+        
+        private void WitBonusInit()
+        {
+            _witBonus.Add(8, -44);
+            _witBonus.Add(9, -42);
+            _witBonus.Add(10, -39);
+            _witBonus.Add(11, -36);
+            _witBonus.Add(12, -32);
+            _witBonus.Add(13, -29);
+            _witBonus.Add(14, -25);
+            _witBonus.Add(15, -22);
+            _witBonus.Add(16, -18);
+            _witBonus.Add(17, -14);
+            _witBonus.Add(18, -9);
+            _witBonus.Add(19, -5);
+            _witBonus.Add(20, -0);
+            _witBonus.Add(21, 5);
+            _witBonus.Add(22, 10);
+            _witBonus.Add(23, 16);
+            _witBonus.Add(24, 22);
+            _witBonus.Add(25, 28);
+            _witBonus.Add(26, 34);
+        }
 
         public float GetLevelBonus(byte level) => _levelBonus[level];
         public short GetStrBonus(int str) => _strBonus[str];
@@ -163,5 +200,6 @@ namespace Core.Module.CharacterData.Template
         public short GetConBonus(int con) => _conBonus[con];
         public short GetMenBonus(int men) => _menBonus[men];
         public short GetDexBonus(int dex) => _dexBonus[dex];
+        public short GetWitBonus(int wit) => _witBonus[wit];
     }
 }
