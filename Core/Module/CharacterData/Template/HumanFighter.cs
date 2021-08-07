@@ -36,12 +36,12 @@ namespace Core.Module.CharacterData.Template
         private const int BaseUnderWaterLowSpeed = 50;
         private const int BaseUnderWaterHighSpeed = 50;
 
-        private const short Int = 21;
-        private const short Str = 40;
-        private const short Con = 43;
-        private const short Men = 25;
-        private const short Dex = 30;
-        private const short Wit = 11;
+        private const byte Int = 21;
+        private const byte Str = 40;
+        private const byte Con = 43;
+        private const byte Men = 25;
+        private const byte Dex = 30;
+        private const byte Wit = 11;
 
         private IList<string> _initialEquipment;
         private IList<Location> _initialStartPoint;
@@ -75,27 +75,27 @@ namespace Core.Module.CharacterData.Template
             };
         }
 
-        public int GetInt()
+        public byte GetInt()
         {
             return Int;
         }
-        public int GetStr()
+        public byte GetStr()
         {
             return Str;
         }
-        public int GetCon()
+        public byte GetCon()
         {
             return Con;
         }
-        public int GetMen()
+        public byte GetMen()
         {
             return Men;
         }
-        public int GetDex()
+        public byte GetDex()
         {
             return Dex;
         }
-        public int GetWit()
+        public byte GetWit()
         {
             return Wit;
         }

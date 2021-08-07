@@ -54,7 +54,7 @@ namespace Core
             LoggerManager.Info("----Json Teleports----");
             LoggerManager.Info("----Players----");
             ServiceProvider.GetService<TemplateInit>();
-            ServiceProvider.GetService<BasicStatBonusInit>();
+            ServiceProvider.GetRequiredService<BasicStatBonusInit>().Run();
             LoggerManager.Info("----Bonus Stats----");
             LoggerManager.Info("----Items----");
             //ServiceProvider.GetService<ItemInit>();

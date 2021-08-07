@@ -4,39 +4,39 @@ namespace Core.Module.CharacterData.Template
 {
     public class HumanMagician : Human
     {
-        private const int Int = 41;
-        private const int Str = 22;
-        private const int Con = 27;
-        private const int Men = 39;
-        private const int Dex = 21;
-        private const int Wit = 20;
+        private const byte Int = 41;
+        private const byte Str = 22;
+        private const byte Con = 27;
+        private const byte Men = 39;
+        private const byte Dex = 21;
+        private const byte Wit = 20;
         
-        public int GetInt()
+        public byte GetInt()
         {
             return Int;
         }
 
-        public int GetStr()
+        public byte GetStr()
         {
             return Str;
         }
 
-        public int GetCon()
+        public byte GetCon()
         {
             return Con;
         }
 
-        public int GetMen()
+        public byte GetMen()
         {
             return Men;
         }
 
-        public int GetDex()
+        public byte GetDex()
         {
             return Dex;
         }
 
-        public int GetWit()
+        public byte GetWit()
         {
             return Wit;
         }
