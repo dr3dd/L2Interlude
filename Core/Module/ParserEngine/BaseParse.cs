@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using Config;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.ParserEngine
 {
@@ -7,9 +10,9 @@ namespace Core.Module.ParserEngine
         private readonly string _basePath;
         public abstract void Run();
 
-        protected BaseParse()
+        protected BaseParse(IServiceProvider provider)
         {
-            _basePath = Initializer.Config().ServerConfig.StaticData;
+            _basePath = provider.GetRequiredService<GameConfig>().ServerConfig.StaticData;
         }
 
         protected string GetStaticData() => _basePath;

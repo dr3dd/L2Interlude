@@ -13,7 +13,7 @@ namespace Core.Module.AreaData
         private readonly IDictionary<string, Type> _areaCollection;
         private readonly IList<BaseArea> _areas;
         
-        public AreaDataInit()
+        public AreaDataInit(IServiceProvider provider) : base(provider)
         {
             _defaultSettings = new Dictionary<string, string>();
             _areaCollection = new Dictionary<string, Type> {{"water", typeof(WaterArea)}};

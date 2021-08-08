@@ -10,7 +10,7 @@ namespace Core.Module.CategoryData
         private readonly IParse _parse;
         private readonly IDictionary<string, byte> _categoryPchCollection;
         
-        public CategoryPchInit()
+        public CategoryPchInit(IServiceProvider provider) : base(provider)
         {
             _categoryPchCollection = new Dictionary<string, byte>();
             _parse = new ParseCategoryPch();

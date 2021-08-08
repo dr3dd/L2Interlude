@@ -13,6 +13,12 @@ namespace Core.Module.ParserEngine
         private bool _isMenBonusBegin;
         private bool _isDexBonusBegin;
         private bool _isWitBonusBegin;
+        
+        private bool _isCpTableBegin;
+        private bool _isHpTableBegin;
+        private bool _isMpTableBegin;
+        private string _className;
+        
         private readonly IDictionary<byte, float> _levelBonus;
         private readonly IDictionary<byte, short> _strBonus;
         private readonly IDictionary<byte, short> _intBonus;
@@ -20,6 +26,9 @@ namespace Core.Module.ParserEngine
         private readonly IDictionary<byte, short> _menBonus;
         private readonly IDictionary<byte, short> _dexBonus;
         private readonly IDictionary<byte, short> _witBonus;
+        private readonly IDictionary<byte, float> _cpTable;
+        private readonly IDictionary<byte, float> _hpTable;
+        private readonly IDictionary<byte, float> _mpTable;
         private readonly IResult _result;
 
         public ParsePcParameter()
@@ -32,6 +41,9 @@ namespace Core.Module.ParserEngine
             _menBonus = new Dictionary<byte, short>();
             _dexBonus = new Dictionary<byte, short>();
             _witBonus = new Dictionary<byte, short>();
+            _cpTable = new Dictionary<byte, float>();
+            _hpTable = new Dictionary<byte, float>();
+            _mpTable = new Dictionary<byte, float>();
         }
         public void ParseLine(string line)
         {
@@ -86,6 +98,48 @@ namespace Core.Module.ParserEngine
                     _isWitBonusBegin = false;
                     _result.AddItem("witBonus", _witBonus);
                     return;
+            }
+            
+            //Init CP
+            if (line.EndsWith("cp_table_begin"))
+            {
+                _isCpTableBegin = true;
+                _className = line.Replace("_cp_table_begin", "");
+                return;
+            }
+            if (line.EndsWith("cp_table_end"))
+            {
+                _isCpTableBegin = false;
+                _result.AddItem(_className + "_cp", new Dictionary<byte, float>(_cpTable));
+                _cpTable.Clear();
+            }
+
+            //Init HP
+            if (line.EndsWith("hp_table_begin"))
+            {
+                _isHpTableBegin = true;
+                _className = line.Replace("_hp_table_begin", "");
+                return;
+            }
+            if (line.EndsWith("hp_table_end"))
+            {
+                _isHpTableBegin = false;
+                _result.AddItem(_className + "_hp", new Dictionary<byte, float>(_hpTable));
+                _hpTable.Clear();
+            }
+            
+            //Init MP
+            if (line.EndsWith("mp_table_begin"))
+            {
+                _isMpTableBegin = true;
+                _className = line.Replace("_mp_table_begin", "");
+                return;
+            }
+            if (line.EndsWith("mp_table_end"))
+            {
+                _isMpTableBegin = false;
+                _result.AddItem(_className + "_mp", new Dictionary<byte, float>(_mpTable));
+                _mpTable.Clear();
             }
             PrepareData(line);
         }
@@ -147,6 +201,33 @@ namespace Core.Module.ParserEngine
                 var parseKey = parseRow[0][10..].Trim();
                 var parseValue = parseRow[1].Trim();
                 _witBonus.Add(Convert.ToByte(parseKey), Convert.ToInt16(parseValue));
+            }
+            
+            if (_isCpTableBegin)
+            {
+                var parseRow = line.Replace("\t", "").Split("=");
+                var parseKey = parseRow[0][4..].Trim();
+                var parseValue = parseRow[1].Trim();
+                _cpTable.Add(Convert.ToByte(parseKey),
+                    Convert.ToSingle(parseValue, CultureInfo.InvariantCulture.NumberFormat));
+            }
+
+            if (_isHpTableBegin)
+            {
+                var parseRow = line.Replace("\t", "").Split("=");
+                var parseKey = parseRow[0][4..].Trim();
+                var parseValue = parseRow[1].Trim();
+                _hpTable.Add(Convert.ToByte(parseKey),
+                    Convert.ToSingle(parseValue, CultureInfo.InvariantCulture.NumberFormat));
+            }
+            
+            if (_isMpTableBegin)
+            {
+                var parseRow = line.Replace("\t", "").Split("=");
+                var parseKey = parseRow[0][4..].Trim();
+                var parseValue = parseRow[1].Trim();
+                _mpTable.Add(Convert.ToByte(parseKey),
+                    Convert.ToSingle(parseValue, CultureInfo.InvariantCulture.NumberFormat));
             }
         }
 

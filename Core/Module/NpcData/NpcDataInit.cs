@@ -10,7 +10,7 @@ namespace Core.Module.NpcData
         private readonly IParse _parse;
         private readonly IDictionary<int, NpcTemplateInit> _npcDataCollection;
 
-        public NpcDataInit()
+        public NpcDataInit(IServiceProvider provider) : base(provider)
         {
             _npcDataCollection = new Dictionary<int, NpcTemplateInit>();
             _parse = new ParseNpcData();

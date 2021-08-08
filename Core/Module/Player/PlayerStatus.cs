@@ -6,7 +6,7 @@ namespace Core.Module.Player
     public class PlayerStatus
     {
         private readonly PlayerInstance _playerInstance;
-        private readonly BasicStatBonusInit _statBonusInit;
+        private readonly PcParameterInit _statBonusInit;
         public float CurrentCp { get; set; }
         public float CurrentHp { get; set; }
         public float CurrentMp { get; set; }
@@ -14,7 +14,7 @@ namespace Core.Module.Player
         public PlayerStatus(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
-            _statBonusInit = playerInstance.ServiceProvider.GetRequiredService<BasicStatBonusInit>();
+            _statBonusInit = playerInstance.ServiceProvider.GetRequiredService<PcParameterInit>();
         }
 
         /// <summary>

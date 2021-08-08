@@ -5,7 +5,7 @@ using L2Logger;
 
 namespace Core.Module.CharacterData.Template
 {
-    public class BasicStatBonusInit : BaseParse
+    public class PcParameterInit : BaseParse
     {
         private IDictionary<byte, float> _levelBonus;
         private IDictionary<byte, short> _strBonus;
@@ -16,8 +16,9 @@ namespace Core.Module.CharacterData.Template
         private IDictionary<byte, short> _witBonus;
         
         private readonly IParse _parse;
+        private IResult _result;
 
-        public BasicStatBonusInit()
+        public PcParameterInit(IServiceProvider provider) : base(provider)
         {
             _parse = new ParsePcParameter();
         }
@@ -34,8 +35,8 @@ namespace Core.Module.CharacterData.Template
             try
             {
                 LoggerManager.Info("PC_parameter start...");
-                IResult result = Parse("PC_parameter.txt", _parse);
-                InitData(result);
+                _result = Parse("PC_parameter.txt", _parse);
+                InitData();
             }
             catch (Exception ex)
             {
@@ -43,9 +44,9 @@ namespace Core.Module.CharacterData.Template
             }
         }
 
-        private void InitData(IResult result)
+        private void InitData()
         {
-            var data = result.GetResult();
+            var data = _result.GetResult();
             if (data.ContainsKey("levelBonus"))
             {
                 _levelBonus = (IDictionary<byte, float>) data["levelBonus"];
@@ -81,5 +82,7 @@ namespace Core.Module.CharacterData.Template
                 _witBonus = (IDictionary<byte, short>) data["witBonus"];
             }
         }
+
+        public IDictionary<string, object> GetResult() => _result.GetResult();
     }
 }

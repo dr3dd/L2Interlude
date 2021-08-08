@@ -8,7 +8,6 @@ namespace Test
         [Fact]
         public void MoveToLocationTest()
         {
-            //var test1 = serviceProvider.GetService<GameTimeController>();
             var playerInstance = GetPlayerInstance();
             playerInstance.Location = new Location(-71453, 258305, -3104);
             playerInstance.PlayerMovement().MoveToLocation(-71953, 258905, -3154, 0);

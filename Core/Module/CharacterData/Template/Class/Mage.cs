@@ -3,22 +3,28 @@
     public class Mage : HumanMagician, ITemplateHandler
     {
         private const byte ClassId = 10;
+
+        public Mage(PcParameterInit pcParameterInit)
+        {
+            
+        }
+        
         public byte GetClassId()
         {
             return ClassId;
         }
 
-        public float GetCpBegin(int level)
+        public float GetCpBegin(byte level)
         {
             throw new System.NotImplementedException();
         }
 
-        public float GetHpBegin(int level)
+        public float GetHpBegin(byte level)
         {
             throw new System.NotImplementedException();
         }
 
-        public float GetMpBegin(int level)
+        public float GetMpBegin(byte level)
         {
             throw new System.NotImplementedException();
         }

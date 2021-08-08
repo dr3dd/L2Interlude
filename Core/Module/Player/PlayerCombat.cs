@@ -7,12 +7,12 @@ namespace Core.Module.Player
     public class PlayerCombat
     {
         private readonly ITemplateHandler _templateHandler;
-        private readonly BasicStatBonusInit _statBonusInit;
+        private readonly PcParameterInit _statBonusInit;
         private readonly byte _level;
         public PlayerCombat(PlayerInstance playerInstance)
         {
             _templateHandler = playerInstance.TemplateHandler();
-            _statBonusInit = playerInstance.ServiceProvider.GetRequiredService<BasicStatBonusInit>();
+            _statBonusInit = playerInstance.ServiceProvider.GetRequiredService<PcParameterInit>();
             _level = playerInstance.PlayerStatus().Level;
         }
 

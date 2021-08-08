@@ -10,9 +10,9 @@
         byte GetMen();
         byte GetDex();
         byte GetWit();
-        float GetCpBegin(int level);
-        float GetHpBegin(int level);
-        float GetMpBegin(int level);
+        float GetCpBegin(byte level);
+        float GetHpBegin(byte level);
+        float GetMpBegin(byte level);
         int GetBasePhysicalAttack();
         int GetBaseAttackSpeed();
         int GetBaseCritical();

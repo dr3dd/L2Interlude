@@ -10,7 +10,7 @@ namespace Core.Module.NpcData
         private readonly IParse _parse;
         private IList<NpcMakerBegin> _makerBegins;
 
-        public NpcPosInit()
+        public NpcPosInit(IServiceProvider provider) : base(provider)
         {
             _parse = new ParseNpcPos(new Result());
             _makerBegins = new List<NpcMakerBegin>();

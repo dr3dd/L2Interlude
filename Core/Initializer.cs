@@ -53,8 +53,8 @@ namespace Core
             LoggerManager.Info("----Html Cache----");
             LoggerManager.Info("----Json Teleports----");
             LoggerManager.Info("----Players----");
+            ServiceProvider.GetRequiredService<PcParameterInit>().Run();
             ServiceProvider.GetService<TemplateInit>();
-            ServiceProvider.GetRequiredService<BasicStatBonusInit>().Run();
             LoggerManager.Info("----Bonus Stats----");
             LoggerManager.Info("----Items----");
             //ServiceProvider.GetService<ItemInit>();
