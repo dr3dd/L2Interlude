@@ -4,7 +4,7 @@ namespace Core.Module.ParserEngine
 {
     public interface IResult
     {
-        IDictionary<string, object> GetResult();
-        void AddItem(string name, object value);
+        IDictionary<object, object> GetResult();
+        void AddItem(object name, object value);
     }
 }

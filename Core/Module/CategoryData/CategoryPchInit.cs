@@ -24,7 +24,7 @@ namespace Core.Module.CategoryData
                 IResult result = Parse("category_pch.txt", _parse);
                 foreach (var (key, value) in result.GetResult())
                 {
-                    _categoryPchCollection.Add(key, Convert.ToByte(value));
+                    _categoryPchCollection.Add(key.ToString(), Convert.ToByte(value));
                 }
             }
             catch (Exception ex)

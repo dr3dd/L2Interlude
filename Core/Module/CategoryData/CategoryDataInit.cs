@@ -24,7 +24,7 @@ namespace Core.Module.CategoryData
                 IResult result = Parse("categorydata.txt", _parse);
                 foreach (var (key, value) in result.GetResult())
                 {
-                    _categoryDataCollection.Add(key, (IList<string>) value);
+                    _categoryDataCollection.Add(key.ToString(), (IList<string>) value);
                 }
             }
             catch (Exception ex)

@@ -83,6 +83,6 @@ namespace Core.Module.CharacterData.Template
             }
         }
 
-        public IDictionary<string, object> GetResult() => _result.GetResult();
+        public IDictionary<object, object> GetResult() => _result.GetResult();
     }
 }

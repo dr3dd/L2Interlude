@@ -4,19 +4,19 @@ namespace Core.Module.ParserEngine
 {
     public class Result : IResult
     {
-        private readonly IDictionary<string, object> _items;
+        private readonly IDictionary<object, object> _items;
 
         public Result()
         {
-            _items = new Dictionary<string, object>();
+            _items = new Dictionary<object, object>();
         }
         
-        public IDictionary<string, object> GetResult()
+        public IDictionary<object, object> GetResult()
         {
             return _items;
         }
 
-        public void AddItem(string name, object value)
+        public void AddItem(object name, object value)
         {
             _items.TryAdd(name, value);
         }

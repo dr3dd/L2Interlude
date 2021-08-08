@@ -1,6 +1,7 @@
 ﻿using Core.Controller;
 using Core.GeoEngine;
 using Core.Module.CharacterData.Template;
+using Core.Module.ItemData;
 using Core.Module.NpcData;
 using Microsoft.Extensions.DependencyInjection;
 using Network;
@@ -18,6 +19,7 @@ namespace Core
             services.AddSingleton<PcParameterInit>();
             services.AddSingleton<GameTimeController>();
             services.AddSingleton<NpcDataInit>();
+            services.AddSingleton<ItemDataInit>();
         }
     }
 }

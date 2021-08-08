@@ -3,6 +3,7 @@ using Config;
 using Core.Controller;
 using Core.GeoEngine;
 using Core.Module.CharacterData.Template;
+using Core.Module.ItemData;
 using Core.Module.NpcData;
 using DataBase.Interfaces;
 using L2Logger;
@@ -57,7 +58,7 @@ namespace Core
             ServiceProvider.GetService<TemplateInit>();
             LoggerManager.Info("----Bonus Stats----");
             LoggerManager.Info("----Items----");
-            //ServiceProvider.GetService<ItemInit>();
+            ServiceProvider.GetRequiredService<ItemDataInit>().Run();
            // ServiceProvider.GetService<ItemHandlerInit>();
             //LoggerManager.Info("----Parser XML----");
             //ServiceProvider.GetService<Parser>();
