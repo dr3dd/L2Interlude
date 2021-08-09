@@ -19,6 +19,7 @@ namespace Core
             services.AddSingleton<PcParameterInit>();
             services.AddSingleton<GameTimeController>();
             services.AddSingleton<NpcDataInit>();
+            services.AddSingleton<ItemPchInit>();
             services.AddSingleton<ItemDataInit>();
         }
     }

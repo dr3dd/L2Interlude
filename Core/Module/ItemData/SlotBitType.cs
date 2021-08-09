@@ -1,5 +1,8 @@
-﻿namespace Core.Module.ItemData
+﻿using System;
+
+namespace Core.Module.ItemData
 {
+    [Flags]
     public enum SlotBitType
     {
         None,

@@ -73,13 +73,45 @@ namespace Core.NetworkPacket.ServerPacket
             WriteInt(0); //_playerInstance.PlayerInventory().GetCurrentLoad()
             WriteInt(100); //_playerInstance.Stat.GetMaxLoad()
 
-            WriteInt(20); // 20 no weapon, 40 weapon equipped
+            WriteInt(40); // 20 no weapon, 40 weapon equipped
             
             //inventory
-            for (byte id = 0; id < 17; id++)
+            //for (byte id = 0; id < 17; id++)
+	            WriteInt(0);
+	            WriteInt(0);
+	            WriteInt(0);
+	            WriteInt(0);
+	            WriteInt(0);
+	            WriteInt(0);
+	            WriteInt(0);
+	            WriteInt(2369);
+	            WriteInt(0);
+	            WriteInt(0);
+	            WriteInt(0);
+	            WriteInt(0);
+	            WriteInt(0);
+	            WriteInt(0);
+	            WriteInt(0);
+	            WriteInt(0);
 	            WriteInt(0);
            
-            for (byte id = 0; id < 17; id++)
+            //for (byte id = 0; id < 17; id++)
+	           WriteInt(0);
+	           WriteInt(0);
+	           WriteInt(0);
+	           WriteInt(0);
+	           WriteInt(0);
+	           WriteInt(0);
+	           WriteInt(0);
+	           WriteInt(2369);
+	           WriteInt(0);
+	           WriteInt(0);
+	           WriteInt(0);
+	           WriteInt(0);
+	           WriteInt(0);
+	           WriteInt(0);
+	           WriteInt(0);
+	           WriteInt(0);
 	           WriteInt(0);
            
             // c6 new h's

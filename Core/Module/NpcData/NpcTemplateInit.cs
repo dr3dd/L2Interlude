@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Core.Module.ParserEngine;
 
 namespace Core.Module.NpcData
 {
@@ -101,13 +102,8 @@ namespace Core.Module.NpcData
 
         private string ParseClanList(string setStat)
         {
-            string clanList = RemoveBrackets(setStat);
+            string clanList = setStat.RemoveBrackets();
             return clanList;
-        }
-
-        private string RemoveBrackets(string setStat)
-        {
-            return Regex.Replace(setStat, @"\{|\}", "");
         }
 
         public NpcStat GetStat() => _stat;

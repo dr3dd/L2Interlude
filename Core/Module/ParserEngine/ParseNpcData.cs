@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace Core.Module.ParserEngine
 {
@@ -35,7 +34,7 @@ namespace Core.Module.ParserEngine
                         _setStats.Add(parseItem[0], parseItem[1]);
                         continue;
                     case 2:
-                        _setStats.Add(parseItem[0], RemoveBrackets(parseItem[1]));
+                        _setStats.Add(parseItem[0], parseItem[1].RemoveBrackets());
                         break;
                     case > 2:
                     {
@@ -47,11 +46,11 @@ namespace Core.Module.ParserEngine
                             if (j == 0)
                             {
                                 var parseItem1 = tmpItem[0].Split("=");
-                                fieldName = RemoveBrackets(parseItem1[0]);
-                                fieldValue.Add(RemoveBrackets(parseItem1[1]));
+                                fieldName = parseItem1[0].RemoveBrackets();
+                                fieldValue.Add(parseItem1[1].RemoveBrackets());
                                 continue;
                             }
-                            fieldValue.Add(RemoveBrackets(tmpItem[j]));
+                            fieldValue.Add(tmpItem[j].RemoveBrackets());
                         }
                         _setStats.Add(fieldName, fieldValue);
                         break;
@@ -81,11 +80,6 @@ namespace Core.Module.ParserEngine
             return parseItem[0] == "corpse_make_list" ||
                    parseItem[0] == "additional_make_list" ||
                    parseItem[0] == "additional_make_multi_list";
-        }
-
-        private string RemoveBrackets(string setStat)
-        {
-            return Regex.Replace(setStat, @"\{|\}|\[|\]", "");
         }
 
         public IResult GetResult()

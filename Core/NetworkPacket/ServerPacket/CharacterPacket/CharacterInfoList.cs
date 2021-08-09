@@ -56,11 +56,45 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
                 WriteInt(0x00);
                 WriteInt(0x00);
                 
-                for (byte id = 0; id < 17; id++)
-                    WriteInt(0);
+                //for (byte id = 0; id < 17; id++)
+                //object ids of items
+                WriteInt(0); //Under
+                WriteInt(0); //Left Earning
+                WriteInt(0); //Right Earning
+                WriteInt(0); //Necklace
+                WriteInt(0); //Left Finger
+                WriteInt(0); //Right Finger
+                WriteInt(0); //Head
+                WriteInt(100); //Right hand
+                WriteInt(200); //Left hand
+                WriteInt(300); //Gloves
+                WriteInt(500); //Chest
+                WriteInt(0); //Legs
+                WriteInt(400); //Feet
+                WriteInt(0); //Back
+                WriteInt(0); //Left Right Hand
+                WriteInt(0); //Face 
+                WriteInt(0); //Hair
 
-                for (byte id = 0; id < 17; id++)
-                    WriteInt(0);
+                //for (byte id = 0; id < 17; id++)
+                //items
+                WriteInt(0); //Under
+                WriteInt(0); //Left Earning
+                WriteInt(0); //Right Earning
+                WriteInt(0); //Necklace
+                WriteInt(0); //Left Finger
+                WriteInt(0); //Right Finger
+                WriteInt(0); //Head
+                WriteInt(2369); //Right hand
+                WriteInt(6377); //Left hand
+                WriteInt(6380); //Gloves
+                WriteInt(6379); //Chest
+                WriteInt(0); //Legs
+                WriteInt(6381); //Feet
+                WriteInt(0); //Back
+                WriteInt(0); //Left Right Hand
+                WriteInt(0); //Face 
+                WriteInt(0); //Hair
                 
                 WriteInt(entity.HairStyle);
                 WriteInt(entity.HairColor);

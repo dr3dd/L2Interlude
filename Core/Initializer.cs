@@ -54,6 +54,7 @@ namespace Core
             LoggerManager.Info("----Html Cache----");
             LoggerManager.Info("----Json Teleports----");
             LoggerManager.Info("----Players----");
+            ServiceProvider.GetRequiredService<ItemPchInit>().Run();
             ServiceProvider.GetRequiredService<PcParameterInit>().Run();
             ServiceProvider.GetService<TemplateInit>();
             LoggerManager.Info("----Bonus Stats----");

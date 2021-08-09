@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using L2Logger;
 
 namespace Core.Module.ParserEngine
@@ -23,7 +24,7 @@ namespace Core.Module.ParserEngine
                 ItemBegin itemData = new ItemBegin();
                 for (int i = 0; i < split.Length; i++)
                 {
-                    var item = split[i];
+                    var item = split[i].RemoveBrackets();
                     if (!split[0].StartsWith("item_begin")) return;
                     switch (i)
                     {
@@ -37,6 +38,12 @@ namespace Core.Module.ParserEngine
                             itemData.Name = item;
                             break;
                     }
+
+                    if (itemData.Id == 329)
+                    {
+                        var d = 1;
+                    }
+                    
                     if (item.StartsWith("item_type"))
                     {
                         var itemType = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
@@ -61,7 +68,7 @@ namespace Core.Module.ParserEngine
                         var recipeId = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
                         itemData.RecipeId = Convert.ToInt32(recipeId);
                     }
-                    if (item.StartsWith("blessed"))
+                    if (item.StartsWith("blessed="))
                     {
                         var blessed = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
                         itemData.Blessed = Convert.ToInt32(blessed);
