@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -11,11 +10,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DataBase.Repositories
 {
-    public class UserUserItemRepository : IUserItemRepository
+    public class UserItemRepository : IUserItemRepository
     {
         private readonly ConnectionFactory _connectionFactory;
         private readonly IServiceProvider _serviceProvider;
-        public UserUserItemRepository(IServiceProvider serviceProvider)
+        public UserItemRepository(IServiceProvider serviceProvider)
         {
             _connectionFactory = serviceProvider.GetService<ConnectionFactory>();
             _serviceProvider = serviceProvider;
@@ -31,9 +30,22 @@ namespace DataBase.Repositories
             throw new System.NotImplementedException();
         }
 
-        public Task<int> AddAsync(UserItemEntity entity)
+        public async Task<int> AddAsync(UserItemEntity userItemEntity)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                using (var connection = _connectionFactory.GetDbConnection())
+                {
+                    connection.Open();
+                    string sql = "INSERT INTO user_item (char_id, item_id, item_type, amount, enchant) values (@CharacterId, @ItemId, @ItemType, @Amount, @Enchant);";
+                    return await connection.ExecuteAsync(sql, userItemEntity);
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggerManager.Error(ex.Message);
+                throw;                
+            }
         }
 
         public Task<int> UpdateAsync(UserItemEntity entity)
@@ -62,7 +74,8 @@ namespace DataBase.Repositories
             {
                 using (var connection = _connectionFactory.GetDbConnection())
                 {
-                    string sql = "INSERT INTO items (owner_id,item_id,count,loc,loc_data,enchant_level,price_sell,price_buy,object_id,custom_type1,custom_type2,mana_left) values (@OwnerId,@ItemId,@Count,@Loc,@LocData,@EnchantLevel,@PriceSell,@PriceBuy,@ObjectId,@CustomType1,@CustomType2,@ManaLeft);";
+                    connection.Open();
+                    string sql = "INSERT INTO user_item (char_id, item_id, item_type, amount, enchant) values (@CharacterId, @ItemId, @ItemType, @Amount, @Enchant);";
                     await connection.ExecuteAsync(sql, userItemEntity);
                     return userItemEntity;
                 }
@@ -92,15 +105,15 @@ namespace DataBase.Repositories
             }
         }
 
-        public async Task<List<UserItemEntity>> GetInventoryItemsByOwnerId(int ownerId)
+        public async Task<List<UserItemEntity>> GetInventoryItemsByOwnerId(int charId)
         {
             try
             {
                 using (var connection = _connectionFactory.GetDbConnection())
                 {
                     connection.Open();
-                    string sql = "SELECT * FROM user_item WHERE char_id = @OwnerId";
-                    IEnumerable<UserItemEntity> items = await connection.QueryAsync<UserItemEntity>(sql, new {OwnerId = ownerId});
+                    string sql = "SELECT * FROM user_item WHERE char_id = @CharId";
+                    IEnumerable<UserItemEntity> items = await connection.QueryAsync<UserItemEntity>(sql, new {CharId = charId});
                     return items.ToList();
                 }
             }
@@ -111,18 +124,15 @@ namespace DataBase.Repositories
             }
         }
         
-        public async Task<List<UserItemEntity>> GetInventoryItemsByOwnerIdAndLocId(int ownerId, string baseLocation, string equipLocation)
+        public async Task<List<UserItemEntity>> GetInventoryItemsByOwnerIdAndLocId(int charId, string baseLocation, string equipLocation)
         {
             try
             {
                 using (var connection = _connectionFactory.GetDbConnection())
                 {
                     connection.Open();
-                    string sql = "SELECT * FROM user_item WHERE char_id = @OwnerId";
-                    IEnumerable<UserItemEntity> items = 
-                        await connection.QueryAsync<UserItemEntity>(sql, 
-                            new {OwnerId = ownerId, BaseLocation = baseLocation, EquipLocation = equipLocation}
-                            );
+                    string sql = "SELECT * FROM user_item WHERE char_id = @CharacterId";
+                    IEnumerable<UserItemEntity> items = await connection.QueryAsync<UserItemEntity>(sql, new {CharacterId = charId});
                     return items.ToList();
                 }
             }

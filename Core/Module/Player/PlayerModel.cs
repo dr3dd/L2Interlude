@@ -1,17 +1,27 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Core.Module.CharacterData.Template;
+using Core.Module.ItemData;
 using DataBase.Entities;
 using DataBase.Interfaces;
 using L2Logger;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player
 {
     public class PlayerModel
     {
         private readonly PlayerInstance _playerInstance;
+        private readonly ItemDataInit _itemData;
+        private readonly IUserItemRepository _itemRepository;
+        private readonly ITemplateHandler _template;
+        
         public PlayerModel(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
+            _template = _playerInstance.TemplateHandler();
+            _itemData = _playerInstance.ServiceProvider.GetRequiredService<ItemDataInit>();
+            _itemRepository = _playerInstance.ServiceProvider.GetRequiredService<IUnitOfWork>().UserItems;
         }
         
         public async Task CreateCharacter()
@@ -19,7 +29,8 @@ namespace Core.Module.Player
             try
             {
                 ICharacterRepository characterRepository = Initializer.UnitOfWork().Characters;
-                await characterRepository.CreateCharacterAsync(PrepareEntity());
+                var characterId = await characterRepository.CreateCharacterAsync(PrepareEntity());
+                AddInitialEquipment(characterId);
             }
             catch (Exception ex)
             {
@@ -29,10 +40,9 @@ namespace Core.Module.Player
 
         private CharacterEntity PrepareEntity()
         {
-            var location = _playerInstance.TemplateHandler().GetInitialStartPoint();
-            var template = _playerInstance.TemplateHandler();
+            var location = _template.GetInitialStartPoint();
             var appearance = _playerInstance.PlayerAppearance();
-            return new CharacterEntity
+            var characterEntity = new CharacterEntity
             {
                 AccountName = appearance.AccountName,
                 AccountId = 1,
@@ -41,9 +51,9 @@ namespace Core.Module.Player
                 HairStyle = appearance.HairStyle,
                 HairColor = appearance.HairColor,
                 Gender = appearance.Gender,
-                Race = template.GetRaceId(),
-                ClassId = template.GetClassId(),
-                Level = 1,
+                Race = _template.GetRaceId(),
+                ClassId = _template.GetClassId(),
+                Level = _playerInstance.PlayerStatus().Level,
                 Cp = _playerInstance.PlayerStatus().GetMaxCp(),
                 Hp = _playerInstance.PlayerStatus().GetMaxHp(),
                 Mp = _playerInstance.PlayerStatus().GetMaxMp(),
@@ -80,6 +90,24 @@ namespace Core.Module.Player
                 YLoc = location.GetY(),
                 ZLoc = location.GetZ(),
             };
+            return characterEntity;
+        }
+
+        private void AddInitialEquipment(int characterId)
+        {
+            var initialEquipment = _template.GetInitialEquipment();
+            var items = _itemData.GetItemsByNames(initialEquipment);
+            items.ForEach(item =>
+            {
+                _itemRepository.AddAsync(new UserItemEntity
+                {
+                    ItemId = item.ItemId,
+                    ItemType = (int) item.ItemType,
+                    Amount = 1,
+                    CharacterId = characterId,
+                    Enchant = 0
+                });
+            });
         }
     }
 }

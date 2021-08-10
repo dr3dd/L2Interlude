@@ -2,6 +2,7 @@
 {
     public class UserItemEntity
     {
+        public int UserItemId { get; set; }
         public int ItemId { get; set; } 
         public int CharacterId { get; set; }
         public int ItemType { get; set; }

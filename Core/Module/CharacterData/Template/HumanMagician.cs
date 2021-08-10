@@ -1,4 +1,5 @@
-﻿using Core.Module.CharacterData.Template.Race;
+﻿using System.Collections.Generic;
+using Core.Module.CharacterData.Template.Race;
 
 namespace Core.Module.CharacterData.Template
 {
@@ -141,6 +142,11 @@ namespace Core.Module.CharacterData.Template
         }
 
         public int GetBaseMagicDefendNecklace()
+        {
+            throw new System.NotImplementedException();
+        }
+        
+        public IEnumerable<string> GetInitialEquipment()
         {
             throw new System.NotImplementedException();
         }

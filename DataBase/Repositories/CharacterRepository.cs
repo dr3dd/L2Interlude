@@ -44,7 +44,7 @@ namespace DataBase.Repositories
             throw new System.NotImplementedException();
         }
 
-        public async Task<CharacterEntity> CreateCharacterAsync(CharacterEntity characterEntity)
+        public async Task<int> CreateCharacterAsync(CharacterEntity characterEntity)
         {
             try
             {
@@ -52,10 +52,10 @@ namespace DataBase.Repositories
                 {
                     connection.Open();
                     string sql =
-                        "INSERT INTO user_data (char_name,account_name,account_id,gender,race,class,xloc,yloc,zloc,isInVehicle,cp,hp,mp,sp,exp,lev,pk,duel,st_underware,st_right_ear,st_left_ear,st_neck,st_right_finger,st_left_finger,st_head,st_right_hand,st_left_hand,st_gloves,st_chest,st_legs,st_feet,st_back,st_both_hand,st_hair,st_face,st_hairall,quest_flag,nickname,max_hp,max_mp,quest_memo,face_index,hair_shape_index,hair_color_index) values (@CharacterName,@AccountName,@AccountId,@Gender,@Race,@ClassId,@XLoc,@YLoc,@ZLoc,@IsInVehicle,@Cp,@Hp,@Mp,@Sp,@Exp,@Level,@Pk,@Duel,@StUnderwear,@StRightEar,@StLeftEar,@StNeck,@StRightFinger,@StLeftFinger,@StHead,@StRightHand,@StLeftHand,@StGloves,@StChest,@StLegs,@StFeet,@StBack,@StBothHand,@StHair,@StFace,@StHairAll,@QuestFlag,@Nickname,@MaxHp,@MaxMp,@QuestMemo,@Face,@HairStyle,@HairColor);";
-                
-                    await connection.ExecuteAsync(sql, characterEntity);
-                    return characterEntity;
+                        "INSERT INTO user_data (char_name,account_name,account_id,gender,race,class,xloc,yloc,zloc,isInVehicle,cp,hp,mp,sp,exp,lev,pk,duel,st_underware,st_right_ear,st_left_ear,st_neck,st_right_finger,st_left_finger,st_head,st_right_hand,st_left_hand,st_gloves,st_chest,st_legs,st_feet,st_back,st_both_hand,st_hair,st_face,st_hairall,quest_flag,nickname,max_hp,max_mp,quest_memo,face_index,hair_shape_index,hair_color_index) values (@CharacterName,@AccountName,@AccountId,@Gender,@Race,@ClassId,@XLoc,@YLoc,@ZLoc,@IsInVehicle,@Cp,@Hp,@Mp,@Sp,@Exp,@Level,@Pk,@Duel,@StUnderwear,@StRightEar,@StLeftEar,@StNeck,@StRightFinger,@StLeftFinger,@StHead,@StRightHand,@StLeftHand,@StGloves,@StChest,@StLegs,@StFeet,@StBack,@StBothHand,@StHair,@StFace,@StHairAll,@QuestFlag,@Nickname,@MaxHp,@MaxMp,@QuestMemo,@Face,@HairStyle,@HairColor); SELECT LAST_INSERT_ID();";
+
+                    var characterId = await connection.ExecuteScalarAsync<int>(sql, characterEntity);
+                    return characterId;
                 }
             }
             catch (Exception ex)

@@ -1,4 +1,6 @@
-﻿namespace Core.Module.CharacterData.Template
+﻿using System.Collections.Generic;
+
+namespace Core.Module.CharacterData.Template
 {
     public interface ITemplateHandler
     {
@@ -32,7 +34,7 @@
         int GetBaseAttackRange();
         int GetBaseGroundHighSpeed();
         int GetBaseGroundLowSpeed();
-        
-        public Location GetInitialStartPoint();
+        IEnumerable<string> GetInitialEquipment();
+        Location GetInitialStartPoint();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Module.ParserEngine;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
@@ -60,6 +61,30 @@ namespace Core.Module.ItemData
             {
                 throw new Exception($": there is no item name {name}");
             }
+        }
+
+        public List<ItemDataModel> GetItemsByNames(IEnumerable<string> names)
+        {
+            try
+            {
+                List<int> itemIds = GetItemIds(names);
+                List<ItemDataModel> items = _itemDataModel
+                    .Where(i => itemIds.Contains(i.Key))
+                    .Select(i => i.Value).ToList();
+                return items;
+            }
+            catch (Exception)
+            {
+                throw new Exception($": there are no item names {names}");
+            }
+        }
+
+        private List<int> GetItemIds(IEnumerable<string> names)
+        {
+            var itemIds = _itemPchInit.GetItems()
+                .Where(i => names.Contains(i.Key))
+                .Select(i => i.Value).ToList();
+            return itemIds;
         }
     }
 }

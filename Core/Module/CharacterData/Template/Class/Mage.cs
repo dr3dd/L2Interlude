@@ -1,4 +1,6 @@
-﻿namespace Core.Module.CharacterData.Template.Class
+﻿using System.Collections.Generic;
+
+namespace Core.Module.CharacterData.Template.Class
 {
     public class Mage : HumanMagician, ITemplateHandler
     {

@@ -27,7 +27,7 @@ namespace DataBase
             services.AddTransient<ICharacterRepository, CharacterRepository>();
             services.AddTransient<ISpawnListRepository, SpawnListRepository>();
             services.AddTransient<IRaidBossSpawnListRepository, RaidBossSpawnListRepository>();
-            services.AddTransient<IUserItemRepository, UserUserItemRepository>();
+            services.AddTransient<IUserItemRepository, UserItemRepository>();
             services.AddTransient<ISkillTreeRepository, SkillTreeRepository>();
             services.AddTransient<ICharacterSkillRepository, CharacterSkillRepository>();
             services.AddTransient<IShortCutRepository, ShortCutRepository>();

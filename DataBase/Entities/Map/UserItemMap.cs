@@ -6,6 +6,7 @@ namespace DataBase.Entities.Map
     {
         public UserItemMap()
         {
+            Map(i => i.UserItemId).ToColumn("user_item_id");
             Map(i => i.CharacterId).ToColumn("char_id");
             Map(i => i.ItemId).ToColumn("item_id");
             Map(i => i.ItemType).ToColumn("item_type");

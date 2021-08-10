@@ -37,5 +37,10 @@ namespace Core.Module.ItemData
         {
             return _items[name];
         }
+
+        public IDictionary<string, int> GetItems()
+        {
+            return _items;
+        }
     }
 }

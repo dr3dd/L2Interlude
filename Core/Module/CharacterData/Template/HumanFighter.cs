@@ -100,7 +100,7 @@ namespace Core.Module.CharacterData.Template
             return Wit;
         }
 
-        public IList<string> GetInitialEquipment()
+        public IEnumerable<string> GetInitialEquipment()
         {
             return _initialEquipment;
         }

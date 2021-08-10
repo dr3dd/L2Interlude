@@ -6,7 +6,7 @@ namespace DataBase.Interfaces
 {
     public interface ICharacterRepository : IGenericRepository<CharacterEntity>
     {
-        Task<CharacterEntity> CreateCharacterAsync(CharacterEntity characterEntity);
+        Task<int> CreateCharacterAsync(CharacterEntity characterEntity);
         Task<CharacterEntity> UpdateCharacterAsync(CharacterEntity characterEntity);
 
         Task<List<CharacterEntity>> GetCharactersByAccountNameAsync(string accountName);
