@@ -27,7 +27,7 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
             _location = _playerInstance.Location;
             _playerAppearance = _playerInstance.PlayerAppearance();
             _sessionId = sessionId;
-            _gameTimeController = Initializer.ServiceProvider.GetService<GameTimeController>();
+            _gameTimeController = Initializer.TimeController();
         }
         
         public override void Write()
@@ -35,7 +35,7 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
             WriteByte(0x15);
 		
             WriteString(_playerAppearance.CharacterName);
-            WriteInt(_characterInfo.CharacterId); // ??
+            WriteInt(_playerInstance.ObjectId); // ObjectId
             WriteString("");
             WriteInt(_sessionId);
             WriteInt(0);

@@ -1,6 +1,8 @@
-﻿namespace Core.Module.CharacterData
+﻿using Core.Module.WorldData;
+
+namespace Core.Module.CharacterData
 {
-    public abstract class Character
+    public abstract class Character : WorldObject
     {
         
     }

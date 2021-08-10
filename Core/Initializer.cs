@@ -5,6 +5,7 @@ using Core.GeoEngine;
 using Core.Module.CharacterData.Template;
 using Core.Module.ItemData;
 using Core.Module.NpcData;
+using Core.Module.WorldData;
 using DataBase.Interfaces;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,6 +48,7 @@ namespace Core
 
         public void Load()
         {
+            ServiceProvider.GetRequiredService<ObjectIdInit>();
             ServiceProvider.GetRequiredService<GameTimeController>().Run();
             ServiceProvider.GetRequiredService<NpcDataInit>().Run();
             ServiceProvider.GetRequiredService<GeoEngineInit>().Run();
