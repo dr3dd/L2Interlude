@@ -75,44 +75,45 @@ namespace Core.NetworkPacket.ServerPacket
 
             WriteInt(40); // 20 no weapon, 40 weapon equipped
             
-            //inventory
+            //Objects
             //for (byte id = 0; id < 17; id++)
-	            WriteInt(0);
-	            WriteInt(0);
-	            WriteInt(0);
-	            WriteInt(0);
-	            WriteInt(0);
-	            WriteInt(0);
-	            WriteInt(0);
-	            WriteInt(2369);
-	            WriteInt(0);
-	            WriteInt(0);
-	            WriteInt(0);
-	            WriteInt(0);
-	            WriteInt(0);
-	            WriteInt(0);
-	            WriteInt(0);
-	            WriteInt(0);
-	            WriteInt(0);
+            WriteInt(0); //Under
+            WriteInt(0); //Left Earning
+            WriteInt(0); //Right Earning
+            WriteInt(0); //Necklace
+            WriteInt(0); //Left Finger
+            WriteInt(0); //Right Finger
+            WriteInt(0); //Head
+            WriteInt(0); //Right hand
+            WriteInt(0); //Left hand
+            WriteInt(0); //Gloves
+            WriteInt(0); //Chest
+            WriteInt(10); //Legs
+            WriteInt(0); //Feet
+            WriteInt(0); //Back
+            WriteInt(0); //Left Right Hand
+            WriteInt(0); //Face 
+            WriteInt(0); //Hair
            
             //for (byte id = 0; id < 17; id++)
-	           WriteInt(0);
-	           WriteInt(0);
-	           WriteInt(0);
-	           WriteInt(0);
-	           WriteInt(0);
-	           WriteInt(0);
-	           WriteInt(0);
-	           WriteInt(2369);
-	           WriteInt(0);
-	           WriteInt(0);
-	           WriteInt(0);
-	           WriteInt(0);
-	           WriteInt(0);
-	           WriteInt(0);
-	           WriteInt(0);
-	           WriteInt(0);
-	           WriteInt(0);
+            //items
+            WriteInt(_characterInfo.StUnderwear); //Under
+            WriteInt(_characterInfo.StLeftEar); //Left Earning
+            WriteInt(_characterInfo.StRightEar); //Right Earning
+            WriteInt(_characterInfo.StNeck); //Necklace
+            WriteInt(_characterInfo.StLeftFinger); //Left Finger
+            WriteInt(_characterInfo.StRightFinger); //Right Finger
+            WriteInt(_characterInfo.StHead); //Head
+            WriteInt(_characterInfo.StRightHand); //Right hand
+            WriteInt(_characterInfo.StLeftHand); //Left hand
+            WriteInt(_characterInfo.StGloves); //Gloves
+            WriteInt(_characterInfo.StChest); //Chest
+            WriteInt(_characterInfo.StLegs); //Legs
+            WriteInt(_characterInfo.StFeet); //Feet
+            WriteInt(_characterInfo.StBack); //Back
+            WriteInt(_characterInfo.StBothHand); //Left Right Hand
+            WriteInt(_characterInfo.StFace); //Face 
+            WriteInt(_characterInfo.StHair); //Hair
            
             // c6 new h's
             WriteShort(0x00);

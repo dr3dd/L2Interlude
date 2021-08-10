@@ -41,6 +41,26 @@ namespace Core.Module.Player
             playerInstance.PlayerStatus().CurrentMp = characterEntity.Mp;
             characterInfo.Exp = characterEntity.Exp;
             characterInfo.Sp = characterEntity.Sp;
+
+            characterInfo.StBack = characterEntity.StBack;
+            characterInfo.StChest = characterEntity.StChest;
+            characterInfo.StFeet = characterEntity.StFeet;
+            characterInfo.StGloves = characterEntity.StGloves;
+            characterInfo.StHair = characterEntity.StHair;
+            characterInfo.StHead = characterEntity.StHead;
+            characterInfo.StLegs = characterEntity.StLegs;
+            characterInfo.StNeck = characterEntity.StNeck;
+            characterInfo.StUnderwear = characterEntity.StUnderwear;
+            characterInfo.StRightEar = characterEntity.StRightEar;
+            characterInfo.StLeftEar = characterEntity.StLeftEar;
+            characterInfo.StRightHand = characterEntity.StRightHand;
+            characterInfo.StLeftHand = characterEntity.StLeftHand;
+            characterInfo.StFace = characterEntity.StFace;
+            characterInfo.StBothHand = characterEntity.StBothHand;
+            characterInfo.StHairAll = characterEntity.StHairAll;
+            characterInfo.StLeftFinger = characterEntity.StLeftFinger;
+            characterInfo.StRightFinger = characterEntity.StRightFinger;
+
             playerInstance.PlayerStatus().Level = characterEntity.Level;
             return playerInstance;
         }

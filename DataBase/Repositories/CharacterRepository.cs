@@ -73,7 +73,7 @@ namespace DataBase.Repositories
                 {
                     connection.Open();
                     string sql =
-                        "UPDATE user_data SET lev=@Level,max_hp=@MaxHp,hp=@Hp,max_mp=@MaxMp,mp=@Mp,exp=@Exp,sp=@Sp,xloc=@XLoc,yloc=@YLoc,zloc=@ZLoc WHERE char_id=@CharacterId";
+                        "UPDATE user_data SET lev=@Level,max_hp=@MaxHp,hp=@Hp,max_mp=@MaxMp,mp=@Mp,exp=@Exp,sp=@Sp,xloc=@XLoc,yloc=@YLoc,zloc=@ZLoc, st_underware=@StUnderwear, st_right_ear=@StRightEar, st_left_ear=@StLeftEar, st_neck=@StNeck, st_right_finger=@StRightFinger, st_left_finger=@StLeftFinger, st_head=@StHead, st_right_hand=@StRightHand, st_left_hand=@StLeftHand, st_gloves=@StGloves, st_chest=@StChest, st_legs=@StLegs, st_feet=@StFeet, st_back=@StBack, st_both_hand=@StBothHand, st_hair=@StHair, st_face=@StFace, st_hairall=@StHairAll WHERE char_id=@CharacterId";
                     await connection.ExecuteAsync(sql, characterEntity);
                     return characterEntity;
                 }

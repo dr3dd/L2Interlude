@@ -14,6 +14,7 @@ namespace Core.Module.Player
         private readonly PlayerInstance _playerInstance;
         private readonly ItemDataInit _itemData;
         private readonly IUserItemRepository _itemRepository;
+        private readonly ICharacterRepository _characterRepository;
         private readonly ITemplateHandler _template;
         
         public PlayerModel(PlayerInstance playerInstance)
@@ -21,16 +22,20 @@ namespace Core.Module.Player
             _playerInstance = playerInstance;
             _template = _playerInstance.TemplateHandler();
             _itemData = _playerInstance.ServiceProvider.GetRequiredService<ItemDataInit>();
-            _itemRepository = _playerInstance.ServiceProvider.GetRequiredService<IUnitOfWork>().UserItems;
+            
+            var unitOfWorkService = _playerInstance.ServiceProvider.GetRequiredService<IUnitOfWork>();
+            _itemRepository = unitOfWorkService.UserItems;
+            _characterRepository = unitOfWorkService.Characters;
         }
         
         public async Task CreateCharacter()
         {
             try
             {
-                ICharacterRepository characterRepository = Initializer.UnitOfWork().Characters;
-                var characterId = await characterRepository.CreateCharacterAsync(PrepareEntity());
-                AddInitialEquipment(characterId);
+                var entity = PrepareEntity();
+                var characterId = await _characterRepository.CreateCharacterAsync(entity);
+                entity.CharacterId = characterId;
+                await AddInitialEquipment(entity);
             }
             catch (Exception ex)
             {
@@ -93,20 +98,97 @@ namespace Core.Module.Player
             return characterEntity;
         }
 
-        private void AddInitialEquipment(int characterId)
+        private async Task AddInitialEquipment(CharacterEntity entity)
         {
             var initialEquipment = _template.GetInitialEquipment();
             var items = _itemData.GetItemsByNames(initialEquipment);
             items.ForEach(item =>
             {
-                _itemRepository.AddAsync(new UserItemEntity
-                {
-                    ItemId = item.ItemId,
-                    ItemType = (int) item.ItemType,
-                    Amount = 1,
-                    CharacterId = characterId,
-                    Enchant = 0
-                });
+                AddItemsToInventory(entity.CharacterId, item);
+                EquipCharacter(entity, item);
+            });
+            await _characterRepository.UpdateCharacterAsync(entity);
+        }
+
+        private void EquipCharacter(CharacterEntity entity, ItemDataModel item)
+        {
+            if (!IsEquippable(item)) return;
+
+            switch (item.SlotBitType)
+            {
+                case SlotBitType.None:
+                    break;
+                case SlotBitType.RightHand:
+                    entity.StRightHand = item.ItemId;
+                    break;
+                case SlotBitType.LeftHand:
+                    entity.StLeftHand = item.ItemId;
+                    break;
+                case SlotBitType.LeftRightHand:
+                    break;
+                case SlotBitType.Chest:
+                    entity.StChest = item.ItemId;
+                    break;
+                case SlotBitType.Legs:
+                    entity.StLegs = item.ItemId;
+                    break;
+                case SlotBitType.Feet:
+                    entity.StFeet = item.ItemId;
+                    break;
+                case SlotBitType.Head:
+                    entity.StHead = item.ItemId;
+                    break;
+                case SlotBitType.Gloves:
+                    entity.StGloves = item.ItemId;
+                    break;
+                case SlotBitType.OnePiece:
+                    break;
+                case SlotBitType.RightEarning:
+                    entity.StRightEar = item.ItemId;
+                    break;
+                case SlotBitType.LeftEarning:
+                    entity.StLeftEar = item.ItemId;
+                    break;
+                case SlotBitType.RightFinger:
+                    entity.StRightFinger = item.ItemId;
+                    break;
+                case SlotBitType.LeftFinger:
+                    entity.StLeftFinger = item.ItemId;
+                    break;
+                case SlotBitType.Necklace:
+                    entity.StNeck = item.ItemId;
+                    break;
+                case SlotBitType.Back:
+                    entity.StBack = item.ItemId;
+                    break;
+                case SlotBitType.UnderWear:
+                    entity.StUnderwear = item.ItemId;
+                    break;
+                case SlotBitType.Hair:
+                    entity.StHair = item.ItemId;
+                    break;
+                case SlotBitType.AllDress:
+                    entity.StHairAll = item.ItemId;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private bool IsEquippable(ItemDataModel item)
+        {
+            return item.ActionType == ActionType.ActionEquip;
+        }
+
+        private void AddItemsToInventory(int characterId, ItemDataModel item)
+        {
+            _itemRepository.AddAsync(new UserItemEntity
+            {
+                ItemId = item.ItemId,
+                ItemType = (int) item.ItemType,
+                Amount = 1,
+                CharacterId = characterId,
+                Enchant = 0
             });
         }
     }

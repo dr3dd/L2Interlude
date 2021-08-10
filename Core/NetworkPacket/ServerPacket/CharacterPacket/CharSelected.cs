@@ -1,9 +1,7 @@
 ﻿using Core.Controller;
 using Core.Module.CharacterData;
 using Core.Module.CharacterData.Template;
-using Core.Module.ItemData;
 using Core.Module.Player;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.NetworkPacket.ServerPacket.CharacterPacket
 {
@@ -29,11 +27,6 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
             _playerAppearance = _playerInstance.PlayerAppearance();
             _sessionId = sessionId;
             _gameTimeController = Initializer.TimeController();
-
-
-            var initialEquipment = _template.GetInitialEquipment();
-            var test = _playerInstance.ServiceProvider.GetRequiredService<ItemDataInit>();
-            var d = test.GetItemsByNames(initialEquipment);
         }
         
         public override void Write()

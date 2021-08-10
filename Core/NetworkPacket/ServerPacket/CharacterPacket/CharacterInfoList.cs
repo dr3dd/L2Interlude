@@ -65,12 +65,12 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
                 WriteInt(0); //Left Finger
                 WriteInt(0); //Right Finger
                 WriteInt(0); //Head
-                WriteInt(100); //Right hand
-                WriteInt(200); //Left hand
-                WriteInt(300); //Gloves
-                WriteInt(500); //Chest
+                WriteInt(0); //Right hand
+                WriteInt(0); //Left hand
+                WriteInt(0); //Gloves
+                WriteInt(0); //Chest
                 WriteInt(0); //Legs
-                WriteInt(400); //Feet
+                WriteInt(0); //Feet
                 WriteInt(0); //Back
                 WriteInt(0); //Left Right Hand
                 WriteInt(0); //Face 
@@ -78,23 +78,23 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
 
                 //for (byte id = 0; id < 17; id++)
                 //items
-                WriteInt(0); //Under
-                WriteInt(0); //Left Earning
-                WriteInt(0); //Right Earning
-                WriteInt(0); //Necklace
-                WriteInt(0); //Left Finger
-                WriteInt(0); //Right Finger
-                WriteInt(0); //Head
-                WriteInt(2369); //Right hand
-                WriteInt(6377); //Left hand
-                WriteInt(6380); //Gloves
-                WriteInt(6379); //Chest
-                WriteInt(0); //Legs
-                WriteInt(6381); //Feet
-                WriteInt(0); //Back
-                WriteInt(0); //Left Right Hand
-                WriteInt(0); //Face 
-                WriteInt(0); //Hair
+                WriteInt(entity.StUnderwear); //Under
+                WriteInt(entity.StLeftEar); //Left Earning
+                WriteInt(entity.StRightEar); //Right Earning
+                WriteInt(entity.StNeck); //Necklace
+                WriteInt(entity.StLeftFinger); //Left Finger
+                WriteInt(entity.StRightFinger); //Right Finger
+                WriteInt(entity.StHead); //Head
+                WriteInt(entity.StRightHand); //Right hand
+                WriteInt(entity.StLeftHand); //Left hand
+                WriteInt(entity.StGloves); //Gloves
+                WriteInt(entity.StChest); //Chest
+                WriteInt(entity.StLegs); //Legs
+                WriteInt(entity.StFeet); //Feet
+                WriteInt(entity.StBack); //Back
+                WriteInt(entity.StBothHand); //Left Right Hand
+                WriteInt(entity.StFace); //Face 
+                WriteInt(entity.StHair); //Hair
                 
                 WriteInt(entity.HairStyle);
                 WriteInt(entity.HairColor);

@@ -9,6 +9,8 @@ namespace Core.Module.ItemData
         public string Name { get; }
         public ItemType ItemType { get; }
         public SlotBitType SlotBitType { get; }
+        public WeaponType WeaponType { get; }
+        public ActionType ActionType { get; }
         public ItemDataModel(KeyValuePair<object, object> keyValuePair)
         {
             ItemId = (int) keyValuePair.Key;
@@ -16,6 +18,8 @@ namespace Core.Module.ItemData
             Name = itemBegin.Name;
             SlotBitType = GetSlotBitType(itemBegin.SlotBitType);
             ItemType = GetItemType(itemBegin.ItemType);
+            WeaponType = GetWeaponType(itemBegin.WeaponType);
+            ActionType = GetActionType(itemBegin.DefaultAction);
         }
 
         private ItemType GetItemType(string itemType)
@@ -56,6 +60,39 @@ namespace Core.Module.ItemData
                 "hair" => SlotBitType.Hair,
                 "alldress" => SlotBitType.AllDress,
                 _ => SlotBitType.None
+            };
+        }
+
+        private WeaponType GetWeaponType(string weaponType)
+        {
+            return weaponType switch
+            {
+                "none" => WeaponType.None,
+                "sword" => WeaponType.DualFist,
+                "dagger" => WeaponType.Dagger,
+                "blunt" => WeaponType.Blunt,
+                "pole" => WeaponType.Pole,
+                "bow" => WeaponType.Bow,
+                "dualfist" => WeaponType.DualFist,
+                "etc" => WeaponType.Etc,
+                _ => WeaponType.None
+            };
+        }
+
+        private ActionType GetActionType(string actionType)
+        {
+            return actionType switch
+            {
+                "action_none" => ActionType.ActionNone,
+                "action_equip" => ActionType.ActionEquip,
+                "action_skill_reduce" => ActionType.ActionSkillReduce,
+                "action_soulshot" => ActionType.ActionSoulShot,
+                "action_recipe" => ActionType.ActionRecipe,
+                "action_seed" => ActionType.ActionSeed,
+                "action_capsule" => ActionType.ActionCapsule,
+                "action_fishingshot" => ActionType.ActionFishingShot,
+                "action_skill_maintain" => ActionType.ActionSkillMaintain,
+                _ => ActionType.ActionNone
             };
         }
 
