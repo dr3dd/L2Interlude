@@ -1,4 +1,5 @@
-﻿using Core.Controller;
+﻿using System.Threading.Tasks;
+using Core.Controller;
 using Core.Module.CharacterData;
 
 namespace Core.NetworkPacket.ServerPacket.CharacterPacket
@@ -25,29 +26,29 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
 
             WriteByte(0x13);
             WriteInt(list.Count);
-            list.ForEach(entity =>
+            list.ForEach(currentUser =>
             {
-                WriteString(entity.CharacterName);
-                WriteInt(entity.CharacterId);
+                WriteString(currentUser.CharacterName);
+                WriteInt(currentUser.CharacterId);
                 WriteString(_accountName);
-                WriteInt(_sessionId);
-                WriteInt(0x00); //ClanId
-                WriteInt(0x00);
-                WriteInt(entity.Gender);
-                WriteInt(entity.Race);
-                WriteInt(entity.ClassId);
-                WriteInt(0x01); // active ??
-                WriteInt(0); // x
-                WriteInt(0); // y
-                WriteInt(0); // z
-                WriteDouble(entity.Hp); // hp cur
-                WriteDouble(entity.Mp); // mp cur
-                WriteInt(entity.Sp);
-                WriteLong(entity.Exp);
-                WriteInt(entity.Level);
-                WriteInt(entity.Pk); // karma
-                WriteInt(0x00);
-                WriteInt(0x00);
+                WriteInt(_sessionId); //GetAccountID
+                WriteInt(0x00); //ClanId GetPledgeID
+                WriteInt(0x00); //GetBuilder
+                WriteInt(currentUser.Gender);
+                WriteInt(currentUser.Race);
+                WriteInt(currentUser.ClassId);
+                WriteInt(0x01); // GetWorld active ??
+                WriteInt(currentUser.X); // x
+                WriteInt(currentUser.Y); // y
+                WriteInt(currentUser.Z); // z
+                WriteDouble(currentUser.Hp); // hp cur
+                WriteDouble(currentUser.Mp); // mp cur
+                WriteInt(currentUser.Sp);
+                WriteLong(currentUser.Exp);
+                WriteInt(currentUser.Level);
+                WriteInt(currentUser.Pk); // karma
+                WriteInt(0x00); //GetDuel
+                WriteInt(0x00); //GetPKPardon
                 WriteInt(0x00);
                 WriteInt(0x00);
                 WriteInt(0x00);
@@ -57,53 +58,53 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
                 WriteInt(0x00);
                 
                 //for (byte id = 0; id < 17; id++)
-                //object ids of items
-                WriteInt(0); //Under
-                WriteInt(0); //Left Earning
-                WriteInt(0); //Right Earning
-                WriteInt(0); //Necklace
-                WriteInt(0); //Left Finger
-                WriteInt(0); //Right Finger
-                WriteInt(0); //Head
-                WriteInt(0); //Right hand
-                WriteInt(0); //Left hand
-                WriteInt(0); //Gloves
-                WriteInt(0); //Chest
-                WriteInt(0); //Legs
-                WriteInt(0); //Feet
-                WriteInt(0); //Back
-                WriteInt(0); //Left Right Hand
-                WriteInt(0); //Face 
-                WriteInt(0); //Hair
+                //user item ids of items
+                WriteInt(currentUser.StUnderwear); //Under
+                WriteInt(currentUser.StLeftEar); //Left Earning
+                WriteInt(currentUser.StRightEar); //Right Earning
+                WriteInt(currentUser.StNeck); //Necklace
+                WriteInt(currentUser.StLeftFinger); //Left Finger
+                WriteInt(currentUser.StRightFinger); //Right Finger
+                WriteInt(currentUser.StHead); //Head
+                WriteInt(currentUser.StRightHand); //Right hand
+                WriteInt(currentUser.StLeftHand); //Left hand
+                WriteInt(currentUser.StGloves); //Gloves
+                WriteInt(currentUser.StChest); //Chest
+                WriteInt(currentUser.StLegs); //Legs
+                WriteInt(currentUser.StFeet); //Feet
+                WriteInt(currentUser.StBack); //Back
+                WriteInt(currentUser.StBothHand); //Left Right Hand
+                WriteInt(currentUser.StFace); //Face 
+                WriteInt(currentUser.StHair); //Hair
 
                 //for (byte id = 0; id < 17; id++)
-                //items
-                WriteInt(entity.StUnderwear); //Under
-                WriteInt(entity.StLeftEar); //Left Earning
-                WriteInt(entity.StRightEar); //Right Earning
-                WriteInt(entity.StNeck); //Necklace
-                WriteInt(entity.StLeftFinger); //Left Finger
-                WriteInt(entity.StRightFinger); //Right Finger
-                WriteInt(entity.StHead); //Head
-                WriteInt(entity.StRightHand); //Right hand
-                WriteInt(entity.StLeftHand); //Left hand
-                WriteInt(entity.StGloves); //Gloves
-                WriteInt(entity.StChest); //Chest
-                WriteInt(entity.StLegs); //Legs
-                WriteInt(entity.StFeet); //Feet
-                WriteInt(entity.StBack); //Back
-                WriteInt(entity.StBothHand); //Left Right Hand
-                WriteInt(entity.StFace); //Face 
-                WriteInt(entity.StHair); //Hair
+                //item ids
+                WriteInt(_characterList.GetItem(currentUser.StUnderwear)); //Under
+                WriteInt(_characterList.GetItem(currentUser.StLeftEar)); //Left Earning
+                WriteInt(_characterList.GetItem(currentUser.StRightEar)); //Right Earning
+                WriteInt(_characterList.GetItem(currentUser.StNeck)); //Necklace
+                WriteInt(_characterList.GetItem(currentUser.StLeftFinger)); //Left Finger
+                WriteInt(_characterList.GetItem(currentUser.StRightFinger)); //Right Finger
+                WriteInt(_characterList.GetItem(currentUser.StHead)); //Head
+                WriteInt(_characterList.GetItem(currentUser.StRightHand)); //Right hand
+                WriteInt(_characterList.GetItem(currentUser.StLeftHand)); //Left hand
+                WriteInt(_characterList.GetItem(currentUser.StGloves)); //Gloves
+                WriteInt(_characterList.GetItem(currentUser.StChest)); //Chest
+                WriteInt(_characterList.GetItem(currentUser.StLegs)); //Legs
+                WriteInt(_characterList.GetItem(currentUser.StFeet)); //Feet
+                WriteInt(_characterList.GetItem(currentUser.StBack)); //Back
+                WriteInt(_characterList.GetItem(currentUser.StBothHand)); //Left Right Hand
+                WriteInt(_characterList.GetItem(currentUser.StFace)); //Face 
+                WriteInt(_characterList.GetItem(currentUser.StHair)); //Hair
                 
-                WriteInt(entity.HairStyle);
-                WriteInt(entity.HairColor);
-                WriteInt(entity.Face);
+                WriteInt(currentUser.HairShapeIndex);
+                WriteInt(currentUser.HairColorIndex);
+                WriteInt(currentUser.FaceIndex);
                 
-                WriteDouble(entity.MaxHp); // hp max
-                WriteDouble(entity.MaxMp); // mp max
-                WriteInt(0); // days left before
-                WriteInt(entity.ClassId);
+                WriteDouble(currentUser.MaxHp); // hp max
+                WriteDouble(currentUser.MaxMp); // mp max
+                WriteInt(0); // elapsedDaysToDelete
+                WriteInt(currentUser.ClassId);
                 WriteInt(0x01);
                 WriteByte(0);
                 WriteInt(0);

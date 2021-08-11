@@ -47,8 +47,8 @@ namespace DataBase.Entities
         public int MaxHp { get; set; }
         public int MaxMp { get; set; }
         public string QuestMemo { get; set; }
-        public byte Face { get; set; }
-        public byte HairStyle { get; set; }
-        public byte HairColor { get; set; }
+        public byte FaceIndex { get; set; }
+        public byte HairShapeIndex { get; set; }
+        public byte HairColorIndex { get; set; }
     }
 }

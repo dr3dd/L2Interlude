@@ -7,6 +7,9 @@
         public byte Gender { get; set; }
         public byte Race { get; set; }
         public byte ClassId { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Z { get; set; }
         public double Hp { get; set; }
         public double Mp { get; set; }
         public int Sp { get; set; }
@@ -15,9 +18,9 @@
         public int Pk { get; set; }
         public double MaxHp { get; set; }
         public double MaxMp { get; set; }
-        public int HairStyle { get; set; }
-        public int HairColor { get; set; }
-        public int Face { get; set; }
+        public int HairShapeIndex { get; set; }
+        public int HairColorIndex { get; set; }
+        public int FaceIndex { get; set; }
         public int StUnderwear { get; set; }
         public int StRightEar { get; set; }
         public int StLeftEar { get; set; }

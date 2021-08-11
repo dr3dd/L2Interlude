@@ -47,9 +47,9 @@ namespace DataBase.Entities.Map
             Map(i => i.QuestFlag).ToColumn("quest_flag");
             Map(i => i.Nickname).ToColumn("nickname");
             Map(i => i.QuestMemo).ToColumn("quest_memo");
-            Map(i => i.Face).ToColumn("face_index");
-            Map(i => i.HairStyle).ToColumn("hair_shape_index");
-            Map(i => i.HairColor).ToColumn("hair_color_index");
+            Map(i => i.FaceIndex).ToColumn("face_index");
+            Map(i => i.HairShapeIndex).ToColumn("hair_shape_index");
+            Map(i => i.HairColorIndex).ToColumn("hair_color_index");
         }
     }
 }

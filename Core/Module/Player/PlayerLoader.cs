@@ -31,8 +31,8 @@ namespace Core.Module.Player
             var characterEntity = await _characterRepository.GetCharacterByObjectIdAsync(charId);
             var template = _templateInit.GetTemplateByClassId(characterEntity.ClassId);
             PlayerAppearance playerAppearance = new PlayerAppearance(characterEntity.AccountName,
-                characterEntity.CharacterName, characterEntity.Face, characterEntity.HairColor,
-                characterEntity.HairStyle, characterEntity.Gender);
+                characterEntity.CharacterName, characterEntity.FaceIndex, characterEntity.HairColorIndex,
+                characterEntity.HairShapeIndex, characterEntity.Gender);
             
             PlayerInstance playerInstance = new PlayerInstance(template, playerAppearance, _serviceProvider);
             var characterInfo = playerInstance.PlayerCharacterInfo();
