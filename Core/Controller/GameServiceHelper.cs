@@ -1,25 +1,25 @@
 ﻿using System.Collections.Generic;
+using Core.Module.CharacterData;
 using Core.Module.Player;
-using DataBase.Entities;
 
 namespace Core.Controller
 {
     public class GameServiceHelper
     {
         private GameServiceController _gameServiceController;
-        private List<CharacterEntity> _charSlotMapping;
+        private List<CharacterListModel> _charSlotMapping;
 
         public GameServiceHelper(GameServiceController gameServiceController)
         {
             _gameServiceController = gameServiceController;
         }
         
-        public void SetCharSelection(List<CharacterEntity> list)
+        public void SetCharSelection(List<CharacterListModel> list)
         {
             _charSlotMapping = list;
         }
 
-        public CharacterEntity GetCharacterBySlot(int charSlot)
+        public CharacterListModel GetCharacterBySlot(int charSlot)
         {
             return _charSlotMapping[charSlot];
         }

@@ -20,6 +20,7 @@ namespace Core.Module.Player
         private readonly PlayerDesire _playerDesire;
         private readonly PlayerStatus _playerStatus;
         private readonly PlayerCombat _playerCombat;
+        private readonly PlayerInventory _playerInventory;
         public Location Location { get; set; }
         public IServiceProvider ServiceProvider { get; }
         public int Heading { get; set; }
@@ -36,6 +37,7 @@ namespace Core.Module.Player
             _playerDesire = new PlayerDesire(this);
             _playerStatus = new PlayerStatus(this);
             _playerCombat = new PlayerCombat(this);
+            _playerInventory = new PlayerInventory(this);
         }
 
         public ITemplateHandler TemplateHandler() => _templateHandler;
@@ -46,6 +48,7 @@ namespace Core.Module.Player
         public PlayerDesire PlayerDesire() => _playerDesire;
         public PlayerStatus PlayerStatus() => _playerStatus;
         public PlayerCombat PlayerCombat() => _playerCombat;
+        public PlayerInventory PlayerInventory() => _playerInventory;
 
         private static PlayerLoader PlayerLoader(IServiceProvider serviceProvider)
         {

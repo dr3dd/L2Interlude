@@ -20,7 +20,7 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
         
         public override void Write()
         {
-            var list = _characterList.GetCharacterList(_accountName);
+            var list = _characterList.GetCharacterList(_accountName).Result;
             _controller.GameServiceHelper.SetCharSelection(list);
 
             WriteByte(0x13);
@@ -37,9 +37,9 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
                 WriteInt(entity.Race);
                 WriteInt(entity.ClassId);
                 WriteInt(0x01); // active ??
-                WriteInt(entity.XLoc); // x
-                WriteInt(entity.YLoc); // y
-                WriteInt(entity.ZLoc); // z
+                WriteInt(0); // x
+                WriteInt(0); // y
+                WriteInt(0); // z
                 WriteDouble(entity.Hp); // hp cur
                 WriteDouble(entity.Mp); // mp cur
                 WriteInt(entity.Sp);
