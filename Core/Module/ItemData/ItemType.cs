@@ -4,11 +4,11 @@
     {
         Weapon,
         Armor,
-        EtcItem,
         Accessory,
         QuestItem,
+        Asset,
+        EtcItem,
         HerbItem,
-        ShadowWeapon,
-        Asset
+        ShadowWeapon
     }
 }

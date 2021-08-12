@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Core.Module.ItemData;
 using Core.Module.WorldData;
@@ -38,8 +39,10 @@ namespace Core.Module.Player
                     int objectId = _objectIdInit.NextObjectId();
                     ItemInstance itemInstance = new ItemInstance(objectId)
                     {
+                        UserItemId = item.UserItemId,
                         ItemId = itemData.ItemId,
-                        ItemData = itemData
+                        ItemData = itemData,
+                        Amount = item.Amount
                     };
                     _items.Add(item.UserItemId, itemInstance);
                 });
@@ -63,9 +66,9 @@ namespace Core.Module.Player
                 : new ItemInstance(0);
         }
 
-        public IDictionary<int, ItemInstance> GetInventory()
+        public List<ItemInstance> GetInventoryItems()
         {
-            return _items;
+            return _items.Values.ToList();
         }
     }
 }
