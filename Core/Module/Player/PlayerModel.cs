@@ -102,15 +102,15 @@ namespace Core.Module.Player
         {
             var initialEquipment = _template.GetInitialEquipment();
             var items = _itemData.GetItemsByNames(initialEquipment);
-            items.ForEach(item =>
+            items.ForEach(async item =>
             {
-                AddItemsToInventory(entity.CharacterId, item);
-                EquipCharacter(entity, item);
+                int userItemId = await AddItemsToInventory(entity.CharacterId, item);
+                EquipCharacter(entity, item, userItemId);
             });
             await _characterRepository.UpdateCharacterAsync(entity);
         }
 
-        private void EquipCharacter(CharacterEntity entity, ItemDataModel item)
+        private void EquipCharacter(CharacterEntity entity, ItemDataModel item, int userItemId)
         {
             if (!IsEquippable(item)) return;
 
@@ -119,56 +119,56 @@ namespace Core.Module.Player
                 case SlotBitType.None:
                     break;
                 case SlotBitType.RightHand:
-                    entity.StRightHand = item.ItemId;
+                    entity.StRightHand = userItemId;
                     break;
                 case SlotBitType.LeftHand:
-                    entity.StLeftHand = item.ItemId;
+                    entity.StLeftHand = userItemId;
                     break;
                 case SlotBitType.LeftRightHand:
                     break;
                 case SlotBitType.Chest:
-                    entity.StChest = item.ItemId;
+                    entity.StChest = userItemId;
                     break;
                 case SlotBitType.Legs:
-                    entity.StLegs = item.ItemId;
+                    entity.StLegs = userItemId;
                     break;
                 case SlotBitType.Feet:
-                    entity.StFeet = item.ItemId;
+                    entity.StFeet = userItemId;
                     break;
                 case SlotBitType.Head:
-                    entity.StHead = item.ItemId;
+                    entity.StHead = userItemId;
                     break;
                 case SlotBitType.Gloves:
-                    entity.StGloves = item.ItemId;
+                    entity.StGloves = userItemId;
                     break;
                 case SlotBitType.OnePiece:
                     break;
                 case SlotBitType.RightEarning:
-                    entity.StRightEar = item.ItemId;
+                    entity.StRightEar = userItemId;
                     break;
                 case SlotBitType.LeftEarning:
-                    entity.StLeftEar = item.ItemId;
+                    entity.StLeftEar = userItemId;
                     break;
                 case SlotBitType.RightFinger:
-                    entity.StRightFinger = item.ItemId;
+                    entity.StRightFinger = userItemId;
                     break;
                 case SlotBitType.LeftFinger:
-                    entity.StLeftFinger = item.ItemId;
+                    entity.StLeftFinger = userItemId;
                     break;
                 case SlotBitType.Necklace:
-                    entity.StNeck = item.ItemId;
+                    entity.StNeck = userItemId;
                     break;
                 case SlotBitType.Back:
-                    entity.StBack = item.ItemId;
+                    entity.StBack = userItemId;
                     break;
                 case SlotBitType.UnderWear:
-                    entity.StUnderwear = item.ItemId;
+                    entity.StUnderwear = userItemId;
                     break;
                 case SlotBitType.Hair:
-                    entity.StHair = item.ItemId;
+                    entity.StHair = userItemId;
                     break;
                 case SlotBitType.AllDress:
-                    entity.StHairAll = item.ItemId;
+                    entity.StHairAll = userItemId;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -180,9 +180,9 @@ namespace Core.Module.Player
             return item.ActionType == ActionType.ActionEquip;
         }
 
-        private void AddItemsToInventory(int characterId, ItemDataModel item)
+        private async Task<int> AddItemsToInventory(int characterId, ItemDataModel item)
         {
-            _itemRepository.AddAsync(new UserItemEntity
+            return await _itemRepository.AddAsync(new UserItemEntity
             {
                 ItemId = item.ItemId,
                 ItemType = (int) item.ItemType,

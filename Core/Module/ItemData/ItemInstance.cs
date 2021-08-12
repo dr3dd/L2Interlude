@@ -4,13 +4,11 @@ namespace Core.Module.ItemData
 {
     public class ItemInstance : WorldObject
     {
-        public int ItemId { get; }
-        public ItemDataModel ItemData { get; }
-        public ItemInstance(int objectId, ItemDataModel itemDataModel)
+        public int ItemId { get; set; }
+        public ItemDataModel ItemData { get; set; }
+        public ItemInstance(int objectId)
         {
             ObjectId = objectId;
-            ItemId = itemDataModel.ItemId;
-            ItemData = itemDataModel;
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Core.NetworkPacket.ServerPacket
     public class UserInfo : Network.ServerPacket
     {
         private readonly PlayerInstance _playerInstance;
-        private float _moveMultiplier;
+        private readonly float _moveMultiplier;
         private readonly int _runSpd;
         private readonly int _walkSpd;
         private readonly int _flyRunSpd;
@@ -19,6 +19,7 @@ namespace Core.NetworkPacket.ServerPacket
         private readonly PlayerCharacterInfo _characterInfo;
         private readonly Location _location;
         private readonly PlayerAppearance _playerAppearance;
+        private readonly PlayerInventory _playerInventory;
 
         public UserInfo(PlayerInstance playerInstance)
         {
@@ -28,6 +29,7 @@ namespace Core.NetworkPacket.ServerPacket
             _template = _playerInstance.TemplateHandler();
             _location = _playerInstance.Location;
             _playerAppearance = _playerInstance.PlayerAppearance();
+            _playerInventory = _playerInstance.PlayerInventory();
             //_moveMultiplier = playerInstance.Stat.GetMovementSpeedMultiplier();
             //_runSpd = Convert.ToInt32(Math.Round(playerInstance.Stat.GetRunSpeed() / _moveMultiplier));
             //_walkSpd = Convert.ToInt32(Math.Round(playerInstance.Stat.GetWalkSpeed() / _moveMultiplier));
@@ -73,47 +75,63 @@ namespace Core.NetworkPacket.ServerPacket
             WriteInt(0); //_playerInstance.PlayerInventory().GetCurrentLoad()
             WriteInt(100); //_playerInstance.Stat.GetMaxLoad()
 
+            var underWear = _playerInventory.GetItemInstance(_characterInfo.StUnderwear);
+            var leftEar = _playerInventory.GetItemInstance(_characterInfo.StLeftEar);
+            var rightEar = _playerInventory.GetItemInstance(_characterInfo.StRightEar);
+            var neck = _playerInventory.GetItemInstance(_characterInfo.StNeck);
+            var leftFinger = _playerInventory.GetItemInstance(_characterInfo.StLeftFinger);
+            var rightFinger = _playerInventory.GetItemInstance(_characterInfo.StRightFinger);
+            var head = _playerInventory.GetItemInstance(_characterInfo.StHead);
+            var rightHand = _playerInventory.GetItemInstance(_characterInfo.StRightHand);
+            var leftHand = _playerInventory.GetItemInstance(_characterInfo.StLeftHand);
+            var gloves = _playerInventory.GetItemInstance(_characterInfo.StGloves);
+            var chest = _playerInventory.GetItemInstance(_characterInfo.StChest);
+            var legs = _playerInventory.GetItemInstance(_characterInfo.StLegs);
+            var feet = _playerInventory.GetItemInstance(_characterInfo.StFeet);
+            var back = _playerInventory.GetItemInstance(_characterInfo.StBack);
+            var bothHand = _playerInventory.GetItemInstance(_characterInfo.StBothHand);
+            var face = _playerInventory.GetItemInstance(_characterInfo.StFace);
+            var hair = _playerInventory.GetItemInstance(_characterInfo.StHair);
+            
             WriteInt(40); // 20 no weapon, 40 weapon equipped
             
-            //Objects
-            //for (byte id = 0; id < 17; id++)
-            WriteInt(0); //Under
-            WriteInt(0); //Left Earning
-            WriteInt(0); //Right Earning
-            WriteInt(0); //Necklace
-            WriteInt(0); //Left Finger
-            WriteInt(0); //Right Finger
-            WriteInt(0); //Head
-            WriteInt(0); //Right hand
-            WriteInt(0); //Left hand
-            WriteInt(0); //Gloves
-            WriteInt(0); //Chest
-            WriteInt(10); //Legs
-            WriteInt(0); //Feet
-            WriteInt(0); //Back
-            WriteInt(0); //Left Right Hand
-            WriteInt(0); //Face 
-            WriteInt(0); //Hair
+            //Object ids of items
+            WriteInt(underWear.ObjectId); //Under
+            WriteInt(leftEar.ObjectId); //Left Earning
+            WriteInt(rightEar.ObjectId); //Right Earning
+            WriteInt(neck.ObjectId); //Necklace
+            WriteInt(leftFinger.ObjectId); //Left Finger
+            WriteInt(rightFinger.ObjectId); //Right Finger
+            WriteInt(head.ObjectId); //Head
+            WriteInt(rightHand.ObjectId); //Right hand
+            WriteInt(leftHand.ObjectId); //Left hand
+            WriteInt(gloves.ObjectId); //Gloves
+            WriteInt(chest.ObjectId); //Chest
+            WriteInt(legs.ObjectId); //Legs
+            WriteInt(feet.ObjectId); //Feet
+            WriteInt(back.ObjectId); //Back
+            WriteInt(bothHand.ObjectId); //Left Right Hand
+            WriteInt(face.ObjectId); //Face 
+            WriteInt(hair.ObjectId); //Hair
            
-            //for (byte id = 0; id < 17; id++)
-            //items
-            WriteInt(_characterInfo.StUnderwear); //Under
-            WriteInt(_characterInfo.StLeftEar); //Left Earning
-            WriteInt(_characterInfo.StRightEar); //Right Earning
-            WriteInt(_characterInfo.StNeck); //Necklace
-            WriteInt(_characterInfo.StLeftFinger); //Left Finger
-            WriteInt(_characterInfo.StRightFinger); //Right Finger
-            WriteInt(_characterInfo.StHead); //Head
-            WriteInt(_characterInfo.StRightHand); //Right hand
-            WriteInt(_characterInfo.StLeftHand); //Left hand
-            WriteInt(_characterInfo.StGloves); //Gloves
-            WriteInt(_characterInfo.StChest); //Chest
-            WriteInt(_characterInfo.StLegs); //Legs
-            WriteInt(_characterInfo.StFeet); //Feet
-            WriteInt(_characterInfo.StBack); //Back
-            WriteInt(_characterInfo.StBothHand); //Left Right Hand
-            WriteInt(_characterInfo.StFace); //Face 
-            WriteInt(_characterInfo.StHair); //Hair
+            //item ids
+            WriteInt(underWear.ItemId); //Under
+            WriteInt(leftEar.ItemId); //Left Earning
+            WriteInt(rightEar.ItemId); //Right Earning
+            WriteInt(neck.ItemId); //Necklace
+            WriteInt(leftFinger.ItemId); //Left Finger
+            WriteInt(rightFinger.ItemId); //Right Finger
+            WriteInt(head.ItemId); //Head
+            WriteInt(rightHand.ItemId); //Right hand
+            WriteInt(leftHand.ItemId); //Left hand
+            WriteInt(gloves.ItemId); //Gloves
+            WriteInt(chest.ItemId); //Chest
+            WriteInt(legs.ItemId); //Legs
+            WriteInt(feet.ItemId); //Feet
+            WriteInt(back.ItemId); //Back
+            WriteInt(bothHand.ItemId); //Left Right Hand
+            WriteInt(face.ItemId); //Face 
+            WriteInt(hair.ItemId); //Hair
            
             // c6 new h's
             WriteShort(0x00);

@@ -37,8 +37,9 @@ namespace DataBase.Repositories
                 using (var connection = _connectionFactory.GetDbConnection())
                 {
                     connection.Open();
-                    string sql = "INSERT INTO user_item (char_id, item_id, item_type, amount, enchant) values (@CharacterId, @ItemId, @ItemType, @Amount, @Enchant);";
-                    return await connection.ExecuteAsync(sql, userItemEntity);
+                    string sql = "INSERT INTO user_item (char_id, item_id, item_type, amount, enchant) values (@CharacterId, @ItemId, @ItemType, @Amount, @Enchant); SELECT LAST_INSERT_ID();";
+                    int userItemId = await connection.ExecuteScalarAsync<int>(sql, userItemEntity);
+                    return userItemId;
                 }
             }
             catch (Exception ex)

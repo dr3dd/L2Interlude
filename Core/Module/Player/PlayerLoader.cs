@@ -22,7 +22,7 @@ namespace Core.Module.Player
         public async Task<PlayerInstance> Load(int charId)
         {
             var playerInstance = await Restore(charId);
-            playerInstance.PlayerInventory().RestoreInventory();
+            await playerInstance.PlayerInventory().RestoreInventory();
             return playerInstance;
         }
         

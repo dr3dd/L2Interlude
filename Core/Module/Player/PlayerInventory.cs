@@ -15,8 +15,7 @@ namespace Core.Module.Player
         private readonly IUserItemRepository _itemRepository;
         private readonly ObjectIdInit _objectIdInit;
         private readonly ItemDataInit _itemDataInit;
-        private readonly List<ItemInstance> _items;
-        private readonly PlayerCharacterInfo _characterInfo;
+        private readonly IDictionary<int, ItemInstance> _items;
         
         public PlayerInventory(PlayerInstance playerInstance)
         {
@@ -24,8 +23,7 @@ namespace Core.Module.Player
             _itemRepository = playerInstance.ServiceProvider.GetRequiredService<IUnitOfWork>().UserItems;
             _objectIdInit = playerInstance.ServiceProvider.GetRequiredService<ObjectIdInit>();
             _itemDataInit = playerInstance.ServiceProvider.GetRequiredService<ItemDataInit>();
-            _characterInfo = playerInstance.PlayerCharacterInfo();
-            _items = new List<ItemInstance>();
+            _items = new Dictionary<int, ItemInstance>();
         }
 
         public async Task RestoreInventory()
@@ -38,8 +36,12 @@ namespace Core.Module.Player
                 {
                     var itemData = _itemDataInit.GetItemById(item.ItemId);
                     int objectId = _objectIdInit.NextObjectId();
-                    ItemInstance itemInstance = new ItemInstance(objectId, itemData);
-                    _items.Add(itemInstance);
+                    ItemInstance itemInstance = new ItemInstance(objectId)
+                    {
+                        ItemId = itemData.ItemId,
+                        ItemData = itemData
+                    };
+                    _items.Add(item.UserItemId, itemInstance);
                 });
             }
             catch (Exception ex)
@@ -49,12 +51,19 @@ namespace Core.Module.Player
             }
         }
 
-        public void GetStUnderwear()
+        public int GetItem(int userItemId)
         {
-            int itemId = _characterInfo.StUnderwear;
+            return _items.ContainsKey(userItemId)? _items[userItemId].ItemId : 0;
+        }
+        
+        public ItemInstance GetItemInstance(int userItemId)
+        {
+            return _items.ContainsKey(userItemId)
+                ? _items[userItemId]
+                : new ItemInstance(0);
         }
 
-        public List<ItemInstance> GetInventory()
+        public IDictionary<int, ItemInstance> GetInventory()
         {
             return _items;
         }
