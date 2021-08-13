@@ -28,8 +28,11 @@ namespace Core.Controller.Handlers
             _clientPackets.TryAdd(0x0D, typeof(CharacterSelected));
             _clientPackets.TryAdd(0x0F, typeof(RequestItemList));
             _clientPackets.TryAdd(0x48, typeof(ValidatePosition));
+            _clientPackets.TryAdd(0xCD, typeof(RequestShowMiniMap));
             
             _clientPacketsD0.TryAdd(0x08, typeof(RequestManorList));
+            _clientPacketsD0.TryAdd(0x22, typeof(RequestCursedWeaponList));
+            _clientPacketsD0.TryAdd(0x23, typeof(RequestCursedWeaponLocation));
         }
         
         public void HandlePacket(Packet packet, GameServiceController controller)
