@@ -58,7 +58,7 @@ namespace Core.Module.ItemData
                 "back" => SlotBitType.Back,
                 "underwear" => SlotBitType.UnderWear,
                 "hair" => SlotBitType.Hair,
-                "alldress" => SlotBitType.AllDress,
+                "alldress" => SlotBitType.HairAll,
                 _ => SlotBitType.None
             };
         }

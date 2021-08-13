@@ -23,6 +23,7 @@ namespace Core.Controller.Handlers
             _clientPackets.TryAdd(0x01, typeof(MoveBackwardToLocation));
             _clientPackets.TryAdd(0x03, typeof(EnterWorld));
             _clientPackets.TryAdd(0x08, typeof(AuthLogin));
+            _clientPackets.TryAdd(0x11, typeof(RequestUnEquipItem));
             _clientPackets.TryAdd(0x0E, typeof(NewCharacter));
             _clientPackets.TryAdd(0x0B, typeof(CharacterCreate));
             _clientPackets.TryAdd(0x0D, typeof(CharacterSelected));
