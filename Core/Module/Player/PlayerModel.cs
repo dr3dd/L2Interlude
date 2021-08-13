@@ -167,7 +167,7 @@ namespace Core.Module.Player
                 case SlotBitType.Hair:
                     entity.StHair = userItemId;
                     break;
-                case SlotBitType.AllDress:
+                case SlotBitType.HairAll:
                     entity.StHairAll = userItemId;
                     break;
                 default:

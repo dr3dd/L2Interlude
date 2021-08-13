@@ -23,6 +23,7 @@ namespace Core.Module.ItemData
         LeftRightHand = 16384,
         OnePiece = 32768,
         Hair = 65536,
-        AllDress = 524288
+        Face = 262144,
+        HairAll = 524288
     }
 }

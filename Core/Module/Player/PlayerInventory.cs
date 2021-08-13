@@ -17,21 +17,25 @@ namespace Core.Module.Player
         private readonly ObjectIdInit _objectIdInit;
         private readonly ItemDataInit _itemDataInit;
         private readonly IDictionary<int, ItemInstance> _items;
-        
+        private readonly IDictionary<SlotBitType, int> _bodyParts;
+        private readonly PlayerCharacterInfo _characterInfo;
+
         public PlayerInventory(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
             _itemRepository = playerInstance.ServiceProvider.GetRequiredService<IUnitOfWork>().UserItems;
             _objectIdInit = playerInstance.ServiceProvider.GetRequiredService<ObjectIdInit>();
             _itemDataInit = playerInstance.ServiceProvider.GetRequiredService<ItemDataInit>();
+            _bodyParts = new Dictionary<SlotBitType, int>();
             _items = new Dictionary<int, ItemInstance>();
+            _characterInfo = _playerInstance.PlayerCharacterInfo();
         }
 
         public async Task RestoreInventory()
         {
             try
             {
-                int charId = _playerInstance.PlayerCharacterInfo().CharacterId;
+                int charId = _characterInfo.CharacterId;
                 var items = await _itemRepository.GetInventoryItemsByOwnerId(charId);
                 items.ForEach(item =>
                 {
@@ -46,6 +50,7 @@ namespace Core.Module.Player
                     };
                     _items.Add(item.UserItemId, itemInstance);
                 });
+                InitBodyParts();
             }
             catch (Exception ex)
             {
@@ -54,9 +59,77 @@ namespace Core.Module.Player
             }
         }
 
-        public int GetItem(int userItemId)
+        private void InitBodyParts()
         {
-            return _items.ContainsKey(userItemId)? _items[userItemId].ItemId : 0;
+            _items.TryGetValue(_characterInfo.StUnderwear, out var underWear);
+            _bodyParts.Add(SlotBitType.UnderWear, underWear?.UserItemId ?? 0);
+            
+            _items.TryGetValue(_characterInfo.StRightEar, out var rightEarning);
+            _bodyParts.Add(SlotBitType.RightEarning, rightEarning?.UserItemId ?? 0);
+            
+            _items.TryGetValue(_characterInfo.StLeftEar, out var leftEarning);
+            _bodyParts.Add(SlotBitType.LeftEarning, leftEarning?.UserItemId ?? 0);
+            
+            _items.TryGetValue(_characterInfo.StNeck, out var necklace);
+            _bodyParts.Add(SlotBitType.Necklace, necklace?.UserItemId ?? 0);
+            
+            _items.TryGetValue(_characterInfo.StRightFinger, out var rightFinger);
+            _bodyParts.Add(SlotBitType.RightFinger, rightFinger?.UserItemId ?? 0);
+            
+            _items.TryGetValue(_characterInfo.StLeftFinger, out var leftFinger);
+            _bodyParts.Add(SlotBitType.LeftFinger, leftFinger?.UserItemId ?? 0);
+            
+            _items.TryGetValue(_characterInfo.StHead, out var head);
+            _bodyParts.Add(SlotBitType.Head, head?.UserItemId ?? 0);
+            
+            _items.TryGetValue(_characterInfo.StRightHand, out var rightHand);
+            _bodyParts.Add(SlotBitType.RightHand, rightHand?.UserItemId ?? 0);
+            
+            _items.TryGetValue(_characterInfo.StLeftHand, out var leftHand);
+            _bodyParts.Add(SlotBitType.LeftHand, rightHand?.UserItemId ?? 0);
+            
+            _items.TryGetValue(_characterInfo.StGloves, out var gloves);
+            _bodyParts.Add(SlotBitType.Gloves, gloves?.UserItemId ?? 0);
+           
+            _items.TryGetValue(_characterInfo.StChest, out var chest);
+            _bodyParts.Add(SlotBitType.Chest, chest?.UserItemId ?? 0);
+            
+            _items.TryGetValue(_characterInfo.StLegs, out var legs);
+            _bodyParts.Add(SlotBitType.Legs, legs?.UserItemId ?? 0);
+            
+            _items.TryGetValue(_characterInfo.StFeet, out var feet);
+            _bodyParts.Add(SlotBitType.Feet, feet?.UserItemId ?? 0);
+            
+            _items.TryGetValue(_characterInfo.StBack, out var back);
+            _bodyParts.Add(SlotBitType.Back, back?.UserItemId ?? 0);
+            
+            _items.TryGetValue(_characterInfo.StBothHand, out var leftRightHand);
+            _bodyParts.Add(SlotBitType.LeftRightHand, leftRightHand?.UserItemId ?? 0);
+            
+            _items.TryGetValue(_characterInfo.StHair, out var hair);
+            _bodyParts.Add(SlotBitType.Hair, leftRightHand?.UserItemId ?? 0);
+            
+            _items.TryGetValue(_characterInfo.StFace, out var face);
+            _bodyParts.Add(SlotBitType.Face, face?.UserItemId ?? 0);
+            
+            _items.TryGetValue(_characterInfo.StHairAll, out var hairAll);
+            _bodyParts.Add(SlotBitType.HairAll, hairAll?.UserItemId ?? 0);
+        }
+
+        public IDictionary<SlotBitType, int> GetBodyParts()
+        {
+            return _bodyParts;
+        }
+
+        public void UnEquipItemInBodySlot(int slot)
+        {
+            
+        }
+
+        public ItemInstance GetBodyPartBySlotId(int slotId)
+        {
+            var userItemId = GetBodyParts()[(SlotBitType)slotId];
+            return GetItemInstance(userItemId);
         }
         
         public ItemInstance GetItemInstance(int userItemId)
