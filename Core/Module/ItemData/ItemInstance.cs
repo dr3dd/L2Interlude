@@ -5,10 +5,16 @@ namespace Core.Module.ItemData
 {
     public class ItemInstance : WorldObject
     {
+        public const byte Unchanged = 0;
+        public const byte Added = 1;
+        public const byte Modified = 2;
+        public const byte Removed = 3;
+        
         public int UserItemId { get; set; }
         public int ItemId { get; set; }
         public ItemDataModel ItemData { get; set; }
         public int Amount { get; set; }
+        public byte Change { get; set; }
 
         public ItemInstance(int objectId)
         {
@@ -96,6 +102,10 @@ namespace Core.Module.ItemData
                 return true;
             }
             return false;
+        }
+        public bool IsEquippable()
+        {
+            return ItemData.ActionType == ActionType.ActionEquip;
         }
     }
 }

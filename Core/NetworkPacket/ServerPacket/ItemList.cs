@@ -22,7 +22,7 @@ namespace Core.NetworkPacket.ServerPacket
             _items.ForEach(item =>
             {
                 WriteShort(0); //?? Type1
-                WriteInt(item.ObjectId);
+                WriteInt(item.UserItemId);
                 WriteInt(item.ItemId);
                 WriteInt(item.Amount);
                 WriteShort((int)item.GetItemType()); //(int)temp.Item.Type2

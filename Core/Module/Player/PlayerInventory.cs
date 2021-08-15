@@ -121,9 +121,118 @@ namespace Core.Module.Player
             return _bodyParts;
         }
 
-        public void UnEquipItemInBodySlot(int slot)
+        public async Task UnEquipItemInBodySlot(int slot)
         {
-            
+            switch ((SlotBitType) slot)
+            {
+                case SlotBitType.Back:
+                    break;
+                case SlotBitType.Chest:
+                    _characterInfo.StChest = 0;
+                    break;
+                case SlotBitType.None:
+                    break;
+                case SlotBitType.UnderWear:
+                    break;
+                case SlotBitType.RightEarning:
+                    break;
+                case SlotBitType.LeftEarning:
+                    break;
+                case SlotBitType.Necklace:
+                    break;
+                case SlotBitType.RightFinger:
+                    break;
+                case SlotBitType.LeftFinger:
+                    break;
+                case SlotBitType.Head:
+                    break;
+                case SlotBitType.RightHand:
+                    _characterInfo.StRightHand = 0;
+                    break;
+                case SlotBitType.LeftHand:
+                    break;
+                case SlotBitType.Gloves:
+                    break;
+                case SlotBitType.Legs:
+                    _characterInfo.StLegs = 0;
+                    break;
+                case SlotBitType.Feet:
+                    break;
+                case SlotBitType.LeftRightHand:
+                    break;
+                case SlotBitType.OnePiece:
+                    break;
+                case SlotBitType.Hair:
+                    break;
+                case SlotBitType.Face:
+                    break;
+                case SlotBitType.HairAll:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(slot), slot, null);
+            }
+            await _playerInstance.PlayerModel().UpdateCharacter();
+        }
+
+        public async Task EquipItemInBodySlot(ItemInstance itemInstance)
+        {
+            SlotBitType slot = itemInstance.ItemData.SlotBitType;
+            switch (slot)
+            {
+                case SlotBitType.Back:
+                    break;
+                case SlotBitType.Chest:
+                    _characterInfo.StChest = itemInstance.UserItemId;
+                    break;
+                case SlotBitType.None:
+                    break;
+                case SlotBitType.UnderWear:
+                    break;
+                case SlotBitType.RightEarning:
+                    break;
+                case SlotBitType.LeftEarning:
+                    break;
+                case SlotBitType.Necklace:
+                    break;
+                case SlotBitType.RightFinger:
+                    break;
+                case SlotBitType.LeftFinger:
+                    break;
+                case SlotBitType.Head:
+                    break;
+                case SlotBitType.RightHand:
+                    _characterInfo.StRightHand = itemInstance.UserItemId;
+                    break;
+                case SlotBitType.LeftHand:
+                    break;
+                case SlotBitType.Gloves:
+                    break;
+                case SlotBitType.Legs:
+                    _characterInfo.StLegs = itemInstance.UserItemId;
+                    break;
+                case SlotBitType.Feet:
+                    break;
+                case SlotBitType.LeftRightHand:
+                    break;
+                case SlotBitType.OnePiece:
+                    break;
+                case SlotBitType.Hair:
+                    break;
+                case SlotBitType.Face:
+                    break;
+                case SlotBitType.HairAll:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(slot), slot, null);
+            }
+            await _playerInstance.PlayerModel().UpdateCharacter();
+        }
+
+        public ItemInstance GetUnEquippedBodyPartItem(int slot)
+        {
+            var itemInstance = GetBodyPartBySlotId(slot);
+            itemInstance.Change = ItemInstance.Modified;
+            return itemInstance;
         }
 
         public ItemInstance GetBodyPartBySlotId(int slotId)
@@ -131,7 +240,10 @@ namespace Core.Module.Player
             var userItemId = GetBodyParts()[(SlotBitType)slotId];
             return GetItemInstance(userItemId);
         }
-        
+
+        public SlotBitType GetSlotBitByItem(ItemInstance itemInstance) =>
+            GetBodyParts().SingleOrDefault(p => p.Value == itemInstance.UserItemId).Key;
+
         public ItemInstance GetItemInstance(int userItemId)
         {
             return _items.ContainsKey(userItemId)
