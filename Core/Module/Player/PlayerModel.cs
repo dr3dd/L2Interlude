@@ -47,8 +47,10 @@ namespace Core.Module.Player
         {
             var location = _template.GetInitialStartPoint();
             var appearance = _playerInstance.PlayerAppearance();
+            var characterInfo = _playerInstance.PlayerCharacterInfo();
             var characterEntity = new CharacterEntity
             {
+                CharacterId = characterInfo.CharacterId,
                 AccountName = appearance.AccountName,
                 AccountId = 1,
                 CharacterName = appearance.CharacterName,
@@ -63,8 +65,8 @@ namespace Core.Module.Player
                 Hp = _playerInstance.PlayerStatus().GetMaxHp(),
                 Mp = _playerInstance.PlayerStatus().GetMaxMp(),
                 Duel = 0,
-                Exp = 0,
-                Sp = 0,
+                Exp = characterInfo.Exp,
+                Sp = characterInfo.Sp,
                 Nickname = "",
                 Pk = 0,
                 MaxCp = _playerInstance.PlayerStatus().GetMaxCp(),
@@ -72,24 +74,24 @@ namespace Core.Module.Player
                 MaxMp = _playerInstance.PlayerStatus().GetMaxMp(),
                 QuestFlag = "",
                 QuestMemo = "",
-                StBack = 0,
-                StChest = 0,
-                StFeet = 0,
-                StGloves = 0,
-                StHead = 0,
-                StLegs = 0,
-                StNeck = 0,
-                StBothHand = 0,
-                StLeftEar = 0,
-                StLeftFinger = 0,
-                StLeftHand = 0,
-                StRightEar = 0,
-                StRightFinger = 0,
-                StRightHand = 0,
-                StUnderwear = 0,
-                StFace = 0,
-                StHair = 0,
-                StHairAll = 0,
+                StBack = characterInfo.StBack,
+                StChest = characterInfo.StChest,
+                StFeet = characterInfo.StFeet,
+                StGloves = characterInfo.StGloves,
+                StHead = characterInfo.StHead,
+                StLegs = characterInfo.StLegs,
+                StNeck = characterInfo.StNeck,
+                StBothHand = characterInfo.StBothHand,
+                StLeftEar = characterInfo.StLeftEar,
+                StLeftFinger = characterInfo.StLeftFinger,
+                StLeftHand = characterInfo.StLeftHand,
+                StRightEar = characterInfo.StRightEar,
+                StRightFinger = characterInfo.StRightFinger,
+                StRightHand = characterInfo.StRightHand,
+                StUnderwear = characterInfo.StUnderwear,
+                StFace = characterInfo.StFace,
+                StHair = characterInfo.StHair,
+                StHairAll = characterInfo.StHairAll,
                 IsInVehicle = false,
                 XLoc = location.GetX(),
                 YLoc = location.GetY(),
@@ -107,6 +109,12 @@ namespace Core.Module.Player
                 int userItemId = await AddItemsToInventory(entity.CharacterId, item);
                 EquipCharacter(entity, item, userItemId);
             });
+            await _characterRepository.UpdateCharacterAsync(entity);
+        }
+
+        public async Task UpdateCharacter()
+        {
+            var entity = PrepareEntity();
             await _characterRepository.UpdateCharacterAsync(entity);
         }
 

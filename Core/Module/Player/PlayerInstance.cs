@@ -21,6 +21,7 @@ namespace Core.Module.Player
         private readonly PlayerStatus _playerStatus;
         private readonly PlayerCombat _playerCombat;
         private readonly PlayerInventory _playerInventory;
+        private readonly PlayerUseItem _playerUseItem;
         public Location Location { get; set; }
         public IServiceProvider ServiceProvider { get; }
         public int Heading { get; set; }
@@ -38,6 +39,7 @@ namespace Core.Module.Player
             _playerStatus = new PlayerStatus(this);
             _playerCombat = new PlayerCombat(this);
             _playerInventory = new PlayerInventory(this);
+            _playerUseItem = new PlayerUseItem(this);
         }
 
         public ITemplateHandler TemplateHandler() => _templateHandler;
@@ -49,6 +51,7 @@ namespace Core.Module.Player
         public PlayerStatus PlayerStatus() => _playerStatus;
         public PlayerCombat PlayerCombat() => _playerCombat;
         public PlayerInventory PlayerInventory() => _playerInventory;
+        public PlayerUseItem PlayerUseItem() => _playerUseItem;
 
         private static PlayerLoader PlayerLoader(IServiceProvider serviceProvider)
         {
@@ -70,6 +73,12 @@ namespace Core.Module.Player
         public async Task SendActionFailedPacketAsync()
         {
             await Controller.SendPacketAsync(new ActionFailed());
+        }
+        
+        public async Task SendUserInfoAsync()
+        {
+            await Controller.SendPacketAsync(new UserInfo(this));
+            //Broadcast.toKnownPlayers(this, new CharInfo(this)); TODO
         }
         
         public PlayerMoveToLocation PlayerLocation()
