@@ -86,7 +86,7 @@ namespace Core.Module.Player
             _bodyParts.Add(SlotBitType.RightHand, rightHand?.UserItemId ?? 0);
             
             _items.TryGetValue(_characterInfo.StLeftHand, out var leftHand);
-            _bodyParts.Add(SlotBitType.LeftHand, rightHand?.UserItemId ?? 0);
+            _bodyParts.Add(SlotBitType.LeftHand, leftHand?.UserItemId ?? 0);
             
             _items.TryGetValue(_characterInfo.StGloves, out var gloves);
             _bodyParts.Add(SlotBitType.Gloves, gloves?.UserItemId ?? 0);
@@ -107,7 +107,7 @@ namespace Core.Module.Player
             _bodyParts.Add(SlotBitType.LeftRightHand, leftRightHand?.UserItemId ?? 0);
             
             _items.TryGetValue(_characterInfo.StHair, out var hair);
-            _bodyParts.Add(SlotBitType.Hair, leftRightHand?.UserItemId ?? 0);
+            _bodyParts.Add(SlotBitType.Hair, hair?.UserItemId ?? 0);
             
             _items.TryGetValue(_characterInfo.StFace, out var face);
             _bodyParts.Add(SlotBitType.Face, face?.UserItemId ?? 0);
@@ -129,6 +129,7 @@ namespace Core.Module.Player
                     break;
                 case SlotBitType.Chest:
                     _characterInfo.StChest = 0;
+                    _bodyParts[SlotBitType.Chest] = 0;
                     break;
                 case SlotBitType.None:
                     break;
@@ -148,6 +149,7 @@ namespace Core.Module.Player
                     break;
                 case SlotBitType.RightHand:
                     _characterInfo.StRightHand = 0;
+                    _bodyParts[SlotBitType.RightHand] = 0;
                     break;
                 case SlotBitType.LeftHand:
                     break;
@@ -155,6 +157,7 @@ namespace Core.Module.Player
                     break;
                 case SlotBitType.Legs:
                     _characterInfo.StLegs = 0;
+                    _bodyParts[SlotBitType.Legs] = 0;
                     break;
                 case SlotBitType.Feet:
                     break;
@@ -183,6 +186,7 @@ namespace Core.Module.Player
                     break;
                 case SlotBitType.Chest:
                     _characterInfo.StChest = itemInstance.UserItemId;
+                    _bodyParts[SlotBitType.Chest] = itemInstance.UserItemId;
                     break;
                 case SlotBitType.None:
                     break;
@@ -202,6 +206,7 @@ namespace Core.Module.Player
                     break;
                 case SlotBitType.RightHand:
                     _characterInfo.StRightHand = itemInstance.UserItemId;
+                    _bodyParts[SlotBitType.RightHand] = itemInstance.UserItemId;
                     break;
                 case SlotBitType.LeftHand:
                     break;
@@ -209,6 +214,7 @@ namespace Core.Module.Player
                     break;
                 case SlotBitType.Legs:
                     _characterInfo.StLegs = itemInstance.UserItemId;
+                    _bodyParts[SlotBitType.Legs] = itemInstance.UserItemId;
                     break;
                 case SlotBitType.Feet:
                     break;
