@@ -509,5 +509,122 @@ namespace Core.GeoEngine
 			// If not same, path is does not exist, return origin point.
 			return goz == gtz ? new Location(tx, ty, gtz) : new Location(ox, oy, oz);
         }
+        
+        public bool CanSee(int ox, int oy, int oz, double oheight, int tx, int ty, int tz, double theight)
+        {
+			// Get origin geodata coordinates.
+			int gox = GetGeoX(ox);
+			int goy = GetGeoY(oy);
+			ABlock block = GetBlock(gox, goy);
+			if ((block == null) || !block.HasGeoPos())
+			{
+				return true; // No Geodata found.
+			}
+			
+			// Get target geodata coordinates.
+			int gtx = GetGeoX(tx);
+			int gty = GetGeoY(ty);
+			
+			// Check being on same cell and layer (index).
+			// Note: Get index must use origin height increased by cell height, the method returns index to height exclusive self.
+			int index = block.GetIndexNearest(gox, goy, oz + GeoStructure.CellHeight); // getIndexBelow
+			if (index < 0)
+			{
+				return false;
+			}
+			
+			if ((gox == gtx) && (goy == gty))
+			{
+				return index == block.GetIndexNearest(gtx, gty, tz + GeoStructure.CellHeight); // getIndexBelow
+			}
+			
+			// Get ground and nswe flag.
+			int groundZ = block.GetHeight(index);
+			int nswe = block.GetNswe(index);
+			
+			// Get delta coordinates, slope of line (XY, XZ) and direction data.
+			int dx = tx - ox;
+			int dy = ty - oy;
+			double dz = (tz + theight) - (oz + oheight);
+			double m = (double) dy / dx;
+			double mz = dz / Math.Sqrt((dx * dx) + (dy * dy));
+			MoveDirection mdt = MoveDirection.GetDirection(gtx - gox, gty - goy);
+			
+			// Get cell grid coordinates.
+			int gridX = ox & 0xFFFFFF0;
+			int gridY = oy & 0xFFFFFF0;
+			
+			// Run loop.
+			sbyte dir;
+			while ((gox != gtx) || (goy != gty))
+			{
+				// Calculate intersection with cell's X border.
+				int checkX = gridX + mdt.OffsetX;
+				int checkY = (int) (oy + (m * (checkX - ox)));
+				
+				if ((mdt.StepX != 0) && (GetGeoY(checkY) == goy))
+				{
+					// Set next cell in X direction.
+					gridX += mdt.StepX;
+					gox += mdt.SignumX;
+					dir = mdt.DirectionX;
+				}
+				else
+				{
+					// Calculate intersection with cell's Y border.
+					checkY = (int)(gridY + mdt.OffsetY);
+					checkX = (int) (ox + ((checkY - oy) / m));
+					checkX = Utility.Limit(checkX, gridX, gridX + 15);
+					
+					// Set next cell in Y direction.
+					gridY += mdt.StepY;
+					goy += mdt.SignumY;
+					dir = mdt.DirectionY;
+				}
+				
+				// Get block of the next cell.
+				block = GetBlock(gox, goy);
+				if ((block == null) || !block.HasGeoPos())
+				{
+					return true; // No Geodata found.
+				}
+				
+				// Get line of sight height (including Z slope).
+				double losz = oz + oheight + 32; //add to config MAX_OBSTACLE_HEIGHT
+				losz += mz * Math.Sqrt(((checkX - ox) * (checkX - ox)) + ((checkY - oy) * (checkY - oy)));
+				
+				// Check line of sight going though wall (vertical check).
+				
+				// Get index of particular layer, based on last iterated cell conditions.
+				bool canMove = (nswe & dir) != 0;
+				if (canMove)
+				{
+					// No wall present, get next cell below current cell.
+					index = block.GetIndexBelow(gox, goy, groundZ + GeoStructure.CellIgnoreHeight);
+				}
+				else
+				{
+					// Wall present, get next cell above current cell.
+					index = block.GetIndexAbove(gox, goy, groundZ - (2 * GeoStructure.CellHeight));
+				}
+				// Next cell's does not exist (no geodata with valid condition), return fail.
+				if (index < 0)
+				{
+					return false;
+				}
+				// Get next cell's layer height.
+				int z = block.GetHeight(index);
+				// Perform sine of sight check (next cell is above line of sight line), return fail.
+				if (z > losz)
+				{
+					return false;
+				}
+				// Next cell is accessible, update z and NSWE.
+				groundZ = z;
+				nswe = block.GetNswe(index);
+			}
+			// Iteration is completed, no obstacle is found.
+			return true;
+		}
     }
 }
