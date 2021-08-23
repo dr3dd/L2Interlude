@@ -27,6 +27,11 @@ namespace Core.Module.CharacterData.Template.Class
             return ClassId;
         }
 
+        public string GetClassKey()
+        {
+            return ClassKey;
+        }
+
         public float GetCpBegin(byte level)
         {
             return _cpTable[level];

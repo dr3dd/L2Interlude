@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace Core.Module.ParserEngine
 {
@@ -14,6 +15,10 @@ namespace Core.Module.ParserEngine
         public IDictionary<object, object> GetResult()
         {
             return _items;
+        }
+        public IEnumerator GetEnumerator()
+        {
+            return _items.Values.GetEnumerator();
         }
 
         public void AddItem(object name, object value)

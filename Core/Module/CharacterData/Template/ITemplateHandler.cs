@@ -5,6 +5,7 @@ namespace Core.Module.CharacterData.Template
     public interface ITemplateHandler
     {
         byte GetClassId();
+        string GetClassKey();
         byte GetRaceId();
         byte GetInt();
         byte GetStr();
