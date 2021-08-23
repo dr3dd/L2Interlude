@@ -5,6 +5,7 @@ namespace Core.Module.CharacterData.Template.Class
     public class Mage : HumanMagician, ITemplateHandler
     {
         private const byte ClassId = 10;
+        private const string ClassKey = "mage";
 
         public Mage(PcParameterInit pcParameterInit)
         {
@@ -14,6 +15,11 @@ namespace Core.Module.CharacterData.Template.Class
         public byte GetClassId()
         {
             return ClassId;
+        }
+        
+        public string GetClassKey()
+        {
+            return ClassKey;
         }
 
         public float GetCpBegin(byte level)

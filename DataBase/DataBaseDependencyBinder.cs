@@ -17,6 +17,7 @@ namespace DataBase
                 config.AddMap(new SpawnListMap());
                 config.AddMap(new RaidBossSpawnListMap());
                 config.AddMap(new UserItemMap());
+                config.AddMap(new UserSkillMap());
                 config.AddMap(new SkillTreeMap());
                 config.AddMap(new CharacterSkillMap());
                 config.AddMap(new ShortCutMap());
@@ -28,6 +29,7 @@ namespace DataBase
             services.AddTransient<ISpawnListRepository, SpawnListRepository>();
             services.AddTransient<IRaidBossSpawnListRepository, RaidBossSpawnListRepository>();
             services.AddTransient<IUserItemRepository, UserItemRepository>();
+            services.AddTransient<IUserSkillRepository, UserSkillRepository>();
             services.AddTransient<ISkillTreeRepository, SkillTreeRepository>();
             services.AddTransient<ICharacterSkillRepository, CharacterSkillRepository>();
             services.AddTransient<IShortCutRepository, ShortCutRepository>();

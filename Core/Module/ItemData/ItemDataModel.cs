@@ -68,7 +68,7 @@ namespace Core.Module.ItemData
             return weaponType switch
             {
                 "none" => WeaponType.None,
-                "sword" => WeaponType.DualFist,
+                "sword" => WeaponType.Sword,
                 "dagger" => WeaponType.Dagger,
                 "blunt" => WeaponType.Blunt,
                 "pole" => WeaponType.Pole,

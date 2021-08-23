@@ -22,6 +22,7 @@ namespace Core.Module.Player
         private readonly PlayerCombat _playerCombat;
         private readonly PlayerInventory _playerInventory;
         private readonly PlayerUseItem _playerUseItem;
+        private readonly PlayerSkill _playerSkill;
         public Location Location { get; set; }
         public IServiceProvider ServiceProvider { get; }
         public int Heading { get; set; }
@@ -40,6 +41,7 @@ namespace Core.Module.Player
             _playerCombat = new PlayerCombat(this);
             _playerInventory = new PlayerInventory(this);
             _playerUseItem = new PlayerUseItem(this);
+            _playerSkill = new PlayerSkill(this);
         }
 
         public ITemplateHandler TemplateHandler() => _templateHandler;
@@ -52,6 +54,7 @@ namespace Core.Module.Player
         public PlayerCombat PlayerCombat() => _playerCombat;
         public PlayerInventory PlayerInventory() => _playerInventory;
         public PlayerUseItem PlayerUseItem() => _playerUseItem;
+        public PlayerSkill PlayerSkill() => _playerSkill;
 
         private static PlayerLoader PlayerLoader(IServiceProvider serviceProvider)
         {

@@ -10,6 +10,8 @@ namespace DataBase
         public ISpawnListRepository SpawnList { get; }
         public IRaidBossSpawnListRepository RaidBossSpawnList { get; }
         public IUserItemRepository UserItems { get; }
+        public IUserSkillRepository UserSkill { get; }
+        
         public ISkillTreeRepository SkillTree { get; }
         public ICharacterSkillRepository CharacterSkill { get; }
         public IShortCutRepository ShortCut { get; }
@@ -19,6 +21,7 @@ namespace DataBase
             ICharacterRepository characterRepository,
             ISpawnListRepository spawnListRepository,
             IUserItemRepository userItemRepository,
+            IUserSkillRepository userSkillRepository,
             ISkillTreeRepository skillTreeRepository,
             ICharacterSkillRepository characterSkillRepository,
             IShortCutRepository shortCutRepository,
@@ -29,6 +32,7 @@ namespace DataBase
             Characters = characterRepository;
             SpawnList = spawnListRepository;
             UserItems = userItemRepository;
+            UserSkill = userSkillRepository;
             SkillTree = skillTreeRepository;
             CharacterSkill = characterSkillRepository;
             ShortCut = shortCutRepository;

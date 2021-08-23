@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Core.Module.CharacterData.Template;
 using Core.Module.ItemData;
+using Core.Module.SkillData;
 using DataBase.Entities;
 using DataBase.Interfaces;
 using L2Logger;
@@ -14,18 +16,24 @@ namespace Core.Module.Player
         private readonly PlayerInstance _playerInstance;
         private readonly ItemDataInit _itemData;
         private readonly IUserItemRepository _itemRepository;
+        private readonly IUserSkillRepository _skillRepository;
         private readonly ICharacterRepository _characterRepository;
         private readonly ITemplateHandler _template;
+        private readonly SkillAcquireInit _acquireInit;
+        private readonly SkillPchInit _skillPchInit;
         
         public PlayerModel(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
             _template = _playerInstance.TemplateHandler();
             _itemData = _playerInstance.ServiceProvider.GetRequiredService<ItemDataInit>();
+            _acquireInit = _playerInstance.ServiceProvider.GetRequiredService<SkillAcquireInit>();
+            _skillPchInit = _playerInstance.ServiceProvider.GetRequiredService<SkillPchInit>();
             
             var unitOfWorkService = _playerInstance.ServiceProvider.GetRequiredService<IUnitOfWork>();
             _itemRepository = unitOfWorkService.UserItems;
             _characterRepository = unitOfWorkService.Characters;
+            _skillRepository = unitOfWorkService.UserSkill;
         }
         
         public async Task CreateCharacter()
@@ -36,6 +44,7 @@ namespace Core.Module.Player
                 var characterId = await _characterRepository.CreateCharacterAsync(entity);
                 entity.CharacterId = characterId;
                 await AddInitialEquipment(entity);
+                AddInitialSkill(characterId);
             }
             catch (Exception ex)
             {
@@ -110,6 +119,25 @@ namespace Core.Module.Player
                 EquipCharacter(entity, item, userItemId);
             });
             await _characterRepository.UpdateCharacterAsync(entity);
+        }
+
+        private void AddInitialSkill(int characterId)
+        {
+            var classKey = _template.GetClassKey();
+            var skills = _acquireInit
+                .GetSkillAcquireListByClassKey(classKey)
+                .Where(s => s.LevelToGetSkill == 1).ToList();
+            
+            skills.ForEach(s =>
+            {
+                _skillRepository.AddAsync(new UserSkillEntity
+                {
+                    CharacterId = characterId,
+                    SkillId = _skillPchInit.GetSkillIdByName(s.SkillName),
+                    SkillLevel = s.LevelToGetSkill,
+                    ToEndTime = 0
+                });
+            });
         }
 
         public async Task UpdateCharacter()

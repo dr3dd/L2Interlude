@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Core.Controller;
 using Core.Module.CharacterData.Template;
 using Core.Module.Player;
+using Core.NetworkPacket.ServerPacket.CharacterPacket;
 using Microsoft.Extensions.DependencyInjection;
 using Network;
 
@@ -48,7 +49,8 @@ namespace Core.NetworkPacket.ClientPacket.CharacterPacket
             PlayerAppearance playerAppearance = new PlayerAppearance(_accountName, _characterName, _face, _hairColor, _hairStyle, _gender);
             PlayerInstance playerInstance = new PlayerInstance(template, playerAppearance, ServiceProvider);
             await playerInstance.PlayerModel().CreateCharacter();
-
+            await _controller.SendPacketAsync(new CharacterCreateOk());
+            await _controller.SendPacketAsync(new CharacterInfoList(_accountName, _controller));
         }
    }
 }

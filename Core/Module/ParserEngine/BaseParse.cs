@@ -23,7 +23,7 @@ namespace Core.Module.ParserEngine
             string line;
             while ((line = sr.ReadLine()) != null)
             {
-                parse.ParseLine(line);
+                parse.ParseLine(line.Trim());
             }
             return parse.GetResult();
         }
