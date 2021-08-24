@@ -4,7 +4,7 @@ using Helpers;
 
 namespace Core.Module.CharacterData.Template
 {
-    public abstract class DwarfApprentice : Dwarf
+    public abstract class OrcFighterApprentice : Orc
     {
         private const int BasePhysicalAttack = 4;
         private const int BaseCritical = 4;
@@ -27,26 +27,26 @@ namespace Core.Module.CharacterData.Template
         private const int BaseMagicDefendRightRing = 5;
         private const int BaseMagicDefendNecklace = 13;
 
-        private const int BaseAttackRange = 20;
+        private const int BaseAttackRange = 25;
         private const int BaseDamageRange = 0;
         private const int BaseRandDam = 10;
 
-        private const int BaseGroundLowSpeed = 80;
-        private const int BaseGroundHighSpeed = 115;
+        private const int BaseGroundLowSpeed = 70;
+        private const int BaseGroundHighSpeed = 117;
         private const int BaseUnderWaterLowSpeed = 50;
         private const int BaseUnderWaterHighSpeed = 50;
 
-        private const byte Int = 20;
-        private const byte Str = 39;
-        private const byte Con = 45;
+        private const byte Int = 18;
+        private const byte Str = 40;
+        private const byte Con = 47;
         private const byte Men = 27;
-        private const byte Dex = 29;
-        private const byte Wit = 10;
+        private const byte Dex = 26;
+        private const byte Wit = 12;
 
         private IList<string> _initialEquipment;
         private IList<Location> _initialStartPoint;
 
-        protected DwarfApprentice()
+        protected OrcFighterApprentice()
         {
             InitialEquipment();
             InitialStartPoint();
@@ -56,12 +56,12 @@ namespace Core.Module.CharacterData.Template
         {
             _initialStartPoint = new List<Location>
             {
-                new Location(108644, -173947, -400),
-                new Location(108678, -174002, -400),
-                new Location(108505, -173964, -400),
-                new Location(108512, -174026, -400),
-                new Location(108549, -174075, -400),
-                new Location(108576, -174122, -400)
+                new Location(-56733, -113459, -690),
+                new Location(-56686, -113470, -690),
+                new Location(-56728, -113610, -690),
+                new Location(-56693, -113610, -690),
+                new Location(-56743, -113757, -690),
+                new Location(-56682, -113730, -690)
             };
         }
 
@@ -69,8 +69,8 @@ namespace Core.Module.CharacterData.Template
         {
             _initialEquipment = new List<string>
             {
-                "union_member_s_club",
-                "dagger",
+                "squire_s_sword",
+                "training_gloves",
                 "squire_s_shirt",
                 "squire_s_pants",
                 "tutorial_guide"

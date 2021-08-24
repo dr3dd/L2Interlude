@@ -162,6 +162,8 @@ namespace Core.Module.Player
                 case SlotBitType.Feet:
                     break;
                 case SlotBitType.LeftRightHand:
+                    _characterInfo.StBothHand = 0;
+                    _bodyParts[SlotBitType.LeftRightHand] = 0;
                     break;
                 case SlotBitType.OnePiece:
                     break;
@@ -219,6 +221,8 @@ namespace Core.Module.Player
                 case SlotBitType.Feet:
                     break;
                 case SlotBitType.LeftRightHand:
+                    _characterInfo.StBothHand = itemInstance.UserItemId;
+                    _bodyParts[SlotBitType.LeftRightHand] = itemInstance.UserItemId;
                     break;
                 case SlotBitType.OnePiece:
                     break;

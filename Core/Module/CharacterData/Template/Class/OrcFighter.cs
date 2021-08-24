@@ -2,16 +2,16 @@
 
 namespace Core.Module.CharacterData.Template.Class
 {
-    public class Fighter : HumanFighter, ITemplateHandler
+    public class OrcFighter : OrcFighterApprentice, ITemplateHandler
     {
-        private const byte ClassId = 0;
-        private const string ClassKey = "fighter";
+        private const byte ClassId = 44;
+        private const string ClassKey = "orc_fighter";
 
         private readonly IDictionary<byte, float> _cpTable;
         private readonly IDictionary<byte, float> _hpTable;
         private readonly IDictionary<byte, float> _mpTable;
 
-        public Fighter(PcParameterInit pcParameter)
+        public OrcFighter(PcParameterInit pcParameter)
         {
             var result = pcParameter.GetResult();
             var fighterCp = result[$"{ClassKey}_cp"];

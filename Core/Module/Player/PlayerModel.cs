@@ -161,6 +161,7 @@ namespace Core.Module.Player
                     entity.StLeftHand = userItemId;
                     break;
                 case SlotBitType.LeftRightHand:
+                    entity.StBothHand = userItemId;
                     break;
                 case SlotBitType.Chest:
                     entity.StChest = userItemId;

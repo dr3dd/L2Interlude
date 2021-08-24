@@ -20,6 +20,9 @@ namespace Core.Module.CharacterData.Template
             RegisterTemplateHandler(new ElvenMage(basicStatBonusInit));
             RegisterTemplateHandler(new DarkFighter(basicStatBonusInit));
             RegisterTemplateHandler(new DarkMage(basicStatBonusInit));
+            RegisterTemplateHandler(new OrcFighter(basicStatBonusInit));
+            RegisterTemplateHandler(new OrcMage(basicStatBonusInit));
+            RegisterTemplateHandler(new DwarvenFighter(basicStatBonusInit));
         }
 
         private void RegisterTemplateHandler(ITemplateHandler templateHandler)

@@ -4,7 +4,7 @@ using Helpers;
 
 namespace Core.Module.CharacterData.Template
 {
-    public class ElfMagician : Elf
+    public abstract class ElfMagician : Elf
     {
         private const int BasePhysicalAttack = 3;
         private const int BaseCritical = 4;
