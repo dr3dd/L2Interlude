@@ -17,6 +17,7 @@ namespace Core.Module.CharacterData.Template
             RegisterTemplateHandler(new Fighter(basicStatBonusInit));
             RegisterTemplateHandler(new Mage(basicStatBonusInit));
             RegisterTemplateHandler(new ElvenFighter(basicStatBonusInit));
+            RegisterTemplateHandler(new ElvenMage(basicStatBonusInit));
         }
 
         private void RegisterTemplateHandler(ITemplateHandler templateHandler)
