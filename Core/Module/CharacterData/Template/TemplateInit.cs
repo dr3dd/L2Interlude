@@ -16,6 +16,7 @@ namespace Core.Module.CharacterData.Template
             _handlers = new Dictionary<byte, ITemplateHandler>();
             RegisterTemplateHandler(new Fighter(basicStatBonusInit));
             RegisterTemplateHandler(new Mage(basicStatBonusInit));
+            RegisterTemplateHandler(new ElvenFighter(basicStatBonusInit));
         }
 
         private void RegisterTemplateHandler(ITemplateHandler templateHandler)
