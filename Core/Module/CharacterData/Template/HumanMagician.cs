@@ -1,154 +1,207 @@
 ﻿using System.Collections.Generic;
 using Core.Module.CharacterData.Template.Race;
+using Helpers;
 
 namespace Core.Module.CharacterData.Template
 {
     public class HumanMagician : Human
     {
+        private const int BasePhysicalAttack = 3;
+        private const int BaseCritical = 4;
+        private const string BaseAttackType = "fist";
+        private const int BaseAttackSpeed = 300;
+        //private const int BaseDefend = 80; //{Upper body; Lower body; Pitch; Boots; Gloves; Underwear; Mantle} {31;18;12;7;8;3;1}
+        private const int BaseDefendUpperBody = 15;
+        private const int BaseDefendLowerBody = 8;
+        private const int BaseDefendPitch = 12;
+        private const int BaseDefendBoots = 7;
+        private const int BaseDefendGloves = 8;
+        private const int BaseDefendUnderwear = 3;
+        private const int BaseDefendMantle = 1;
+
+        private const int BaseMagicAttack = 6;
+        //private const int BaseMagicDefend = 41; //{The earring which rises; Left earring; The ring which rises; Left ring; Neck} {9;9;5;5;13}
+        private const int BaseMagicDefendLeftEarring = 9;
+        private const int BaseMagicDefendRightEarring = 9;
+        private const int BaseMagicDefendLeftRing = 5;
+        private const int BaseMagicDefendRightRing = 5;
+        private const int BaseMagicDefendNecklace = 13;
+
+        private const int BaseAttackRange = 20;
+        private const int BaseDamageRange = 0;
+        private const int BaseRandDam = 10;
+
+        private const int BaseGroundLowSpeed = 78;
+        private const int BaseGroundHighSpeed = 120;
+        private const int BaseUnderWaterLowSpeed = 50;
+        private const int BaseUnderWaterHighSpeed = 50;
+        
         private const byte Int = 41;
         private const byte Str = 22;
         private const byte Con = 27;
         private const byte Men = 39;
         private const byte Dex = 21;
         private const byte Wit = 20;
+
+        private IList<string> _initialEquipment;
+        private IList<Location> _initialStartPoint;
+
+        protected HumanMagician()
+        {
+            InitialEquipment();
+            InitialStartPoint();
+        }
         
+        private void InitialStartPoint()
+        {
+            _initialStartPoint = new List<Location>
+            {
+                new Location(-90875, 248162, -3570),
+                new Location(-90954, 248118, -3570),
+                new Location(-90918, 248070, -3570),
+                new Location(-90890, 248027, -3570),
+            };
+        }
+
+        private void InitialEquipment()
+        {
+            _initialEquipment = new List<string>
+            {
+                "apprentice_s_wand",
+                "apprentice_s_tunic",
+                "apprentice_s_hose",
+                "tutorial_guide"
+            };
+        }
+
         public byte GetInt()
         {
             return Int;
         }
-
         public byte GetStr()
         {
             return Str;
         }
-
         public byte GetCon()
         {
             return Con;
         }
-
         public byte GetMen()
         {
             return Men;
         }
-
         public byte GetDex()
         {
             return Dex;
         }
-
         public byte GetWit()
         {
             return Wit;
         }
-        
+
+        public IEnumerable<string> GetInitialEquipment()
+        {
+            return _initialEquipment;
+        }
+
         public Location GetInitialStartPoint()
         {
-            throw new System.NotImplementedException();
+            var rndItem = Rnd.Next(3);
+            return _initialStartPoint[rndItem];
         }
 
         public int GetBasePhysicalAttack()
         {
-            return 1;
+            return BasePhysicalAttack;
         }
+
         public int GetBaseAttackSpeed()
         {
-            return 1;
+            return BaseAttackSpeed;
         }
 
         public int GetBaseCritical()
         {
-            return 1;
+            return BaseCritical;
         }
-
-        public int GetBaseMagicAttack()
-        {
-            return 1;
-        }
-
-        public int GetBaseMagicDefend()
-        {
-            return 1;
-        }
-
-        public int GetBaseAttackRange()
-        {
-            return 1;
-        }
-        
         public int GetBaseDefendUpperBody()
         {
-            throw new System.NotImplementedException();
+            return BaseDefendUpperBody;
         }
 
         public int GetBaseDefendLowerBody()
         {
-            throw new System.NotImplementedException();
+            return BaseDefendLowerBody;
         }
 
         public int GetBaseDefendPitch()
         {
-            throw new System.NotImplementedException();
+            return BaseDefendPitch;
         }
 
         public int GetBaseDefendBoots()
         {
-            throw new System.NotImplementedException();
+            return BaseDefendBoots;
         }
 
         public int GetBaseDefendGloves()
         {
-            throw new System.NotImplementedException();
+            return BaseDefendGloves;
         }
 
         public int GetBaseDefendUnderwear()
         {
-            throw new System.NotImplementedException();
+            return BaseDefendUnderwear;
         }
 
         public int GetBaseDefendMantle()
         {
-            throw new System.NotImplementedException();
-        }
-        
-        public int GetBaseGroundHighSpeed()
-        {
-            throw new System.NotImplementedException();
+            return BaseDefendMantle;
         }
 
-        public int GetBaseGroundLowSpeed()
-        {
-            throw new System.NotImplementedException();
-        }
-        
         public int GetBaseMagicDefendLeftEarring()
         {
-            throw new System.NotImplementedException();
+            return BaseMagicDefendLeftEarring;
         }
 
         public int GetBaseMagicDefendRightEarring()
         {
-            throw new System.NotImplementedException();
+            return BaseMagicDefendRightEarring;
         }
 
         public int GetBaseMagicDefendLeftRing()
         {
-            throw new System.NotImplementedException();
+            return BaseMagicDefendLeftRing;
         }
 
         public int GetBaseMagicDefendRightRing()
         {
-            throw new System.NotImplementedException();
+            return BaseMagicDefendRightRing;
         }
 
         public int GetBaseMagicDefendNecklace()
         {
-            throw new System.NotImplementedException();
+            return BaseMagicDefendNecklace;
         }
-        
-        public IEnumerable<string> GetInitialEquipment()
+
+        public int GetBaseMagicAttack()
         {
-            throw new System.NotImplementedException();
+            return BaseMagicAttack;
+        }
+
+        public int GetBaseAttackRange()
+        {
+            return BaseAttackRange;
+        }
+
+        public int GetBaseGroundHighSpeed()
+        {
+            return BaseGroundHighSpeed;
+        }
+
+        public int GetBaseGroundLowSpeed()
+        {
+            return BaseGroundLowSpeed;
         }
     }
 }
