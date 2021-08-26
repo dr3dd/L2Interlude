@@ -29,6 +29,7 @@ namespace Core
             services.AddSingleton<SkillPchInit>();
             services.AddSingleton<SkillDataInit>();
             services.AddSingleton<SkillAcquireInit>();
+            services.AddSingleton<EffectInit>();
         }
     }
 }

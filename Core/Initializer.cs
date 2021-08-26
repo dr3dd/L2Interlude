@@ -70,6 +70,7 @@ namespace Core
             ServiceProvider.GetRequiredService<SkillPchInit>().Run();
             ServiceProvider.GetRequiredService<SkillDataInit>().Run();
             ServiceProvider.GetRequiredService<SkillAcquireInit>().Run();
+            ServiceProvider.GetRequiredService<EffectInit>();
             //ServiceProvider.GetService<SkillTreeInit>();
             //ServiceProvider.GetService<SkillHandlerInit>();
             //ServiceProvider.GetService<SkillSpellBookInit>();

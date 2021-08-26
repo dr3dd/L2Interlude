@@ -1,5 +1,7 @@
 ﻿using System;
 using Core.Module.CharacterData.Template;
+using Core.Module.SkillData;
+using Core.Module.SkillData.Effect;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player
@@ -8,11 +10,13 @@ namespace Core.Module.Player
     {
         private readonly ITemplateHandler _templateHandler;
         private readonly PcParameterInit _statBonusInit;
+        private readonly EffectInit _effectInit;
         private readonly byte _level;
         public PlayerCombat(PlayerInstance playerInstance)
         {
             _templateHandler = playerInstance.TemplateHandler();
             _statBonusInit = playerInstance.ServiceProvider.GetRequiredService<PcParameterInit>();
+            _effectInit = playerInstance.ServiceProvider.GetRequiredService<EffectInit>();
             _level = playerInstance.PlayerStatus().Level;
         }
 
@@ -119,7 +123,12 @@ namespace Core.Module.Player
             var dexStat = _templateHandler.GetDex();
             float dexBonus = (_statBonusInit.GetDexBonus(dexStat) + 100) / 100f;
             var result = baseGroundHighSpeed * dexBonus;
-            return (int) result;
+
+            var handler = _effectInit.GetEffectHandler("p_speed");
+            handler.Calc((int)result, 30);
+            var test = ((PSpeed)handler).GetEffectSpeed();
+            
+            return (int) test;
         }
         
         public int GetGroundLowSpeed()
