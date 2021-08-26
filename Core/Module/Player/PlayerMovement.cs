@@ -24,7 +24,7 @@ namespace Core.Module.Player
         public void MoveToLocation(int x, int y, int z, int offset)
         {
             // Get the Move Speed of the Creature
-            int speed = 125;
+            int speed = _playerInstance.PlayerCombat().GetGroundHighSpeed();
             
             // Get current position of the Creature
             int curX = _playerInstance.Location.GetX();
