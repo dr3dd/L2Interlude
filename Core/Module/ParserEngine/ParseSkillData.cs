@@ -93,6 +93,10 @@ namespace Core.Module.ParserEngine
                     {
                         skillBegin.EffectPoint = item.Split("=")[1].Trim();
                     }
+                    if (item.StartsWith("abnormal_type"))
+                    {
+                        skillBegin.AbnormalType = item.Split("=")[1].Trim();
+                    }
                     if (item.StartsWith("target_type"))
                     {
                         skillBegin.TargetType = item.Split("=")[1].Trim();
