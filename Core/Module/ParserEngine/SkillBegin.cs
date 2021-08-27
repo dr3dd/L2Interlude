@@ -19,6 +19,7 @@
         public float ReuseDelay { get; set; }
         public string Attribute { get; set; }
         public string EffectPoint { get; set; }
+        public string AbnormalType { get; set; }
         public string TargetType { get; set; }
         public string AffectScope { get; set; }
         public string AffectLimit { get; set; }

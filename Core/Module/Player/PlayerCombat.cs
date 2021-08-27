@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Core.Module.CharacterData.Template;
 using Core.Module.SkillData;
 using Core.Module.SkillData.Effect;
@@ -12,8 +14,10 @@ namespace Core.Module.Player
         private readonly PcParameterInit _statBonusInit;
         private readonly EffectInit _effectInit;
         private readonly byte _level;
+        private readonly PlayerInstance _playerInstance;
         public PlayerCombat(PlayerInstance playerInstance)
         {
+            _playerInstance = playerInstance;
             _templateHandler = playerInstance.TemplateHandler();
             _statBonusInit = playerInstance.ServiceProvider.GetRequiredService<PcParameterInit>();
             _effectInit = playerInstance.ServiceProvider.GetRequiredService<EffectInit>();
@@ -124,6 +128,9 @@ namespace Core.Module.Player
             float dexBonus = (_statBonusInit.GetDexBonus(dexStat) + 100) / 100f;
             var result = baseGroundHighSpeed * dexBonus;
 
+            IEnumerable<SkillDataModel> effects = _playerInstance.PlayerEffect().GetEffects();
+            effects.Where(e => e.AbnormalType == AbnormalType.SpeedUp);
+            
             var handler = _effectInit.GetEffectHandler("p_speed");
             handler.Calc((int)result, 30);
             var test = ((PSpeed)handler).GetEffectSpeed();

@@ -23,6 +23,7 @@ namespace Core.Module.Player
         private readonly PlayerInventory _playerInventory;
         private readonly PlayerUseItem _playerUseItem;
         private readonly PlayerSkill _playerSkill;
+        private readonly PlayerEffect _playerEffect;
         public Location Location { get; set; }
         public IServiceProvider ServiceProvider { get; }
         public int Heading { get; set; }
@@ -42,6 +43,7 @@ namespace Core.Module.Player
             _playerInventory = new PlayerInventory(this);
             _playerUseItem = new PlayerUseItem(this);
             _playerSkill = new PlayerSkill(this);
+            _playerEffect = new PlayerEffect(this);
         }
 
         public ITemplateHandler TemplateHandler() => _templateHandler;
@@ -55,6 +57,7 @@ namespace Core.Module.Player
         public PlayerInventory PlayerInventory() => _playerInventory;
         public PlayerUseItem PlayerUseItem() => _playerUseItem;
         public PlayerSkill PlayerSkill() => _playerSkill;
+        public PlayerEffect PlayerEffect() => _playerEffect;
 
         private static PlayerLoader PlayerLoader(IServiceProvider serviceProvider)
         {
