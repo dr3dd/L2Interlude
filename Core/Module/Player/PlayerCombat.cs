@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Module.CharacterData;
 using Core.Module.CharacterData.Template;
 using Core.Module.SkillData;
 using Core.Module.SkillData.Effect;
@@ -129,13 +130,13 @@ namespace Core.Module.Player
             var result = baseGroundHighSpeed * dexBonus;
 
             IEnumerable<SkillDataModel> effects = _playerInstance.PlayerEffect().GetEffects();
-            effects.Where(e => e.AbnormalType == AbnormalType.SpeedUp);
-            
-            var handler = _effectInit.GetEffectHandler("p_speed");
-            handler.Calc((int)result, 30);
-            var test = ((PSpeed)handler).GetEffectSpeed();
-            
-            return (int) test;
+            foreach (var skillDataModel in effects.Where(e => e.AbnormalType == AbnormalType.SpeedUp | e.AbnormalType == AbnormalType.SongOfWind))
+            {
+                var effect= skillDataModel.Effects.First();
+                effect.Key.Calc((int)result, 30);
+                result = ((PSpeed)effect.Key).GetEffectSpeed();
+            }
+            return (int) result;
         }
         
         public int GetGroundLowSpeed()

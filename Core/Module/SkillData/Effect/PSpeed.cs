@@ -1,6 +1,6 @@
 ﻿namespace Core.Module.SkillData.Effect
 {
-    public class PSpeed : Effects
+    public class PSpeed : Effect
     {
         private int _effectSpeed;
         public override void Calc(params int[] param)

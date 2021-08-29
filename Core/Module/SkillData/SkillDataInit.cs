@@ -11,11 +11,13 @@ namespace Core.Module.SkillData
         private readonly IParse _parse;
         private readonly IDictionary<string, SkillDataModel> _skillDataModel;
         private readonly SkillPchInit _skillPchInit;
+        private readonly EffectInit _effectInit;
         public SkillDataInit(IServiceProvider provider) : base(provider)
         {
             _skillDataModel = new Dictionary<string, SkillDataModel>();
             _parse = new ParseSkillData();
             _skillPchInit = provider.GetRequiredService<SkillPchInit>();
+            _effectInit = provider.GetRequiredService<EffectInit>();
         }
 
         public override void Run()
@@ -26,7 +28,7 @@ namespace Core.Module.SkillData
                 IResult result = Parse("skilldata.txt", _parse);
                 foreach (var parseItem in result)
                 {
-                    var skillModel = new SkillDataModel((SkillBegin) parseItem);
+                    var skillModel = new SkillDataModel((SkillBegin) parseItem, _effectInit);
                     _skillDataModel.Add(skillModel.SkillName, skillModel);
                 }
                 LoggerManager.Info("Loaded SkillData: " + _skillDataModel.Count);

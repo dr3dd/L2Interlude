@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Core.Module.ParserEngine;
+using Core.Module.SkillData.Effect;
+using L2Logger;
 
 namespace Core.Module.SkillData
 {
@@ -10,7 +13,7 @@ namespace Core.Module.SkillData
         public int Level { get; }
         public OperateType OperateType { get; set; }
         public int MagicLevel { get; set; }
-        public string Effect { get; set; }
+        public IDictionary<Effect.Effect, string[]> Effects { get; }
         public string OperateCond { get; set; }
         public byte IsMagic { get; set; }
         public int MpConsume2 { get; set; }
@@ -29,7 +32,7 @@ namespace Core.Module.SkillData
         public string NextAction { get; set; }
         public string RideState { get; set; }
 
-        public SkillDataModel(SkillBegin skillBegin)
+        public SkillDataModel(SkillBegin skillBegin, EffectInit effectInit)
         {
             SkillId = skillBegin.SkillId;
             SkillName = skillBegin.SkillName;
@@ -37,8 +40,36 @@ namespace Core.Module.SkillData
             OperateType = GetOperateType(skillBegin.OperateType);
             TargetType = GetTargetType(skillBegin.TargetType);
             AbnormalType = GetAbnormalType(skillBegin.AbnormalType);
+
+            //for debug
+            switch (SkillName)
+            {
+                case "s_wind_walk2":
+                case "s_song_of_wind":
+                    Effects = GetEffects(skillBegin.Effect, effectInit);
+                    break;
+            }
         }
-        
+
+        private IDictionary<Effect.Effect, string[]> GetEffects(IList<string> skillBeginEffect, EffectInit effectInit)
+        {
+            IDictionary<Effect.Effect, string[]> effects = new Dictionary<Effect.Effect, string[]>();
+            try
+            {
+                foreach (var strEffect in skillBeginEffect)
+                {
+                    var effectParams = strEffect.Split(";");
+                    var effect = effectInit.GetEffectHandler(effectParams[0]);
+                    effects.Add(effect, effectParams);
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggerManager.Error(ex.Message);
+            }
+            return effects;
+        }
+
         private OperateType GetOperateType(string operateType)
         {
             return operateType switch
