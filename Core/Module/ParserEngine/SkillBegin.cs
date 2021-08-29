@@ -1,4 +1,6 @@
-﻿namespace Core.Module.ParserEngine
+﻿using System.Collections.Generic;
+
+namespace Core.Module.ParserEngine
 {
     public struct SkillBegin
     {
@@ -7,7 +9,7 @@
         public int Level { get; set; }
         public string OperateType { get; set; }
         public int MagicLevel { get; set; }
-        public string Effect { get; set; }
+        public IList<string> Effect { get; set; }
         public string OperateCond { get; set; }
         public byte IsMagic { get; set; }
         public int MpConsume2 { get; set; }
