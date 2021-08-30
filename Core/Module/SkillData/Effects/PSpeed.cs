@@ -1,4 +1,4 @@
-﻿namespace Core.Module.SkillData.Effect
+﻿namespace Core.Module.SkillData.Effects
 {
     public class PSpeed : Effect
     {

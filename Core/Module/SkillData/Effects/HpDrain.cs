@@ -1,6 +1,6 @@
-﻿namespace Core.Module.SkillData.Effect
+﻿namespace Core.Module.SkillData.Effects
 {
-    public class AttackSpeedByWeapon : Effect
+    public class HpDrain : Effect
     {
         public override void Calc(params int[] param)
         {

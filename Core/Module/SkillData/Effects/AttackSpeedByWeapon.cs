@@ -1,6 +1,6 @@
-﻿namespace Core.Module.SkillData.Effect
+﻿namespace Core.Module.SkillData.Effects
 {
-    public class FatalBlow : Effect
+    public class AttackSpeedByWeapon : Effect
     {
         public override void Calc(params int[] param)
         {

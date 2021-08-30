@@ -1,6 +1,6 @@
-﻿namespace Core.Module.SkillData.Effect
+﻿namespace Core.Module.SkillData.Effects
 {
-    public class Heal : Effect
+    public class FatalBlow : Effect
     {
         public override void Calc(params int[] param)
         {

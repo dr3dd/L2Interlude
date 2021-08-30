@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 
 namespace Core.TaskManager
 {
-    public class TaskScheduler
+    public static class TaskManagerScheduler
     {
-        
         public static Task ScheduleAtFixed(Action action, int delay, CancellationToken token)
         {
             return Task.Run( async () =>

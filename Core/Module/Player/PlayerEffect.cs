@@ -1,41 +1,33 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading;
 using Core.Module.SkillData;
+using Core.Module.SkillData.Effects;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player
 {
     public class PlayerEffect
     {
-        private PlayerInstance _playerInstance;
+        private readonly PlayerInstance _playerInstance;
         private readonly ConcurrentDictionary<string, SkillDataModel> _currentEffects;
         private readonly SkillDataInit _dataInit;
         private readonly EffectInit _effectInit;
-        private CancellationTokenSource _cts;
         public PlayerEffect(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
             _currentEffects = new ConcurrentDictionary<string, SkillDataModel>();
             _dataInit = playerInstance.ServiceProvider.GetRequiredService<SkillDataInit>();
             _effectInit = playerInstance.ServiceProvider.GetRequiredService<EffectInit>();
-
-            //debug
-            AddWindWalk2();
-            AddSongOfWind();
         }
 
-        private void AddSongOfWind()
+        public void AddEffect(Effect effect)
         {
-            SkillDataModel skillData = _dataInit.GetSkillByName("s_song_of_wind");
-            _currentEffects.TryAdd("s_song_of_wind", skillData);
+            _currentEffects.TryAdd(effect.SkillDataModel.SkillName, effect.SkillDataModel);
         }
 
-        private void AddWindWalk2()
+        public void RemoveEffect(Effect effect)
         {
-            _cts = new CancellationTokenSource();
-            SkillDataModel skillData = _dataInit.GetSkillByName("s_wind_walk2");
-            _currentEffects.TryAdd("s_wind_walk2", skillData);
+            _currentEffects.TryRemove(effect.SkillDataModel.SkillName, out _);
         }
 
         public IEnumerable<SkillDataModel> GetEffects()

@@ -1,6 +1,6 @@
-﻿namespace Core.Module.SkillData.Effect
+﻿namespace Core.Module.SkillData.Effects
 {
-    public class PAttackOverHit : Effect
+    public class TargetMeChance : Effect
     {
         public override void Calc(params int[] param)
         {

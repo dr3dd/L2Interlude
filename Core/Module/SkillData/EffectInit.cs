@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using Core.Module.SkillData.Effect;
+using Core.Module.SkillData.Effects;
 
 namespace Core.Module.SkillData
 {
     public class EffectInit
     {
-        private readonly IDictionary<string, Effect.Effect> _handlers;
+        private readonly IDictionary<string, Effect> _handlers;
         public EffectInit()
         {
-            _handlers = new Dictionary<string, Effect.Effect>();
+            _handlers = new Dictionary<string, Effect>();
 
             RegisterSkillHandler("i_p_attack_over_hit", new PAttackOverHit());
             RegisterSkillHandler("p_speed", new PSpeed());
@@ -24,12 +24,12 @@ namespace Core.Module.SkillData
             
         }
         
-        private void RegisterSkillHandler(string key, Effect.Effect handler)
+        private void RegisterSkillHandler(string key, Effect handler)
         {
             _handlers.Add(key, handler);
         }
 
-        public Effect.Effect GetEffectHandler(string key)
+        public Effect GetEffectHandler(string key)
         {
             try
             {
