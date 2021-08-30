@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core.Module.CharacterData;
 using Core.Module.CharacterData.Template;
 using Core.Module.SkillData;
-using Core.Module.SkillData.Effect;
+using Core.Module.SkillData.Effects;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player

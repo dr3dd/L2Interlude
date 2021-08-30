@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Core.Module.ParserEngine;
-using Core.Module.SkillData.Effect;
+using Core.Module.SkillData.Effects;
 using L2Logger;
 
 namespace Core.Module.SkillData
@@ -13,7 +13,7 @@ namespace Core.Module.SkillData
         public int Level { get; }
         public OperateType OperateType { get; set; }
         public int MagicLevel { get; set; }
-        public IDictionary<Effect.Effect, string[]> Effects { get; }
+        public IDictionary<Effect, string[]> Effects { get; }
         public string OperateCond { get; set; }
         public byte IsMagic { get; set; }
         public int MpConsume2 { get; set; }
@@ -51,9 +51,9 @@ namespace Core.Module.SkillData
             }
         }
 
-        private IDictionary<Effect.Effect, string[]> GetEffects(IList<string> skillBeginEffect, EffectInit effectInit)
+        private IDictionary<Effect, string[]> GetEffects(IList<string> skillBeginEffect, EffectInit effectInit)
         {
-            IDictionary<Effect.Effect, string[]> effects = new Dictionary<Effect.Effect, string[]>();
+            IDictionary<Effect, string[]> effects = new Dictionary<Effect, string[]>();
             try
             {
                 foreach (var strEffect in skillBeginEffect)
