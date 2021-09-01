@@ -30,7 +30,7 @@ namespace Core.Module.Player
             _acquireInit = _playerInstance.ServiceProvider.GetRequiredService<SkillAcquireInit>();
             _skillPchInit = _playerInstance.ServiceProvider.GetRequiredService<SkillPchInit>();
             
-            var unitOfWorkService = _playerInstance.ServiceProvider.GetRequiredService<IUnitOfWork>();
+            var unitOfWorkService = _playerInstance.GetUnitOfWork();
             _itemRepository = unitOfWorkService.UserItems;
             _characterRepository = unitOfWorkService.Characters;
             _skillRepository = unitOfWorkService.UserSkill;

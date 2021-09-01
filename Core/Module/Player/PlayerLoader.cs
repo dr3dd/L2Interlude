@@ -12,11 +12,13 @@ namespace Core.Module.Player
         private readonly ICharacterRepository _characterRepository;
         private readonly TemplateInit _templateInit;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IUnitOfWork _unitOfWork;
         public PlayerLoader(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
             _characterRepository = serviceProvider.GetRequiredService<IUnitOfWork>().Characters;
             _templateInit = serviceProvider.GetRequiredService<TemplateInit>();
+            _unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
         }
         
         public async Task<PlayerInstance> Load(int charId)
@@ -34,7 +36,7 @@ namespace Core.Module.Player
                 characterEntity.CharacterName, characterEntity.FaceIndex, characterEntity.HairColorIndex,
                 characterEntity.HairShapeIndex, characterEntity.Gender);
             
-            PlayerInstance playerInstance = new PlayerInstance(template, playerAppearance, _serviceProvider);
+            PlayerInstance playerInstance = new PlayerInstance(template, playerAppearance, _serviceProvider, _unitOfWork);
             var characterInfo = playerInstance.PlayerCharacterInfo();
             characterInfo.CharacterId = characterEntity.CharacterId;
             playerInstance.Location = new Location(characterEntity.XLoc, characterEntity.YLoc, characterEntity.ZLoc);

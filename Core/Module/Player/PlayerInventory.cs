@@ -23,7 +23,7 @@ namespace Core.Module.Player
         public PlayerInventory(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
-            _itemRepository = playerInstance.ServiceProvider.GetRequiredService<IUnitOfWork>().UserItems;
+            _itemRepository = playerInstance.GetUnitOfWork().UserItems;
             _objectIdInit = playerInstance.ServiceProvider.GetRequiredService<ObjectIdInit>();
             _itemDataInit = playerInstance.ServiceProvider.GetRequiredService<ItemDataInit>();
             _bodyParts = new Dictionary<SlotBitType, int>();

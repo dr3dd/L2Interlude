@@ -17,7 +17,7 @@ namespace Core.Module.Player
         public PlayerSkill(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
-            _userSkillRepository = playerInstance.ServiceProvider.GetRequiredService<IUnitOfWork>().UserSkill;
+            _userSkillRepository = playerInstance.GetUnitOfWork().UserSkill;
             _skillPchInit = playerInstance.ServiceProvider.GetRequiredService<SkillPchInit>();
             _skillDataInit= playerInstance.ServiceProvider.GetRequiredService<SkillDataInit>();
         }
