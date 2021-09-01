@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Core.Module.SkillData;
 
 namespace Core.Module.CharacterData
 {
@@ -39,6 +40,7 @@ namespace Core.Module.CharacterData
                 case Desire.AttackDesire:
                     break;
                 case Desire.CastDesire:
+                    CastDesireAsync((SkillDataModel) arg0);
                     break;
                 case Desire.MoveToDesire:
                     MoveToDesireAsync((Location) arg0);
@@ -56,5 +58,6 @@ namespace Core.Module.CharacterData
             }
         }
         protected abstract Task MoveToDesireAsync(Location arg0);
+        protected abstract Task CastDesireAsync(SkillDataModel arg0);
     }
 }

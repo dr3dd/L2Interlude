@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Module.ParserEngine;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,6 +48,11 @@ namespace Core.Module.SkillData
         public SkillDataModel GetSkillByName(string name)
         {
             return _skillDataModel[name];
+        }
+        
+        public SkillDataModel GetSkillBySkillIdAndLevel(int skillId, int level)
+        {
+            return _skillDataModel.SingleOrDefault(s => s.Value.SkillId == skillId && s.Value.Level == level).Value;
         }
     }
 }
