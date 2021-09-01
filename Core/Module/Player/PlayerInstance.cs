@@ -4,6 +4,7 @@ using Core.Controller;
 using Core.Module.CharacterData;
 using Core.Module.CharacterData.Template;
 using Core.NetworkPacket.ServerPacket;
+using DataBase.Interfaces;
 using Network;
 
 namespace Core.Module.Player
@@ -28,11 +29,13 @@ namespace Core.Module.Player
         public IServiceProvider ServiceProvider { get; }
         public int Heading { get; set; }
         public GameServiceController Controller { get; set; }
-        public PlayerInstance(ITemplateHandler template, PlayerAppearance playerAppearance, IServiceProvider provider)
+        private readonly IUnitOfWork _unitOfWork;
+        public PlayerInstance(ITemplateHandler template, PlayerAppearance playerAppearance, IServiceProvider provider, IUnitOfWork unitOfWork)
         {
             ServiceProvider = provider;
             _templateHandler = template;
             _playerAppearance = playerAppearance;
+            _unitOfWork = unitOfWork;
             _playerModel = new PlayerModel(this);
             _playerCharacterInfo = new PlayerCharacterInfo(this);
             _toLocation = new PlayerMoveToLocation(this);
@@ -45,6 +48,8 @@ namespace Core.Module.Player
             _playerSkill = new PlayerSkill(this);
             _playerEffect = new PlayerEffect(this);
         }
+
+        public IUnitOfWork GetUnitOfWork() => _unitOfWork;
 
         public ITemplateHandler TemplateHandler() => _templateHandler;
         public PlayerAppearance PlayerAppearance() => _playerAppearance;

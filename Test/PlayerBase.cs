@@ -6,8 +6,9 @@ using Core.Module.ItemData;
 using Core.Module.Player;
 using Core.Module.SkillData;
 using Core.Module.WorldData;
-using DataBase;
+using DataBase.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 
 namespace Test
 {
@@ -22,7 +23,6 @@ namespace Test
             if (_serviceCollection != null) return;
             _serviceCollection = new ServiceCollection();
             ConfigDependencyBinder.Bind(_serviceCollection);
-            DataBaseDependencyBinder.Bind(_serviceCollection);
             CoreDependencyBinder.Bind(_serviceCollection);
 
             _serviceProvider = _serviceCollection.BuildServiceProvider();
@@ -43,9 +43,10 @@ namespace Test
                 return _playerInstance;
             }
             InitServices();
+            var mock = new Mock<IUnitOfWork>();
             var templateInit = new TemplateInit(_serviceProvider);
             var playerAppearance = new PlayerAppearance("Test1", "Test1", 0, 0, 0, 0);
-            _playerInstance = new PlayerInstance(templateInit.GetTemplateByClassId(0), playerAppearance, _serviceProvider);
+            _playerInstance = new PlayerInstance(templateInit.GetTemplateByClassId(0), playerAppearance, _serviceProvider, mock.Object);
             return _playerInstance;
         }
     }
