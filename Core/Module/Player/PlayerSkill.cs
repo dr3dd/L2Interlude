@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Module.SkillData;
 using Core.NetworkPacket.ServerPacket;
@@ -13,13 +14,15 @@ namespace Core.Module.Player
         private readonly IUserSkillRepository _userSkillRepository;
         private readonly SkillPchInit _skillPchInit;
         private readonly SkillDataInit _skillDataInit;
+        private readonly ConcurrentDictionary<int, SkillDataModel> _skills;
 
         public PlayerSkill(PlayerInstance playerInstance)
         {
+            _skills = new ConcurrentDictionary<int, SkillDataModel>();
             _playerInstance = playerInstance;
             _userSkillRepository = playerInstance.GetUnitOfWork().UserSkill;
             _skillPchInit = playerInstance.ServiceProvider.GetRequiredService<SkillPchInit>();
-            _skillDataInit= playerInstance.ServiceProvider.GetRequiredService<SkillDataInit>();
+            _skillDataInit = playerInstance.ServiceProvider.GetRequiredService<SkillDataInit>();
         }
 
         public async Task SendSkillListAsync()
@@ -33,17 +36,25 @@ namespace Core.Module.Player
             await _playerInstance.SendPacketAsync(sl);
         }
 
-        public async Task<Dictionary<int, SkillDataModel>> GetPlayerSkills()
+        public async Task<ConcurrentDictionary<int, SkillDataModel>> GetPlayerSkills()
         {
             var characterId = _playerInstance.PlayerCharacterInfo().CharacterId;
             var userSkills = await _userSkillRepository.GetSkillsByCharId(characterId);
-            Dictionary<int, SkillDataModel> skills = new Dictionary<int, SkillDataModel>();
             userSkills.ForEach(us =>
             {
-                var skillName = _skillPchInit.GetSkillNameById(us.SkillId);
-                skills.Add(us.SkillId, _skillDataInit.GetSkillByName(skillName));
+                _skills.TryAdd(us.SkillId, _skillDataInit.GetSkillBySkillIdAndLevel(us.SkillId, us.SkillLevel));
             });
-            return skills;
+            return _skills;
+        }
+        
+        public int GetSkillLevel(int skillId)
+        {
+            if (_skills.ContainsKey(skillId))
+            {
+                SkillDataModel skill = _skills[skillId];
+                return skill?.Level ?? 0;
+            }
+            return 0;
         }
     }
 }

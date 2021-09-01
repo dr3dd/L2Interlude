@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Core.Module.SkillData;
 using L2Logger;
 
 namespace Core.Module.CharacterData
@@ -15,8 +16,12 @@ namespace Core.Module.CharacterData
            // await MoveToAsync(destination.GetX(), destination.GetY(), destination.GetZ()).ContinueWith(HandleException);
         }
 
-        
-        
+        protected override Task CastDesireAsync(SkillDataModel arg0)
+        {
+            throw new System.NotImplementedException();
+        }
+
+
         private void HandleException(Task obj)
         {
             if (obj.IsFaulted)

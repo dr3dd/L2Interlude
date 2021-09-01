@@ -21,6 +21,7 @@ namespace Core.Module.Player
         private readonly ITemplateHandler _template;
         private readonly SkillAcquireInit _acquireInit;
         private readonly SkillPchInit _skillPchInit;
+        private readonly SkillDataInit _skillDataInit;
         
         public PlayerModel(PlayerInstance playerInstance)
         {
@@ -29,6 +30,7 @@ namespace Core.Module.Player
             _itemData = _playerInstance.ServiceProvider.GetRequiredService<ItemDataInit>();
             _acquireInit = _playerInstance.ServiceProvider.GetRequiredService<SkillAcquireInit>();
             _skillPchInit = _playerInstance.ServiceProvider.GetRequiredService<SkillPchInit>();
+            _skillDataInit = _playerInstance.ServiceProvider.GetRequiredService<SkillDataInit>();
             
             var unitOfWorkService = _playerInstance.GetUnitOfWork();
             _itemRepository = unitOfWorkService.UserItems;
@@ -133,7 +135,7 @@ namespace Core.Module.Player
                 _skillRepository.AddAsync(new UserSkillEntity
                 {
                     CharacterId = characterId,
-                    SkillId = _skillPchInit.GetSkillIdByName(s.SkillName),
+                    SkillId = _skillDataInit.GetSkillIdByName(s.SkillName),
                     SkillLevel = s.LevelToGetSkill,
                     ToEndTime = 0
                 });

@@ -25,6 +25,8 @@ namespace Core.Module.Player
         private readonly PlayerUseItem _playerUseItem;
         private readonly PlayerSkill _playerSkill;
         private readonly PlayerEffect _playerEffect;
+        private readonly PlayerSkillMagic _playerSkillMagic;
+        private readonly PlayerMessage _playerMessage;
         public Location Location { get; set; }
         public IServiceProvider ServiceProvider { get; }
         public int Heading { get; set; }
@@ -47,6 +49,8 @@ namespace Core.Module.Player
             _playerUseItem = new PlayerUseItem(this);
             _playerSkill = new PlayerSkill(this);
             _playerEffect = new PlayerEffect(this);
+            _playerSkillMagic = new PlayerSkillMagic(this);
+            _playerMessage = new PlayerMessage(this);
         }
 
         public IUnitOfWork GetUnitOfWork() => _unitOfWork;
@@ -63,6 +67,8 @@ namespace Core.Module.Player
         public PlayerUseItem PlayerUseItem() => _playerUseItem;
         public PlayerSkill PlayerSkill() => _playerSkill;
         public PlayerEffect PlayerEffect() => _playerEffect;
+        public PlayerSkillMagic PlayerSkillMagic() => _playerSkillMagic;
+        public PlayerMessage PlayerMessage() => _playerMessage;
 
         private static PlayerLoader PlayerLoader(IServiceProvider serviceProvider)
         {
