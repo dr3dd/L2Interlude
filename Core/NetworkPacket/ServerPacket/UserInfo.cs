@@ -49,7 +49,7 @@ namespace Core.NetworkPacket.ServerPacket
             WriteInt(_location.GetY());
             WriteInt(_location.GetZ());
             WriteInt(0); //heading
-            WriteInt(_characterInfo.CharacterId);
+            WriteInt(_playerInstance.ObjectId);
             
             WriteString(_playerAppearance.CharacterName);
             

@@ -6,5 +6,10 @@
         {
             throw new System.NotImplementedException();
         }
+
+        public override void Process(string[] param)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

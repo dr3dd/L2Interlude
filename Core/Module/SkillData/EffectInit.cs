@@ -17,6 +17,7 @@ namespace Core.Module.SkillData
             RegisterSkillHandler("i_dispel_by_slot", new DispelBySlot());
             RegisterSkillHandler("i_target_me_chance", new TargetMeChance());
             RegisterSkillHandler("i_heal", new Heal());
+            RegisterSkillHandler("i_m_attack", new MagicAttack());
             RegisterSkillHandler("i_hp_drain", new HpDrain());
             RegisterSkillHandler("p_block_act", new BlockAct());
             RegisterSkillHandler("p_attack_speed_by_weapon", new AttackSpeedByWeapon());

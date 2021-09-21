@@ -18,6 +18,7 @@ namespace Core.Module.SkillData.Effects
             
         }
         public abstract void Calc(params int[] param);
+        public abstract void Process(string[] param);
         
         public Task StartEffectTask(int duration, PlayerInstance playerInstance)
         {

@@ -11,7 +11,7 @@ namespace Core.Module.SkillData
         public int SkillId { get; }
         public string SkillName { get; }
         public int Level { get; }
-        public OperateType OperateType { get; set; }
+        public OperateType OperateType { get; }
         public int MagicLevel { get; set; }
         public IDictionary<Effect, string[]> Effects { get; }
         public string OperateCond { get; set; }
@@ -19,10 +19,10 @@ namespace Core.Module.SkillData
         public int MpConsume2 { get; set; }
         public int CastRange { get; set; }
         public int EffectiveRange { get; set; }
-        public float SkillHitTime { get; set; }
-        public float SkillCoolTime { get; set; }
+        public float SkillHitTime { get; }
+        public float SkillCoolTime { get; }
         public float SkillHitCancelTime { get; set; }
-        public float ReuseDelay { get; set; }
+        public float ReuseDelay { get; }
         public string Attribute { get; set; }
         public string EffectPoint { get; set; }
         public TargetType TargetType { get; }
@@ -40,12 +40,16 @@ namespace Core.Module.SkillData
             OperateType = GetOperateType(skillBegin.OperateType);
             TargetType = GetTargetType(skillBegin.TargetType);
             AbnormalType = GetAbnormalType(skillBegin.AbnormalType);
+            SkillHitTime = skillBegin.SkillHitTime;
+            SkillCoolTime = skillBegin.SkillCoolTime;
+            ReuseDelay = skillBegin.ReuseDelay;
 
             //for debug
             switch (SkillName)
             {
                 case "s_wind_walk2":
                 case "s_song_of_wind":
+                case "s_wind_strike11":
                     Effects = GetEffects(skillBegin.Effect, effectInit);
                     break;
             }

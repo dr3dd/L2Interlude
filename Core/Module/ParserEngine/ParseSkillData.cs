@@ -152,7 +152,7 @@ namespace Core.Module.ParserEngine
         private IList<string> ParseEffect(string value)
         {
             var pattern = @"\{.*?\}";
-            var matches = Regex.Matches(value, pattern);
+            var matches = Regex.Matches(value.Replace("{all}", "all"), pattern);
             IList<string> effects = new List<string>();
             foreach (Match match in matches)
             {
