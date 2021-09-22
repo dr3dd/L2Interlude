@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Core.Module.CharacterData.Template;
@@ -128,12 +129,11 @@ namespace Core.Module.Player
             float dexBonus = (_statBonusInit.GetDexBonus(dexStat) + 100) / 100f;
             var result = baseGroundHighSpeed * dexBonus;
 
-            IEnumerable<SkillDataModel> effects = _playerInstance.PlayerEffect().GetEffects();
-            foreach (var skillDataModel in effects.Where(e => e.AbnormalType == AbnormalType.SpeedUp | e.AbnormalType == AbnormalType.SongOfWind))
+            ConcurrentDictionary<string, Effect> effects = _playerInstance.PlayerEffect().GetEffects();
+            foreach (var (key, value) in effects.Where(e => e.Value is PSpeed))
             {
-                var effect= skillDataModel.Effects.First();
-                effect.Key.Calc((int)result, 30);
-                result = ((PSpeed)effect.Key).GetEffectSpeed();
+                var effectSpeed = (PSpeed)value;
+                result += effectSpeed.GetEffectSpeed();
             }
             return (int) result;
         }

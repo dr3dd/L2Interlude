@@ -1,18 +1,23 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Core.Module.SkillData;
 using Core.Module.SkillData.Effects;
 using Core.NetworkPacket.ServerPacket;
+using L2Logger;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player
 {
     public class PlayerDesireCast
     {
         private readonly PlayerInstance _playerInstance;
+        private readonly EffectInit _effectInit;
         
         public PlayerDesireCast(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
+            _effectInit = _playerInstance.ServiceProvider.GetRequiredService<EffectInit>();
         }
 
         public async Task DoCastAsync(SkillDataModel skill)
@@ -24,28 +29,28 @@ namespace Core.Module.Player
             float coolTime = skill.SkillCoolTime;
             float hitTime = skill.SkillHitTime * 1000;
             float reuseDelay = skill.ReuseDelay * 1000;
-            await StartEffect(skill);
+            await HandleMagicSkill(skill);
             await SendToKnownListAsync(skill, target, hitTime, reuseDelay);
             // Send a system message to the Player
             await _playerInstance.PlayerMessage().SendMessageToPlayerAsync(skill, skillId);
             await _playerInstance.SendUserInfoAsync();
         }
 
-        private async Task StartEffect(SkillDataModel skill)
+        private async Task HandleMagicSkill(SkillDataModel skill)
         {
-            var effects = skill.Effects;
-            foreach (var (key, value ) in effects)
+            try
             {
-                key.Process(value);
+                var effects = skill.Effects;
+                foreach (var (key, value) in effects)
+                {
+                    var effect = (Effect)Activator.CreateInstance(_effectInit.GetEffectHandler(key));
+                    await effect.Process(value, skill, _playerInstance);
+                }
             }
-            /*
-            await Task.Run(() =>
+            catch (Exception ex)
             {
-                Effect effect = skill.Effects.First().Key;
-                effect.SkillDataModel = skill;
-                effect.StartEffectTask(1200 * 1000, _playerInstance);
-            });
-            */
+                LoggerManager.Error(ex.Message);
+            }
         }
 
         private async Task SendToKnownListAsync(SkillDataModel skill, PlayerInstance target, float hitTime, float reuseDelay)

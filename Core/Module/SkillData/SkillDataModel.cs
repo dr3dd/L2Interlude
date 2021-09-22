@@ -13,7 +13,7 @@ namespace Core.Module.SkillData
         public int Level { get; }
         public OperateType OperateType { get; }
         public int MagicLevel { get; set; }
-        public IDictionary<Effect, string[]> Effects { get; }
+        public IDictionary<string, string[]> Effects { get; }
         public string OperateCond { get; set; }
         public byte IsMagic { get; set; }
         public int MpConsume2 { get; set; }
@@ -55,16 +55,16 @@ namespace Core.Module.SkillData
             }
         }
 
-        private IDictionary<Effect, string[]> GetEffects(IList<string> skillBeginEffect, EffectInit effectInit)
+        private IDictionary<string, string[]> GetEffects(IList<string> skillBeginEffect, EffectInit effectInit)
         {
-            IDictionary<Effect, string[]> effects = new Dictionary<Effect, string[]>();
+            IDictionary<string, string[]> effects = new Dictionary<string, string[]>();
             try
             {
                 foreach (var strEffect in skillBeginEffect)
                 {
                     var effectParams = strEffect.Split(";");
-                    var effect = effectInit.GetEffectHandler(effectParams[0]);
-                    effects.Add(effect, effectParams);
+                    //var effect = effectInit.GetEffectHandler(effectParams[0]);
+                    effects.Add(effectParams[0], effectParams);
                 }
             }
             catch (Exception ex)
