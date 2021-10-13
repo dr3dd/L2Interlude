@@ -1,23 +1,21 @@
 ﻿using System;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Core.Module.SkillData;
-using Core.Module.SkillData.Effects;
 using Core.NetworkPacket.ServerPacket;
+using Core.TaskManager;
 using L2Logger;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player
 {
     public class PlayerDesireCast
     {
         private readonly PlayerInstance _playerInstance;
-        private readonly EffectInit _effectInit;
+        private CancellationTokenSource _cts;
         
         public PlayerDesireCast(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
-            _effectInit = _playerInstance.ServiceProvider.GetRequiredService<EffectInit>();
         }
 
         public async Task DoCastAsync(SkillDataModel skill)
@@ -29,28 +27,34 @@ namespace Core.Module.Player
             float coolTime = skill.SkillCoolTime;
             float hitTime = skill.SkillHitTime * 1000;
             float reuseDelay = skill.ReuseDelay * 1000;
-            await HandleMagicSkill(skill);
+            await HandleMagicSkill(skill, hitTime);
             await SendToKnownListAsync(skill, target, hitTime, reuseDelay);
             // Send a system message to the Player
             await _playerInstance.PlayerMessage().SendMessageToPlayerAsync(skill, skillId);
             await _playerInstance.SendUserInfoAsync();
         }
 
-        private async Task HandleMagicSkill(SkillDataModel skill)
+        private async Task HandleMagicSkill(SkillDataModel skill, float hitTime)
         {
-            try
+            await Task.Run(() =>
             {
-                var effects = skill.Effects;
-                foreach (var (key, value) in effects)
+                try
                 {
-                    var effect = (Effect)Activator.CreateInstance(_effectInit.GetEffectHandler(key));
-                    await effect.Process(value, skill, _playerInstance);
+                    _cts = new CancellationTokenSource();
+                    var effects = skill.Effects;
+                    foreach (var (key, value) in effects)
+                    {
+                        TaskManagerScheduler.ScheduleAtFixed(async () =>
+                        {
+                            await value.Process(_playerInstance);
+                        }, (int)hitTime, _cts.Token);
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                LoggerManager.Error(ex.Message);
-            }
+                catch (Exception ex)
+                {
+                    LoggerManager.Error(ex.Message);
+                }
+            });
         }
 
         private async Task SendToKnownListAsync(SkillDataModel skill, PlayerInstance target, float hitTime, float reuseDelay)

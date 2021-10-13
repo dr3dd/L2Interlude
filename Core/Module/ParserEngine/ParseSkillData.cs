@@ -107,8 +107,10 @@ namespace Core.Module.ParserEngine
                             skillBegin.RideState = value;
                             break;
                         case "debuff":
+                            skillBegin.DeBuff = Convert.ToByte(value);
                             break;
                         case "abnormal_time":
+                            skillBegin.AbnormalTime = Convert.ToInt32(value);
                             break;
                         case "abnormal_lv":
                             break;

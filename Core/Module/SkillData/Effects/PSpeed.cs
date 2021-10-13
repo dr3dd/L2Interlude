@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Module.Player;
 
@@ -7,16 +7,18 @@ namespace Core.Module.SkillData.Effects
 {
     public class PSpeed : Effect
     {
-        private int _effectSpeed;
-
-        public override async Task Process(string[] param, SkillDataModel skill, PlayerInstance playerInstance)
+        private readonly int _effectSpeed;
+        private readonly int _abnormalTime;
+        public PSpeed(IReadOnlyList<string> param, SkillDataModel skillDataModel)
         {
             _effectSpeed = Convert.ToInt32(param[2]);
-            await Task.Run(() =>
-            {
-                SkillDataModel = skill;
-                StartEffectTask(1200 * 1000, playerInstance);
-            });
+            _abnormalTime = skillDataModel.AbnormalTime;
+            SkillDataModel = skillDataModel;
+        }
+
+        public override async Task Process(PlayerInstance playerInstance)
+        {
+            await StartEffectTask(_abnormalTime * 1000, playerInstance);
         }
 
         public int GetEffectSpeed()

@@ -29,7 +29,7 @@ namespace Test
             foreach (var (key, value) in effects)
             {
                 var effect = (Effect)Activator.CreateInstance(_effectInit.GetEffectHandler(key));
-                await effect.Process(value, skillData, _playerInstance);
+                await effect.Process(_playerInstance);
             }
             var speed = _playerInstance.PlayerCombat().GetGroundHighSpeed();
             Assert.Equal(146, speed);
@@ -43,7 +43,7 @@ namespace Test
             foreach (var (key, value) in effects)
             {
                 var effect = (Effect)Activator.CreateInstance(_effectInit.GetEffectHandler(key));
-                await effect.Process(value, skillData, _playerInstance);
+                await effect.Process(_playerInstance);
             }
 
             var speed = _playerInstance.PlayerCombat().GetGroundHighSpeed();
@@ -58,7 +58,7 @@ namespace Test
             foreach (var (key, value) in songOfWindEffects)
             {
                 var effect = (Effect)Activator.CreateInstance(_effectInit.GetEffectHandler(key));
-                await effect.Process(value, skillDataSongWind, _playerInstance);
+                await effect.Process(_playerInstance);
             }
             
             SkillDataModel skillDataWindWalk = _dataInit.GetSkillByName("s_wind_walk2");
@@ -66,7 +66,7 @@ namespace Test
             foreach (var (key, value) in windWalkEffects)
             {
                 var effect = (Effect)Activator.CreateInstance(_effectInit.GetEffectHandler(key));
-                await effect.Process(value, skillDataWindWalk, _playerInstance);
+                await effect.Process(_playerInstance);
             }
             
             var speed = _playerInstance.PlayerCombat().GetGroundHighSpeed();

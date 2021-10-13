@@ -129,10 +129,10 @@ namespace Core.Module.Player
             float dexBonus = (_statBonusInit.GetDexBonus(dexStat) + 100) / 100f;
             var result = baseGroundHighSpeed * dexBonus;
 
-            ConcurrentDictionary<string, Effect> effects = _playerInstance.PlayerEffect().GetEffects();
-            foreach (var (key, value) in effects.Where(e => e.Value is PSpeed))
+            ConcurrentDictionary<string, EffectDuration> effects = _playerInstance.PlayerEffect().GetEffects();
+            foreach (var (key, value) in effects.Where(e => e.Value.Effect is PSpeed))
             {
-                var effectSpeed = (PSpeed)value;
+                var effectSpeed = (PSpeed)value.Effect;
                 result += effectSpeed.GetEffectSpeed();
             }
             return (int) result;

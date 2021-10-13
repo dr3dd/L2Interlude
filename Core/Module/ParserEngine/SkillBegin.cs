@@ -22,10 +22,12 @@ namespace Core.Module.ParserEngine
         public string Attribute { get; set; }
         public string EffectPoint { get; set; }
         public string AbnormalType { get; set; }
+        public int AbnormalTime { get; set; }
         public string TargetType { get; set; }
         public string AffectScope { get; set; }
         public string AffectLimit { get; set; }
         public string NextAction { get; set; }
         public string RideState { get; set; }
+        public int DeBuff { get; set; }
     }
 }

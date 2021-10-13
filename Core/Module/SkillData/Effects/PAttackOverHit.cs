@@ -5,7 +5,7 @@ namespace Core.Module.SkillData.Effects
 {
     public class PAttackOverHit : Effect
     {
-        public override Task Process(string[] param, SkillDataModel skill, PlayerInstance playerInstance)
+        public override Task Process(PlayerInstance playerInstance)
         {
             throw new System.NotImplementedException();
         }
