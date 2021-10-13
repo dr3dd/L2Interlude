@@ -31,7 +31,7 @@ namespace Core.Module.Player
             int curY = _playerInstance.Location.GetY();
             int curZ = _playerInstance.Location.GetZ();
 
-            LoggerManager.Info($"curX: {curX} curY: {curY} curZ: {curZ} distX: {x} distY: {y} distZ: {z}");
+            LoggerManager.Info($"curSpeed: {speed} curX: {curX} curY: {curY} curZ: {curZ} distX: {x} distY: {y} distZ: {z}");
             
             double dx = (x - curX);
             double dy = (y - curY);

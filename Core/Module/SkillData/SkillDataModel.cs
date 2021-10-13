@@ -11,26 +11,28 @@ namespace Core.Module.SkillData
         public int SkillId { get; }
         public string SkillName { get; }
         public int Level { get; }
-        public OperateType OperateType { get; set; }
+        public OperateType OperateType { get; }
         public int MagicLevel { get; set; }
-        public IDictionary<Effect, string[]> Effects { get; }
+        public IDictionary<string, Effect> Effects { get; }
         public string OperateCond { get; set; }
         public byte IsMagic { get; set; }
         public int MpConsume2 { get; set; }
         public int CastRange { get; set; }
         public int EffectiveRange { get; set; }
-        public float SkillHitTime { get; set; }
-        public float SkillCoolTime { get; set; }
+        public float SkillHitTime { get; }
+        public float SkillCoolTime { get; }
         public float SkillHitCancelTime { get; set; }
-        public float ReuseDelay { get; set; }
+        public float ReuseDelay { get; }
         public string Attribute { get; set; }
         public string EffectPoint { get; set; }
         public TargetType TargetType { get; }
         public AbnormalType AbnormalType { get; }
+        public int AbnormalTime { get; }
         public string AffectScope { get; set; }
         public string AffectLimit { get; set; }
         public string NextAction { get; set; }
         public string RideState { get; set; }
+        public bool IsDeBuff { get; }
 
         public SkillDataModel(SkillBegin skillBegin, EffectInit effectInit)
         {
@@ -40,27 +42,38 @@ namespace Core.Module.SkillData
             OperateType = GetOperateType(skillBegin.OperateType);
             TargetType = GetTargetType(skillBegin.TargetType);
             AbnormalType = GetAbnormalType(skillBegin.AbnormalType);
+            AbnormalTime = skillBegin.AbnormalTime;
+            SkillHitTime = skillBegin.SkillHitTime;
+            SkillCoolTime = skillBegin.SkillCoolTime;
+            ReuseDelay = skillBegin.ReuseDelay;
+            IsDeBuff = (skillBegin.DeBuff == 1);
 
             //for debug
             switch (SkillName)
             {
                 case "s_wind_walk2":
+                case "s_speed_walk1":
+                case "s_speed_walk2":
                 case "s_song_of_wind":
+                case "s_wind_strike11":
                     Effects = GetEffects(skillBegin.Effect, effectInit);
                     break;
             }
         }
 
-        private IDictionary<Effect, string[]> GetEffects(IList<string> skillBeginEffect, EffectInit effectInit)
+        private IDictionary<string, Effect> GetEffects(IList<string> skillBeginEffect, EffectInit effectInit)
         {
-            IDictionary<Effect, string[]> effects = new Dictionary<Effect, string[]>();
+            IDictionary<string, Effect> effects = new Dictionary<string, Effect>();
             try
             {
                 foreach (var strEffect in skillBeginEffect)
                 {
                     var effectParams = strEffect.Split(";");
-                    var effect = effectInit.GetEffectHandler(effectParams[0]);
-                    effects.Add(effect, effectParams);
+                    //var effect = effectInit.GetEffectHandler(effectParams[0]);
+                    //var effect = effectInit.GetEffectHandler(effectParams[0]);
+                    
+                    var effect = (Effect)Activator.CreateInstance(effectInit.GetEffectHandler(effectParams[0]), effectParams, this);
+                    effects.Add(effectParams[0], effect);
                 }
             }
             catch (Exception ex)
