@@ -11,6 +11,13 @@ namespace Core.Module.ItemData
         public SlotBitType SlotBitType { get; }
         public WeaponType WeaponType { get; }
         public ActionType ActionType { get; }
+        public int MagicalDamage { get; }
+        public int PhysicalDamage { get; }
+        public int PhysicalDefense { get; }
+        public int AttackSpeed { get; }
+        public float HitModify { get; } //increase or decrease accuracy
+        public int Critical { get; }
+        
         public ItemDataModel(KeyValuePair<object, object> keyValuePair)
         {
             ItemId = (int) keyValuePair.Key;
@@ -20,6 +27,12 @@ namespace Core.Module.ItemData
             ItemType = GetItemType(itemBegin.ItemType);
             WeaponType = GetWeaponType(itemBegin.WeaponType);
             ActionType = GetActionType(itemBegin.DefaultAction);
+            MagicalDamage = itemBegin.MagicalDamage;
+            PhysicalDamage = itemBegin.PhysicalDamage;
+            PhysicalDefense = itemBegin.PhysicalDefense;
+            AttackSpeed = itemBegin.AttackSpeed;
+            HitModify = itemBegin.HitModify;
+            Critical = itemBegin.Critical;
         }
 
         private ItemType GetItemType(string itemType)

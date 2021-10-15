@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using Core.Module.CharacterData.Template;
-using Core.Module.SkillData;
+using Core.Module.ItemData;
 using Core.Module.SkillData.Effects;
+using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player
@@ -13,7 +12,6 @@ namespace Core.Module.Player
     {
         private readonly ITemplateHandler _templateHandler;
         private readonly PcParameterInit _statBonusInit;
-        private readonly EffectInit _effectInit;
         private readonly byte _level;
         private readonly PlayerInstance _playerInstance;
         public PlayerCombat(PlayerInstance playerInstance)
@@ -21,8 +19,24 @@ namespace Core.Module.Player
             _playerInstance = playerInstance;
             _templateHandler = playerInstance.TemplateHandler();
             _statBonusInit = playerInstance.ServiceProvider.GetRequiredService<PcParameterInit>();
-            _effectInit = playerInstance.ServiceProvider.GetRequiredService<EffectInit>();
             _level = playerInstance.PlayerStatus().Level;
+        }
+
+        public ItemInstance GetWeapon()
+        {
+            return _playerInstance.PlayerInventory().GetBodyPartBySlotId((int)SlotBitType.RightHand);
+        }
+
+        public int GetPhysicalWeaponDamage()
+        {
+            var itemWeapon = GetWeapon();
+            return itemWeapon.UserItemId == 0 ? _templateHandler.GetBasePhysicalAttack() : itemWeapon.ItemData.PhysicalDamage;
+        }
+        
+        public int GetMagicalWeaponDamage()
+        {
+            var itemWeapon = GetWeapon();
+            return itemWeapon.UserItemId == 0 ? _templateHandler.GetBaseMagicAttack() : itemWeapon.ItemData.MagicalDamage;
         }
 
         /// <summary>
@@ -32,9 +46,7 @@ namespace Core.Module.Player
         /// <returns></returns>
         public int GetPhysicalAttack()
         {
-            var weaponAttack = 6;
-            bool weaponEquipped = true;
-            var baseAttack = (weaponEquipped? weaponAttack : _templateHandler.GetBasePhysicalAttack());
+            var baseAttack = GetPhysicalWeaponDamage();
             var strStat = _templateHandler.GetStr();
             float strBonus = (_statBonusInit.GetStrBonus(strStat) + 100) / 100f;
             float levelBonus = _statBonusInit.GetLevelBonus(_level);
@@ -49,9 +61,7 @@ namespace Core.Module.Player
         /// <returns></returns>
         public int GetMagicalAttack()
         {
-            var weaponAttack = 6;
-            bool weaponEquipped = true;
-            var baseAttack = (weaponEquipped? weaponAttack : _templateHandler.GetBaseMagicAttack());
+            var baseAttack = GetMagicalWeaponDamage();
             var intStat = _templateHandler.GetInt();
             float intBonus = (_statBonusInit.GetIntBonus(intStat) + 100) / 100f;
             float levelBonus = _statBonusInit.GetLevelBonus(_level);
@@ -61,19 +71,79 @@ namespace Core.Module.Player
 
         public int GetPhysicalDefence()
         {
-            float levelBonus = _statBonusInit.GetLevelBonus(_level);
-            var upperBody = _templateHandler.GetBaseDefendUpperBody();
-            var lowerBody = _templateHandler.GetBaseDefendLowerBody();
-            var pitch = _templateHandler.GetBaseDefendPitch();
-            var boots = _templateHandler.GetBaseDefendBoots();
-            var gloves = _templateHandler.GetBaseDefendGloves();
-            var underwear = _templateHandler.GetBaseDefendUnderwear();
-            var mantle = _templateHandler.GetBaseDefendMantle();
-            
-            var result = (upperBody + lowerBody + pitch + boots + gloves + underwear + mantle) * levelBonus;
-            return (int) result;
+            int result = 0;
+            try
+            {
+                float levelBonus = _statBonusInit.GetLevelBonus(_level);
+                var upperBody = GetUpperBody();
+                var lowerBody = GetLowerBody();
+                var pitch = GetHead();
+                var boots = GetBoots();
+                var gloves = GetGloves();
+                var underwear = GetUnderwear();
+                var mantle = GetMantle();
+                result = (int)((upperBody + lowerBody + pitch + boots + gloves + underwear + mantle) * levelBonus);
+                
+            }
+            catch (Exception ex)
+            {
+                LoggerManager.Error(GetType().Name + ": "  + ex.Message);
+            }
+            return result;
         }
-        
+
+        private int GetMantle()
+        {
+            var mantle = _templateHandler.GetBaseDefendMantle(); //TODO
+            return mantle;
+        }
+
+        private int GetUnderwear()
+        {
+            var underwear = _templateHandler.GetBaseDefendUnderwear(); //TODO
+            return underwear;
+        }
+
+        private int GetGloves()
+        {
+            var itemGloves = _playerInstance.PlayerInventory().GetBodyPartBySlotId((int)SlotBitType.Gloves);
+            var gloves = itemGloves.UserItemId == 0
+                ? _templateHandler.GetBaseDefendGloves()
+                : itemGloves.ItemData.PhysicalDefense;
+            return gloves;
+        }
+
+        private int GetBoots()
+        {
+            var boots = _templateHandler.GetBaseDefendBoots(); // TODO
+            return boots;
+        }
+
+        private int GetHead()
+        {
+            var itemHead = _playerInstance.PlayerInventory().GetBodyPartBySlotId((int)SlotBitType.Head);
+            var pitch = itemHead.UserItemId == 0 ? _templateHandler.GetBaseDefendPitch() : itemHead.ItemData.PhysicalDefense;
+            return pitch;
+        }
+
+        private int GetLowerBody()
+        {
+            var itemLowerBody = _playerInstance.PlayerInventory().GetBodyPartBySlotId((int)SlotBitType.Legs);
+            var lowerBody = itemLowerBody.UserItemId == 0
+                ? _templateHandler.GetBaseDefendLowerBody()
+                : itemLowerBody.ItemData.PhysicalDefense;
+            return lowerBody;
+        }
+
+        private int GetUpperBody()
+        {
+            var itemUpperBody = _playerInstance.PlayerInventory().GetBodyPartBySlotId((int)SlotBitType.Chest);
+            var upperBody = itemUpperBody.UserItemId == 0
+                ? _templateHandler.GetBaseDefendUpperBody()
+                : itemUpperBody.ItemData.PhysicalDefense;
+            return upperBody;
+        }
+
         public int GetMagicalDefence()
         {
             float levelBonus = _statBonusInit.GetLevelBonus(_level);
@@ -90,10 +160,16 @@ namespace Core.Module.Player
             return (int) result;
         }
 
+        /// <summary>
+        /// Accuracy = ((square root of DEX)*6)+Level+Weapon Accuracy+Passive+Armor Bonus+Guidance SA+M.Def. Bonus+Buffs
+        /// </summary>
+        /// <returns></returns>
         public int GetAccuracy()
         {
             var dexStat = _templateHandler.GetDex();
-            var result = Math.Sqrt(dexStat) * 6 + _level;
+            var itemWeapon = GetWeapon();
+            var weaponAccuracy = itemWeapon.UserItemId == 0 ? 0 : itemWeapon.ItemData.HitModify;
+            var result = Math.Sqrt(dexStat) * 6 + _level + weaponAccuracy;
             return (int) result;
         }
 
@@ -104,9 +180,16 @@ namespace Core.Module.Player
             return (int) result;
         }
 
+        /// <summary>
+        /// Base Critical = DEX Modifier*Weapon Critical Modifier
+        /// Final Critical = Base Critical+Passives+Buffs+Weapon Bonus
+        /// If you have a Final Critical of higher than 500, it is set as 500.
+        /// </summary>
+        /// <returns></returns>
         public int GetCriticalRate()
         {
-            var baseCritical = _templateHandler.GetBaseCritical() * 10;
+            var itemWeapon = GetWeapon();
+            var baseCritical = (itemWeapon.UserItemId == 0 ? _templateHandler.GetBaseCritical() : itemWeapon.ItemData.Critical) * 10;
             var dexStat = _templateHandler.GetDex();
             float dexBonus = (_statBonusInit.GetDexBonus(dexStat) + 100) / 100f;
             var result = dexBonus * baseCritical;
@@ -115,7 +198,9 @@ namespace Core.Module.Player
 
         public int GetPhysicalAttackSpeed()
         {
-            var baseAttackSpeed = _templateHandler.GetBaseAttackSpeed();
+            var itemWeapon = GetWeapon();
+            var baseAttackSpeed = itemWeapon.UserItemId == 0 ? _templateHandler.GetBaseAttackSpeed() : itemWeapon.ItemData.AttackSpeed;
+            
             var dexStat = _templateHandler.GetDex();
             float dexBonus = (_statBonusInit.GetDexBonus(dexStat) + 100) / 100f;
             var result = dexBonus * baseAttackSpeed;
@@ -129,12 +214,9 @@ namespace Core.Module.Player
             float dexBonus = (_statBonusInit.GetDexBonus(dexStat) + 100) / 100f;
             var result = baseGroundHighSpeed * dexBonus;
 
-            ConcurrentDictionary<string, EffectDuration> effects = _playerInstance.PlayerEffect().GetEffects();
-            foreach (var (key, value) in effects.Where(e => e.Value.Effect is PSpeed))
-            {
-                var effectSpeed = (PSpeed)value.Effect;
-                result += effectSpeed.GetEffectSpeed();
-            }
+            var effects = _playerInstance.PlayerEffect().GetEffects().Values;
+            result = effects.Where(e => e.Effect is PSpeed).Select(effect => (PSpeed)effect.Effect).Aggregate(result,
+                (current, effectSpeed) => current + effectSpeed.GetEffectSpeed());
             return (int) result;
         }
         
@@ -153,12 +235,16 @@ namespace Core.Module.Player
             return GetGroundHighSpeed() / (float)baseGroundHighSpeed;
         }
 
+        /// <summary>
+        /// Casting Spd. = (333*WIT bonus*Fast Spell Casting)*Armor Multiplier*Armor Bonus*Weapon Bonus*M.Def. Bonus*Buffs*Weapon Penalty+Heroic Berserker
+        /// </summary>
+        /// <returns></returns>
         public int GetCastSpeed()
         {
             var attackSpeed = _templateHandler.GetBaseAttackSpeed() + 33;
             var witStat = _templateHandler.GetWit();
             float witBonus = (_statBonusInit.GetWitBonus(witStat) + 100) / 100f;
-            var result = witBonus * attackSpeed;
+            var result = attackSpeed * witBonus;
             return (int) result;
         }
     }

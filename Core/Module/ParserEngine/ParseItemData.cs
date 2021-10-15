@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using L2Logger;
 
@@ -149,10 +150,25 @@ namespace Core.Module.ParserEngine
                         var isTrade = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
                         itemData.IsTrade = Convert.ToByte(isTrade) == 1;
                     }
+                    if (item.StartsWith("hit_modify"))
+                    {
+                        var hitModify = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
+                        itemData.HitModify = Convert.ToSingle(hitModify, CultureInfo.CurrentCulture);
+                    }
+                    if (item.StartsWith("magical_damage"))
+                    {
+                        var magicalDamage = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
+                        itemData.MagicalDamage = Convert.ToInt32(magicalDamage);
+                    }
                     if (item.StartsWith("physical_damage"))
                     {
                         var physicalDamage = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
                         itemData.PhysicalDamage = Convert.ToInt32(physicalDamage);
+                    }
+                    if (item.StartsWith("physical_defense"))
+                    {
+                        var physicalDefense = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
+                        itemData.PhysicalDefense = Convert.ToInt32(physicalDefense);
                     }
                     if (item.StartsWith("weapon_type"))
                     {
