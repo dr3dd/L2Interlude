@@ -27,4 +27,4 @@ PTS scripts files are included in it and plan to work with the server.
 </ul>
 
 # FAQ
-If you have an ideas or want be a contributor in this project write me s0uldr3dd@gmail.com
+If you have any ideas or want to be a contributor in this project write me s0uldr3dd@gmail.com
