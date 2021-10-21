@@ -27,9 +27,9 @@ namespace Core.Module.Player
             int speed = _playerInstance.PlayerCombat().GetGroundHighSpeed();
             
             // Get current position of the Creature
-            int curX = _playerInstance.Location.GetX();
-            int curY = _playerInstance.Location.GetY();
-            int curZ = _playerInstance.Location.GetZ();
+            int curX = _playerInstance.GetX();
+            int curY = _playerInstance.GetY();
+            int curZ = _playerInstance.GetZ();
 
             LoggerManager.Info($"curSpeed: {speed} curX: {curX} curY: {curY} curZ: {curZ} distX: {x} distY: {y} distZ: {z}");
             
@@ -85,8 +85,8 @@ namespace Core.Module.Player
             if (m.MoveTimestamp == 0)
             {
                 m.MoveTimestamp = m.MoveStartTime;
-                m.XAccurate = _playerInstance.Location.GetX();
-                m.YAccurate = _playerInstance.Location.GetY();
+                m.XAccurate = _playerInstance.GetX();
+                m.YAccurate = _playerInstance.GetY();
             }
             // Check if the position has already be calculated
             if (m.MoveTimestamp == gameTicks)
@@ -94,9 +94,9 @@ namespace Core.Module.Player
                 return false;
             }
             
-            int xPrev = _playerInstance.Location.GetX();
-            int yPrev = _playerInstance.Location.GetY();
-            int zPrev = _playerInstance.Location.GetZ(); // the z coordinate may be modified by coordinate synchronizations
+            int xPrev = _playerInstance.GetX();
+            int yPrev = _playerInstance.GetY();
+            int zPrev = _playerInstance.GetZ(); // the z coordinate may be modified by coordinate synchronizations
             double dx;
             double dy;
             double dz;
@@ -106,7 +106,7 @@ namespace Core.Module.Player
             dy = m.YDestination - m.YAccurate;
             dz = m.ZDestination - zPrev;
 
-            int speed = 125;
+            int speed = _playerInstance.PlayerCombat().GetGroundHighSpeed();
 
             double distance = Utility.Hypot(dx, dy);
             if (_cursorKeyMovement // In case of cursor movement, avoid moving through obstacles.
@@ -143,7 +143,7 @@ namespace Core.Module.Player
             
             if (distFraction > 1)
             {
-                _playerInstance.Location.SetXYZ(m.XDestination, m.YDestination, m.ZDestination);
+                _playerInstance.SetXYZ(m.XDestination, m.YDestination, m.ZDestination);
                 // Set the position of the Creature to the destination
                 //_character.SetXYZ(m.XDestination, m.YDestination, m.ZDestination);
             }
@@ -154,10 +154,11 @@ namespace Core.Module.Player
                 
                 // Set the position of the Creature to estimated after parcial move
                 //_character.SetXYZ((int) m.XAccurate, (int) m.YAccurate, zPrev + (int) ((dz * distFraction) + 0.5));
-                _playerInstance.Location.SetXYZ((int) m.XAccurate, (int) m.YAccurate, zPrev + (int) ((dz * distFraction) + 0.5));
+                _playerInstance.SetXYZ((int) m.XAccurate, (int) m.YAccurate, zPrev + (int) ((dz * distFraction) + 0.5));
             }
             // Set the timer of last position update to now
             m.MoveTimestamp = gameTicks;
+            _playerInstance.PlayerZone().RevalidateZone();
 		
             return distFraction > 1;
         }
@@ -169,7 +170,7 @@ namespace Core.Module.Player
             {
                 return m.XDestination;
             }
-            return _playerInstance.Location.GetX();
+            return _playerInstance.GetX();
         }
         
         public int GetYDestination()
@@ -179,7 +180,7 @@ namespace Core.Module.Player
             {
                 return m.YDestination;
             }
-            return _playerInstance.Location.GetY();
+            return _playerInstance.GetY();
         }
         
         public int GetZDestination()
@@ -189,7 +190,7 @@ namespace Core.Module.Player
             {
                 return m.ZDestination;
             }
-            return _playerInstance.Location.GetZ();
+            return _playerInstance.GetZ();
         }
     }
 }

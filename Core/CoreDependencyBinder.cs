@@ -1,5 +1,6 @@
 ﻿using Core.Controller;
 using Core.GeoEngine;
+using Core.Module.AreaData;
 using Core.Module.CharacterData.Template;
 using Core.Module.ItemData;
 using Core.Module.ManualData;
@@ -19,6 +20,8 @@ namespace Core
             services.UseGeoEngine();
             services.AddSingleton<NetworkWriter>();
             services.AddTransient<ClientManager>();
+            services.AddSingleton<AreaDataInit>();
+            services.AddSingleton<WorldInit>();
             services.AddSingleton<TemplateInit>();
             services.AddSingleton<ManualPchInit>();
             services.AddSingleton<PcParameterInit>();

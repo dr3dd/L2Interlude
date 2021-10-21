@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using Core.Module.ParserEngine;
+using Core.Module.WorldData;
 using L2Logger;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.AreaData
 {
@@ -12,185 +12,132 @@ namespace Core.Module.AreaData
         private readonly IDictionary<string, string> _defaultSettings;
         private readonly IDictionary<string, Type> _areaCollection;
         private readonly IList<BaseArea> _areas;
+        private readonly WorldInit _worldInit;
+        private readonly IParse _parse;
         
         public AreaDataInit(IServiceProvider provider) : base(provider)
         {
             _defaultSettings = new Dictionary<string, string>();
-            _areaCollection = new Dictionary<string, Type> {{"water", typeof(WaterArea)}};
+            _areaCollection = new Dictionary<string, Type>
+                {
+                    { "water", typeof(WaterArea) }, 
+                    { "mother_tree", typeof(MotherTree) },
+                    { "peace_zone", typeof(PeaceZone) },
+                    { "damage", typeof(Damage) },
+                    { "swamp", typeof(Swamp) },
+                    { "no_restart", typeof(NoRestart) },
+                    { "poison", typeof(Poison) },
+                    { "ssq_zone", typeof(SsqZone) },
+                    { "battle_zone", typeof(BattleZone) },
+                    { "instant_skill", typeof(InstantSkill) },
+                };
+            _worldInit = provider.GetRequiredService<WorldInit>();
             _areas = new List<BaseArea>();
-            Run();
+            _parse = new ParseAreaData();
         }
 
         public override void Run()
         {
-            LoggerManager.Info("AreaData start...");
-            using StreamReader sr = new StreamReader(GetStaticData() + "/" + "areadata.txt");
-            string line;
-            while ((line = sr.ReadLine()) != null)
+            try
             {
-                ParseFile(line);
+                LoggerManager.Info("AreaData start...");
+                IResult result = Parse("areadata.txt", _parse);
+                foreach (var (type, collection) in result.GetResult())
+                {
+                    InitAreas(type.ToString(), collection);
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggerManager.Info(GetType().Name + ": " + ex.Message);
             }
             LoggerManager.Info("Loaded Areas: " + _areas.Count);
         }
 
-        private void ParseFile(string line)
+        private void InitAreas(string type, object value)
         {
             try
             {
-                if (line.StartsWith("default_setting_begin") && line.EndsWith("default_setting_end"))
+                var worldRegions = _worldInit.GetAllWorldRegions();
+                var areaType = _areaCollection[type];
+                if (areaType == typeof(WaterArea))
                 {
-                    ParseDefaultSetting(line);
+                    InitWaterArea(value, areaType, worldRegions);
+                    return;
                 }
-
-                if (!line.StartsWith("area_begin") || !line.EndsWith("area_end")) return;
-                var data = ParseArea(line);
-                switch (data["type"])
-                {
-                    case "water":
-                        var mapNo = data["map_no"].Split(";");
-                        var type = _areaCollection["water"];
-                        var waterRange= ParseWaterRange(data["water_range"]);
-                        var waterZone = (BaseArea) Activator.CreateInstance(type, data["name"],
-                            Convert.ToByte(mapNo[0]), Convert.ToByte(mapNo[1]), waterRange);
-                        _areas.Add(waterZone);
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggerManager.Error(ex.Message);
-            }
-        }
-
-        private IDictionary<string, double> ParseWaterRange(string waterRange)
-        {
-            var tmpItem = "";
-            IList<string> fieldList = new List<string>();
-            IList<double> valueList = new List<double>();
-            IDictionary<string, double> waterRangeData = new Dictionary<string, double>();
-            
-            bool isBracketsOpened = false;
-            foreach (var item in waterRange)
-            {
-                switch (item)
-                {
-                    case ':':
-                        fieldList.Add(tmpItem);
-                        tmpItem = string.Empty;
-                        continue;
-                    case ' ' when isBracketsOpened:
-                        valueList.Add(Convert.ToDouble(tmpItem, CultureInfo.InvariantCulture.NumberFormat));
-                        tmpItem = string.Empty;
-                        continue;
-                    case '(':
-                        isBracketsOpened = true;
-                        continue;
-                    case ')':
-                        valueList.Add(Convert.ToDouble(tmpItem, CultureInfo.InvariantCulture.NumberFormat));
-                        tmpItem = string.Empty;
-                        isBracketsOpened = false;
-                        continue;
-                }
-                if (item is ' ')
-                    continue;
-                tmpItem += item;
-            }
-            waterRangeData.Add("MinX", valueList[0]);
-            waterRangeData.Add("MinY", valueList[1]);
-            waterRangeData.Add("MinZ", valueList[2]);
-            
-            waterRangeData.Add("MaxX", valueList[3]);
-            waterRangeData.Add("MaxY", valueList[4]);
-            waterRangeData.Add("MaxZ", valueList[5]);
-
-            return waterRangeData;
-        }
-
-        private IDictionary<string, string> ParseArea(string line)
-        {
-            IDictionary<string, string> areaData = new Dictionary<string, string>();
-            try
-            {
-                var newLine = line.Replace("area_begin", "")
-                    .Replace("area_end", "")
-                    .Replace("\t", " ");
-                var tmpItem = "";
-                IList<string> fieldList = new List<string>();
-                IList<string> valueList = new List<string>();
-                bool isFoundField = false;
-                bool brackedOpen = false;
-                foreach (var item in newLine)
-                {
-                    switch (item)
-                    {
-                        case '=':
-                            fieldList.Add(tmpItem);
-                            tmpItem = string.Empty;
-                            isFoundField = true;
-                            continue;
-                        case ' ' when isFoundField && !brackedOpen:
-                            if (tmpItem is "")
-                            {
-                                continue;
-                            }
-                            valueList.Add(tmpItem);
-                            tmpItem = string.Empty;
-                            isFoundField = false;
-                            continue;
-                        case '{':
-                            brackedOpen = true;
-                            continue;
-                        case '}':
-                            brackedOpen = false;
-                            continue;
-                    }
-
-                    if ((item is ' ') && !brackedOpen)
-                        continue;
-                    tmpItem += item;
-                }
-                for (int i = 0; i < fieldList.Count; i++)
-                {
-                    areaData.Add(fieldList[i], valueList[i]);
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggerManager.Error(ex.Message);
-            }
-            return areaData;
-        }
-
-        private void ParseDefaultSetting(string line)
-        {
-            try
-            {
-                var newLine = line.Replace("default_setting_begin", "").Replace("default_setting_end", "");
-                var tmpItem = "";
-                IList<string> fieldList = new List<string>();
-                IList<string> valueList = new List<string>();
-                foreach (var item in newLine)
-                {
-                    switch (item)
-                    {
-                        case '=':
-                            fieldList.Add(tmpItem);
-                            tmpItem = string.Empty;
-                            continue;
-                        case ' ' when tmpItem.Length > 0:
-                            valueList.Add(tmpItem);
-                            tmpItem = string.Empty;
-                            continue;
-                    }
-
-                    if (item is ' ')
-                        continue;
-                    tmpItem += item;
-                }
+                InitZonesArea(value, areaType, worldRegions);
             }
             catch (Exception ex)
             {
                 LoggerManager.Error(GetType().Name + ": " + ex.Message);
+            }
+        }
+
+        private void InitZonesArea(object value, Type areaType, WorldRegionData[,] worldRegions)
+        {
+            var areaZoneValue = (Dictionary<string, IList<IDictionary<string, int>>>)value;
+            foreach (var (name, baseRange) in areaZoneValue)
+            {
+                var zoneArea = (BaseArea)Activator.CreateInstance(areaType, name.RemoveBrackets(), areaType);
+                var aX = new int[baseRange.Count];
+                var aY = new int[baseRange.Count];
+                var minZ = 0;
+                var maxZ = 0;
+                for (var i = 0; i < baseRange.Count; i++)
+                {
+                    aX[i] = baseRange[i]["X"];
+                    aY[i] = baseRange[i]["Y"];
+                    minZ = baseRange[i]["MinZ"];
+                    maxZ = baseRange[i]["MaxZ"];
+                }
+                zoneArea.X = aX;
+                zoneArea.Y = aY;
+                zoneArea.MinZ = minZ;
+                zoneArea.MaxZ = maxZ;
+                
+                zoneArea.Zone = new ZoneNPoly(zoneArea.X, zoneArea.Y, zoneArea.MinZ, zoneArea.MaxZ);
+                AddAreaZone(worldRegions, zoneArea);
+            }
+        }
+
+        private void InitWaterArea(object value, Type areaType, WorldRegionData[,] worldRegions)
+        {
+            var waterValue = (IDictionary<string, IDictionary<string, double>>)value;
+            foreach (var (name, data) in waterValue)
+            {
+                var waterZone = (WaterArea)Activator.CreateInstance(areaType, name.RemoveBrackets(), areaType);
+                waterZone.MinX = (int) data["MinX"]; 
+                waterZone.MinY = (int) data["MinY"];
+                waterZone.MinZ = (int) data["MinZ"];
+            
+                waterZone.MaxX = (int) data["MaxX"];
+                waterZone.MaxY = (int) data["MaxY"];
+                waterZone.MaxZ = (int) data["MaxZ"];
+                
+                waterZone.Zone = new ZoneCuboid(waterZone.MinX, waterZone.MaxX, waterZone.MinY,
+                    waterZone.MaxY, waterZone.MinZ, waterZone.MaxZ);
+
+                AddAreaZone(worldRegions, waterZone);
+            }
+        }
+
+        private void AddAreaZone(WorldRegionData[,] worldRegions, BaseArea baseArea)
+        {
+            int rows = worldRegions.GetUpperBound(0) + 1;
+            int columns = worldRegions.Length / rows;
+            for (int x = 0; x < rows; x++)
+            {
+                for (int y = 0; y < columns; y++)
+                {
+                    if (baseArea.Zone.IntersectsRectangle(
+                        (x - _worldInit.OffsetX) << _worldInit.ShiftBy,
+                        ((x + 1) - _worldInit.OffsetX) << _worldInit.ShiftBy,
+                        (y - _worldInit.OffsetY) << _worldInit.ShiftBy,
+                        ((y + 1) - _worldInit.OffsetY) << _worldInit.ShiftBy))
+                    {
+                        worldRegions[x, y].AddZone(baseArea);
+                    }
+                }
             }
         }
     }

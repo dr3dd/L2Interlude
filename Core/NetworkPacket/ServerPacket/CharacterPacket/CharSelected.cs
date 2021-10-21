@@ -43,9 +43,9 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
             WriteInt(_template.GetRaceId());
             WriteInt(_template.GetClassId());
             WriteInt(0x01); // active ??
-            WriteInt(_location.GetX());
-            WriteInt(_location.GetY());
-            WriteInt(_location.GetZ());
+            WriteInt(_playerInstance.GetX());
+            WriteInt(_playerInstance.GetY());
+            WriteInt(_playerInstance.GetZ());
 		
             WriteInt(_playerInstance.PlayerStatus().CurrentHp);//_player.getCurrentHp()
             WriteInt(_playerInstance.PlayerStatus().CurrentMp);//_player.getCurrentMp()

@@ -45,9 +45,9 @@ namespace Core.NetworkPacket.ServerPacket
         {
             WriteByte(0x04);
             
-            WriteInt(_location.GetX());
-            WriteInt(_location.GetY());
-            WriteInt(_location.GetZ());
+            WriteInt(_playerInstance.GetX());
+            WriteInt(_playerInstance.GetY());
+            WriteInt(_playerInstance.GetZ());
             WriteInt(0); //heading
             WriteInt(_playerInstance.ObjectId);
             

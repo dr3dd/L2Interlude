@@ -27,6 +27,7 @@ namespace Core.Module.Player
         private readonly PlayerEffect _playerEffect;
         private readonly PlayerSkillMagic _playerSkillMagic;
         private readonly PlayerMessage _playerMessage;
+        private readonly PlayerZone _playerZone;
         public Location Location { get; set; }
         public IServiceProvider ServiceProvider { get; }
         public int Heading { get; set; }
@@ -51,6 +52,7 @@ namespace Core.Module.Player
             _playerEffect = new PlayerEffect(this);
             _playerSkillMagic = new PlayerSkillMagic(this);
             _playerMessage = new PlayerMessage(this);
+            _playerZone = new PlayerZone(this);
         }
 
         public IUnitOfWork GetUnitOfWork() => _unitOfWork;
@@ -69,6 +71,7 @@ namespace Core.Module.Player
         public PlayerEffect PlayerEffect() => _playerEffect;
         public PlayerSkillMagic PlayerSkillMagic() => _playerSkillMagic;
         public PlayerMessage PlayerMessage() => _playerMessage;
+        public PlayerZone PlayerZone() => _playerZone;
 
         private static PlayerLoader PlayerLoader(IServiceProvider serviceProvider)
         {
