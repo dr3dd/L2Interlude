@@ -5,20 +5,20 @@ using L2Logger;
 
 namespace Core.Module.AreaData
 {
-    public class WaterArea : BaseArea
+    internal class PeaceZone : BaseArea
     {
-        public WaterArea(string name, Type type) : base(name, type)
+        public PeaceZone(string name, Type area) : base(name, area)
         {
         }
 
         protected override void OnEnter(PlayerInstance character)
         {
-            LoggerManager.Info("OnEnter WaterZone");
+            LoggerManager.Info("OnEnter PeaceZone");
         }
 
         protected override void OnExit(PlayerInstance character)
         {
-            LoggerManager.Info("OnExit WaterZone");
+            LoggerManager.Info("OnExit PeaceZone");
         }
     }
 }

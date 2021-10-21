@@ -8,6 +8,7 @@ using Core.Module.CharacterData;
 using Core.Module.WorldData;
 using Helpers;
 using L2Logger;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.GeoEngine
 {
@@ -18,12 +19,14 @@ namespace Core.GeoEngine
         private readonly ABlock[,] _blocks;
         // Pre-allocated buffers.
         private BufferHolder[] _buffers;
-        public GeoEngineInit()
+        private readonly WorldInit _worldInit;
+        public GeoEngineInit(IServiceProvider provider)
         {
             _basePath = Initializer.Config().ServerConfig.StaticData;
             LoggerManager.Info("GeoEngine: Initializing...");
             // Initialize block container.
             _blocks = new ABlock[GeoStructure.GeoBlocksX, GeoStructure.GeoBlocksY];
+            _worldInit = provider.GetRequiredService<WorldInit>();
             // Initialize multilayer temporarily buffer.
             BlockMultilayer.Initialize();
         }
@@ -99,8 +102,8 @@ namespace Core.GeoEngine
                     }
 
                     // Get block indexes.
-                    int blockX = (regionX - World.TileXMin) * GeoStructure.RegionBlocksX;
-                    int blockY = (regionY - World.TileYMin) * GeoStructure.RegionBlocksY;
+                    int blockX = (regionX - _worldInit.TileXMin) * GeoStructure.RegionBlocksX;
+                    int blockY = (regionY - _worldInit.TileYMin) * GeoStructure.RegionBlocksY;
 
                     for (int ix = 0; ix < GeoStructure.RegionBlocksX; ix++)
                     {
@@ -198,24 +201,24 @@ namespace Core.GeoEngine
         public short GetHeight(int worldX, int worldY, int worldZ) => GetHeightNearest(GetGeoX(worldX), GetGeoY(worldY), worldZ);
         
         
-        public static int GetGeoX(int worldX)
+        public int GetGeoX(int worldX)
         {
-            return (worldX - World.WorldXMin) >> 4;
+            return (worldX - _worldInit.MapMinX) >> 4;
         }
         
-        public static int GetGeoY(int worldY)
+        public int GetGeoY(int worldY)
         {
-            return (worldY - World.WorldYMin) >> 4;
+            return (worldY - _worldInit.MapMinY) >> 4;
         }
         
-        public static int GetWorldX(int geoX)
+        public int GetWorldX(int geoX)
         {
-            return (geoX << 4) + World.WorldXMin + 8;
+            return (geoX << 4) + _worldInit.MapMinX + 8;
         }
         
-        public static int GetWorldY(int geoY)
+        public int GetWorldY(int geoY)
         {
-            return (geoY << 4) + World.WorldYMin + 8;
+            return (geoY << 4) + _worldInit.MapMinY + 8;
         }
 
         public LinkedList<Location> FindPath(int ox, int oy, int oz, int tx, int ty, int tz)

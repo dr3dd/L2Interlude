@@ -2,6 +2,7 @@
 using Config;
 using Core.Controller;
 using Core.GeoEngine;
+using Core.Module.AreaData;
 using Core.Module.CharacterData.Template;
 using Core.Module.ItemData;
 using Core.Module.ManualData;
@@ -47,11 +48,18 @@ namespace Core
         {
             return ServiceProvider.GetService<GeoEngineInit>();
         }
+        
+        internal static WorldInit WorldInit()
+        {
+            return ServiceProvider.GetService<WorldInit>();
+        }
 
         public void Load()
         {
             ServiceProvider.GetRequiredService<ObjectIdInit>();
             ServiceProvider.GetRequiredService<GameTimeController>().Run();
+            ServiceProvider.GetRequiredService<WorldInit>().Run();
+            ServiceProvider.GetRequiredService<AreaDataInit>().Run();
             ServiceProvider.GetRequiredService<NpcDataInit>().Run();
             ServiceProvider.GetRequiredService<GeoEngineInit>().Run();
             //ServiceProvider.GetRequiredService<NpcPosInit>().Run();

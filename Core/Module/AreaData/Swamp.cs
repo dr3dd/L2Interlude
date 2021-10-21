@@ -1,24 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using Core.Module.Player;
 using L2Logger;
 
 namespace Core.Module.AreaData
 {
-    public class WaterArea : BaseArea
+    internal class Swamp : BaseArea
     {
-        public WaterArea(string name, Type type) : base(name, type)
+        public Swamp(string name, Type area) : base(name, area)
         {
         }
 
         protected override void OnEnter(PlayerInstance character)
         {
-            LoggerManager.Info("OnEnter WaterZone");
+            LoggerManager.Info("OnEnter Swamp");
         }
 
         protected override void OnExit(PlayerInstance character)
         {
-            LoggerManager.Info("OnExit WaterZone");
+            LoggerManager.Info("OnExit Swamp");
         }
     }
 }

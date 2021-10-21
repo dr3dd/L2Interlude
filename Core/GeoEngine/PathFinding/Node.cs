@@ -28,7 +28,7 @@ namespace Core.GeoEngine.PathFinding
         
         public void SetGeo(int gx, int gy, int gz, sbyte nswe)
         {
-            SetXYZ(GeoEngineInit.GetWorldX(gx), GeoEngineInit.GetWorldY(gy), gz);
+            //SetXYZ(GeoEngineInit.GetWorldX(gx), GeoEngineInit.GetWorldY(gy), gz);
             _geoX = gx;
             _geoY = gy;
             _nswe = nswe;

@@ -39,7 +39,7 @@ namespace Core.Module.Player
             PlayerInstance playerInstance = new PlayerInstance(template, playerAppearance, _serviceProvider, _unitOfWork);
             var characterInfo = playerInstance.PlayerCharacterInfo();
             characterInfo.CharacterId = characterEntity.CharacterId;
-            playerInstance.Location = new Location(characterEntity.XLoc, characterEntity.YLoc, characterEntity.ZLoc);
+            playerInstance.WorldObjectPosition().WorldPosition().SetXYZ(characterEntity.XLoc, characterEntity.YLoc, characterEntity.ZLoc);
             playerInstance.PlayerStatus().CurrentCp = characterEntity.Cp;
             playerInstance.PlayerStatus().CurrentHp = characterEntity.Hp;
             playerInstance.PlayerStatus().CurrentMp = characterEntity.Mp;

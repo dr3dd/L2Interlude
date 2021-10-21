@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Core.GeoEngine;
+using Core.Module.AreaData;
 using Core.Module.CharacterData;
 using Core.NetworkPacket.ServerPacket;
 using L2Logger;
@@ -27,8 +28,8 @@ namespace Core.Module.Player
                 await _playerInstance.SendActionFailedPacketAsync();
             }
 
-            double dx = targetX - _playerInstance.Location.GetX();
-            double dy = targetY - _playerInstance.Location.GetY();
+            double dx = targetX - _playerInstance.GetX();
+            double dy = targetY - _playerInstance.GetY();
 
             if (((dx * dx) + (dy * dy)) > 98010000)
             {
@@ -44,9 +45,9 @@ namespace Core.Module.Player
 
         public async Task ValidatePositionAsync(int x, int y, int z, int heading)
         {
-            int realX = _playerInstance.Location.GetX();
-            int realY = _playerInstance.Location.GetY();
-            int realZ = _playerInstance.Location.GetZ();
+            int realX = _playerInstance.GetX();
+            int realY = _playerInstance.GetY();
+            int realZ = _playerInstance.GetZ();
             
             LoggerManager.Info($"Validate Location: X: {realX}, Y: {realY} Z: {realZ}");
 
@@ -59,6 +60,20 @@ namespace Core.Module.Player
             int dy = y - realY;
             int dz = z - realZ;
             double diffSq = ((dx * dx) + (dy * dy));
+            
+            if (_playerInstance.PlayerZone().IsInsideZone(AreaId.Water))
+            {
+                _playerInstance.SetXYZ(realX, realY, z);
+                if (diffSq > 90000)
+                {
+                    await _playerInstance.SendPacketAsync(new ValidateLocation(_playerInstance));
+                }
+            }
+            else if (diffSq < 360000) // if too large, messes observation
+            {
+                _playerInstance.SetXYZ(realX, realY, z);
+                return;
+            }
         }
     }
 }

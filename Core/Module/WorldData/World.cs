@@ -1,32 +1,62 @@
-﻿using System;
+﻿using System.Collections.Concurrent;
+using Core.Module.CharacterData;
+using Core.Module.Player;
 
 namespace Core.Module.WorldData
 {
-    public class World
+    internal abstract class World
     {
-        public static int ShiftBy = 11;
-	
-        public static int TileSize = 32768;
+        public int ShiftBy = 12;
+
+        // Geodata min/max tiles
+        public int TileXMin = 16;
+        public int TileXMax = 26;
+        public int TileYMin = 10;
+        public int TileYMax = 25;
+
+        // Map dimensions
+        public int TileSize = 32768;
+        public int MapMinX;
+        public int MapMaxX;
+        public int MapMinY;
+        public int MapMaxY;
+
+        /** calculated offset used so top left region is 0,0. */
+        protected int RegionsX;
+
+        /** The Constant REGIONS_Y. */
+        protected int RegionsY;
+
+        /** calculated offset used so top left region is 0,0. */
+        public int OffsetX;
+
+        /** The Constant OFFSET_Y. */
+        public int OffsetY;
+
+        /** The _world regions. */
+        protected WorldRegionData[,] _worldRegions;
+
+        public WorldRegionData[,] GetAllWorldRegions() => _worldRegions;
         
-        /** Map dimensions. */
-        public static int TileXMin = 16;
-        public static int TileYMin = 10;
-        public static int TileXMax = 26;
-        public static int TileYMax = 25;
-        public static int TileZeroCoordX = 20;
-        public static int TileZeroCoordY = 18;
-        public static int WorldXMin = (TileXMin - TileZeroCoordX) * TileSize;
-        public static int WorldYMin = (TileYMin - TileZeroCoordY) * TileSize;
-	
-        public static int WorldXMax = ((TileXMax - TileZeroCoordX) + 1) * TileSize;
-        public static int WorldYMax = ((TileYMax - TileZeroCoordY) + 1) * TileSize;
-	
-        /** Calculated offset used so top left region is 0,0 */
-        public static int OffsetX = Math.Abs(WorldXMin >> ShiftBy);
-        public static int OffsetY = Math.Abs(WorldYMin >> ShiftBy);
-	
-        /** Number of regions. */
-        private static int _regionsX = (WorldXMax >> ShiftBy) + OffsetX;
-        private static int _regionsY = (WorldYMax >> ShiftBy) + OffsetY;
+        /// <summary>
+        /// containing all the players in game
+        /// </summary>
+        private static ConcurrentDictionary<string, PlayerInstance> _allPlayers;
+        
+        /// <summary>
+        /// containing all visible objects
+        /// </summary>
+        private static ConcurrentDictionary<int, WorldObject> _allObjects;
+
+        protected World()
+        {
+            _allObjects = new ConcurrentDictionary<int, WorldObject>();
+            _allPlayers = new ConcurrentDictionary<string, PlayerInstance>();
+        }
+        
+        public WorldRegionData GetRegion(Location location)
+        {
+            return _worldRegions[(location.GetX() >> ShiftBy) + OffsetX,(location.GetY() >> ShiftBy) + OffsetY];
+        }
     }
 }

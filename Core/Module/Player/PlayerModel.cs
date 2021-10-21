@@ -42,6 +42,8 @@ namespace Core.Module.Player
         {
             try
             {
+                var location = _template.GetInitialStartPoint();
+                _playerInstance.SetXYZ(location.GetX(), location.GetY(), location.GetZ());
                 var entity = PrepareEntity();
                 var characterId = await _characterRepository.CreateCharacterAsync(entity);
                 entity.CharacterId = characterId;
@@ -56,7 +58,6 @@ namespace Core.Module.Player
 
         private CharacterEntity PrepareEntity()
         {
-            var location = _template.GetInitialStartPoint();
             var appearance = _playerInstance.PlayerAppearance();
             var characterInfo = _playerInstance.PlayerCharacterInfo();
             var characterEntity = new CharacterEntity
@@ -104,9 +105,9 @@ namespace Core.Module.Player
                 StHair = characterInfo.StHair,
                 StHairAll = characterInfo.StHairAll,
                 IsInVehicle = false,
-                XLoc = location.GetX(),
-                YLoc = location.GetY(),
-                ZLoc = location.GetZ(),
+                XLoc = _playerInstance.GetX(),
+                YLoc = _playerInstance.GetY(),
+                ZLoc = _playerInstance.GetZ(),
             };
             return characterEntity;
         }
