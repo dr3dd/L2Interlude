@@ -153,7 +153,7 @@ namespace Core.Module.ParserEngine
                     if (item.StartsWith("hit_modify"))
                     {
                         var hitModify = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
-                        itemData.HitModify = Convert.ToSingle(hitModify, CultureInfo.CurrentCulture);
+                        itemData.HitModify = Convert.ToSingle(hitModify, CultureInfo.InvariantCulture);
                     }
                     if (item.StartsWith("magical_damage"))
                     {
