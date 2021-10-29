@@ -114,14 +114,15 @@ namespace Core.Module.Player
         
         public void UpdateKnownObjects()
         {
-            FindCloseObjects();
+            FindClosePlayers();
         }
 
-        private void FindCloseObjects()
+        private void FindClosePlayers()
         {
             foreach (PlayerInstance targetInstance in _worldInit.GetVisiblePlayers(this))
             {
                 SendPacketAsync(new CharInfo(targetInstance));
+                targetInstance.SendPacketAsync(new CharInfo(this));
             }
         }
 
@@ -130,6 +131,7 @@ namespace Core.Module.Player
             foreach (PlayerInstance targetInstance in _worldInit.GetVisiblePlayers(this))
             {
                 await targetInstance.SendPacketAsync(packet);
+                await SendPacketAsync(new CharInfo(targetInstance));
             }
         }
     }
