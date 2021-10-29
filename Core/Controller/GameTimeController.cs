@@ -115,9 +115,9 @@ namespace Core.Controller
 
                 if (ended != null)
                 {
-                    foreach (Character character in ended)
+                    foreach (PlayerInstance playerInstance in ended)
                     {
-                        //character.GetKnownList().UpdateKnownObjects();
+                        playerInstance.UpdateKnownObjects();
                         //character.AI.NotifyEvent(CtrlEvent.EvtArrived);
                     }
                 }

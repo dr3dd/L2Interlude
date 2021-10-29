@@ -40,6 +40,7 @@ namespace Core.Module.Player
         {
             _playerInstance.PlayerMovement().MoveToLocation(x, y, z, 0);
             await _playerInstance.SendPacketAsync(new CharMoveToLocation(_playerInstance));
+            await _playerInstance.SendToKnownPlayers(new CharMoveToLocation(_playerInstance));
         }
     }
 }

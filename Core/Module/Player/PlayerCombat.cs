@@ -235,6 +235,11 @@ namespace Core.Module.Player
             return GetGroundHighSpeed() / (float)baseGroundHighSpeed;
         }
 
+        public float GetAttackSpeedMultiplier()
+        {
+            return (float)((1.1 * GetPhysicalAttackSpeed()) / _templateHandler.GetBaseAttackSpeed());
+        }
+
         /// <summary>
         /// Casting Spd. = (333*WIT bonus*Fast Spell Casting)*Armor Multiplier*Armor Bonus*Weapon Bonus*M.Def. Bonus*Buffs*Weapon Penalty+Heroic Berserker
         /// </summary>
