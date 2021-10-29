@@ -130,10 +130,10 @@ namespace Core.Module.AreaData
                 for (int y = 0; y < columns; y++)
                 {
                     if (baseArea.Zone.IntersectsRectangle(
-                        (x - _worldInit.OffsetX) << _worldInit.ShiftBy,
-                        ((x + 1) - _worldInit.OffsetX) << _worldInit.ShiftBy,
-                        (y - _worldInit.OffsetY) << _worldInit.ShiftBy,
-                        ((y + 1) - _worldInit.OffsetY) << _worldInit.ShiftBy))
+                        (x - _worldInit.OffsetX) << World.ShiftBy,
+                        ((x + 1) - _worldInit.OffsetX) << World.ShiftBy,
+                        (y - _worldInit.OffsetY) << World.ShiftBy,
+                        ((y + 1) - _worldInit.OffsetY) << World.ShiftBy))
                     {
                         worldRegions[x, y].AddZone(baseArea);
                     }

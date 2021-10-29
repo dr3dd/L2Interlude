@@ -1,21 +1,25 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using Core.Module.CharacterData;
 using Core.Module.Player;
+using Core.NetworkPacket.ServerPacket.CharacterPacket;
 
 namespace Core.Module.WorldData
 {
     internal abstract class World
     {
-        public int ShiftBy = 12;
+        public const int ShiftBy = 12;
 
         // Geodata min/max tiles
-        public int TileXMin = 16;
-        public int TileXMax = 26;
-        public int TileYMin = 10;
-        public int TileYMax = 25;
+        public const int TileXMin = 16;
+        public const int TileXMax = 26;
+        public const int TileYMin = 10;
+        public const int TileYMax = 25;
 
         // Map dimensions
-        public int TileSize = 32768;
+        public const int TileSize = 32768;
         public int MapMinX;
         public int MapMaxX;
         public int MapMinY;
@@ -57,6 +61,89 @@ namespace Core.Module.WorldData
         public WorldRegionData GetRegion(Location location)
         {
             return _worldRegions[(location.GetX() >> ShiftBy) + OffsetX,(location.GetY() >> ShiftBy) + OffsetY];
+        }
+        
+        /// <summary>
+        /// Add WorldObject object in _allObjects.
+        /// </summary>
+        /// <param name="worldObject"></param>
+        public void StoreWorldObject(WorldObject worldObject)
+        {
+            _allObjects.TryAdd(worldObject.ObjectId, worldObject);
+        }
+
+        public void StorePlayerObject(PlayerInstance playerInstance)
+        {
+            _allPlayers.TryAdd(playerInstance.PlayerAppearance().CharacterName, playerInstance);
+        }
+        
+        /// <summary>
+        /// Removes the objects
+        /// </summary>
+        /// <param name="worldObject"></param>
+        public void RemoveObject(WorldObject worldObject)
+        {
+            _allObjects.TryRemove(worldObject.ObjectId, value: out _);
+        }
+
+        public List<WorldObject> GetVisibleObjects(WorldObject worldObject, int radius)
+        {
+            if ((worldObject == null))
+            {
+                return new List<WorldObject>();
+            }
+            
+            var region = worldObject.GetWorldRegion();
+            
+            var x = worldObject.GetX();
+            var y = worldObject.GetY();
+            var sqRadius = radius * radius;
+            
+            // Create a list in order to contain all visible WorldObject
+            var result = new List<WorldObject>();
+            // Go through the list of region
+            foreach (var worldRegion in region.GetSurroundingRegions())
+            {
+                result.AddRange(from wo in worldRegion.GetVisibleObjects()
+                    where !wo.Equals(worldObject)
+                    let x1 = wo.GetX()
+                    let y1 = wo.GetY()
+                    let dx = x1 - x
+                    let dy = y1 - y
+                    where ((dx * (double)dx) + (dy * (double)dy)) < sqRadius
+                    select wo);
+            }
+            return result;
+        }
+        
+        public List<WorldObject> GetVisibleObjects(WorldObject worldObject)
+        {
+            var region = worldObject.GetWorldRegion();
+            
+            // Create a list in order to contain all visible WorldObject
+            var result = new List<WorldObject>();
+            // Go through the list of region
+            foreach (WorldRegionData worldRegion in region.GetSurroundingRegions())
+            {
+                result.AddRange(worldRegion.GetVisibleObjects().Where(wo => wo != null)
+                    .Where(wo => !wo.Equals(worldObject)));
+            }
+            return result;
+        }
+        
+        public List<PlayerInstance> GetVisiblePlayers(WorldObject worldObject)
+        {
+            WorldRegionData region = worldObject.GetWorldRegion();
+            // Create a list in order to contain all visible WorldObject
+            List<PlayerInstance> result = new List<PlayerInstance>();
+		
+            // Go through the list of region
+            foreach (WorldRegionData worldRegion in region.GetSurroundingRegions())
+            {
+                // Go through visible object of the selected region
+                result.AddRange(worldRegion.GetAllPlayers().Where(playable => !playable.Equals(worldObject)));
+            }
+            return result;
         }
     }
 }

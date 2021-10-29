@@ -102,8 +102,8 @@ namespace Core.GeoEngine
                     }
 
                     // Get block indexes.
-                    int blockX = (regionX - _worldInit.TileXMin) * GeoStructure.RegionBlocksX;
-                    int blockY = (regionY - _worldInit.TileYMin) * GeoStructure.RegionBlocksY;
+                    int blockX = (regionX - World.TileXMin) * GeoStructure.RegionBlocksX;
+                    int blockY = (regionY - World.TileYMin) * GeoStructure.RegionBlocksY;
 
                     for (int ix = 0; ix < GeoStructure.RegionBlocksX; ix++)
                     {

@@ -59,11 +59,7 @@ namespace Core.Module.WorldData
 
         public Location GetWorldPosition()
         {
-            if (_worldPosition == null)
-            {
-                _worldPosition = new Location(0, 0, 0);
-            }
-            return _worldPosition;
+            return _worldPosition ??= new Location(0, 0, 0);
         }
         
         public void SetWorldRegion(WorldRegionData value)
@@ -83,11 +79,7 @@ namespace Core.Module.WorldData
         
         public Location WorldPosition()
         {
-            if (_worldPosition == null)
-            {
-                _worldPosition = new Location(0, 0, 0);
-            }
-            return _worldPosition;
+            return _worldPosition ??= new Location(0, 0, 0);
         }
     }
 }

@@ -33,6 +33,7 @@ namespace Core.Module.Player
         {
             await _playerInstance.SendPacketAsync(new UserInfo(_playerInstance));
             await _playerInstance.SendPacketAsync(new ItemList(_playerInstance));
+            await _playerInstance.SendToKnownPlayers(new UserInfo(_playerInstance));
         }
         
         private async Task EquipUnEquipItemAsync(ItemInstance itemInstance)

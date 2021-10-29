@@ -3,8 +3,11 @@ using System.Threading.Tasks;
 using Core.Controller;
 using Core.Module.CharacterData;
 using Core.Module.CharacterData.Template;
+using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
+using Core.NetworkPacket.ServerPacket.CharacterPacket;
 using DataBase.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using Network;
 
 namespace Core.Module.Player
@@ -33,6 +36,7 @@ namespace Core.Module.Player
         public int Heading { get; set; }
         public GameServiceController Controller { get; set; }
         private readonly IUnitOfWork _unitOfWork;
+        private readonly WorldInit _worldInit;
         public PlayerInstance(ITemplateHandler template, PlayerAppearance playerAppearance, IServiceProvider provider, IUnitOfWork unitOfWork)
         {
             ServiceProvider = provider;
@@ -53,6 +57,8 @@ namespace Core.Module.Player
             _playerSkillMagic = new PlayerSkillMagic(this);
             _playerMessage = new PlayerMessage(this);
             _playerZone = new PlayerZone(this);
+
+            _worldInit = provider.GetRequiredService<WorldInit>();
         }
 
         public IUnitOfWork GetUnitOfWork() => _unitOfWork;
@@ -104,6 +110,27 @@ namespace Core.Module.Player
         public PlayerMoveToLocation PlayerLocation()
         {
             return _toLocation;
+        }
+        
+        public void UpdateKnownObjects()
+        {
+            FindCloseObjects();
+        }
+
+        private void FindCloseObjects()
+        {
+            foreach (PlayerInstance targetInstance in _worldInit.GetVisiblePlayers(this))
+            {
+                SendPacketAsync(new CharInfo(targetInstance));
+            }
+        }
+
+        public async Task SendToKnownPlayers(ServerPacket packet)
+        {
+            foreach (PlayerInstance targetInstance in _worldInit.GetVisiblePlayers(this))
+            {
+                await targetInstance.SendPacketAsync(packet);
+            }
         }
     }
 }
