@@ -31,6 +31,8 @@ namespace Core.Module.Player
         private readonly PlayerSkillMagic _playerSkillMagic;
         private readonly PlayerMessage _playerMessage;
         private readonly PlayerZone _playerZone;
+        private readonly PlayerTargetAction _playerTargetAction;
+            
         public Location Location { get; set; }
         public IServiceProvider ServiceProvider { get; }
         public int Heading { get; set; }
@@ -57,6 +59,7 @@ namespace Core.Module.Player
             _playerSkillMagic = new PlayerSkillMagic(this);
             _playerMessage = new PlayerMessage(this);
             _playerZone = new PlayerZone(this);
+            _playerTargetAction = new PlayerTargetAction(this);
 
             _worldInit = provider.GetRequiredService<WorldInit>();
         }
@@ -78,6 +81,7 @@ namespace Core.Module.Player
         public PlayerSkillMagic PlayerSkillMagic() => _playerSkillMagic;
         public PlayerMessage PlayerMessage() => _playerMessage;
         public PlayerZone PlayerZone() => _playerZone;
+        internal PlayerTargetAction PlayerTargetAction() => _playerTargetAction;
 
         private static PlayerLoader PlayerLoader(IServiceProvider serviceProvider)
         {
@@ -132,6 +136,14 @@ namespace Core.Module.Player
             {
                 await targetInstance.SendPacketAsync(packet);
                 await SendPacketAsync(new CharInfo(targetInstance));
+            }
+        }
+
+        public async Task OnActionAsync(WorldObject worldObject)
+        {
+            if (worldObject is PlayerInstance targetInstance)
+            {
+                await _playerTargetAction.OnTargetAsync(targetInstance);
             }
         }
     }

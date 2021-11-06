@@ -44,5 +44,10 @@ namespace Helpers
             }
             return (int) (angleTarget * 182.04444444399999D);
         }
+        
+        public static double CalculateDistanceSq2D(int x1, int y1, int x2, int y2)
+        {
+            return Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2);
+        }
     }
 }

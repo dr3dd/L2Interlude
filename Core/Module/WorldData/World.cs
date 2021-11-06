@@ -145,5 +145,10 @@ namespace Core.Module.WorldData
             }
             return result;
         }
+        
+        public WorldObject GetWorldObject(int objectId)
+        {
+            return _allObjects[objectId];
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Core.Module.Player;
+﻿using System.Threading.Tasks;
+using Core.Module.Player;
 using Core.Module.WorldData;
 
 namespace Core.Module.ItemData
