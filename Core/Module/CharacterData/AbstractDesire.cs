@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Core.Module.SkillData;
+using Core.Module.WorldData;
 
 namespace Core.Module.CharacterData
 {
@@ -50,6 +51,7 @@ namespace Core.Module.CharacterData
                 case Desire.PickUpDesire:
                     break;
                 case Desire.InteractDesire:
+                    IntentionInteractAsync((WorldObject) arg0);
                     break;
                 case Desire.MoveToInABoatDesire:
                     break;
@@ -59,5 +61,6 @@ namespace Core.Module.CharacterData
         }
         protected abstract Task MoveToDesireAsync(Location arg0);
         protected abstract Task CastDesireAsync(SkillDataModel arg0);
+        protected abstract Task IntentionInteractAsync(WorldObject worldObject);
     }
 }

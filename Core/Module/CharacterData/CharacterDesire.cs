@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Core.Module.SkillData;
+using Core.Module.WorldData;
 using L2Logger;
 
 namespace Core.Module.CharacterData
@@ -17,6 +18,11 @@ namespace Core.Module.CharacterData
         }
 
         protected override Task CastDesireAsync(SkillDataModel arg0)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override Task IntentionInteractAsync(WorldObject worldObject)
         {
             throw new System.NotImplementedException();
         }

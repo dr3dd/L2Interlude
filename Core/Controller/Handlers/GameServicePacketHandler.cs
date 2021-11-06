@@ -22,6 +22,7 @@ namespace Core.Controller.Handlers
             _clientPackets.TryAdd(0x00, typeof(ProtocolVersion));
             _clientPackets.TryAdd(0x01, typeof(MoveBackwardToLocation));
             _clientPackets.TryAdd(0x03, typeof(EnterWorld));
+            _clientPackets.TryAdd(0x04, typeof(ActionRequest));
             _clientPackets.TryAdd(0x08, typeof(AuthLogin));
             _clientPackets.TryAdd(0x11, typeof(RequestUnEquipItem));
             _clientPackets.TryAdd(0x14, typeof(UseItem));
@@ -32,6 +33,7 @@ namespace Core.Controller.Handlers
             _clientPackets.TryAdd(0x0D, typeof(CharacterSelected));
             _clientPackets.TryAdd(0x0F, typeof(RequestItemList));
             _clientPackets.TryAdd(0x9D, typeof(RequestSkillCoolTime));
+            _clientPackets.TryAdd(0x37, typeof(RequestTargetCancel));
             _clientPackets.TryAdd(0x48, typeof(ValidatePosition));
             _clientPackets.TryAdd(0xCD, typeof(RequestShowMiniMap));
             
