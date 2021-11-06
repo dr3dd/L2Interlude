@@ -18,11 +18,13 @@ PTS scripts files are included in it and plan to work with the server.
 <li>Day/Night</li>
 <li>Mini Map</li>
 <li>Basic inventory</li>
+<li>Loading Zones from PTS files</li>
+<li>Player Known List</li>
+<li>Select UnSelect Player Target</li>
 </ul>
 
 # What is in progress
 <ul>
-<li>Loading Zones from PTS files</li>
 <li>Calculate stats when character is equipping and unequipping items</li>
 </ul>
 
