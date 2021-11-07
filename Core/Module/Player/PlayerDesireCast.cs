@@ -29,6 +29,7 @@ namespace Core.Module.Player
             float reuseDelay = skill.ReuseDelay * 1000;
             await HandleMagicSkill(skill, hitTime);
             await SendToKnownListAsync(skill, target, hitTime, reuseDelay);
+            await _playerInstance.SendPacketAsync(new SetupGauge(SetupGauge.Blue, hitTime));
             // Send a system message to the Player
             await _playerInstance.PlayerMessage().SendMessageToPlayerAsync(skill, skillId);
             await _playerInstance.SendUserInfoAsync();
@@ -59,7 +60,9 @@ namespace Core.Module.Player
 
         private async Task SendToKnownListAsync(SkillDataModel skill, PlayerInstance target, float hitTime, float reuseDelay)
         {
-            await _playerInstance.SendPacketAsync(new MagicSkillUse(_playerInstance, target, skill.SkillId, skill.Level, hitTime, reuseDelay));
+            var skillUse = new MagicSkillUse(_playerInstance, target, skill.SkillId, skill.Level, hitTime, reuseDelay);
+            await _playerInstance.SendPacketAsync(skillUse);
+            await _playerInstance.SendToKnownPlayers(skillUse);
         }
     }
 }

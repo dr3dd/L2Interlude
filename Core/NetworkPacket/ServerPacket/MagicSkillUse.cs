@@ -22,9 +22,9 @@ namespace Core.NetworkPacket.ServerPacket
             _skillLevel = skillLevel;
             _hitTime = hitTime;
             _reuseDelay = reuseDelay;
-            _x = player.Location.GetX();
-            _y = player.Location.GetY();
-            _z = player.Location.GetZ();
+            _x = player.GetX();
+            _y = player.GetY();
+            _z = player.GetZ();
         }
         public override void Write()
         {
