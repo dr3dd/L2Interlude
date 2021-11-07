@@ -20,14 +20,14 @@ namespace Core.Module.Player
 
         public async Task DoCastAsync(SkillDataModel skill)
         {
-            var target = _playerInstance; //self target
+            var target = GetTarget();
             // Get the Identifier of the skill
             int skillId = skill.SkillId;
             //todo need add calculator
             float coolTime = skill.SkillCoolTime;
             float hitTime = skill.SkillHitTime * 1000;
             float reuseDelay = skill.ReuseDelay * 1000;
-            await HandleMagicSkill(skill, hitTime);
+            await HandleMagicSkill(skill, target, hitTime);
             await SendToKnownListAsync(skill, target, hitTime, reuseDelay);
             await _playerInstance.SendPacketAsync(new SetupGauge(SetupGauge.Blue, hitTime));
             // Send a system message to the Player
@@ -35,7 +35,16 @@ namespace Core.Module.Player
             await _playerInstance.SendUserInfoAsync();
         }
 
-        private async Task HandleMagicSkill(SkillDataModel skill, float hitTime)
+        /// <summary>
+        /// Get Selected Target
+        /// </summary>
+        /// <returns></returns>
+        private PlayerInstance GetTarget()
+        {
+            return _playerInstance.PlayerTargetAction().GetTarget();
+        }
+
+        private async Task HandleMagicSkill(SkillDataModel skill, PlayerInstance target, float hitTime)
         {
             await Task.Run(() =>
             {
@@ -47,7 +56,7 @@ namespace Core.Module.Player
                     {
                         TaskManagerScheduler.ScheduleAtFixed(async () =>
                         {
-                            await value.Process(_playerInstance);
+                            await value.Process(target);
                         }, (int)hitTime, _cts.Token);
                     }
                 }
