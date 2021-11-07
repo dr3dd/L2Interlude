@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Core.Module.CharacterData;
 using Core.Module.Player;
 
 namespace Core.Module.AreaData
@@ -24,5 +25,14 @@ namespace Core.Module.AreaData
                 e?.RevalidateInZone(character);
             });
         }
+        
+        public void RemoveCharacter(Character character)
+        {
+            _zones.ForEach(e =>
+            {
+                e?.RemoveCharacter(character);
+            });
+        }
+        
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Core.Module.CharacterData;
 using L2Logger;
 
 namespace Core.Module.WorldData

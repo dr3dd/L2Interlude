@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using Core.Module.CharacterData;
 using Core.Module.Player;
 
 namespace Core.Module.AreaData
@@ -62,6 +63,14 @@ namespace Core.Module.AreaData
             {
                 _characterList.TryRemove(playerInstance.ObjectId, out _);
                 OnExit(playerInstance);
+            }
+        }
+        
+        public void RemoveCharacter(Character character)
+        {
+            if (_characterList.TryRemove(character.ObjectId, out _))
+            {
+                OnExit((PlayerInstance)character);
             }
         }
     }

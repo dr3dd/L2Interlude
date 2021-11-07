@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Core.Module.Player;
+﻿using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket.CharacterPacket;
 
 namespace Core.Module.WorldData

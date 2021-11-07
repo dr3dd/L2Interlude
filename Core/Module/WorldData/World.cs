@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Core.Module.CharacterData;
 using Core.Module.Player;
-using Core.NetworkPacket.ServerPacket.CharacterPacket;
 
 namespace Core.Module.WorldData
 {
@@ -149,6 +147,16 @@ namespace Core.Module.WorldData
         public WorldObject GetWorldObject(int objectId)
         {
             return _allObjects[objectId];
+        }
+        
+        public void RemoveFromAllPlayers(PlayerInstance playerInstance)
+        {
+            _allPlayers.TryRemove(playerInstance.PlayerAppearance().CharacterName, out _);
+        }
+        
+        public void RemoveVisibleObject(WorldObject worldObject, WorldRegionData oldRegion)
+        {
+            oldRegion.RemoveVisibleObject(worldObject);
         }
     }
 }

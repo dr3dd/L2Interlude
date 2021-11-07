@@ -231,5 +231,11 @@ namespace Core.Module.Player
                 Enchant = 0
             });
         }
+        
+        public async Task CharacterStoreAsync()
+        {
+            var entity = PrepareEntity();
+            await _characterRepository.UpdateCharacterAsync(entity);
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Core.Controller;
+﻿using Core.Controller;
 using Core.Module.CharacterData;
 
 namespace Core.NetworkPacket.ServerPacket.CharacterPacket

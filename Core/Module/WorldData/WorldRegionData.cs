@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Core.Module.AreaData;
+using Core.Module.CharacterData;
 using Core.Module.Player;
 
 namespace Core.Module.WorldData
@@ -53,6 +54,15 @@ namespace Core.Module.WorldData
                 _playerObjects.TryAdd(playerInstance.ObjectId, playerInstance);
             }
         }
+
+        public void RemoveVisibleObject(WorldObject worldObject)
+        {
+            _visibleObjects.TryRemove(worldObject.ObjectId, out worldObject);
+            if (worldObject is PlayerInstance)
+            {
+                _playerObjects.TryRemove(worldObject.ObjectId, out _);
+            }
+        }
         
         public IEnumerable<WorldObject> GetVisibleObjects()
         {
@@ -62,6 +72,11 @@ namespace Core.Module.WorldData
         public IEnumerable<PlayerInstance> GetAllPlayers()
         {
             return _playerObjects.Values;
+        }
+        
+        public void RemoveFromZones(Character character)
+        {
+            _zoneManager?.RemoveCharacter(character);
         }
     }
 }

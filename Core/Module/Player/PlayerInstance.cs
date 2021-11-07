@@ -146,5 +146,18 @@ namespace Core.Module.Player
                 await _playerTargetAction.OnTargetAsync(targetInstance);
             }
         }
+
+        public async Task DeleteMeAsync()
+        {
+            if (GetWorldRegion() != null)
+            {
+                GetWorldRegion().RemoveFromZones(this);
+            }
+            await PlayerTargetAction().RemoveTargetAsync();
+            _worldInit.RemoveObject(this);
+            _worldInit.RemoveFromAllPlayers(this);
+            _worldInit.RemoveVisibleObject(this, WorldObjectPosition().GetWorldRegion());
+            WorldObjectPosition().SetWorldRegion(null);
+        }
     }
 }
