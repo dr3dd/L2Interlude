@@ -216,7 +216,9 @@ namespace Core.Module.Player
 
             var effects = _playerInstance.PlayerEffect().GetEffects().Values;
             result = effects.Where(e => e.Effect is PSpeed).Select(effect => (PSpeed)effect.Effect).Aggregate(result,
-                (current, effectSpeed) => current + effectSpeed.GetEffectSpeed());
+                (current, effectSpeed) => current + (effectSpeed.GetEffectSpeed() < 0
+                    ? (current * effectSpeed.GetEffectSpeed() / 100)
+                    : effectSpeed.GetEffectSpeed()));
             return (int) result;
         }
         

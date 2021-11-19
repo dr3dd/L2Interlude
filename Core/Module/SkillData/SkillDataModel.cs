@@ -56,6 +56,8 @@ namespace Core.Module.SkillData
                 case "s_speed_walk2":
                 case "s_song_of_wind":
                 case "s_wind_strike11":
+                case "s_self_heal":
+                case "s_ice_bolt11":   
                     Effects = GetEffects(skillBegin.Effect, effectInit);
                     break;
             }

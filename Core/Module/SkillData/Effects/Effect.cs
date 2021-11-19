@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Core.Module.Effects;
 using Core.Module.Player;
+using Core.NetworkPacket.ServerPacket;
 using Core.TaskManager;
 using Helpers;
 using L2Logger;
@@ -23,6 +24,10 @@ namespace Core.Module.SkillData.Effects
             await StartNewEffect(duration, playerInstance);
             LoggerManager.Info($"The effect {SkillDataModel.SkillName} has been started");
             await PlayerEffect(playerInstance);
+            
+            var sm = new SystemMessage(SystemMessageId.YouFeelS1Effect);
+            sm.AddSkillName(SkillDataModel.SkillId, SkillDataModel.Level);
+            await playerInstance.SendPacketAsync(sm);
         }
 
         private async Task PlayerEffect(PlayerInstance playerInstance)
@@ -59,6 +64,10 @@ namespace Core.Module.SkillData.Effects
             await playerInstance.SendPacketAsync(mi);
             LoggerManager.Info($"The effect {SkillDataModel.SkillName} has been disappeared");
             await playerInstance.SendUserInfoAsync();
+            
+            var sm = new SystemMessage(SystemMessageId.S1Disappeared);
+            sm.AddSkillName(SkillDataModel.SkillId, SkillDataModel.Level);
+            await playerInstance.SendPacketAsync(sm);
         }
     }
 }

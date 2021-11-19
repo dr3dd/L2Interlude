@@ -36,7 +36,7 @@ namespace Core.GeoEngine
         private readonly string _symbolX;
         private readonly string _symbolY;
 
-        public int StepX => _signumY;
+        public int StepX => _stepX;
         public int StepY => _stepY;
         public int SignumX => _signumX;
         public int SignumY => _signumY;

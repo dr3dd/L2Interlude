@@ -554,8 +554,8 @@ namespace Core.GeoEngine
 			MoveDirection mdt = MoveDirection.GetDirection(gtx - gox, gty - goy);
 			
 			// Get cell grid coordinates.
-			int gridX = ox & 0xFFFFFF0;
-			int gridY = oy & 0xFFFFFF0;
+			int gridX = (int)(ox & 0xFFFFFFF0);
+			int gridY = (int)(oy & 0xFFFFFFF0);
 			
 			// Run loop.
 			sbyte dir;
@@ -575,7 +575,7 @@ namespace Core.GeoEngine
 				else
 				{
 					// Calculate intersection with cell's Y border.
-					checkY = (int)(gridY + mdt.OffsetY);
+					checkY = gridY + mdt.OffsetY;
 					checkX = (int) (ox + ((checkY - oy) / m));
 					checkX = Utility.Limit(checkX, gridX, gridX + 15);
 					

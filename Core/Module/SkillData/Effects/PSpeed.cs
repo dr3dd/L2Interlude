@@ -9,8 +9,10 @@ namespace Core.Module.SkillData.Effects
     {
         private readonly int _effectSpeed;
         private readonly int _abnormalTime;
+        private readonly IReadOnlyList<string> _params;
         public PSpeed(IReadOnlyList<string> param, SkillDataModel skillDataModel)
         {
+            _params = param;
             _effectSpeed = Convert.ToInt32(param[2]);
             _abnormalTime = skillDataModel.AbnormalTime;
             SkillDataModel = skillDataModel;

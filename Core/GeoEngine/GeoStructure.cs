@@ -1,4 +1,6 @@
-﻿namespace Core.GeoEngine
+﻿using Core.Module.WorldData;
+
+namespace Core.GeoEngine
 {
     internal static class GeoStructure
     {
@@ -36,8 +38,8 @@
         public static int RegionCellsY = RegionBlocksY * BlockCellsY;
 	
         // Geo world dimensions.
-        public static int GeoRegionsX = ((26 - 16) + 1);
-        public static int GeoRegionsY = ((25 - 10) + 1);
+        public static int GeoRegionsX = ((World.TileXMax - World.TileXMin) + 1);
+        public static int GeoRegionsY = ((World.TileYMax - World.TileYMin) + 1);
 	
         public static readonly int GeoBlocksX = GeoRegionsX * RegionBlocksX;
         public static readonly int GeoBlocksY = GeoRegionsY * RegionBlocksY;
