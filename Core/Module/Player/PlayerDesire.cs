@@ -12,8 +12,8 @@ namespace Core.Module.Player
     {
         private readonly PlayerInstance _playerInstance;
         private readonly PlayerDesireCast _playerDesireCast;
-        protected bool _clientMoving;
-        protected int _clientMovingToPawnOffset;
+        private bool _clientMoving;
+        private int _clientMovingToPawnOffset;
         private int _moveToPawnTimeout;
         public PlayerDesire(PlayerInstance playerInstance) : base(playerInstance)
         {
@@ -98,6 +98,16 @@ namespace Core.Module.Player
             _playerInstance.PlayerMovement().MoveToLocation(x, y, z, 0);
             await _playerInstance.SendPacketAsync(new CharMoveToLocation(_playerInstance));
             await _playerInstance.SendToKnownPlayers(new CharMoveToLocation(_playerInstance));
+        }
+
+        public bool IsCastingNow()
+        {
+            return _playerDesireCast.IsCastingNow();
+        }
+
+        public bool IsSkillDisabled(SkillDataModel skill)
+        {
+            return _playerDesireCast.IsSkillDisabled(skill);
         }
     }
 }

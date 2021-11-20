@@ -1,11 +1,9 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Core.GeoEngine;
 using Core.Module.AreaData;
 using Core.Module.CharacterData;
 using Core.NetworkPacket.ServerPacket;
 using L2Logger;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player
 {
@@ -21,6 +19,11 @@ namespace Core.Module.Player
         
         public async Task MoveToLocationAsync(int targetX, int targetY, int targetZ, int originX, int originY, int originZ)
         {
+            if (_playerInstance.PlayerDesire().IsCastingNow())
+            {
+                await _playerInstance.SendActionFailedPacketAsync();
+                return;
+            }
             
             if ((targetX == originX) && (targetY == originY) && (targetZ == originZ))
             {
