@@ -107,6 +107,7 @@ namespace Core.Module.Player
         
         public async Task SendUserInfoAsync()
         {
+            if (Controller is null) return;
             await Controller.SendPacketAsync(new UserInfo(this));
             //Broadcast.toKnownPlayers(this, new CharInfo(this)); TODO
         }

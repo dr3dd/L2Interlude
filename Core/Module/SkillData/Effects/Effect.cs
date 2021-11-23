@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Core.Module.Effects;
 using Core.Module.Player;
+using Core.Module.SkillData.Helper;
 using Core.NetworkPacket.ServerPacket;
 using Core.TaskManager;
 using Helpers;
@@ -17,7 +18,7 @@ namespace Core.Module.SkillData.Effects
         private int Duration { get; set; }
         public SkillDataModel SkillDataModel { get; protected set; }
 
-        public abstract Task Process(PlayerInstance playerInstance);
+        public abstract Task Process(PlayerInstance playerInstance, PlayerInstance targetInstance);
         
         protected async Task StartEffectTask(int duration, PlayerInstance playerInstance)
         {
@@ -68,6 +69,11 @@ namespace Core.Module.SkillData.Effects
             var sm = new SystemMessage(SystemMessageId.S1Disappeared);
             sm.AddSkillName(SkillDataModel.SkillId, SkillDataModel.Level);
             await playerInstance.SendPacketAsync(sm);
+        }
+
+        protected EffectResult CanPlayerUseSkill(PlayerInstance playerInstance, PlayerInstance targetInstance)
+        {
+            return CheckUseSkillHelper.CanPlayerUseSkill(SkillDataModel, playerInstance, targetInstance);
         }
     }
 }

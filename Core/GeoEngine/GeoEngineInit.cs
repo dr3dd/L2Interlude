@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Linq;
+using Config;
 using Core.GeoEngine.PathFinding;
 using Core.Module.CharacterData;
 using Core.Module.WorldData;
@@ -22,7 +23,7 @@ namespace Core.GeoEngine
         private readonly WorldInit _worldInit;
         public GeoEngineInit(IServiceProvider provider)
         {
-            _basePath = Initializer.Config().ServerConfig.StaticData;
+            _basePath = provider.GetRequiredService<GameConfig>().ServerConfig.StaticData;
             LoggerManager.Info("GeoEngine: Initializing...");
             // Initialize block container.
             _blocks = new ABlock[GeoStructure.GeoBlocksX, GeoStructure.GeoBlocksY];

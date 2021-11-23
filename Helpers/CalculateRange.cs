@@ -49,5 +49,30 @@ namespace Helpers
         {
             return Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2);
         }
+        
+        public static bool CheckIfInRange(int range, int origX, int origY, int origZ, int origCollisionRadius, int targetX,
+            int targetY, int targetZ, int targetCollisionRadius, bool includeZAxis)
+        {
+            if (range == -1)
+            {
+                return true; // not limited
+            }
+	
+            float rad = 0;
+            rad += origCollisionRadius;
+            rad += targetCollisionRadius;
+		
+            double dx = origX - targetX;
+            double dy = origY - targetY;
+            double d;
+            if (includeZAxis)
+            {
+                double dz = origZ - targetZ;
+                d = (dx * dx) + (dy * dy) + (dz * dz);
+                return d <= ((range * range) + (2 * range * rad) + (rad * rad));
+            }
+            d = (dx * dx) + (dy * dy);
+            return d <= ((range * range) + (2 * range * rad) + (rad * rad));
+        }
     }
 }

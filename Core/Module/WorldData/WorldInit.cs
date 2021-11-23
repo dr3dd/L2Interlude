@@ -23,6 +23,35 @@ namespace Core.Module.WorldData
         public void Run()
         {
 	        _worldRegions = new WorldRegionData[RegionsX + 1, RegionsY + 1];
+	        for (int x = 0; x <= RegionsX; x++)
+	        {
+		        for (int y = 0; y <= RegionsY; y++)
+		        {
+			        _worldRegions[x,y] = new WorldRegionData(x, y);
+		        }
+	        }
+	        for (int rx = 0; rx <= RegionsX; rx++)
+	        {
+		        for (int ry = 0; ry <= RegionsY; ry++)
+		        {
+			        List<WorldRegionData> surroundingRegions = new List<WorldRegionData>();
+			        for (int sx = rx - 1; sx <= (rx + 1); sx++)
+			        {
+				        for (int sy = ry - 1; sy <= (ry + 1); sy++)
+				        {
+					        if (((sx >= 0) && (sx < RegionsX) && (sy >= 0) && (sy < RegionsY)))
+					        {
+						        if (_worldRegions[sx, sy] == null)
+							        continue;
+						        surroundingRegions.Add(_worldRegions[sx,sy]);
+					        }
+				        }
+			        }
+			        _worldRegions[rx,ry].SetSurroundingRegions(surroundingRegions);
+		        }
+	        }
+	        
+	        /*
 	        for (var x = 0; x <= RegionsX; x++)
 	        {
 		        for (var y = 0; y <= RegionsY; y++)
@@ -35,16 +64,14 @@ namespace Core.Module.WorldData
 				        {
 					        if (((sx >= 0) && (sx < RegionsX) && (sy >= 0) && (sy < RegionsY)))
 					        {
-						        if (_worldRegions[sx, sy] != null)
-						        {
 							        surroundingRegions.Add(_worldRegions[sx,sy]);
-						        }
 					        }
 				        }
 			        }
 			        _worldRegions[x,y].SetSurroundingRegions(surroundingRegions);
 		        }
 	        }
+	        */
 	        LoggerManager.Info("World: (" + RegionsX + "x" + RegionsY + ") World Region Grid set up.");
         }
     }

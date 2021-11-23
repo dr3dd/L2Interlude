@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Module.Player;
+using Core.NetworkPacket.ServerPacket;
 
 namespace Core.Module.SkillData.Effects
 {
@@ -18,9 +19,15 @@ namespace Core.Module.SkillData.Effects
             SkillDataModel = skillDataModel;
         }
 
-        public override async Task Process(PlayerInstance playerInstance)
+        public override async Task Process(PlayerInstance playerInstance, PlayerInstance targetInstance)
         {
-            await StartEffectTask(_abnormalTime * 1000, playerInstance);
+            var effectResult = CanPlayerUseSkill(playerInstance, targetInstance);
+            if (effectResult.IsNotValid)
+            {
+                await playerInstance.SendPacketAsync(new SystemMessage(effectResult.SystemMessageId));
+                return;
+            }
+            await StartEffectTask(_abnormalTime * 1000, targetInstance);
         }
 
         public int GetEffectSpeed()

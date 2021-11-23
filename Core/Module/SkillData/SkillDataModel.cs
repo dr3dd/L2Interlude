@@ -47,6 +47,8 @@ namespace Core.Module.SkillData
             SkillCoolTime = skillBegin.SkillCoolTime;
             ReuseDelay = skillBegin.ReuseDelay;
             IsDeBuff = (skillBegin.DeBuff == 1);
+            EffectiveRange = skillBegin.EffectiveRange;
+            CastRange = skillBegin.CastRange;
 
             //for debug
             switch (SkillName)

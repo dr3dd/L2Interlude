@@ -1,4 +1,6 @@
-﻿using Core.Module.CharacterData.Template;
+﻿using System.Threading.Tasks;
+using Core.Module.CharacterData.Template;
+using Core.NetworkPacket.ServerPacket;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player
@@ -8,7 +10,7 @@ namespace Core.Module.Player
         private readonly PlayerInstance _playerInstance;
         private readonly PcParameterInit _statBonusInit;
         public float CurrentCp { get; set; }
-        public float CurrentHp { get; set; }
+        public double CurrentHp { get; set; }
         public float CurrentMp { get; set; }
         public byte Level { get; set; } = 1;  
         public PlayerStatus(PlayerInstance playerInstance)
@@ -48,6 +50,38 @@ namespace Core.Module.Player
             var mpBegin = _playerInstance.TemplateHandler().GetMpBegin(Level);
             var menStat =  _playerInstance.TemplateHandler().GetMen();
             return (int) (mpBegin + (mpBegin * _statBonusInit.GetMenBonus(menStat) / 100));
+        }
+
+        public void DecreaseCurrentHp(double damage)
+        {
+            lock (this)
+            {
+                if (!(damage > 0)) return;
+                CurrentHp -= damage; // Get diff of Hp vs value
+                if (CurrentHp <= 0)
+                {
+                    CurrentHp = 0;
+                }
+                SetCurrentHp(CurrentHp); // Set Hp
+            }
+        }
+        
+        public void IncreaseCurrentHp(double heal)
+        {
+            lock (this)
+            {
+                CurrentHp += heal; // Get diff of Hp vs value
+                if (CurrentHp >= GetMaxHp())
+                {
+                    CurrentHp = GetMaxHp();
+                }
+                SetCurrentHp(CurrentHp); // Set Hp
+            }
+        }
+
+        private void SetCurrentHp(double newHp)
+        {
+            CurrentHp = newHp;
         }
     }
 }

@@ -35,5 +35,30 @@ namespace Core.Module.Player
             }
             await _playerInstance.SendPacketAsync(sm);
         }
+
+        public async Task SendDamageMessageAsync(PlayerInstance targetInstance, double damage, bool isMagicalCritical, bool pcrit = false, bool miss = false)
+        {
+            // Check if hit is missed
+            if (miss)
+            {
+                await _playerInstance.SendPacketAsync(new SystemMessage(SystemMessageId.MissedTarget));
+                return;
+            }
+            // Check if hit is critical
+            if (pcrit)
+            {
+                await _playerInstance.SendPacketAsync(new SystemMessage(SystemMessageId.CriticalHit));
+            }
+            if (isMagicalCritical)
+            {
+                await _playerInstance.SendPacketAsync(new SystemMessage(SystemMessageId.CriticalHitMagic));
+            }
+            if (_playerInstance != targetInstance)
+            {
+                SystemMessage sm = new SystemMessage(SystemMessageId.YouDidS1Dmg);
+                sm.AddNumber(damage);
+                await _playerInstance.SendPacketAsync(sm);
+            }
+        }
     }
 }

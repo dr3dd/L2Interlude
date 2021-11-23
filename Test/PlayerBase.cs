@@ -1,6 +1,8 @@
 ﻿using System;
 using Config;
 using Core;
+using Core.Controller;
+using Core.GeoEngine;
 using Core.Module.CharacterData.Template;
 using Core.Module.ItemData;
 using Core.Module.Player;
@@ -27,6 +29,8 @@ namespace Test
 
             _serviceProvider = _serviceCollection.BuildServiceProvider();
             _serviceProvider.GetRequiredService<ObjectIdInit>();
+            _serviceProvider.GetRequiredService<GeoEngineInit>();
+            _serviceProvider.GetRequiredService<GameTimeController>();
             _serviceProvider.GetRequiredService<PcParameterInit>().Run();
             _serviceProvider.GetRequiredService<ItemPchInit>().Run();
             _serviceProvider.GetRequiredService<ItemDataInit>().Run();

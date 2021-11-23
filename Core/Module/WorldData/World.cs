@@ -136,10 +136,13 @@ namespace Core.Module.WorldData
             List<PlayerInstance> result = new List<PlayerInstance>();
 		
             // Go through the list of region
-            foreach (WorldRegionData worldRegion in region.GetSurroundingRegions())
+            foreach (var worldRegion in region.GetSurroundingRegions())
             {
+                if (worldRegion is null)
+                    continue;
                 // Go through visible object of the selected region
-                result.AddRange(worldRegion.GetAllPlayers().Where(playable => !playable.Equals(worldObject)));
+                result.AddRange(worldRegion.GetAllPlayers()
+                    .Where(playable => !playable.Equals(worldObject)));
             }
             return result;
         }

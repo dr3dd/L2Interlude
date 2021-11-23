@@ -7,6 +7,7 @@ using Core.GeoEngine;
 using Core.Module.SkillData;
 using Core.NetworkPacket.ServerPacket;
 using Core.TaskManager;
+using Helpers;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -36,6 +37,14 @@ namespace Core.Module.Player
             if (target == null)
             {
                 await _playerInstance.SendPacketAsync(new SystemMessage(SystemMessageId.CantSeeTarget));
+                return;
+            }
+            var castRange = skill.CastRange;
+            if (!CalculateRange.CheckIfInRange(castRange, _playerInstance.GetX(), _playerInstance.GetY(),
+                _playerInstance.GetZ(), 33, target.GetX(), target.GetY(), target.GetZ(), 33, true)
+            )
+            {
+                await _playerInstance.SendPacketAsync(new SystemMessage(SystemMessageId.TargetTooFar));
                 return;
             }
             
@@ -153,7 +162,7 @@ namespace Core.Module.Player
                     {
                         TaskManagerScheduler.ScheduleAtFixed(async () =>
                         {
-                            await value.Process(target);
+                            await value.Process(_playerInstance, target);
                         }, (int)hitTime, _cts.Token);
                     }
                 }
