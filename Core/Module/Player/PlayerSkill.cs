@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Core.Module.SkillData;
 using Core.NetworkPacket.ServerPacket;
@@ -55,6 +55,18 @@ namespace Core.Module.Player
                 return skill?.Level ?? 0;
             }
             return 0;
+        }
+
+        public async Task RestorePassiveSkills()
+        {
+            var playerSkill = await GetPlayerSkills();
+            foreach (var skill in playerSkill.Where(s => s.Value.OperateType == OperateType.P))
+            {
+                if (skill.Value.Effects is null)
+                    continue;
+                var effect = skill.Value.Effects.SingleOrDefault().Value;
+                _playerInstance.PlayerEffect().AddEffect(effect, 0, 0);
+            }
         }
     }
 }

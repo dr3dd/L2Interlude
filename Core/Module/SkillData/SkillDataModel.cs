@@ -59,7 +59,15 @@ namespace Core.Module.SkillData
                 case "s_song_of_wind":
                 case "s_wind_strike11":
                 case "s_self_heal":
-                case "s_ice_bolt11":   
+                case "s_ice_bolt11":
+                case "s_heal13":
+                case "s_advanced_magic_defence11":
+                case "s_song_of_warding":
+                case "s_spirit_barrier1":
+                case "s_magic_resistance11":
+                case "s_song_of_vitality":
+                case "s_might1":
+                case "s_shield1":
                     Effects = GetEffects(skillBegin.Effect, effectInit);
                     break;
             }

@@ -25,6 +25,7 @@ namespace Core.Module.Player
         {
             var playerInstance = await Restore(charId);
             await playerInstance.PlayerInventory().RestoreInventory();
+            await playerInstance.PlayerSkill().RestorePassiveSkills();
             return playerInstance;
         }
         

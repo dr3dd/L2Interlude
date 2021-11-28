@@ -17,6 +17,7 @@ namespace Core.Module.SkillData.Effects
         private long PeriodStartTime { get; set; }
         private int Duration { get; set; }
         public SkillDataModel SkillDataModel { get; protected set; }
+        public bool IsModPer { get; protected set; }
 
         public abstract Task Process(PlayerInstance playerInstance, PlayerInstance targetInstance);
         

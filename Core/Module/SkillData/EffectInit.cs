@@ -22,6 +22,10 @@ namespace Core.Module.SkillData
             _handlers.TryAdd("p_block_act", typeof(BlockAct));
             _handlers.TryAdd("p_attack_speed_by_weapon", typeof(AttackSpeedByWeapon));
             _handlers.TryAdd("i_target_cancel_chance", typeof(TargetCancelChance));
+            _handlers.TryAdd("p_magical_defence", typeof(PMagicalDefence));
+            _handlers.TryAdd("p_max_hp", typeof(PMaxHp));
+            _handlers.TryAdd("p_physical_attack", typeof(PPhysicalAttack));
+            _handlers.TryAdd("p_physical_defence", typeof(PPhysicalDefence));
 /*            
             RegisterSkillHandler("i_p_attack_over_hit", new PAttackOverHit());
             RegisterSkillHandler("p_speed", new PSpeed());

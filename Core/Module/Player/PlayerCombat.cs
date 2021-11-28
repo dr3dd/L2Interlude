@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
+using Core.Module.CharacterData;
 using Core.Module.CharacterData.Template;
 using Core.Module.ItemData;
-using Core.Module.SkillData.Effects;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -40,17 +40,21 @@ namespace Core.Module.Player
         }
 
         /// <summary>
+        /// pAtk = weaponPAtk * mod_lvl * mod_str * mod_per  + mod_diff
         /// Str bonus = Str Bonus + 100 / 100f
         /// Weapon P.Atk * Level Bonus * Str bonus
         /// </summary>
         /// <returns></returns>
         public int GetPhysicalAttack()
         {
-            var baseAttack = GetPhysicalWeaponDamage();
+            var weaponPAtk = GetPhysicalWeaponDamage();
             var strStat = _templateHandler.GetStr();
             float strBonus = (_statBonusInit.GetStrBonus(strStat) + 100) / 100f;
             float levelBonus = _statBonusInit.GetLevelBonus(_level);
-            var result = baseAttack * levelBonus * strBonus;
+            var result = weaponPAtk * levelBonus * strBonus;
+
+            var effects = GetPlayerEffects();
+            result = CalculateStats.CalculatePhysicalAttack(effects, result);
             return (int) result;
         }
 
@@ -69,9 +73,16 @@ namespace Core.Module.Player
             return (int) result;
         }
 
+        /// <summary>
+        /// pDef = (4 + ArmorPDef) * mod_lvl * mod_per + mod_diff
+        /// ArmorPDef - total sum physical defence of all equipped armors
+        /// mod_per - skill affects on physical defence in per
+        /// mod_diff - kill affects on physical defence in diff
+        /// </summary>
+        /// <returns></returns>
         public int GetPhysicalDefence()
         {
-            int result = 0;
+            double result = 0;
             try
             {
                 float levelBonus = _statBonusInit.GetLevelBonus(_level);
@@ -82,14 +93,18 @@ namespace Core.Module.Player
                 var gloves = GetGloves();
                 var underwear = GetUnderwear();
                 var mantle = GetMantle();
-                result = (int)((upperBody + lowerBody + pitch + boots + gloves + underwear + mantle) * levelBonus);
-                
+
+                var armorPDef = (upperBody + lowerBody + pitch + boots + gloves + underwear + mantle);
+                result = (4 + armorPDef) * levelBonus;
+
+                var effects = GetPlayerEffects();
+                result = CalculateStats.CalculatePhysicalDefence(effects, result);
             }
             catch (Exception ex)
             {
                 LoggerManager.Error(GetType().Name + ": "  + ex.Message);
             }
-            return result;
+            return (int)result;
         }
 
         private int GetMantle()
@@ -144,6 +159,14 @@ namespace Core.Module.Player
             return upperBody;
         }
 
+        /// <summary>
+        /// Formula magical defence
+        /// mDef =  accMDef * mod_lvl * mod_men * mod_per  + mod_diff
+        /// accMDef - total magical defence of Jewels
+        /// mod_per - skills which are affected on magic defence in per
+        /// mod_diff - skills which are affected on magic defence in diff
+        /// </summary>
+        /// <returns></returns>
         public int GetMagicalDefence()
         {
             float levelBonus = _statBonusInit.GetLevelBonus(_level);
@@ -157,7 +180,15 @@ namespace Core.Module.Player
             float menBonus = (_statBonusInit.GetMenBonus(menStat) + 100) / 100f;
 
             var result = (leftEarning + rightEarning + leftRing + rightRing + necklace) * menBonus * levelBonus;
+            
+            var effects = GetPlayerEffects();
+            result = CalculateStats.CalculateMagicalDefence(effects, result);
             return (int) result;
+        }
+
+        private IEnumerable<EffectDuration> GetPlayerEffects()
+        {
+            return _playerInstance.PlayerEffect().GetEffects().Values;
         }
 
         /// <summary>
@@ -214,11 +245,8 @@ namespace Core.Module.Player
             float dexBonus = (_statBonusInit.GetDexBonus(dexStat) + 100) / 100f;
             var result = baseGroundHighSpeed * dexBonus;
 
-            var effects = _playerInstance.PlayerEffect().GetEffects().Values;
-            result = effects.Where(e => e.Effect is PSpeed).Select(effect => (PSpeed)effect.Effect).Aggregate(result,
-                (current, effectSpeed) => current + (effectSpeed.GetEffectSpeed() < 0
-                    ? (current * effectSpeed.GetEffectSpeed() / 100)
-                    : effectSpeed.GetEffectSpeed()));
+            var effects = GetPlayerEffects();
+            result = CalculateStats.CalculateSpeed(effects, result);
             return (int) result;
         }
         
