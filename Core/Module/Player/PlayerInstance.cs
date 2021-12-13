@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Core.Controller;
 using Core.Module.CharacterData;
 using Core.Module.CharacterData.Template;
+using Core.Module.NpcData;
 using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
 using Core.NetworkPacket.ServerPacket.CharacterPacket;
 using DataBase.Interfaces;
+using Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Network;
 
@@ -32,6 +36,7 @@ namespace Core.Module.Player
         private readonly PlayerMessage _playerMessage;
         private readonly PlayerZone _playerZone;
         private readonly PlayerTargetAction _playerTargetAction;
+        private readonly PlayerKnownList _playerKnownList;
             
         public Location Location { get; set; }
         public IServiceProvider ServiceProvider { get; }
@@ -60,6 +65,7 @@ namespace Core.Module.Player
             _playerMessage = new PlayerMessage(this);
             _playerZone = new PlayerZone(this);
             _playerTargetAction = new PlayerTargetAction(this);
+            _playerKnownList = new PlayerKnownList(this);
 
             _worldInit = provider.GetRequiredService<WorldInit>();
         }
@@ -82,6 +88,7 @@ namespace Core.Module.Player
         public PlayerMessage PlayerMessage() => _playerMessage;
         public PlayerZone PlayerZone() => _playerZone;
         internal PlayerTargetAction PlayerTargetAction() => _playerTargetAction;
+        public PlayerKnownList PlayerKnownList() => _playerKnownList;
 
         private static PlayerLoader PlayerLoader(IServiceProvider serviceProvider)
         {
@@ -120,6 +127,71 @@ namespace Core.Module.Player
         public void UpdateKnownObjects()
         {
             FindClosePlayers();
+            FindCloseNpc();
+        }
+
+        private void FindCloseNpc()
+        {
+            foreach (NpcInstance npcInstance in _worldInit.GetVisibleNpc(this))
+            {
+                var npcAi = npcInstance.GetTemplate().GetStat().NpcAi;
+                npcAi.TryGetValue("MoveAroundSocial", out var moveAroundSocial);
+                npcAi.TryGetValue("MoveAroundSocial1", out var moveAroundSocial1);
+                npcAi.TryGetValue("MoveAroundSocial2", out var moveAroundSocial2);
+                npcAi.TryGetValue("fnHi", out var fnHi);
+                npcAi.TryGetValue("fnNobless", out var fnNobless);
+                npcAi.TryGetValue("fnNoNobless", out var fnNoNobless);
+                npcAi.TryGetValue("fnNoNoblessItem", out var fnNoNoblessItem);
+                npcAi.TryGetValue("fnYouAreChaotic", out var fnYouAreChaotic);
+
+                var npcServerRequest = new NpcServerRequest
+                {
+                    EventName = EventName.Created,
+                    Race = npcInstance.GetTemplate().GetStat().Race,
+                    NpcName = npcInstance.GetTemplate().GetStat().Name,
+                    NpcType = npcInstance.GetTemplate().GetStat().Type,
+                    PlayerObjectId = ObjectId,
+                    NpcObjectId = npcInstance.ObjectId
+                };
+                if (moveAroundSocial != null)
+                {
+                    npcServerRequest.MoveAroundSocial = Convert.ToInt16(moveAroundSocial);
+                }
+                if (moveAroundSocial1 != null)
+                {
+                    npcServerRequest.MoveAroundSocial1 = Convert.ToInt16(moveAroundSocial1);
+                }
+                if (moveAroundSocial2 != null)
+                {
+                    npcServerRequest.MoveAroundSocial2 = Convert.ToInt16(moveAroundSocial2);
+                }
+                if (fnHi != null)
+                {
+                    npcServerRequest.FnHi = fnHi;
+                }
+                if (fnNobless != null)
+                {
+                    npcServerRequest.FnNobless = fnNobless;
+                }
+                if (fnNoNobless != null)
+                {
+                    npcServerRequest.FnNoNobless = fnNoNobless;
+                }
+                if (fnNoNoblessItem != null)
+                {
+                    npcServerRequest.FnNoNoblessItem = fnNoNoblessItem;
+                }
+                if (fnYouAreChaotic != null)
+                {
+                    npcServerRequest.FnYouAreChaotic = fnYouAreChaotic;
+                }
+                SendObjectToNpcServerAsync(npcServerRequest);
+            }
+        }
+
+        public void SendObjectToNpcServerAsync(NpcServerRequest npcServerRequest)
+        {
+            ServiceProvider.GetRequiredService<NpcServiceController>().SendMessageToNpcService(npcServerRequest);
         }
 
         private void FindClosePlayers()
@@ -142,10 +214,7 @@ namespace Core.Module.Player
 
         public async Task OnActionAsync(WorldObject worldObject)
         {
-            if (worldObject is PlayerInstance targetInstance)
-            {
-                await _playerTargetAction.OnTargetAsync(targetInstance);
-            }
+            await _playerTargetAction.OnTargetAsync(worldObject);
         }
 
         public async Task DeleteMeAsync()

@@ -89,15 +89,26 @@ namespace Core.Module.NpcData
             return ((string) setStat).Split(";").ToList();
         }
 
-        private IList<object> ParseNpcAi(object setStat)
+        private IDictionary<string, string> ParseNpcAi(object setStat)
         {
-            var newList = new List<object>();
+            if (_stat.Name == "mint")
+            {
+                var d = 1;
+            }
+            var npcAi = new Dictionary<string, string>();
             if (setStat is List<object> list)
             {
-                return list;
+                list.ForEach(i =>
+                {
+                    var splited = ((string)i).Split("=");
+                    var key = (splited.Length > 1)? splited[0] : "npcAi";
+                    var value = (splited.Length > 1)? splited[1] : splited[0];
+                    npcAi.TryAdd(key, value);
+                });
+                return npcAi;
             }
-            newList.Add(setStat);
-            return newList;
+            npcAi.TryAdd("npcAi", setStat.ToString());
+            return npcAi;
         }
 
         private string ParseClanList(string setStat)

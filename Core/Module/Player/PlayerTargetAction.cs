@@ -1,12 +1,14 @@
 ﻿using System.Threading.Tasks;
 using Core.Module.CharacterData;
+using Core.Module.NpcData;
+using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
 
 namespace Core.Module.Player
 {
     internal class PlayerTargetAction
     {
-        private PlayerInstance _currentTarget;
+        private WorldObject _currentTarget;
         private readonly PlayerInstance _playerInstance;
 
         public PlayerTargetAction(PlayerInstance playerInstance)
@@ -14,17 +16,17 @@ namespace Core.Module.Player
             _playerInstance = playerInstance;
         }
 
-        public PlayerInstance GetTarget()
+        public WorldObject GetTarget()
         {
             return _currentTarget;
         }
 
-        public void SetTarget(PlayerInstance playerInstance)
+        public void SetTarget(WorldObject playerInstance)
         {
             _currentTarget = playerInstance;
         }
         
-        public async Task OnTargetAsync(PlayerInstance targetPlayer)
+        public async Task OnTargetAsync(WorldObject targetPlayer)
         {
             if (GetTarget() != targetPlayer)
             {
@@ -32,14 +34,19 @@ namespace Core.Module.Player
                 await _playerInstance.SendPacketAsync(new MyTargetSelected(targetPlayer.ObjectId, 0));
                 if (targetPlayer != _playerInstance)
                 {
-                    await _playerInstance.SendPacketAsync(new ValidateLocation(targetPlayer));
+                    await _playerInstance.SendPacketAsync(new ValidateLocation((Character)targetPlayer));
                 }
                 return;
             }
             if (targetPlayer != _playerInstance)
             {
-                await _playerInstance.SendPacketAsync(new ValidateLocation(targetPlayer));
+                await _playerInstance.SendPacketAsync(new ValidateLocation((Character)targetPlayer));
             }
+
+            if (targetPlayer is NpcInstance npcInstance)
+            {
+                await npcInstance.OnActionAsync(_playerInstance);
+            } 
             _playerInstance.PlayerDesire().AddDesire(Desire.InteractDesire, targetPlayer);
         }
         

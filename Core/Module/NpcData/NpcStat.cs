@@ -20,7 +20,7 @@ namespace Core.Module.NpcData
         public short ShieldDefenseRate { get; set; }
         public short ShieldDefense { get; set; }
         public IList<string> SkillList { get; set; }
-        public IList<object> NpcAi { get; set; }
+        public IDictionary<string, string> NpcAi { get; set; }
         public string Category { get; set; }
         public string Race { get; set; }
         public string Sex { get; set; }

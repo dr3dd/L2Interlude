@@ -1,4 +1,5 @@
-﻿using Core.Module.Player;
+﻿using Core.Module.CharacterData;
+using Core.Module.Player;
 
 namespace Core.NetworkPacket.ServerPacket
 {
@@ -10,13 +11,13 @@ namespace Core.NetworkPacket.ServerPacket
         private readonly int _z;
         private readonly int _heading;
 
-        public ValidateLocation(PlayerInstance playerInstance)
+        public ValidateLocation(Character character)
         {
-            _objectId = playerInstance.ObjectId;
-            _x = playerInstance.GetX();
-            _y = playerInstance.GetY();
-            _z = playerInstance.GetZ();
-            _heading = playerInstance.Heading;
+            _objectId = character.ObjectId;
+            _x = character.GetX();
+            _y = character.GetY();
+            _z = character.GetZ();
+            _heading = 0; //character.Heading;
         }
         
         public override void Write()

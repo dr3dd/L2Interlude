@@ -8,11 +8,13 @@ namespace Core.Module.NpcData
     public class NpcDataInit : BaseParse
     {
         private readonly IParse _parse;
-        private readonly IDictionary<int, NpcTemplateInit> _npcDataCollection;
+        private readonly IDictionary<string, NpcTemplateInit> _npcDataCollection;
+        private readonly IDictionary<string, string> _dictionary;
 
         public NpcDataInit(IServiceProvider provider) : base(provider)
         {
-            _npcDataCollection = new Dictionary<int, NpcTemplateInit>();
+            _npcDataCollection = new Dictionary<string, NpcTemplateInit>();
+            _dictionary = new Dictionary<string, string>();
             _parse = new ParseNpcData();
         }
         
@@ -25,9 +27,13 @@ namespace Core.Module.NpcData
 
                 foreach (var (key, value) in result.GetResult())
                 {
-                    var npc = new NpcTemplateInit(value as IDictionary<string, object>);
-                    _npcDataCollection.Add(npc.GetStat().Id, npc);
+                    var npcTemplateInit = new NpcTemplateInit(value as IDictionary<string, object>);
+                    _npcDataCollection.Add(key.ToString(), npcTemplateInit);
+
+                    _dictionary.TryAdd(npcTemplateInit.GetStat().Type, "1");
                 }
+
+                var d = 1;
             } 
             catch (Exception ex)
             {
@@ -35,47 +41,10 @@ namespace Core.Module.NpcData
             }
             LoggerManager.Info("Loaded NpcData: " + _npcDataCollection.Count);
         }
-        
-        /*
-        public NpcTemplate GetTemplate(string npcName)
+
+        public NpcTemplateInit GetNpcTemplate(string name)
         {
-            NpcTemplateInit npcTemplateInit = _npcDataCollection.Values.FirstOrDefault(n => n.GetStat().Name == npcName);
-            var npcStat = npcTemplateInit.GetStat();
-            NpcTemplateStat stat = new NpcTemplateStat
-            {
-                NpcId = npcStat.Id, 
-                Type = npcStat.Type,
-                Level = npcStat.Level,
-                Name = npcStat.Name,
-                Sex = npcStat.Sex,
-                CollisionRadius = npcStat.CollisionRadius.FirstOrDefault(),
-                CollisionHeight = npcStat.CollisionHeight.FirstOrDefault(),
-                RewardExp = (int)npcStat.AcquireExpRate,
-                RewardSp = npcStat.AcquireSp,
-                BasePAtkSpd = (int)npcStat.BaseAttackSpeed,
-                BaseHpMax = (int)npcStat.OrgHp,
-                BaseMpMax = (int)npcStat.OrgMp,
-                BaseHpReg = npcStat.OrgHpRegen,
-                BaseMpReg = npcStat.OrgMpRegen,
-                BasePAtk = (int) npcStat.BasePhysicalAttack,
-                BasePDef = (int) npcStat.BaseDefend,
-                BaseMAtk = (int)npcStat.BaseMagicAttack,
-                BaseMDef = (int) npcStat.BaseMagicDefend,
-                BaseCritRate = npcStat.BaseCritical,
-                RHand = 0,
-                LHand = 0,
-                BaseCon = npcStat.Con,
-                BaseDex = npcStat.Dex,
-                BaseInt = npcStat.Int,
-                BaseMen = npcStat.Men,
-                BaseStr = npcStat.Str,
-                BaseRunSpd = (int)npcStat.GroundHigh.FirstOrDefault(),
-                BaseWalkSpd = (int)npcStat.GroundLow.FirstOrDefault(),
-                BaseCpMax = 0,
-                CanBeAttacked = npcStat.CanBeAttacked
-            };
-            return new NpcTemplate(stat);
+            return _npcDataCollection[name];
         }
-        */
     }
 }

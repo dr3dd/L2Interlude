@@ -4,6 +4,7 @@ using Core.Controller;
 using Core.GeoEngine;
 using Core.Module.AreaData;
 using Core.Module.CharacterData.Template;
+using Core.Module.HtmlCacheData;
 using Core.Module.ItemData;
 using Core.Module.ManualData;
 using Core.Module.NpcData;
@@ -44,6 +45,11 @@ namespace Core
             return ServiceProvider.GetService<GameTimeController>();
         }
 
+        public static HtmlCacheInit HtmlCacheInit()
+        {
+            return ServiceProvider.GetService<HtmlCacheInit>();
+        }
+
         public static GeoEngineInit GeoEngineInit()
         {
             return ServiceProvider.GetService<GeoEngineInit>();
@@ -61,9 +67,10 @@ namespace Core
             ServiceProvider.GetRequiredService<WorldInit>().Run();
             ServiceProvider.GetRequiredService<AreaDataInit>().Run();
             ServiceProvider.GetRequiredService<NpcDataInit>().Run();
+            ServiceProvider.GetRequiredService<NpcPosInit>().Run();
             ServiceProvider.GetRequiredService<GeoEngineInit>().Run();
-            //ServiceProvider.GetRequiredService<NpcPosInit>().Run();
             LoggerManager.Info("----Html Cache----");
+            ServiceProvider.GetRequiredService<HtmlCacheInit>().Run();
             LoggerManager.Info("----Json Teleports----");
             LoggerManager.Info("----Players----");
             ServiceProvider.GetRequiredService<ItemPchInit>().Run();

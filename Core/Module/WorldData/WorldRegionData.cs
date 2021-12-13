@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Core.Module.AreaData;
 using Core.Module.CharacterData;
+using Core.Module.NpcData;
 using Core.Module.Player;
 
 namespace Core.Module.WorldData
@@ -11,7 +12,7 @@ namespace Core.Module.WorldData
         private int _regionX;
         private int _regionY;
         
-        private readonly ConcurrentDictionary<int, WorldObject> _visibleObjects;
+        private readonly ConcurrentDictionary<int, NpcInstance> _visibleNpc;
         private readonly ConcurrentDictionary<int, PlayerInstance> _playerObjects;
         
         private readonly ZoneManager _zoneManager;
@@ -21,7 +22,7 @@ namespace Core.Module.WorldData
         {
             _regionX = regionX;
             _regionY = regionY;
-            _visibleObjects = new ConcurrentDictionary<int, WorldObject>();
+            _visibleNpc = new ConcurrentDictionary<int, NpcInstance>();
             _playerObjects = new ConcurrentDictionary<int, PlayerInstance>();
             _zoneManager = new ZoneManager();
         }
@@ -48,25 +49,33 @@ namespace Core.Module.WorldData
 
         public void AddVisibleObject(WorldObject worldObject)
         {
-            _visibleObjects.TryAdd(worldObject.ObjectId, worldObject);
-            if (worldObject is PlayerInstance playerInstance)
+            switch (worldObject)
             {
-                _playerObjects.TryAdd(playerInstance.ObjectId, playerInstance);
+                case NpcInstance npcInstance:
+                    _visibleNpc.TryAdd(npcInstance.ObjectId, npcInstance);
+                    break;
+                case PlayerInstance playerInstance:
+                    _playerObjects.TryAdd(playerInstance.ObjectId, playerInstance);
+                    break;
             }
         }
 
         public void RemoveVisibleObject(WorldObject worldObject)
         {
-            _visibleObjects.TryRemove(worldObject.ObjectId, out worldObject);
-            if (worldObject is PlayerInstance)
+            switch (worldObject)
             {
-                _playerObjects.TryRemove(worldObject.ObjectId, out _);
+                case NpcInstance:
+                    _visibleNpc.TryRemove(worldObject.ObjectId, out _);
+                    break;
+                case PlayerInstance:
+                    _playerObjects.TryRemove(worldObject.ObjectId, out _);
+                    break;
             }
         }
         
-        public IEnumerable<WorldObject> GetVisibleObjects()
+        public IEnumerable<NpcInstance> GetVisibleNpc()
         {
-            return _visibleObjects.Values;
+            return _visibleNpc.Values;
         }
         
         public IEnumerable<PlayerInstance> GetAllPlayers()

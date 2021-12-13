@@ -34,6 +34,7 @@ namespace Core.Controller.Handlers
             _clientPackets.TryAdd(0x0D, typeof(CharacterSelected));
             _clientPackets.TryAdd(0x0F, typeof(RequestItemList));
             _clientPackets.TryAdd(0x9D, typeof(RequestSkillCoolTime));
+            _clientPackets.TryAdd(0x21, typeof(RequestBypass));
             _clientPackets.TryAdd(0x37, typeof(RequestTargetCancel));
             _clientPackets.TryAdd(0x46, typeof(RequestRestart));
             _clientPackets.TryAdd(0x48, typeof(ValidatePosition));

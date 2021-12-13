@@ -2,6 +2,7 @@
 using Core.GeoEngine;
 using Core.Module.AreaData;
 using Core.Module.CharacterData.Template;
+using Core.Module.HtmlCacheData;
 using Core.Module.ItemData;
 using Core.Module.ManualData;
 using Core.Module.NpcData;
@@ -26,6 +27,8 @@ namespace Core
             services.AddSingleton<ManualPchInit>();
             services.AddSingleton<PcParameterInit>();
             services.AddSingleton<GameTimeController>();
+            services.AddSingleton<HtmlCacheInit>();
+            services.AddSingleton<NpcPosInit>();
             services.AddSingleton<NpcDataInit>();
             services.AddSingleton<ItemPchInit>();
             services.AddSingleton<ItemDataInit>();

@@ -106,7 +106,6 @@ namespace LoginService
             finally
             {
                 _networkStream?.Close();
-                _networkStream?.Close();
             }
         }
 

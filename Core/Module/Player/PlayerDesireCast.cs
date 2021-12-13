@@ -4,7 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Core.Controller;
 using Core.GeoEngine;
+using Core.Module.CharacterData;
 using Core.Module.SkillData;
+using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
 using Core.TaskManager;
 using Helpers;
@@ -66,8 +68,8 @@ namespace Core.Module.Player
             DisableSkill(skill, reuseDelay);
             SetCastTime(coolTime, hitTime);
             
-            await HandleMagicSkill(skill, target, hitTime);
-            await SendToKnownListAsync(skill, target, hitTime, reuseDelay);
+            await HandleMagicSkill(skill, (PlayerInstance) target, hitTime);
+            await SendToKnownListAsync(skill, (PlayerInstance) target, hitTime, reuseDelay);
             await _playerInstance.SendPacketAsync(new SetupGauge(SetupGauge.Blue, hitTime));
             // Send a system message to the Player
             await _playerInstance.PlayerMessage().SendMessageToPlayerAsync(skill, skillId);
@@ -114,20 +116,20 @@ namespace Core.Module.Player
         /// Get Selected Target
         /// </summary>
         /// <returns></returns>
-        private PlayerInstance GetTarget(TargetType targetType)
+        private Character GetTarget(TargetType targetType)
         {
             switch (targetType)
             {
                 case TargetType.Self:
                     return _playerInstance;
                 case TargetType.Target:
-                    return _playerInstance.PlayerTargetAction().GetTarget();
+                    return (Character) _playerInstance.PlayerTargetAction().GetTarget();
                 case TargetType.None:
                     break;
                 case TargetType.EnemyOnly:
-                    return _playerInstance.PlayerTargetAction().GetTarget();
+                    return (Character) _playerInstance.PlayerTargetAction().GetTarget();
                 case TargetType.Enemy:
-                    return _playerInstance.PlayerTargetAction().GetTarget();
+                    return (Character) _playerInstance.PlayerTargetAction().GetTarget();
                 case TargetType.HolyThing:
                     break;
                 case TargetType.Summon:

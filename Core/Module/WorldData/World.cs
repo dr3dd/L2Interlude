@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Module.CharacterData;
+using Core.Module.NpcData;
 using Core.Module.Player;
 
 namespace Core.Module.WorldData
@@ -84,46 +85,16 @@ namespace Core.Module.WorldData
             _allObjects.TryRemove(worldObject.ObjectId, value: out _);
         }
 
-        public List<WorldObject> GetVisibleObjects(WorldObject worldObject, int radius)
+        public List<NpcInstance> GetVisibleNpc(WorldObject worldObject)
         {
-            if ((worldObject == null))
-            {
-                return new List<WorldObject>();
-            }
-            
             var region = worldObject.GetWorldRegion();
             
-            var x = worldObject.GetX();
-            var y = worldObject.GetY();
-            var sqRadius = radius * radius;
-            
             // Create a list in order to contain all visible WorldObject
-            var result = new List<WorldObject>();
+            var result = new List<NpcInstance>();
             // Go through the list of region
             foreach (var worldRegion in region.GetSurroundingRegions())
             {
-                result.AddRange(from wo in worldRegion.GetVisibleObjects()
-                    where !wo.Equals(worldObject)
-                    let x1 = wo.GetX()
-                    let y1 = wo.GetY()
-                    let dx = x1 - x
-                    let dy = y1 - y
-                    where ((dx * (double)dx) + (dy * (double)dy)) < sqRadius
-                    select wo);
-            }
-            return result;
-        }
-        
-        public List<WorldObject> GetVisibleObjects(WorldObject worldObject)
-        {
-            var region = worldObject.GetWorldRegion();
-            
-            // Create a list in order to contain all visible WorldObject
-            var result = new List<WorldObject>();
-            // Go through the list of region
-            foreach (WorldRegionData worldRegion in region.GetSurroundingRegions())
-            {
-                result.AddRange(worldRegion.GetVisibleObjects().Where(wo => wo != null)
+                result.AddRange(worldRegion.GetVisibleNpc().Where(wo => wo != null)
                     .Where(wo => !wo.Equals(worldObject)));
             }
             return result;
