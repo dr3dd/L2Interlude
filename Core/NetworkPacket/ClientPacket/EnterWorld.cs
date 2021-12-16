@@ -23,6 +23,7 @@ namespace Core.NetworkPacket.ClientPacket
             {
                 await _playerInstance.SendActionFailedPacketAsync();
                 _playerInstance.SpawnMe(_playerInstance.GetX(), _playerInstance.GetY(), _playerInstance.GetZ());
+                _playerInstance.UpdateKnownObjects();
                 await _playerInstance.SendPacketAsync(new EtcStatusUpdate(_playerInstance));
                 await _playerInstance.SendPacketAsync(new UserInfo(_playerInstance));
                 await _playerInstance.SendPacketAsync(new ClientSetTime()); // SetClientTime

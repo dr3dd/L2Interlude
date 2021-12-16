@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Config;
@@ -50,9 +51,9 @@ namespace NpcService
         {
             try
             {
+                var reader = new StreamReader(_stream);
                 while (true)
                 {
-                    var reader = new StreamReader(_stream);
                     var responseData = await reader.ReadLineAsync();
                     var json = JsonSerializer.Deserialize<NpcServerRequest>(responseData);
                     await _gameServiceHandler.HandlePacket(json, this);

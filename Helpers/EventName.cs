@@ -5,6 +5,5 @@
         Created,
         EffectActionDesire,
         Talked,
-        ShowPage,
     }
 }

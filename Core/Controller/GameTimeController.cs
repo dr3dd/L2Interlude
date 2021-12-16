@@ -111,13 +111,14 @@ namespace Core.Controller
                         }
                         ended.Add(l2Character);
                     }
+                    l2Character.UpdateKnownObjects();
+                    l2Character.RemoveKnownObjects();
                 }
 
                 if (ended != null)
                 {
                     foreach (PlayerInstance playerInstance in ended)
                     {
-                        playerInstance.UpdateKnownObjects();
                         //character.AI.NotifyEvent(CtrlEvent.EvtArrived);
                     }
                 }

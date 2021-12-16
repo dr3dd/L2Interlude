@@ -127,13 +127,49 @@ namespace Core.Module.Player
         public void UpdateKnownObjects()
         {
             FindClosePlayers();
-            FindCloseNpc();
+            Task.Run(FindCloseNpc);
         }
 
-        private void FindCloseNpc()
+        public void RemoveKnownObjects()
+        {
+            foreach (var (objectId, worldObject) in _playerKnownList.GetKnownObjects())
+            {
+                if (!CalculateRange.CheckIfInRange(2000, worldObject.GetX(), worldObject.GetY(),
+                        worldObject.GetZ(), 20,
+                        GetX(), GetY(), GetZ(), 20, true))
+                {
+                    if (worldObject is PlayerInstance playerInstance)
+                    {
+                        playerInstance.PlayerKnownList().RemoveKnownObject(this);
+                        playerInstance.SendPacketAsync(new DeleteObject(ObjectId));
+                    }
+                    if (worldObject is NpcInstance npcInstance)
+                    {
+                        npcInstance.NpcKnownList().RemoveKnownObject(this);
+                    }
+                    if (_playerKnownList.GetKnownObjects() != null)
+                    {
+                        _playerKnownList.RemoveKnownObject(worldObject);
+                        SendPacketAsync(new DeleteObject(objectId));
+                    }
+                }
+            }
+        }
+
+        private async Task FindCloseNpc()
         {
             foreach (NpcInstance npcInstance in _worldInit.GetVisibleNpc(this))
             {
+                if (!CalculateRange.CheckIfInRange(2000, npcInstance.GetX(), npcInstance.GetY(),
+                        npcInstance.GetZ(), 20,
+                        GetX(), GetY(), GetZ(), 20, true))
+                {
+                    continue;
+                }
+                if (PlayerKnownList().HasObjectInKnownList(npcInstance.ObjectId))
+                {
+                    continue;
+                }
                 var npcAi = npcInstance.GetTemplate().GetStat().NpcAi;
                 npcAi.TryGetValue("MoveAroundSocial", out var moveAroundSocial);
                 npcAi.TryGetValue("MoveAroundSocial1", out var moveAroundSocial1);
@@ -185,30 +221,46 @@ namespace Core.Module.Player
                 {
                     npcServerRequest.FnYouAreChaotic = fnYouAreChaotic;
                 }
-                SendObjectToNpcServerAsync(npcServerRequest);
+                await SendObjectToNpcServerAsync(npcServerRequest);
             }
         }
 
-        public void SendObjectToNpcServerAsync(NpcServerRequest npcServerRequest)
+        public async Task SendObjectToNpcServerAsync(NpcServerRequest npcServerRequest)
         {
-            ServiceProvider.GetRequiredService<NpcServiceController>().SendMessageToNpcService(npcServerRequest);
+            await ServiceProvider.GetRequiredService<NpcServiceController>()
+                    .SendMessageToNpcService(npcServerRequest);
         }
 
         private void FindClosePlayers()
         {
             foreach (PlayerInstance targetInstance in _worldInit.GetVisiblePlayers(this))
             {
+                if (!CalculateRange.CheckIfInRange(2000, targetInstance.GetX(), targetInstance.GetY(),
+                        targetInstance.GetZ(), 20,
+                        GetX(), GetY(), GetZ(), 20, true))
+                {
+                    continue;
+                }
+                if (PlayerKnownList().HasObjectInKnownList(targetInstance.ObjectId))
+                {
+                    continue;
+                }
+                PlayerKnownList().AddToKnownList(targetInstance.ObjectId, targetInstance);
                 SendPacketAsync(new CharInfo(targetInstance));
                 targetInstance.SendPacketAsync(new CharInfo(this));
+                targetInstance.PlayerKnownList().AddToKnownList(ObjectId, this);
             }
         }
 
         public async Task SendToKnownPlayers(ServerPacket packet)
         {
-            foreach (PlayerInstance targetInstance in _worldInit.GetVisiblePlayers(this))
+            foreach (var (objectId, worldObject) in PlayerKnownList().GetKnownObjects())
             {
-                await targetInstance.SendPacketAsync(packet);
-                await SendPacketAsync(new CharInfo(targetInstance));
+                if (worldObject is PlayerInstance targetInstance)
+                {
+                    await targetInstance.SendPacketAsync(packet);
+                    await SendPacketAsync(new CharInfo(targetInstance));
+                }
             }
         }
 

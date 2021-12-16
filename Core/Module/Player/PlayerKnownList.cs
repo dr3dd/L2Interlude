@@ -28,5 +28,19 @@ namespace Core.Module.Player
         {
             return _playerKnownList;
         }
+        
+        public void RemoveKnownObject(WorldObject worldObject)
+        {
+            if (worldObject == null)
+            {
+                return;
+            }
+            _playerKnownList.TryRemove(worldObject.ObjectId, out _);
+        }
+        
+        public void RemoveAllKnownObjects()
+        {
+            GetKnownObjects().Clear();
+        }
     }
 }

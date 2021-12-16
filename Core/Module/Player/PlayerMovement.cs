@@ -1,6 +1,7 @@
 ﻿using System;
 using Core.Controller;
 using Core.Module.CharacterData;
+using Core.NetworkPacket.ServerPacket.CharacterPacket;
 using Helpers;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
@@ -159,6 +160,7 @@ namespace Core.Module.Player
             // Set the timer of last position update to now
             m.MoveTimestamp = gameTicks;
             _playerInstance.PlayerZone().RevalidateZone();
+            _playerInstance.SendToKnownPlayers(new CharMoveToLocation(_playerInstance));
 		
             return distFraction > 1;
         }

@@ -52,9 +52,9 @@ namespace Core.Controller
         {
             try
             {
+                var reader = new StreamReader(_stream);
                 while (_client.Connected)
                 {
-                    var reader = new StreamReader(_stream);
                     var dataReceived = await reader.ReadLineAsync();
                     LoggerManager.Info("Received response: " + dataReceived);
                     await HandleMessage(dataReceived);
@@ -76,10 +76,12 @@ namespace Core.Controller
             switch (npcServerContract.EventName)
             {
                 case EventName.Created:
+                    player.PlayerKnownList().AddToKnownList(npc.ObjectId, npc);
+                    npc.NpcKnownList().AddToKnownList(player.ObjectId, player);
                     await player.SendPacketAsync(new NpcInfo(npc));
                     break;
                 case EventName.EffectActionDesire:
-                    await player.SendPacketAsync(new SocialAction(npc.ObjectId, npcServerContract.SocialId));
+                    await npc.SendToKnownPlayers(new SocialAction(npc.ObjectId, npcServerContract.SocialId));
                     break;
                 case EventName.Talked:
                     await npc.ShowPage(player, npcServerContract.FnHi);
