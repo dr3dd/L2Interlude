@@ -4,6 +4,7 @@
     {
         Created,
         EffectActionDesire,
+        AddMoveAroundDesire,
         Talked,
     }
 }

@@ -4,6 +4,7 @@ using Helpers;
 using L2Logger;
 using NpcService.Ai;
 using NpcService.Ai.NpcType;
+using NpcService.Model;
 
 namespace NpcService
 {
@@ -14,6 +15,7 @@ namespace NpcService
         private readonly HandleNpc<Citizen> _citizenNpc;
         private readonly HandleNpc<Teleporter> _teleportNpc;
         private readonly HandleNpc<Guard> _guardNpc;
+        private readonly HandleNpc<Warrior> _warriorNpc;
         
         public GameServiceHandler(IServiceProvider serviceProvider)
         {
@@ -22,6 +24,7 @@ namespace NpcService
             _citizenNpc = new HandleNpc<Citizen>(_serviceProvider);
             _teleportNpc = new HandleNpc<Teleporter>(_serviceProvider);
             _guardNpc = new HandleNpc<Guard>(_serviceProvider);
+            _warriorNpc = new HandleNpc<Warrior>(_serviceProvider);
         }
 
         public async Task HandlePacket(NpcServerRequest npcServerRequest, NpcService npcService)
@@ -36,8 +39,8 @@ namespace NpcService
                     var npcServiceResponse = new NpcServerResponse
                     {
                         EventName = EventName.Created,
-                        NpcObjectId = defaultNpc.NpcObjectId,
-                        PlayerObjectId = defaultNpc.PlayerObjectId
+                        NpcObjectId = npcServerRequest.NpcObjectId,
+                        PlayerObjectId = npcServerRequest.PlayerObjectId
                     };
                     await npcService.SendMessageAsync(npcServiceResponse);
                     return;
@@ -112,12 +115,15 @@ namespace NpcService
                 }
                 defaultNpc = guardNpc;
             }
+            
+            if (npcServerRequest.NpcType == "warrior")
+            {
+                var warriorNpc = _warriorNpc.TestHandleNpc(npcService, npcKeyId, className, npcName, race, npcServerRequest.NpcType);
+                defaultNpc = warriorNpc;
+            }
 
-            defaultNpc.MySelf = defaultNpc;
-            defaultNpc.Sm = defaultNpc;
-            defaultNpc.NpcObjectId = npcServerRequest.NpcObjectId;
-            defaultNpc.PlayerObjectId = npcServerRequest.PlayerObjectId;
-            defaultNpc.Talker = new Talker(defaultNpc.PlayerObjectId, 0);
+            defaultNpc.MySelf = new NpcCreature(defaultNpc, npcServerRequest);
+            defaultNpc.Talker = new Talker(npcServerRequest.PlayerObjectId, 0);
 
             if (npcServerRequest.MoveAroundSocial != 0)
             {

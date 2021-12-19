@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Threading.Tasks;
-using Helpers;
-using L2Logger;
+using NpcService.Model;
 
 namespace NpcService.Ai
 {
@@ -11,9 +8,9 @@ namespace NpcService.Ai
         protected int ResidenceId = 0;
         protected int DesirePqSize = 50;
         protected int FavorListSize = 30;
-        public virtual int MoveAroundSocial { get; set; } = 0;
-        public virtual int MoveAroundSocial1 { get; set; } = 0;
-        public virtual int MoveAroundSocial2 { get; set; } = 0;
+        public virtual int MoveAroundSocial { get; set; }
+        public virtual int MoveAroundSocial1 { get; set; }
+        public virtual int MoveAroundSocial2 { get; set; }
         
         protected double IdleDesireDecayRatio = 0.000000;
         protected double MoveAroundDecayRatio = 0.000000;
@@ -43,79 +40,29 @@ namespace NpcService.Ai
         protected double MoveToBoostValue = 0.000000;
         protected double EffectActionBoostValue = 0.000000;
         protected double MoveToTargetBoostValue = 0.000000;
-        public int NpcObjectId { get; set; }
-        public int PlayerObjectId { get; set; }
         
         protected IServiceProvider ServiceProvider { get; }
-        protected NpcService NpcService { get; }
-        public NpcServerRequest NpcServerRequest { get; set; }
-        public DefaultNpc MySelf { get; set; }
-        public DefaultNpc Sm { get; set; }
+        protected internal NpcService NpcService { get; }
+        public NpcCreature MySelf { get; set; }
         public Talker Talker { get; set; }
 
         public abstract void Created();
         public abstract void Talked(Talker talker);
-        
         public abstract void TimerFiredEx(int timerId);
-        private readonly ConcurrentDictionary<int, Task> _tasks;
 
         protected DefaultNpc(IServiceProvider serviceProvider, NpcService npcService)
         {
-            _tasks = new ConcurrentDictionary<int, Task>();
             ServiceProvider = serviceProvider;
             NpcService = npcService;
         }
         
-        public void AddEffectActionDesire (DefaultNpc npc, int actionId, int moveAround, int desire)
+        public virtual void NoDesire()
         {
-            var npcServiceResponse = new NpcServerResponse
-            {
-                EventName = EventName.EffectActionDesire,
-                NpcObjectId = NpcObjectId,
-                PlayerObjectId = PlayerObjectId,
-                SocialId = actionId
-            };
-            NpcService.SendMessageAsync(npcServiceResponse);
-        }
-
-        public void AddTimerEx(int timerId, int delay)
-        {
-            if (_tasks.ContainsKey(timerId))
-            {
-                return;
-            }
-            var currentTimer = ScheduleAtFixed(() =>
-            {
-                _tasks.TryRemove(timerId, out _);
-                TimerFiredEx(timerId);
-            }, delay);
-            _tasks.TryAdd(timerId, currentTimer);
         }
         
-        private Task ScheduleAtFixed(Action action, int delay)
+        public virtual void TalkSelected(Talker talker)
         {
-            return Task.Run( async () =>
-            {
-                await Task.Delay(delay);
-                action.Invoke();
-            });
-        }
-
-        public void ShowPage(Talker talker, string fnHi)
-        {
-            var npcServiceResponse = new NpcServerResponse
-            {
-                EventName = EventName.Talked,
-                NpcObjectId = NpcObjectId,
-                PlayerObjectId = PlayerObjectId,
-                FnHi = fnHi
-            };
-            NpcService.SendMessageAsync(npcServiceResponse);
-        }
-
-        public int OwnItemCount(Talker talker, int friendShip1)
-        {
-            return 0;
+            MySelf.ShowPage(talker, "noquest.htm");
         }
     }
 }

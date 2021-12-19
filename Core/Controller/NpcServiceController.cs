@@ -86,6 +86,13 @@ namespace Core.Controller
                 case EventName.Talked:
                     await npc.ShowPage(player, npcServerContract.FnHi);
                     break;
+                case EventName.AddMoveAroundDesire:
+                    // If NPC with fixed coord
+                    var x1 = (npc.GetX() + Rnd.Next(300 * 2)) - 300;
+                    var y1 = (npc.GetY() + Rnd.Next(300 * 2)) - 300;
+                    var z1 = npc.GetZ();
+                    LoggerManager.Info("Npc " + npc.GetTemplate().GetStat().Name +  " running: X: " + x1 + " Y: " + y1 + " Z: " + z1);
+                    break;
             }
         }
 
