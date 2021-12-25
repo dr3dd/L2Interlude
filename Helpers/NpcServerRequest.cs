@@ -1,4 +1,6 @@
-﻿namespace Helpers
+﻿using System.Collections.Generic;
+
+namespace Helpers
 {
     public class NpcServerRequest
     {
@@ -16,5 +18,7 @@
         public string FnNoNobless { get; set; }
         public string FnNoNoblessItem { get; set; }
         public string FnYouAreChaotic { get; set; }
+        public string Html { get; set; }
+        public int TeleportId { get; set; }
     }
 }

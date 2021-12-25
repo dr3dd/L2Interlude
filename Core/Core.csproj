@@ -11,4 +11,8 @@
       <ProjectReference Include="..\Network\Network.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="StaticData\Ai\Citizen" />
+    </ItemGroup>
+
 </Project>

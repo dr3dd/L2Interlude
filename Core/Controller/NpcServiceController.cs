@@ -93,6 +93,12 @@ namespace Core.Controller
                     var z1 = npc.GetZ();
                     LoggerManager.Info("Npc " + npc.GetTemplate().GetStat().Name +  " running: X: " + x1 + " Y: " + y1 + " Z: " + z1);
                     break;
+                case EventName.TeleportRequest:
+                    await npc.ShowTeleportList(npcServerContract.Html, player); 
+                    break;
+                case EventName.TeleportRequested:
+                    await npc.DoTeleportToLocation(npcServerContract.TeleportList, player); 
+                    break;
             }
         }
 

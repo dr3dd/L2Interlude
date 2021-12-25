@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Helpers;
+using Microsoft.Extensions.DependencyInjection;
 using NpcService.Ai;
 
 namespace NpcService.Model
@@ -16,13 +18,13 @@ namespace NpcService.Model
         private readonly Desire _desire;
         private readonly NpcService _npcService;
         private int _additionalTime; 
-        public NpcCreature(DefaultNpc defaultNpc, NpcServerRequest npcServerRequest)
+        public NpcCreature(DefaultNpc defaultNpc, NpcServerRequest npcServerRequest, IServiceProvider serviceProvider)
         {
             NpcObjectId = npcServerRequest.NpcObjectId;
             PlayerObjectId = npcServerRequest.PlayerObjectId;
-            _desire = new Desire(NpcObjectId, PlayerObjectId, defaultNpc.NpcService);
+            _npcService = serviceProvider.GetRequiredService<NpcService>();
+            _desire = new Desire(NpcObjectId, PlayerObjectId, _npcService);
             _defaultNpc = defaultNpc;
-            _npcService = _defaultNpc.NpcService;
             _tasks = new ConcurrentDictionary<int, Task>();
         }
         
@@ -79,6 +81,36 @@ namespace NpcService.Model
                 await Task.Delay(delay);
                 action.Invoke();
             });
+        }
+
+        public void Teleport(Talker talker, IList<TeleportList> position, string shopName, string empty, string s, string empty1, int i, object makeFString)
+        {
+            var url = @"<a action=""bypass -h teleport_goto##objectId#?teleportId=#id#"" msg=""811;#Name#""> #Name# - #Price# Adena </a><br1>";
+            string html = null;
+            for (var i1 = 0; i1 < position.Count; i1++)
+            {
+                var teleportName = position[i1].Name;
+                var replace = url.Replace("#objectId#", NpcObjectId.ToString());
+                replace = replace.Replace("#id#", i1.ToString());
+                replace = replace.Replace("#Name#", teleportName);
+                replace = replace.Replace("#Price#", position[i1].Price.ToString());
+                html += replace;
+            }
+
+            var npcServiceResponse = new NpcServerResponse
+            {
+                EventName = EventName.TeleportRequest,
+                NpcObjectId = NpcObjectId,
+                PlayerObjectId = PlayerObjectId,
+                Html = "<html><body>&$556;<br><br>" + html + "</body></html>"
+            };
+            _npcService.SendMessageAsync(npcServiceResponse);
+            
+        }
+
+        public object MakeFString(int i, string empty, string s, string empty1, string s1, string empty2)
+        {
+            return 1;
         }
     }
 }

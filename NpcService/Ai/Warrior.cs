@@ -9,10 +9,6 @@ namespace NpcService.Ai
         public virtual float Attack_BoostValue { get; set; } = 300.000000f;
         public virtual float UseSkill_BoostValue { get; set; } = 100000.000000f;
         
-        protected Warrior(IServiceProvider serviceProvider, NpcService npcService) : base(serviceProvider, npcService)
-        {
-        }
-        
         public virtual void NoDesire()
         {
             //MySelf.AddMoveAroundDesire(5, 5);

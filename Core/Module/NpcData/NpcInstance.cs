@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Controller;
 using Core.Module.CharacterData;
 using Core.Module.Player;
@@ -68,6 +69,58 @@ namespace Core.Module.NpcData
             {
                 await playerInstance.SendPacketAsync(packet);
             }
+        }
+
+        public async Task TeleportRequest(PlayerInstance playerInstance)
+        {
+            var npcServerRequest = new NpcServerRequest
+            {
+                EventName = EventName.TeleportRequest,
+                NpcName = GetTemplate().GetStat().Name,
+                NpcType = GetTemplate().GetStat().Type,
+                PlayerObjectId = playerInstance.ObjectId,
+                NpcObjectId = ObjectId
+            };
+            await playerInstance.ServiceProvider.GetRequiredService<NpcServiceController>().SendMessageToNpcService(npcServerRequest);
+        }
+
+        public async Task ShowTeleportList(string html, PlayerInstance player)
+        {
+            var htmlText = new NpcHtmlMessage(ObjectId, html);
+            await player.SendPacketAsync(htmlText);
+            await player.SendActionFailedPacketAsync();
+        }
+
+        public async Task TeleportToLocation(int teleportId, PlayerInstance playerInstance)
+        {
+            var npcServerRequest = new NpcServerRequest
+            {
+                EventName = EventName.TeleportRequested,
+                NpcName = GetTemplate().GetStat().Name,
+                NpcType = GetTemplate().GetStat().Type,
+                PlayerObjectId = playerInstance.ObjectId,
+                NpcObjectId = ObjectId,
+                TeleportId = teleportId
+            };
+            await playerInstance.ServiceProvider.GetRequiredService<NpcServiceController>().SendMessageToNpcService(npcServerRequest);
+        }
+
+        public async Task DoTeleportToLocation(TeleportList teleport, PlayerInstance player)
+        {
+            await TeleportToLocation(teleport.GetX, teleport.GetY, teleport.GetZ, player);
+        }
+
+        private async Task TeleportToLocation(int getX, int getY, int getZ, PlayerInstance playerInstance)
+        {
+            await playerInstance.PlayerTargetAction().RemoveTargetAsync();
+            playerInstance.WorldObjectPosition().GetWorldRegion().RemoveFromZones(playerInstance);
+
+            var tele = new TeleportToLocation(playerInstance, getX, getY, getZ);
+            await playerInstance.SendPacketAsync(tele);
+            await playerInstance.SendToKnownPlayers(tele);
+            playerInstance.WorldObjectPosition().SetXYZ(getX, getY, getZ);
+            playerInstance.PlayerZone().RevalidateZone();
+            await playerInstance.SendActionFailedPacketAsync();
         }
     }
 }

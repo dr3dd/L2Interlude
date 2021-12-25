@@ -49,6 +49,28 @@ namespace NpcService
                 {
                     defaultNpc.Talked(defaultNpc.Talker);
                 }
+
+                if (npcServerRequest.EventName == EventName.TeleportRequest)
+                {
+                    var teleporter = defaultNpc as Teleporter;
+                    teleporter.TeleportRequested(defaultNpc.Talker);
+                    return;
+                }
+                if (npcServerRequest.EventName == EventName.TeleportRequested)
+                {
+                    var teleporter = defaultNpc as Teleporter;
+                    var teleport = teleporter.Position[npcServerRequest.TeleportId];
+                    var npcServiceResponse = new NpcServerResponse
+                    {
+                        EventName = EventName.TeleportRequested,
+                        NpcObjectId = npcServerRequest.NpcObjectId,
+                        PlayerObjectId = npcServerRequest.PlayerObjectId,
+                        TeleportList = teleport
+                    };
+                    await npcService.SendMessageAsync(npcServiceResponse);
+                    return;
+                }
+                
             }
             catch (Exception ex)
             {
@@ -72,7 +94,7 @@ namespace NpcService
 
             if (npcServerRequest.NpcType == "citizen")
             {
-                var citizen = _citizenNpc.TestHandleNpc(npcService, npcKeyId, className, npcName, race, npcServerRequest.NpcType);
+                var citizen = _citizenNpc.TestHandleNpc(npcKeyId, className, npcName, npcServerRequest.NpcType);
                 if (npcServerRequest.FnHi != null)
                 {
                     citizen.FnHi = npcServerRequest.FnHi;
@@ -82,7 +104,7 @@ namespace NpcService
             
             if (npcServerRequest.NpcType == "teleporter")
             {
-                var teleportNpc = _teleportNpc.TestHandleNpc(npcService, npcKeyId, className, npcName, race, npcServerRequest.NpcType);
+                var teleportNpc = _teleportNpc.TestHandleNpc(npcKeyId, className, npcName, npcServerRequest.NpcType);
                 if (npcServerRequest.FnHi != null)
                 {
                     teleportNpc.FnHi = npcServerRequest.FnHi;
@@ -108,7 +130,7 @@ namespace NpcService
             
             if (npcServerRequest.NpcType == "guard")
             {
-                var guardNpc = _guardNpc.TestHandleNpc(npcService, npcKeyId, className, npcName, race, npcServerRequest.NpcType);
+                var guardNpc = _guardNpc.TestHandleNpc(npcKeyId, className, npcName, npcServerRequest.NpcType);
                 if (npcServerRequest.FnHi != null)
                 {
                     guardNpc.FnHi = npcServerRequest.FnHi;
@@ -118,11 +140,11 @@ namespace NpcService
             
             if (npcServerRequest.NpcType == "warrior")
             {
-                var warriorNpc = _warriorNpc.TestHandleNpc(npcService, npcKeyId, className, npcName, race, npcServerRequest.NpcType);
+                var warriorNpc = _warriorNpc.TestHandleNpc(npcKeyId, className, npcName, npcServerRequest.NpcType);
                 defaultNpc = warriorNpc;
             }
 
-            defaultNpc.MySelf = new NpcCreature(defaultNpc, npcServerRequest);
+            defaultNpc.MySelf = new NpcCreature(defaultNpc, npcServerRequest, _serviceProvider);
             defaultNpc.Talker = new Talker(npcServerRequest.PlayerObjectId, 0);
 
             if (npcServerRequest.MoveAroundSocial != 0)

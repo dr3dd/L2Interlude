@@ -27,13 +27,6 @@ namespace NpcService.Ai.NpcType
         public virtual int NoFnHi { get; set; }
         public virtual string FnNoFriend { get; set; }
         
-
-        protected Citizen(IServiceProvider serviceProvider, NpcService npcService)
-            : base(serviceProvider, npcService)
-        {
-            
-        }
-
         public override void Created()
         {
             if (MoveAroundSocial > 0 || MoveAroundSocial1 > 0)

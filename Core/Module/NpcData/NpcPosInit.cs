@@ -31,8 +31,11 @@ namespace Core.Module.NpcData
                 IResult result = Parse("npcpos.txt", _parse);
                 _makerBegins = result.GetResult()["NpcMakerCollection"] as List<NpcMakerBegin>;
 
+                /*
                 var testOren = _makerBegins
                     .Where(l => l.Name is "oren04_npc2119_013" or "oren04_npc2119_017" or "oren02_qm2119_00" or "oren04_npc2019_01" or "oren04_npc2119_wp1");
+                    */
+                var testOren = _makerBegins;
                 foreach (var npcMakerBegin in testOren)
                 {
                     var name = npcMakerBegin.Name;
@@ -46,8 +49,12 @@ namespace Core.Module.NpcData
                         var h = npcBegin.Pos["H"];
 
                         var npcTemplate = _npcDataInit.GetNpcTemplate(npcBegin.Name);
-                        var npcInstance = new NpcInstance(_objectIdInit.NextObjectId(), npcTemplate);
-                        npcInstance.OnSpawn(x, y, z, h);
+                        if (npcTemplate.GetStat().Type == "citizen" || npcTemplate.GetStat().Type == "teleporter" || npcTemplate.GetStat().Type == "guard" )
+                        {
+                            var npcInstance = new NpcInstance(_objectIdInit.NextObjectId(), npcTemplate);
+                            npcInstance.OnSpawn(x, y, z, h);
+                        }
+                        
                     }
                 }
                 /*

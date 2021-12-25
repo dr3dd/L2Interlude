@@ -122,6 +122,11 @@ namespace Core.Module.WorldData
         {
             return _allObjects[objectId];
         }
+
+        public NpcInstance GetNpcInstance(int objectId)
+        {
+            return _allObjects[objectId] as NpcInstance;
+        }
         
         public void RemoveFromAllPlayers(PlayerInstance playerInstance)
         {

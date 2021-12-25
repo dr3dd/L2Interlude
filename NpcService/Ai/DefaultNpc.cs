@@ -50,11 +50,6 @@ namespace NpcService.Ai
         public abstract void Talked(Talker talker);
         public abstract void TimerFiredEx(int timerId);
 
-        protected DefaultNpc(IServiceProvider serviceProvider, NpcService npcService)
-        {
-            ServiceProvider = serviceProvider;
-            NpcService = npcService;
-        }
         
         public virtual void NoDesire()
         {

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Helpers;
 
 namespace NpcService.Ai.NpcType
 {
@@ -16,10 +18,24 @@ namespace NpcService.Ai.NpcType
         public virtual int PHtoHour => 8;
         public virtual int PHfromDay => 1;
         public virtual int PHtoDay => 7;
-        public virtual string Position => @"{{'Talking Island'; -84169; 244693; -3729; 100000; 0 }}"; 
-        protected Teleporter(IServiceProvider serviceProvider, NpcService npcService) : base(serviceProvider, npcService)
+        /*
+        public virtual object[,] Position => new object[,]
         {
+            {"Talking Island Village", -84169, 244693, -3729, 100000, 0 },
+        };
+        */
+        public virtual IList<TeleportList> Position => new List<TeleportList>
+        {
+            {new("Talking Island Village", -84169, 244693, -3729, 100000, 0 )}
+        };
+        
+
+        public virtual void TeleportRequested(Talker talker)
+        {
+            MySelf.Teleport(talker, Position, ShopName, "", "", "", 57,
+                MySelf.MakeFString(1000308, "", "", "", "", ""));
         }
+        
         
         public override void Talked(Talker talker)
         {

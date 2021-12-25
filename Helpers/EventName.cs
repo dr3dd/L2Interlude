@@ -6,5 +6,7 @@
         EffectActionDesire,
         AddMoveAroundDesire,
         Talked,
+        TeleportRequest,
+        TeleportRequested
     }
 }
