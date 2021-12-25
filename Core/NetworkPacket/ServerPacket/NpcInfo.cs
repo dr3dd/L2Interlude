@@ -50,7 +50,7 @@ namespace Core.NetworkPacket.ServerPacket
             WriteByte(0); //_npc.IsAlikeDead()
             WriteByte(0); // _npc.Summoned ? 2 : 0 invisible ?? 0=false  1=true   2=summoned (only works if model has a summon animation)
             WriteString(""); //_npcInstance.GetTemplate().GetStat().Name
-            WriteString(""); //_npcInstance.Template.Stat.Title
+            WriteString("Level: " + _npcInstance.GetTemplate().GetStat().Id); //_npcInstance.Template.Stat.Title
             WriteInt(0x00); // Title color 0=client default
             WriteInt(0x00); //pvp flag
             WriteInt(0x00); // karma
