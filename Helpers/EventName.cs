@@ -7,6 +7,8 @@
         AddMoveAroundDesire,
         Talked,
         TeleportRequest,
-        TeleportRequested
+        TeleportRequested,
+        MenuSelect,
+        CastleGateOpenClose
     }
 }

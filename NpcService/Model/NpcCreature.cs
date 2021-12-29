@@ -112,5 +112,28 @@ namespace NpcService.Model
         {
             return 1;
         }
+
+        public bool CastleIsUnderSiege()
+        {
+            return false;
+        }
+
+        public void CastleGateOpenClose2(string doorName1, int p1)
+        {
+            var npcServiceResponse = new NpcServerResponse
+            {
+                EventName = EventName.CastleGateOpenClose,
+                NpcObjectId = NpcObjectId,
+                PlayerObjectId = PlayerObjectId,
+                DoorName = doorName1,
+                OpenClose = p1
+            };
+            _npcService.SendMessageAsync(npcServiceResponse);
+        }
+
+        public void InstantTeleport(Talker talker, int posX01, int posY01, int posZ01)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

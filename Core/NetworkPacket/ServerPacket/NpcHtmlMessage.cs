@@ -45,6 +45,7 @@ namespace Core.NetworkPacket.ServerPacket
             var content = _html;
             content = content.Replace("teleport_request", "teleport_request#" + _npcObjId); //add ObjectId
             content = content.Replace("menu_select", "menu_select#" + _npcObjId); //add ObjectId
+            content = content.Replace("learn_skill", "learn_skill#" + _npcObjId); //add ObjectId
             content = content.Replace("talk_select", "talk_select#" + _npcObjId); //add ObjectId
             content = content.Replace("quest_accept", "quest_accept#" + _npcObjId); //add ObjectId
             return content;

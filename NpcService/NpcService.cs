@@ -57,7 +57,7 @@ namespace NpcService
                     var responseData = await reader.ReadLineAsync();
                     var json = JsonSerializer.Deserialize<NpcServerRequest>(responseData);
                     await _gameServiceHandler.HandlePacket(json, this);
-                    LoggerManager.Info("Received response: " + responseData);
+                    //LoggerManager.Info("Received response: " + responseData);
                 }
             }
             catch (Exception ex)
@@ -73,7 +73,7 @@ namespace NpcService
                 IgnoreNullValues = true
             };
             var json = JsonSerializer.Serialize(npcServerResponse, options);
-            LoggerManager.Info("Sent response: " + json);
+            //LoggerManager.Info("Sent response: " + json);
             //send a test message
             var writer = new StreamWriter(_stream);
             await writer.WriteLineAsync(json);

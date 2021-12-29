@@ -3,7 +3,7 @@ using NpcService.Ai.NpcType;
 
 namespace NpcService.Ai.NpcCitizen
 {
-    public class GludioOutterDoorman : Citizen
+    public class GludioOutterDoorman : Doorkeeper
     {
     }
 }

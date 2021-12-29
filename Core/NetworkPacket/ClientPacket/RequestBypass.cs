@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Core.Controller;
 using Core.Module.NpcData;
@@ -45,10 +46,33 @@ namespace Core.NetworkPacket.ClientPacket
                     await npcInstance.TeleportToLocation(teleportId, _playerInstance);
                     break;
                 }
+                case "menu_select":
+                {
+                    var spl = split.Last();
+                    int charLocation = spl.IndexOf("?", StringComparison.Ordinal);
+                    int npcObjectId = Convert.ToInt32(spl[..charLocation]);
+                    //var match = Regex.Match(spl, @"ask=(.+?)&").Groups[1].Value;
+                    int askId  = Convert.ToInt32(BetweenStrings(spl, "ask=", "&"));
+                    
+                    int lasCharLocation = spl.LastIndexOf("=", StringComparison.Ordinal);
+                    int replyId = Convert.ToInt32(spl.Substring(lasCharLocation + 1));
+                    
+                    var npcInstance = GetNpcInstance(npcObjectId);
+                    await npcInstance.MenuSelect(askId, replyId, _playerInstance);
+                    break;
+                }
             }
 
             var id = _command;
             
+        }
+
+        public string BetweenStrings(string text, string start, string end)
+        {
+            int p1 = text.IndexOf(start, StringComparison.Ordinal) + start.Length;
+            int p2 = text.IndexOf(end, p1, StringComparison.Ordinal);
+
+            return end == "" ? text[p1..] : text.Substring(p1, p2 - p1);
         }
         
         private NpcInstance GetNpcInstance(int objectId)

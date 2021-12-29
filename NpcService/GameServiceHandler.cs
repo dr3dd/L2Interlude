@@ -70,6 +70,14 @@ namespace NpcService
                     await npcService.SendMessageAsync(npcServiceResponse);
                     return;
                 }
+
+                if (npcServerRequest.EventName == EventName.MenuSelect)
+                {
+                    if (defaultNpc is Citizen citizen)
+                    {
+                        citizen.MenuSelected(defaultNpc.Talker, npcServerRequest.AskId, npcServerRequest.ReplyId, "");
+                    }
+                }
                 
             }
             catch (Exception ex)

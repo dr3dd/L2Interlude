@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Core.Controller;
 using Core.Module.CharacterData;
+using Core.NetworkPacket.ServerPacket;
 using Core.NetworkPacket.ServerPacket.CharacterPacket;
 using Helpers;
 using L2Logger;
@@ -193,6 +195,15 @@ namespace Core.Module.Player
                 return m.ZDestination;
             }
             return _playerInstance.GetZ();
+        }
+
+        public async Task StopMoveAsync()
+        {
+            // Delete movement data of the Creature
+            _move = null;
+            var stopMovePacket = new StopMove(_playerInstance);
+            await _playerInstance.SendPacketAsync(stopMovePacket);
+            await _playerInstance.SendToKnownPlayers(stopMovePacket);
         }
     }
 }

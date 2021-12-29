@@ -112,15 +112,38 @@ namespace Core.Module.NpcData
 
         private async Task TeleportToLocation(int getX, int getY, int getZ, PlayerInstance playerInstance)
         {
+            await playerInstance.PlayerMovement().StopMoveAsync();
             await playerInstance.PlayerTargetAction().RemoveTargetAsync();
+            await playerInstance.SendActionFailedPacketAsync();
+            playerInstance.PlayerKnownList().RemoveMeFromKnownObjects();
+            playerInstance.PlayerKnownList().RemoveAllKnownObjects();
             playerInstance.WorldObjectPosition().GetWorldRegion().RemoveFromZones(playerInstance);
 
-            var tele = new TeleportToLocation(playerInstance, getX, getY, getZ);
-            await playerInstance.SendPacketAsync(tele);
-            await playerInstance.SendToKnownPlayers(tele);
+            var teleportToLocation = new TeleportToLocation(playerInstance, getX, getY, getZ);
+            await playerInstance.SendPacketAsync(teleportToLocation);
+            await playerInstance.SendToKnownPlayers(teleportToLocation);
             playerInstance.WorldObjectPosition().SetXYZ(getX, getY, getZ);
             playerInstance.PlayerZone().RevalidateZone();
-            await playerInstance.SendActionFailedPacketAsync();
+        }
+
+        public async Task MenuSelect(int askId, int replyId, PlayerInstance playerInstance)
+        {
+            var npcServerRequest = new NpcServerRequest
+            {
+                EventName = EventName.MenuSelect,
+                NpcName = GetTemplate().GetStat().Name,
+                NpcType = GetTemplate().GetStat().Type,
+                PlayerObjectId = playerInstance.ObjectId,
+                NpcObjectId = ObjectId,
+                AskId = askId,
+                ReplyId = replyId,
+            };
+            await playerInstance.ServiceProvider.GetRequiredService<NpcServiceController>().SendMessageToNpcService(npcServerRequest);
+        }
+
+        public async Task CastleGateOpenClose(string doorName, int openClose, PlayerInstance player)
+        {
+            await player.SendPacketAsync(new DoorStatusUpdate(ObjectId, openClose));
         }
     }
 }

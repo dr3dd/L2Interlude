@@ -74,5 +74,19 @@ namespace NpcService.Ai.NpcType
             }
             MySelf.AddTimerEx(1671, 10000);
         }
+
+        public virtual void MenuSelected(Talker talker, int ask, int reply, string fhtml0)
+        {
+            if (ask == -1000)
+            {
+                
+            }
+
+            if (ask == -303)
+            {
+                
+            }
+        }
+            
     }
 }

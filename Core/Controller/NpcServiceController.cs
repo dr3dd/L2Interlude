@@ -56,7 +56,7 @@ namespace Core.Controller
                 while (_client.Connected)
                 {
                     var dataReceived = await reader.ReadLineAsync();
-                    LoggerManager.Info("Received response: " + dataReceived);
+                    //LoggerManager.Info("Received response: " + dataReceived);
                     await HandleMessage(dataReceived);
                 }
             }
@@ -99,6 +99,9 @@ namespace Core.Controller
                 case EventName.TeleportRequested:
                     await npc.DoTeleportToLocation(npcServerContract.TeleportList, player); 
                     break;
+                case EventName.CastleGateOpenClose:
+                    await npc.CastleGateOpenClose(npcServerContract.DoorName, npcServerContract.OpenClose, player);
+                    break;
             }
         }
 
@@ -112,7 +115,7 @@ namespace Core.Controller
                 };
                 var json = JsonSerializer.Serialize(npcServerRequest, options);
                 var writer = new StreamWriter(_stream);
-                LoggerManager.Info("Sent: " + json);
+                //LoggerManager.Info("Sent: " + json);
                 await writer.WriteLineAsync(json);
                 await writer.FlushAsync();
             }

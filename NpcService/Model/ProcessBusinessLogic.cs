@@ -13,7 +13,7 @@ namespace NpcService.Model
 		
             try
             {
-                Console.WriteLine("Process Started!");
+                //Console.WriteLine("Process Started!");
 			
                 // some code here..
             

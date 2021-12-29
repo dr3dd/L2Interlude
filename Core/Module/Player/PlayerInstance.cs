@@ -276,10 +276,13 @@ namespace Core.Module.Player
                 GetWorldRegion().RemoveFromZones(this);
             }
             await PlayerTargetAction().RemoveTargetAsync();
-            _worldInit.RemoveObject(this);
+            //_worldInit.RemoveObject(this);
             _worldInit.RemoveFromAllPlayers(this);
             _worldInit.RemoveVisibleObject(this, WorldObjectPosition().GetWorldRegion());
             WorldObjectPosition().SetWorldRegion(null);
+            
+            PlayerKnownList().RemoveMeFromKnownObjects();
+            PlayerKnownList().RemoveAllKnownObjects();
         }
     }
 }

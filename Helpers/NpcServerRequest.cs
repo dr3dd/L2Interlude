@@ -20,5 +20,7 @@ namespace Helpers
         public string FnYouAreChaotic { get; set; }
         public string Html { get; set; }
         public int TeleportId { get; set; }
+        public int AskId { get; set; }
+        public int ReplyId { get; set; }
     }
 }
