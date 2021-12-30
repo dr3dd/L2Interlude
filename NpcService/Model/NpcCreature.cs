@@ -83,7 +83,8 @@ namespace NpcService.Model
             });
         }
 
-        public void Teleport(Talker talker, IList<TeleportList> position, string shopName, string empty, string s, string empty1, int i, object makeFString)
+        public async Task Teleport(Talker talker, IList<TeleportList> position, string shopName, string empty, string s,
+            string empty1, int i, object makeFString)
         {
             var url = @"<a action=""bypass -h teleport_goto##objectId#?teleportId=#id#"" msg=""811;#Name#""> #Name# - #Price# Adena </a><br1>";
             string html = null;
@@ -104,7 +105,7 @@ namespace NpcService.Model
                 PlayerObjectId = PlayerObjectId,
                 Html = "<html><body>&$556;<br><br>" + html + "</body></html>"
             };
-            _npcService.SendMessageAsync(npcServiceResponse);
+            await _npcService.SendMessageAsync(npcServiceResponse);
             
         }
 

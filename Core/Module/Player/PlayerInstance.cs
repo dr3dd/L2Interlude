@@ -37,6 +37,7 @@ namespace Core.Module.Player
         private readonly PlayerZone _playerZone;
         private readonly PlayerTargetAction _playerTargetAction;
         private readonly PlayerKnownList _playerKnownList;
+        private readonly PlayerAction _playerAction;
             
         public Location Location { get; set; }
         public IServiceProvider ServiceProvider { get; }
@@ -51,6 +52,7 @@ namespace Core.Module.Player
             _playerAppearance = playerAppearance;
             _unitOfWork = unitOfWork;
             _playerModel = new PlayerModel(this);
+            _playerAction = new PlayerAction(this);
             _playerCharacterInfo = new PlayerCharacterInfo(this);
             _toLocation = new PlayerMoveToLocation(this);
             _playerMovement = new PlayerMovement(this);
@@ -89,6 +91,7 @@ namespace Core.Module.Player
         public PlayerZone PlayerZone() => _playerZone;
         internal PlayerTargetAction PlayerTargetAction() => _playerTargetAction;
         public PlayerKnownList PlayerKnownList() => _playerKnownList;
+        public PlayerAction PlayerAction() => _playerAction;
 
         private static PlayerLoader PlayerLoader(IServiceProvider serviceProvider)
         {
@@ -124,13 +127,13 @@ namespace Core.Module.Player
             return _toLocation;
         }
         
-        public void UpdateKnownObjects()
+        public async Task UpdateKnownObjects()
         {
-            FindClosePlayers();
-            Task.Run(FindCloseNpc);
+            await FindClosePlayers();
+            await FindCloseNpc();
         }
 
-        public void RemoveKnownObjects()
+        public async Task RemoveKnownObjects()
         {
             foreach (var (objectId, worldObject) in _playerKnownList.GetKnownObjects())
             {
@@ -138,19 +141,35 @@ namespace Core.Module.Player
                         worldObject.GetZ(), 20,
                         GetX(), GetY(), GetZ(), 20, true))
                 {
-                    if (worldObject is PlayerInstance playerInstance)
+                    switch (worldObject)
                     {
-                        playerInstance.PlayerKnownList().RemoveKnownObject(this);
-                        playerInstance.SendPacketAsync(new DeleteObject(ObjectId));
+                        case PlayerInstance playerInstance:
+                            playerInstance.PlayerKnownList().RemoveKnownObject(this);
+                            await playerInstance.SendPacketAsync(new DeleteObject(ObjectId));
+                            break;
+                        case NpcInstance npcInstance:
+                        {
+                            npcInstance.NpcKnownList().RemoveKnownObject(this);
+                            if (npcInstance.NpcKnownList().GetKnownPlayers().IsEmpty)
+                            {
+                                var npcServerRequest = new NpcServerRequest
+                                {
+                                    EventName = EventName.NoDesire,
+                                    NpcName = npcInstance.GetTemplate().GetStat().Name,
+                                    NpcType = npcInstance.GetTemplate().GetStat().Type,
+                                    PlayerObjectId = ObjectId,
+                                    NpcObjectId = npcInstance.ObjectId
+                                };
+                                await SendObjectToNpcServerAsync(npcServerRequest);
+                            }
+                            break;
+                        }
                     }
-                    if (worldObject is NpcInstance npcInstance)
-                    {
-                        npcInstance.NpcKnownList().RemoveKnownObject(this);
-                    }
+
                     if (_playerKnownList.GetKnownObjects() != null)
                     {
                         _playerKnownList.RemoveKnownObject(worldObject);
-                        SendPacketAsync(new DeleteObject(objectId));
+                        await SendPacketAsync(new DeleteObject(objectId));
                     }
                 }
             }
@@ -183,7 +202,6 @@ namespace Core.Module.Player
                 var npcServerRequest = new NpcServerRequest
                 {
                     EventName = EventName.Created,
-                    Race = npcInstance.GetTemplate().GetStat().Race,
                     NpcName = npcInstance.GetTemplate().GetStat().Name,
                     NpcType = npcInstance.GetTemplate().GetStat().Type,
                     PlayerObjectId = ObjectId,
@@ -231,7 +249,7 @@ namespace Core.Module.Player
                     .SendMessageToNpcService(npcServerRequest);
         }
 
-        private void FindClosePlayers()
+        private async Task FindClosePlayers()
         {
             foreach (PlayerInstance targetInstance in _worldInit.GetVisiblePlayers(this))
             {
@@ -246,8 +264,8 @@ namespace Core.Module.Player
                     continue;
                 }
                 PlayerKnownList().AddToKnownList(targetInstance.ObjectId, targetInstance);
-                SendPacketAsync(new CharInfo(targetInstance));
-                targetInstance.SendPacketAsync(new CharInfo(this));
+                await SendPacketAsync(new CharInfo(targetInstance));
+                await targetInstance.SendPacketAsync(new CharInfo(this));
                 targetInstance.PlayerKnownList().AddToKnownList(ObjectId, this);
             }
         }

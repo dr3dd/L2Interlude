@@ -80,14 +80,14 @@ namespace Core.Controller
                 
                 if (oldTicks != GameTicks)
                 {
-                    MoveObjects();
+                    await MoveObjects();
                 }
         
                 //LoggerManager.Info("TICK:" + GameTicks);
             }
         }
         
-        private void MoveObjects()
+        private async Task MoveObjects()
         {
             try
             {
@@ -100,7 +100,7 @@ namespace Core.Controller
                     if (l2Character is null)
                         continue;
                     // Update the position of the Creature and return True if the movement is finished
-                    bool end = l2Character.PlayerMovement().UpdatePosition(GameTicks);
+                    var end = await l2Character.PlayerMovement().UpdatePosition(GameTicks);
                     // If movement is finished, the Creature is removed from movingObjects and added to the ArrayList ended
                     if (end)
                     {
@@ -111,8 +111,8 @@ namespace Core.Controller
                         }
                         ended.Add(l2Character);
                     }
-                    l2Character.UpdateKnownObjects();
-                    l2Character.RemoveKnownObjects();
+                    await l2Character.UpdateKnownObjects();
+                    await l2Character.RemoveKnownObjects();
                 }
 
                 if (ended != null)

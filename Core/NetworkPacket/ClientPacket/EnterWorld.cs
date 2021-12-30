@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Core.Controller;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
+using Core.NetworkPacket.ServerPacket.CharacterPacket;
 using L2Logger;
 using Network;
 
@@ -23,7 +24,8 @@ namespace Core.NetworkPacket.ClientPacket
             {
                 await _playerInstance.SendActionFailedPacketAsync();
                 _playerInstance.SpawnMe(_playerInstance.GetX(), _playerInstance.GetY(), _playerInstance.GetZ());
-                _playerInstance.UpdateKnownObjects();
+                await _playerInstance.SendToKnownPlayers(new CharInfo(_playerInstance));
+                await _playerInstance.UpdateKnownObjects();
                 await _playerInstance.SendPacketAsync(new EtcStatusUpdate(_playerInstance));
                 await _playerInstance.SendPacketAsync(new UserInfo(_playerInstance));
                 await _playerInstance.SendPacketAsync(new ClientSetTime()); // SetClientTime

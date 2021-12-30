@@ -2,6 +2,7 @@
 using Core.GeoEngine;
 using Core.Module.AreaData;
 using Core.Module.CharacterData;
+using Core.Module.Player.Validators;
 using Core.NetworkPacket.ServerPacket;
 using L2Logger;
 
@@ -11,14 +12,22 @@ namespace Core.Module.Player
     {
         private readonly PlayerInstance _playerInstance;
         private readonly GeoEngineInit _geoEngine;
+        private readonly IPlayerMoveToLocationValidator _validator;
         public PlayerMoveToLocation(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
+            _validator = new GeneralPlayerMoveToLocationValidator(playerInstance);
             //_geoEngine = playerInstance.ServiceProvider.GetRequiredService<GeoEngineInit>();
         }
         
         public async Task MoveToLocationAsync(int targetX, int targetY, int targetZ, int originX, int originY, int originZ)
         {
+            if (!_validator.IsValid())
+            {
+                await _playerInstance.SendActionFailedPacketAsync();
+                return;
+            }
+            //todo move to validator
             if (_playerInstance.PlayerDesire().IsCastingNow())
             {
                 await _playerInstance.SendActionFailedPacketAsync();
@@ -48,6 +57,12 @@ namespace Core.Module.Player
 
         public async Task ValidatePositionAsync(int x, int y, int z, int heading)
         {
+            if (!_validator.IsValid())
+            {
+                await _playerInstance.SendActionFailedPacketAsync();
+                return;
+            }
+            
             int realX = _playerInstance.GetX();
             int realY = _playerInstance.GetY();
             int realZ = _playerInstance.GetZ();

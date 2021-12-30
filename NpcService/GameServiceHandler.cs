@@ -53,7 +53,7 @@ namespace NpcService
                 if (npcServerRequest.EventName == EventName.TeleportRequest)
                 {
                     var teleporter = defaultNpc as Teleporter;
-                    teleporter.TeleportRequested(defaultNpc.Talker);
+                    await teleporter.TeleportRequested(defaultNpc.Talker);
                     return;
                 }
                 if (npcServerRequest.EventName == EventName.TeleportRequested)

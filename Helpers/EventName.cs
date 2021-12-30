@@ -3,6 +3,7 @@
     public enum EventName
     {
         Created,
+        NoDesire,
         EffectActionDesire,
         AddMoveAroundDesire,
         Talked,

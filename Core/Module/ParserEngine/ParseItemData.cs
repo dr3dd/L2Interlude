@@ -40,11 +40,6 @@ namespace Core.Module.ParserEngine
                             break;
                     }
 
-                    if (itemData.Id == 329)
-                    {
-                        var d = 1;
-                    }
-                    
                     if (item.StartsWith("item_type"))
                     {
                         var itemType = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);

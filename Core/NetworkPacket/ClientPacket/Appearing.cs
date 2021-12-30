@@ -18,7 +18,12 @@ namespace Core.NetworkPacket.ClientPacket
 
         public override async Task Execute()
         {
-            _playerInstance.UpdateKnownObjects();
+            if (_playerInstance.PlayerAction().IsTeleporting())
+            {
+                _playerInstance.PlayerAction().SetTeleporting(false);
+                _playerInstance.PlayerZone().RevalidateZone();
+                await _playerInstance.UpdateKnownObjects();
+            }
             await _playerInstance.SendPacketAsync(new UserInfo(_playerInstance));
         }
     }

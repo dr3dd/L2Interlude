@@ -34,10 +34,6 @@ namespace Core.Module.ParserEngine
                     {
                         case "skill_name":
                             skillBegin.SkillName = value.RemoveBrackets();
-                            if (skillBegin.SkillName.Equals("s_tribunal11"))
-                            {
-                                var d = 1;
-                            }
                             break;
                         case "skill_id":
                             skillBegin.SkillId = Convert.ToInt32(value);

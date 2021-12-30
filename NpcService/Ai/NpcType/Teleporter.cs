@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Helpers;
 
 namespace NpcService.Ai.NpcType
@@ -30,9 +31,9 @@ namespace NpcService.Ai.NpcType
         };
         
 
-        public virtual void TeleportRequested(Talker talker)
+        public virtual async Task TeleportRequested(Talker talker)
         {
-            MySelf.Teleport(talker, Position, ShopName, "", "", "", 57,
+            await MySelf.Teleport(talker, Position, ShopName, "", "", "", 57,
                 MySelf.MakeFString(1000308, "", "", "", "", ""));
         }
         

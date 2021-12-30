@@ -58,7 +58,6 @@ namespace Core.Module.WorldData
             if (this is PlayerInstance playerInstance)
             {
                 Initializer.WorldInit().StorePlayerObject(playerInstance);
-                playerInstance.SendToKnownPlayers(new CharInfo(playerInstance));
             }
         }
 

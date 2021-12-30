@@ -75,7 +75,7 @@ namespace Core.GeoEngine
 		            count += size;
 		            _buffers[i] = new BufferHolder(int.Parse(args[0]), size);
 	            }
-	            catch (Exception e)
+	            catch (Exception)
 	            {
 		            //LOGGER.warning("Could not load buffer setting:" + buf + ". " + e);
 	            }
@@ -264,7 +264,7 @@ namespace Core.GeoEngine
 			        return new LinkedList<Location>();
 		        }
 	        }
-	        catch (Exception e)
+	        catch (Exception)
 	        {
 		        return new LinkedList<Location>();
 	        }

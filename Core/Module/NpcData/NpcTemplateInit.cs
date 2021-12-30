@@ -91,10 +91,6 @@ namespace Core.Module.NpcData
 
         private IDictionary<string, string> ParseNpcAi(object setStat)
         {
-            if (_stat.Name == "mint")
-            {
-                var d = 1;
-            }
             var npcAi = new Dictionary<string, string>();
             if (setStat is List<object> list)
             {

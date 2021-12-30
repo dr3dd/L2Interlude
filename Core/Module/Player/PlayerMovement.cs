@@ -76,7 +76,7 @@ namespace Core.Module.Player
             _timeController.RegisterMovingObject(_playerInstance);
         }
         
-        public bool UpdatePosition(int gameTicks)
+        public async Task<bool> UpdatePosition(int gameTicks)
         {
             MoveData m = _move;
             if (m == null)
@@ -162,9 +162,9 @@ namespace Core.Module.Player
             // Set the timer of last position update to now
             m.MoveTimestamp = gameTicks;
             _playerInstance.PlayerZone().RevalidateZone();
-            _playerInstance.SendToKnownPlayers(new CharMoveToLocation(_playerInstance));
+            await _playerInstance.SendToKnownPlayers(new CharMoveToLocation(_playerInstance));
 		
-            return distFraction > 1;
+            return await Task.FromResult(distFraction > 1);
         }
         
         public int GetXDestination()

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Core.Controller;
 using Core.Module.CharacterData;
 using Core.Module.Player;
@@ -113,8 +112,8 @@ namespace Core.Module.NpcData
         private async Task TeleportToLocation(int getX, int getY, int getZ, PlayerInstance playerInstance)
         {
             await playerInstance.PlayerMovement().StopMoveAsync();
+            playerInstance.PlayerAction().SetTeleporting(true);
             await playerInstance.PlayerTargetAction().RemoveTargetAsync();
-            await playerInstance.SendActionFailedPacketAsync();
             playerInstance.PlayerKnownList().RemoveMeFromKnownObjects();
             playerInstance.PlayerKnownList().RemoveAllKnownObjects();
             playerInstance.WorldObjectPosition().GetWorldRegion().RemoveFromZones(playerInstance);
@@ -123,7 +122,6 @@ namespace Core.Module.NpcData
             await playerInstance.SendPacketAsync(teleportToLocation);
             await playerInstance.SendToKnownPlayers(teleportToLocation);
             playerInstance.WorldObjectPosition().SetXYZ(getX, getY, getZ);
-            playerInstance.PlayerZone().RevalidateZone();
         }
 
         public async Task MenuSelect(int askId, int replyId, PlayerInstance playerInstance)

@@ -29,20 +29,6 @@ namespace Core.Module.ParserEngine
             }
         }
         
-        private bool TryParseHex(string hex, out UInt32 result)
-        {
-            result = 0;
-            try
-            {
-                result = Convert.ToUInt32(hex, 16);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
         public IResult GetResult()
         {
             return _result;

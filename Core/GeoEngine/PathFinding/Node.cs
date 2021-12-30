@@ -56,7 +56,7 @@ namespace Core.GeoEngine.PathFinding
             return _costF - other._costF;
         }
 
-        public void Clean()
+        public new void Clean()
         {
             base.Clean();
 		
