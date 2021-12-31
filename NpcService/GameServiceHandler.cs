@@ -52,21 +52,36 @@ namespace NpcService
 
                 if (npcServerRequest.EventName == EventName.TeleportRequest)
                 {
-                    var teleporter = defaultNpc as Teleporter;
-                    await teleporter.TeleportRequested(defaultNpc.Talker);
+                    switch (defaultNpc)
+                    {
+                        case Teleporter teleporter:
+                            await teleporter.TeleportRequested(defaultNpc.Talker);
+                            break;
+                        case NewbieGuide newbieGuide:
+                            await newbieGuide.TeleportRequested(defaultNpc.Talker);
+                            break;
+                    }
                     return;
                 }
                 if (npcServerRequest.EventName == EventName.TeleportRequested)
                 {
-                    var teleporter = defaultNpc as Teleporter;
-                    var teleport = teleporter.Position[npcServerRequest.TeleportId];
                     var npcServiceResponse = new NpcServerResponse
                     {
                         EventName = EventName.TeleportRequested,
                         NpcObjectId = npcServerRequest.NpcObjectId,
-                        PlayerObjectId = npcServerRequest.PlayerObjectId,
-                        TeleportList = teleport
+                        PlayerObjectId = npcServerRequest.PlayerObjectId
                     };
+                    switch (defaultNpc)
+                    {
+                        case Teleporter teleporter:
+                            var teleport = teleporter.Position[npcServerRequest.TeleportId];
+                            npcServiceResponse.TeleportList = teleport;
+                            break;
+                        case NewbieGuide newbieGuide:
+                            var newBieTeleport = newbieGuide.NewbieTokenTeleports[npcServerRequest.TeleportId];
+                            npcServiceResponse.TeleportList = newBieTeleport;
+                            break;
+                    }
                     await npcService.SendMessageAsync(npcServiceResponse);
                     return;
                 }

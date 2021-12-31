@@ -84,7 +84,7 @@ namespace NpcService.Model
         }
 
         public async Task Teleport(Talker talker, IList<TeleportList> position, string shopName, string empty, string s,
-            string empty1, int i, object makeFString)
+            string empty1, int itemId, string itemName)
         {
             var url = @"<a action=""bypass -h teleport_goto##objectId#?teleportId=#id#"" msg=""811;#Name#""> #Name# - #Price# Adena </a><br1>";
             string html = null;
@@ -109,9 +109,9 @@ namespace NpcService.Model
             
         }
 
-        public object MakeFString(int i, string empty, string s, string empty1, string s1, string empty2)
+        public string MakeFString(int i, string empty, string s, string empty1, string s1, string empty2)
         {
-            return 1;
+            return "TmpItemName";
         }
 
         public bool CastleIsUnderSiege()

@@ -19,12 +19,7 @@ namespace NpcService.Ai.NpcType
         public virtual int PHtoHour => 8;
         public virtual int PHfromDay => 1;
         public virtual int PHtoDay => 7;
-        /*
-        public virtual object[,] Position => new object[,]
-        {
-            {"Talking Island Village", -84169, 244693, -3729, 100000, 0 },
-        };
-        */
+
         public virtual IList<TeleportList> Position => new List<TeleportList>
         {
             {new("Talking Island Village", -84169, 244693, -3729, 100000, 0 )}
