@@ -1,9 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Core.Controller;
 using Core.Module.CharacterData;
 using Core.Module.Player;
+using Core.Module.SkillData;
 using Core.NetworkPacket.ServerPacket;
+using Core.TaskManager;
 using Helpers;
+using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 using Network;
 
@@ -15,6 +20,7 @@ namespace Core.Module.NpcData
         private readonly NpcKnownList _playerKnownList;
         public readonly int NpcHashId;
         public int Heading;
+        private CancellationTokenSource _cts;
         public NpcInstance(int objectId, NpcTemplateInit npcTemplateInit)
         {
             ObjectId = objectId;
@@ -142,6 +148,53 @@ namespace Core.Module.NpcData
         public async Task CastleGateOpenClose(string doorName, int openClose, PlayerInstance player)
         {
             await player.SendPacketAsync(new DoorStatusUpdate(ObjectId, openClose));
+        }
+
+        public async Task UseSkill(int pchSkillId, PlayerInstance player)
+        {
+            var skillName = Initializer.SkillPchInit().GetSkillNameById(pchSkillId);
+            
+            SkillDataModel skill = Initializer.SkillDataInit().GetSkillByName(skillName);
+            // Get the Identifier of the skill
+            int skillId = skill.SkillId;
+            //todo need add calculator
+            short coolTime = (short) skill.SkillCoolTime;
+            short hitTime = (short)(skill.SkillHitTime * 1000);
+            short reuseDelay = (short)(skill.ReuseDelay * 1000);
+            await HandleMagicSkill(skill, player, hitTime);
+            await SendToKnownListAsync(skill, player, hitTime, reuseDelay);
+            await player.PlayerMessage().SendMessageToPlayerAsync(skill, skillId);
+            await player.SendUserInfoAsync();
+        }
+        
+        private async Task HandleMagicSkill(SkillDataModel skill, PlayerInstance target, float hitTime)
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    _cts = new CancellationTokenSource();
+                    var effects = skill.Effects;
+                    foreach (var (key, value) in effects)
+                    {
+                        TaskManagerScheduler.ScheduleAtFixed(async () =>
+                        {
+                            await value.Process(target, target);
+                        }, (int)hitTime, _cts.Token);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LoggerManager.Error(skill.SkillName + " " + ex.Message);
+                }
+            });
+        }
+        
+        private async Task SendToKnownListAsync(SkillDataModel skill, PlayerInstance target, float hitTime, float reuseDelay)
+        {
+            var skillUse = new MagicSkillUse(this, target, skill.SkillId, skill.Level, hitTime, reuseDelay);
+            await target.SendPacketAsync(skillUse);
+            await target.SendToKnownPlayers(skillUse);
         }
     }
 }

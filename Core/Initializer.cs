@@ -60,6 +60,16 @@ namespace Core
             return ServiceProvider.GetService<WorldInit>();
         }
 
+        public static SkillPchInit SkillPchInit()
+        {
+            return ServiceProvider.GetService<SkillPchInit>();
+        }
+        
+        public static SkillDataInit SkillDataInit()
+        {
+            return ServiceProvider.GetService<SkillDataInit>();
+        }
+
         public void Load()
         {
             ServiceProvider.GetRequiredService<ObjectIdInit>();

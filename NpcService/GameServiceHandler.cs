@@ -92,6 +92,10 @@ namespace NpcService
                     {
                         citizen.MenuSelected(defaultNpc.Talker, npcServerRequest.AskId, npcServerRequest.ReplyId, "");
                     }
+                    if (defaultNpc is NewbieGuide newbieGuide)
+                    {
+                        newbieGuide.MenuSelected(defaultNpc.Talker, npcServerRequest.AskId, npcServerRequest.ReplyId);
+                    }
                 }
                 
             }
@@ -167,7 +171,11 @@ namespace NpcService
                 defaultNpc = warriorNpc;
             }
 
-            defaultNpc.MySelf = new NpcCreature(defaultNpc, npcServerRequest, _serviceProvider);
+            if (defaultNpc.MySelf is null)
+            {
+                defaultNpc.MySelf = new NpcCreature(defaultNpc, npcServerRequest, _serviceProvider);
+            }
+
             defaultNpc.Talker = new Talker(npcServerRequest.PlayerObjectId, 0);
 
             if (npcServerRequest.MoveAroundSocial != 0)

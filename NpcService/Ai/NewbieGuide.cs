@@ -37,5 +37,128 @@ namespace NpcService.Ai
             }
             await MySelf.Teleport(talker, NewbieTokenTeleports, ShopName, "", "", "", 8542, "Newbie Travel Token");
         }
+
+        public virtual void MenuSelected(Talker talker, int ask, int reply)
+        {
+            if (ask == -7 && reply == 1)
+            {
+	            if(talker.Race != MySelf.Sm.Race)
+	            {
+		            MySelf.ShowPage(talker, FnRaceMisMatch);
+	            }
+	            else if(talker.Level > 20 || MySelf.IsInCategory(5, talker.Occupation))
+	            {
+		            MySelf.ShowPage(talker, FnHighLevel);
+	            }
+	            else if(MySelf.IsInCategory(0, talker.Occupation))
+	            {
+		            if(talker.Level <= 5)
+		            {
+			            MySelf.ShowPage(talker, FnGuideF05);
+		            }
+		            else if(talker.Level <= 10)
+		            {
+			            MySelf.ShowPage(talker, FnGuideF10);
+		            }
+		            else if(talker.Level <= 15)
+		            {
+			            MySelf.ShowPage(talker, FnGuideF15);
+		            }
+		            else
+		            {
+			            MySelf.ShowPage(talker, FnGuideF20);
+		            }
+	            }
+	            else if(talker.Level <= 7)
+	            {
+		            MySelf.ShowPage(talker, FnGuideM07);
+	            }
+	            else if(talker.Level <= 14)
+	            {
+		            MySelf.ShowPage(talker, FnGuideM14);
+	            }
+	            else
+	            {
+		            MySelf.ShowPage(talker, FnGuideM20);
+	            }
+            }
+            if (ask == -7 && reply == 2)
+            {
+                if(MySelf.IsNewbie(talker) && MySelf.IsInCategory(7, talker.Occupation))
+				{
+					if(talker.Level < 8)
+					{
+						MySelf.ShowPage(talker, "guide_for_newbie002.htm");
+					}
+					else if (MySelf.IsInCategory(0, talker.Occupation))
+					{
+						if(talker.Level >= 8 && talker.Level <= 24)
+						{
+							MySelf.AddUseSkillDesire(talker, 1106433, 1, 0, 1000000);
+						}
+						if(talker.Level >= 11 && talker.Level <= 23)
+						{
+							MySelf.AddUseSkillDesire(talker, 1106689, 1, 0, 1000000);
+						}
+						if(talker.Level >= 12 && talker.Level <= 22)
+						{
+							MySelf.AddUseSkillDesire(talker, 1106945, 1, 0, 1000000);
+						}
+						if(talker.Level >= 13 && talker.Level <= 21)
+						{
+							MySelf.AddUseSkillDesire(talker, 1107201, 1, 0, 1000000);
+						}
+						if(talker.Level >= 14 && talker.Level <= 20)
+						{
+							MySelf.AddUseSkillDesire(talker, 1107457, 1, 0, 1000000);
+						}
+						if(talker.Level >= 15 && talker.Level <= 19)
+						{
+							MySelf.AddUseSkillDesire(talker, 1107713, 1, 0, 1000000);
+						}
+						if(talker.Level >= 16 && talker.Level <= 19)
+						{
+							MySelf.AddUseSkillDesire(talker, 1110529, 1, 0, 1000000);
+						}
+					}
+					else if(talker.Level >= 8 && talker.Level <= 24)
+					{
+						MySelf.AddUseSkillDesire(talker, 1106433, 1, 0, 1000000);
+					}
+					if(talker.Level >= 11 && talker.Level <= 23)
+					{
+						MySelf.AddUseSkillDesire(talker, 1106689, 1, 0, 1000000);
+					}
+					if(talker.Level >= 12 && talker.Level <= 22)
+					{
+						MySelf.AddUseSkillDesire(talker, 1107969, 1, 0, 1000000);
+					}
+					if(talker.Level >= 13 && talker.Level <= 21)
+					{
+						MySelf.AddUseSkillDesire(talker, 1108225, 1, 0, 1000000);
+					}
+					if(talker.Level >= 14 && talker.Level <= 20)
+					{
+						MySelf.AddUseSkillDesire(talker, 1108481, 1, 0, 1000000);
+					}
+					if(talker.Level >= 15 && talker.Level <= 19)
+					{
+						MySelf.AddUseSkillDesire(talker, 1108737, 1, 0, 1000000);
+					}
+					if(talker.Level >= 16 && talker.Level <= 19)
+					{
+						MySelf.AddUseSkillDesire(talker, 1110529, 1, 0, 1000000);
+					}
+				}
+				else
+				{
+					MySelf.ShowPage(talker, "guide_for_newbie003.htm");
+				}
+            }
+            if (ask == -7 && reply == 3)
+            {
+                
+            }
+        }
     }
 }

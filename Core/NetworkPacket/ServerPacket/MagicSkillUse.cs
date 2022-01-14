@@ -1,4 +1,5 @@
-﻿using Core.Module.Player;
+﻿using Core.Module.CharacterData;
+using Core.Module.Player;
 
 namespace Core.NetworkPacket.ServerPacket
 {
@@ -14,17 +15,17 @@ namespace Core.NetworkPacket.ServerPacket
         private readonly int _y;
         private readonly int _z;
 
-        public MagicSkillUse(PlayerInstance player, PlayerInstance target, int skillId, int skillLevel, float hitTime, float reuseDelay)
+        public MagicSkillUse(Character character, PlayerInstance target, int skillId, int skillLevel, float hitTime, float reuseDelay)
         {
-            _objectId = player.ObjectId;
+            _objectId = character.ObjectId;
             _targetId = target.ObjectId;
             _skillId = skillId;
             _skillLevel = skillLevel;
             _hitTime = hitTime;
             _reuseDelay = reuseDelay;
-            _x = player.GetX();
-            _y = player.GetY();
-            _z = player.GetZ();
+            _x = character.GetX();
+            _y = character.GetY();
+            _z = character.GetZ();
         }
         public override void Write()
         {

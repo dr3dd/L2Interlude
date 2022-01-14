@@ -10,6 +10,7 @@
         TeleportRequest,
         TeleportRequested,
         MenuSelect,
-        CastleGateOpenClose
+        CastleGateOpenClose,
+        AddUseSkillDesire
     }
 }

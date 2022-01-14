@@ -3,6 +3,7 @@
     public enum ActionDesire
     {
         AddMoveAroundDesire,
-        AddEffectActionDesire
+        AddEffectActionDesire,
+        AddUseSkillDesire
     }
 }

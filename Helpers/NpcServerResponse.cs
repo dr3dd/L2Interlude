@@ -11,5 +11,6 @@
         public TeleportList TeleportList { get; set; }
         public string DoorName { get; set; }
         public int OpenClose { get; set; }
+        public int PchSkillId { get; set; }
     }
 }

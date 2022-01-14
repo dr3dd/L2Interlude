@@ -1,30 +1,26 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Linq;
-using System.Threading.Tasks;
-using Helpers;
+﻿using Helpers;
 
 namespace NpcService.Model
 {
     public class Desire
     {
-        private readonly ConcurrentDictionary<NpcDesire, double> _desireCollection;
         private readonly int _npcObjectId;
         private readonly int _playerObjectId;
         private readonly ProcessBusinessLogic _blLogic;
         private readonly NpcService _npcService;
+        private readonly PriorityQueue<DesireObject> _priorityDesire;
 
         public Desire(int objectId, int playerObjectId, NpcService npcNpcService)
         {
+            _priorityDesire = new PriorityQueue<DesireObject>();
             _npcService = npcNpcService;
             _playerObjectId = playerObjectId;
-            _desireCollection = new ConcurrentDictionary<NpcDesire, double>();
             _npcObjectId = objectId;
             _blLogic = new ProcessBusinessLogic();
             _blLogic.ProcessCompleted += bl_ProcessCompleted; // register with an event
         }
 
-        public void AddEffectActionDesire(int sm, int actionId, int moveAround, int desire)
+        public void AddEffectActionDesire(NpcCreature sm, int actionId, int moveAround, int desire)
         {
             var npcDesire = new NpcDesire
             {
@@ -33,7 +29,7 @@ namespace NpcService.Model
                 ActionId = actionId,
                 PlayerObjectId = _playerObjectId
             };
-            _desireCollection.TryAdd(npcDesire, desire);
+            _priorityDesire.Enqueue(new DesireObject(desire, ActionDesire.AddEffectActionDesire, npcDesire));
             _blLogic.StartProcess();
         }
 
@@ -45,13 +41,13 @@ namespace NpcService.Model
                 ObjectId = _npcObjectId,
                 PlayerObjectId = _playerObjectId
             };
-            _desireCollection.TryAdd(npcDesire, desire);
+            _priorityDesire.Enqueue(new DesireObject(desire, ActionDesire.AddEffectActionDesire, npcDesire));
             _blLogic.StartProcess();
         }
 
         public NpcDesire GetDesire()
         {
-            return _desireCollection.OrderBy(x => x.Value).SingleOrDefault().Key;
+            return _priorityDesire.Dequeue().NpcDesire;
         }
         
         // event handler
@@ -81,9 +77,32 @@ namespace NpcService.Model
                     };
                     await _npcService.SendMessageAsync(npcServiceResponse);
                     break;
+                case ActionDesire.AddUseSkillDesire:
+                    npcServiceResponse = new NpcServerResponse
+                    {
+                        EventName = EventName.AddUseSkillDesire,
+                        PchSkillId = desire.PchSkillId,
+                        NpcObjectId = desire.ObjectId,
+                        PlayerObjectId = desire.PlayerObjectId,
+                    };
+                    await _npcService.SendMessageAsync(npcServiceResponse);
+                    break;
             }
             //Console.WriteLine("Process " + (e.IsSuccessful? "Completed Successfully": "failed"));
             //Console.WriteLine("Completion Time: " + e.CompletionTime.ToLongDateString());
+        }
+
+        public void AddUseSkillDesire(Talker talker, int pchSkillId, int skillClassification, int castingMethod, int desire)
+        {
+            var npcDesire = new NpcDesire
+            {
+                ActionDesire = ActionDesire.AddUseSkillDesire,
+                PchSkillId = pchSkillId,
+                ObjectId = _npcObjectId,
+                PlayerObjectId = _playerObjectId
+            };
+            _priorityDesire.Enqueue(new DesireObject(desire, ActionDesire.AddUseSkillDesire, npcDesire));
+            _blLogic.StartProcess();
         }
     }
 }

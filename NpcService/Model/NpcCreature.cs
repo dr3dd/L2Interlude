@@ -12,9 +12,10 @@ namespace NpcService.Model
     {
         private readonly DefaultNpc _defaultNpc;
         private readonly ConcurrentDictionary<int, Task> _tasks;
-        public int Sm { get; set; }
+        public NpcCreature Sm { get; set; }
         public int NpcObjectId { get; set; }
         public int PlayerObjectId { get; set; }
+        public int Race { get; set; }
         private readonly Desire _desire;
         private readonly NpcService _npcService;
         private int _additionalTime; 
@@ -26,6 +27,8 @@ namespace NpcService.Model
             _desire = new Desire(NpcObjectId, PlayerObjectId, _npcService);
             _defaultNpc = defaultNpc;
             _tasks = new ConcurrentDictionary<int, Task>();
+            Sm = this;
+            Race = 1;
         }
         
         public void ShowPage(Talker talker, string fnHi)
@@ -40,7 +43,7 @@ namespace NpcService.Model
             _npcService.SendMessageAsync(npcServiceResponse);
         }
         
-        public void AddEffectActionDesire (int sm, int actionId, int moveAround, int desire)
+        public void AddEffectActionDesire (NpcCreature sm, int actionId, int moveAround, int desire)
         {
             _additionalTime = moveAround;
             _desire.AddEffectActionDesire(sm, actionId, moveAround, desire);
@@ -135,6 +138,35 @@ namespace NpcService.Model
         public void InstantTeleport(Talker talker, int posX01, int posY01, int posZ01)
         {
             throw new NotImplementedException();
+        }
+
+        /**
+         * TODO dummy
+         */
+        public bool IsNewbie(Talker talker)
+        {
+            return true;
+        }
+
+        /**
+         * TODO dummy
+         */
+        public bool IsInCategory(int p0, object occupation)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// AddUseSkillDesire
+        /// </summary>
+        /// <param name="talker"></param>
+        /// <param name="pchSkillId"></param>
+        /// <param name="skillClassification"></param>
+        /// <param name="castingMethod"></param>
+        /// <param name="desire"></param>
+        public void AddUseSkillDesire(Talker talker, int pchSkillId, int skillClassification, int castingMethod, int desire)
+        {
+            _desire.AddUseSkillDesire(talker, pchSkillId, skillClassification, castingMethod, desire);
         }
     }
 }

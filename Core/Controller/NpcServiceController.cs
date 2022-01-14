@@ -102,6 +102,9 @@ namespace Core.Controller
                 case EventName.CastleGateOpenClose:
                     await npc.CastleGateOpenClose(npcServerContract.DoorName, npcServerContract.OpenClose, player);
                     break;
+                case EventName.AddUseSkillDesire:
+                    await npc.UseSkill(npcServerContract.PchSkillId, player);
+                    break;
             }
         }
 

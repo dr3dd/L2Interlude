@@ -54,6 +54,7 @@ namespace Core.Module.SkillData
             switch (SkillName)
             {
                 case "s_wind_walk2":
+                case "s_wind_walk_for_newbie":
                 case "s_speed_walk1":
                 case "s_speed_walk2":
                 case "s_song_of_wind":

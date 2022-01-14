@@ -13,10 +13,6 @@ namespace NpcService.Model
 		
             try
             {
-                //Console.WriteLine("Process Started!");
-			
-                // some code here..
-            
                 data.IsSuccessful = true;
                 data.CompletionTime = DateTime.Now;
                 OnProcessCompleted(data);
