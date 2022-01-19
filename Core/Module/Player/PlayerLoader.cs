@@ -41,9 +41,13 @@ namespace Core.Module.Player
             var characterInfo = playerInstance.PlayerCharacterInfo();
             characterInfo.CharacterId = characterEntity.CharacterId;
             playerInstance.WorldObjectPosition().WorldPosition().SetXYZ(characterEntity.XLoc, characterEntity.YLoc, characterEntity.ZLoc);
+            playerInstance.PlayerStatus().Level = characterEntity.Level;
             playerInstance.PlayerStatus().CurrentCp = characterEntity.Cp;
             playerInstance.PlayerStatus().CurrentHp = characterEntity.Hp;
             playerInstance.PlayerStatus().CurrentMp = characterEntity.Mp;
+            characterInfo.RaceId = characterEntity.Race;
+            characterInfo.ClassId = characterEntity.ClassId;
+            characterInfo.ClassName = template.GetClassKey();
             characterInfo.Exp = characterEntity.Exp;
             characterInfo.Sp = characterEntity.Sp;
 

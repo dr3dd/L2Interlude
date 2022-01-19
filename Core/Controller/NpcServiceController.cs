@@ -103,7 +103,10 @@ namespace Core.Controller
                     await npc.CastleGateOpenClose(npcServerContract.DoorName, npcServerContract.OpenClose, player);
                     break;
                 case EventName.AddUseSkillDesire:
-                    await npc.UseSkill(npcServerContract.PchSkillId, player);
+                    await npc.NpcUseSkill().UseSkill(npcServerContract.PchSkillId, player);
+                    break;
+                case EventName.ShowSkillList:
+                    await npc.ShowSkillList(player);
                     break;
             }
         }

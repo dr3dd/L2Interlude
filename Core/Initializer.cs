@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Config;
 using Core.Controller;
 using Core.GeoEngine;
@@ -11,6 +12,7 @@ using Core.Module.NpcData;
 using Core.Module.SkillData;
 using Core.Module.WorldData;
 using DataBase.Interfaces;
+using Helpers;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -68,6 +70,16 @@ namespace Core
         public static SkillDataInit SkillDataInit()
         {
             return ServiceProvider.GetService<SkillDataInit>();
+        }
+        
+        public static SkillAcquireInit SkillAcquireInit()
+        {
+            return ServiceProvider.GetService<SkillAcquireInit>();
+        }
+        
+        public static async Task SendMessageToNpcService(NpcServerRequest npcServerRequest)
+        {
+            await ServiceProvider.GetRequiredService<NpcServiceController>().SendMessageToNpcService(npcServerRequest);
         }
 
         public void Load()

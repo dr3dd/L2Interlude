@@ -1,9 +1,13 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Module.SkillData;
 using Core.NetworkPacket.ServerPacket;
+using DataBase.Entities;
 using DataBase.Interfaces;
+using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player
@@ -42,11 +46,19 @@ namespace Core.Module.Player
             var userSkills = await _userSkillRepository.GetSkillsByCharId(characterId);
             userSkills.ForEach(us =>
             {
-                _skills.TryAdd(us.SkillId, _skillDataInit.GetSkillBySkillIdAndLevel(us.SkillId, us.SkillLevel));
+                //_skills.TryAdd(us.SkillId, _skillDataInit.GetSkillBySkillIdAndLevel(us.SkillId, us.SkillLevel));
+                _skills.AddOrUpdate(us.SkillId,
+                    i => _skillDataInit.GetSkillBySkillIdAndLevel(us.SkillId, us.SkillLevel),
+                    (i, update) => _skillDataInit.GetSkillBySkillIdAndLevel(us.SkillId, us.SkillLevel));
             });
             return _skills;
         }
         
+        private List<SkillDataModel> GetAllSkills()
+        {
+            return _skills.Values.ToList();
+        }
+
         public int GetSkillLevel(int skillId)
         {
             if (_skills.ContainsKey(skillId))
@@ -67,6 +79,42 @@ namespace Core.Module.Player
                 var effect = skill.Value.Effects.SingleOrDefault().Value;
                 _playerInstance.PlayerEffect().AddEffect(effect, 0, 0);
             }
+        }
+        
+        public void AddSkill(SkillDataModel newSkill, bool store = false)
+        {
+            // Add or update a PlayerInstance skill in the character_skills table of the database
+            try
+            {
+                if (store)
+                {
+                    SaveSkill(newSkill);
+                }
+                _skills.TryAdd(newSkill.SkillId, newSkill);
+            }
+            catch (Exception ex)
+            {
+                LoggerManager.Error(GetType().Name + ": " + ex);
+            }
+        }
+        
+        private void SaveSkill(SkillDataModel newSkill)
+        {
+            var skill = GetAllSkills().FirstOrDefault(s => s.SkillId == newSkill.SkillId);
+            var characterId = _playerInstance.PlayerCharacterInfo().CharacterId;
+            var userSkillEntity = new UserSkillEntity
+            {
+                CharacterId = characterId,
+                SkillId = newSkill.SkillId,
+                SkillLevel = newSkill.Level,
+                ToEndTime = 0
+            };
+            if (skill is null)
+            {
+                _userSkillRepository.AddAsync(userSkillEntity);
+                return;
+            }
+            _userSkillRepository.UpdateAsync(userSkillEntity);
         }
     }
 }

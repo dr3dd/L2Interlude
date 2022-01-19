@@ -42,6 +42,7 @@ namespace Core.Module.Player
         public Location Location { get; set; }
         public IServiceProvider ServiceProvider { get; }
         public int Heading { get; set; }
+        public NpcInstance LastTalkedNpc { get; set; }
         public GameServiceController Controller { get; set; }
         private readonly IUnitOfWork _unitOfWork;
         private readonly WorldInit _worldInit;

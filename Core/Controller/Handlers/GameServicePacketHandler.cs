@@ -32,6 +32,8 @@ namespace Core.Controller.Handlers
             _clientPackets.TryAdd(0x0E, typeof(NewCharacter));
             _clientPackets.TryAdd(0x0B, typeof(CharacterCreate));
             _clientPackets.TryAdd(0x0D, typeof(CharacterSelected));
+            _clientPackets.TryAdd(0x6b, typeof(RequestAcquireSkillInfo));
+            _clientPackets.TryAdd(0x6c, typeof(RequestAcquireSkill));
             _clientPackets.TryAdd(0x0F, typeof(RequestItemList));
             _clientPackets.TryAdd(0x9D, typeof(RequestSkillCoolTime));
             _clientPackets.TryAdd(0x21, typeof(RequestBypass));

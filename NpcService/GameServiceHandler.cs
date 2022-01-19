@@ -97,6 +97,14 @@ namespace NpcService
                         newbieGuide.MenuSelected(defaultNpc.Talker, npcServerRequest.AskId, npcServerRequest.ReplyId);
                     }
                 }
+
+                if (npcServerRequest.EventName == EventName.LearnSkillRequested)
+                {
+                    if (defaultNpc is GuildCoach guildCoach)
+                    {
+                        guildCoach.LearnSkillRequested(defaultNpc.Talker);
+                    }
+                }
                 
             }
             catch (Exception ex)

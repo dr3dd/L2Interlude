@@ -61,6 +61,13 @@ namespace Core.NetworkPacket.ClientPacket
                     await npcInstance.MenuSelect(askId, replyId, _playerInstance);
                     break;
                 }
+                case "learn_skill":
+                {
+                    var npcObjectId = Convert.ToInt32(split.Last());
+                    var npcInstance = GetNpcInstance(npcObjectId);
+                    await npcInstance.LearnSkillRequest(_playerInstance);
+                    break;
+                }
             }
 
             var id = _command;

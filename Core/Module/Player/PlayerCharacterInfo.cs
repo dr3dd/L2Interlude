@@ -5,6 +5,9 @@ namespace Core.Module.Player
     public class PlayerCharacterInfo
     {
         public int CharacterId { get; set; }
+        public int RaceId { get; set; }
+        public int ClassId { get; set; }
+        public string ClassName { get; set; }
         
         public long Exp { get; set; }
         public int Sp { get; set; }

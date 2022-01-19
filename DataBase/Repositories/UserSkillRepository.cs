@@ -50,9 +50,26 @@ namespace DataBase.Repositories
             }
         }
 
-        public Task<int> UpdateAsync(UserSkillEntity entity)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync(UserSkillEntity entity)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                using var connection = _connectionFactory.GetDbConnection();
+                connection.Open();
+                var sql = "UPDATE user_skill SET skill_level = @SkillLevel WHERE char_id = @CharacterId AND skill_id = @SkillId;";
+                var result = await connection.ExecuteAsync(sql, entity);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                LoggerManager.Error(ex.Message);
+                throw;                
+            }
         }
 
         public Task<int> DeleteAsync(int id)

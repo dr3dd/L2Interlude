@@ -168,5 +168,21 @@ namespace NpcService.Model
         {
             _desire.AddUseSkillDesire(talker, pchSkillId, skillClassification, castingMethod, desire);
         }
+
+        public void ShowSkillList(Talker talker, string empty)
+        {
+            var npcServiceResponse = new NpcServerResponse
+            {
+                EventName = EventName.ShowSkillList,
+                NpcObjectId = NpcObjectId,
+                PlayerObjectId = talker.ObjectId
+            };
+            _npcService.SendMessageAsync(npcServiceResponse);
+        }
+
+        public void ShowGrowSkillMessage(Talker talker, int skillNameId, string empty)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

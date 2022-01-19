@@ -11,6 +11,8 @@
         TeleportRequested,
         MenuSelect,
         CastleGateOpenClose,
-        AddUseSkillDesire
+        AddUseSkillDesire,
+        LearnSkillRequested,
+        ShowSkillList
     }
 }
