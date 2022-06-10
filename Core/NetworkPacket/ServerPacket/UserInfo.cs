@@ -68,9 +68,9 @@ namespace Core.NetworkPacket.ServerPacket
             WriteInt(_template.GetMen());
             
             WriteInt(_playerInstance.PlayerStatus().GetMaxHp()); //maxHp
-            WriteInt(_playerInstance.PlayerStatus().CurrentHp); //_playerInstance.Status.GetCurrentHp()
+            WriteInt(_playerInstance.CharacterStatus().CurrentHp); //_playerInstance.Status.GetCurrentHp()
             WriteInt(_playerInstance.PlayerStatus().GetMaxMp()); //_playerInstance.Stat.GetMaxMp()
-            WriteInt(_playerInstance.PlayerStatus().CurrentMp); //_playerInstance.Status.GetCurrentMp()
+            WriteInt(_playerInstance.CharacterStatus().CurrentMp); //_playerInstance.Status.GetCurrentMp()
             WriteInt(_characterInfo.Sp); //_playerInstance.Stat.Sp
             WriteInt(0); //_playerInstance.PlayerInventory().GetCurrentLoad()
             WriteInt(100); //_playerInstance.Stat.GetMaxLoad()

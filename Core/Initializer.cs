@@ -82,6 +82,11 @@ namespace Core
             await ServiceProvider.GetRequiredService<NpcServiceController>().SendMessageToNpcService(npcServerRequest);
         }
 
+        public static PcParameterInit PcParameterInit()
+        {
+            return ServiceProvider.GetService<PcParameterInit>();
+        }
+
         public void Load()
         {
             ServiceProvider.GetRequiredService<ObjectIdInit>();

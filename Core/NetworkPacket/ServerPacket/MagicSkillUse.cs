@@ -15,7 +15,7 @@ namespace Core.NetworkPacket.ServerPacket
         private readonly int _y;
         private readonly int _z;
 
-        public MagicSkillUse(Character character, PlayerInstance target, int skillId, int skillLevel, float hitTime, float reuseDelay)
+        public MagicSkillUse(Character character, Character target, int skillId, int skillLevel, float hitTime, float reuseDelay)
         {
             _objectId = character.ObjectId;
             _targetId = target.ObjectId;

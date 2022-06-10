@@ -47,8 +47,8 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
             WriteInt(_playerInstance.GetY());
             WriteInt(_playerInstance.GetZ());
 		
-            WriteInt(_playerInstance.PlayerStatus().CurrentHp);//_player.getCurrentHp()
-            WriteInt(_playerInstance.PlayerStatus().CurrentMp);//_player.getCurrentMp()
+            WriteInt(_playerInstance.CharacterStatus().CurrentHp);//_player.getCurrentHp()
+            WriteInt(_playerInstance.CharacterStatus().CurrentMp);//_player.getCurrentMp()
             WriteInt(_characterInfo.Sp);//_player.getSp()
             WriteLong(_characterInfo.Exp);//_player.getExp()
             WriteInt(_level);//_player.getLevel()

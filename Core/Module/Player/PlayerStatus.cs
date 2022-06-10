@@ -10,21 +10,6 @@ namespace Core.Module.Player
         private readonly PlayerInstance _playerInstance;
         private readonly PcParameterInit _statBonusInit;
         public float CurrentCp { get; set; }
-        private double _currentHp;
-
-        public double CurrentHp
-        {
-            get
-            {
-                if (_currentHp >= GetMaxHp())
-                {
-                    return GetMaxHp();
-                }
-                return _currentHp;
-            }
-            set => _currentHp = value;
-        }
-        public float CurrentMp { get; set; }
         public byte Level { get; set; } = 1;  
         public PlayerStatus(PlayerInstance playerInstance)
         {
@@ -69,41 +54,9 @@ namespace Core.Module.Player
             return (int) (mpBegin + (mpBegin * _statBonusInit.GetMenBonus(menStat) / 100));
         }
 
-        public void DecreaseCurrentHp(double damage)
-        {
-            lock (this)
-            {
-                if (!(damage > 0)) return;
-                CurrentHp -= damage; // Get diff of Hp vs value
-                if (CurrentHp <= 0)
-                {
-                    CurrentHp = 0;
-                }
-                SetCurrentHp(CurrentHp); // Set Hp
-            }
-        }
-        
-        public void IncreaseCurrentHp(double heal)
-        {
-            lock (this)
-            {
-                CurrentHp += heal; // Get diff of Hp vs value
-                if (CurrentHp >= GetMaxHp())
-                {
-                    CurrentHp = GetMaxHp();
-                }
-                SetCurrentHp(CurrentHp); // Set Hp
-            }
-        }
-
-        private void SetCurrentHp(double newHp)
-        {
-            CurrentHp = newHp;
-        }
-        
         private IEnumerable<EffectDuration> GetPlayerEffects()
         {
-            return _playerInstance.PlayerEffect().GetEffects().Values;
+            return _playerInstance.CharacterEffect().GetEffects().Values;
         }
     }
 }

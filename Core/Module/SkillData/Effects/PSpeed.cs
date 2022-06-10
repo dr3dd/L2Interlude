@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.Module.CharacterData;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
 
@@ -19,7 +20,7 @@ namespace Core.Module.SkillData.Effects
             SkillDataModel = skillDataModel;
         }
 
-        public override async Task Process(PlayerInstance playerInstance, PlayerInstance targetInstance)
+        public override async Task Process(PlayerInstance playerInstance, Character targetInstance)
         {
             var effectResult = CanPlayerUseSkill(playerInstance, targetInstance);
             if (effectResult.IsNotValid)

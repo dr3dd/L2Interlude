@@ -6,7 +6,6 @@ using Core.Controller;
 using Core.GeoEngine;
 using Core.Module.CharacterData;
 using Core.Module.SkillData;
-using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
 using Core.TaskManager;
 using Helpers;
@@ -68,8 +67,9 @@ namespace Core.Module.Player
             DisableSkill(skill, reuseDelay);
             SetCastTime(coolTime, hitTime);
             
-            await HandleMagicSkill(skill, (PlayerInstance) target, hitTime);
-            await SendToKnownListAsync(skill, (PlayerInstance) target, hitTime, reuseDelay);
+            await HandleMagicSkill(skill, target, hitTime);
+            
+            await SendToKnownListAsync(skill, target, hitTime, reuseDelay);
             await _playerInstance.SendPacketAsync(new SetupGauge(SetupGauge.Blue, hitTime));
             // Send a system message to the Player
             await _playerInstance.PlayerMessage().SendMessageToPlayerAsync(skill, skillId);
@@ -152,7 +152,7 @@ namespace Core.Module.Player
             return _playerInstance;
         }
 
-        private async Task HandleMagicSkill(SkillDataModel skill, PlayerInstance target, float hitTime)
+        private async Task HandleMagicSkill(SkillDataModel skill, Character target, float hitTime)
         {
             await Task.Run(() =>
             {
@@ -175,7 +175,7 @@ namespace Core.Module.Player
             });
         }
 
-        private async Task SendToKnownListAsync(SkillDataModel skill, PlayerInstance target, float hitTime, float reuseDelay)
+        private async Task SendToKnownListAsync(SkillDataModel skill, Character target, float hitTime, float reuseDelay)
         {
             var skillUse = new MagicSkillUse(_playerInstance, target, skill.SkillId, skill.Level, hitTime, reuseDelay);
             await _playerInstance.SendPacketAsync(skillUse);

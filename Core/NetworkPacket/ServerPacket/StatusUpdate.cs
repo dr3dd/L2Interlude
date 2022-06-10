@@ -99,11 +99,11 @@ namespace Core.NetworkPacket.ServerPacket
 		        WriteInt(_playerInstance.TemplateHandler().GetMen());
 			
 		        WriteInt(CurHp);
-		        WriteInt((int) _playerInstance.PlayerStatus().CurrentHp);
+		        WriteInt((int) _playerInstance.CharacterStatus().CurrentHp);
 		        WriteInt(MaxHp);
 		        WriteInt(_playerInstance.PlayerStatus().GetMaxHp());
 		        WriteInt(CurMp);
-		        WriteInt((int) _playerInstance.PlayerStatus().CurrentMp);
+		        WriteInt((int) _playerInstance.CharacterStatus().CurrentMp);
 		        WriteInt(MaxMp);
 		        WriteInt(_playerInstance.PlayerStatus().GetMaxMp());
 		        WriteInt(Sp);

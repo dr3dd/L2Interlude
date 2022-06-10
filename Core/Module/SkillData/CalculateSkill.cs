@@ -1,11 +1,12 @@
 ﻿using System;
+using Core.Module.CharacterData;
 using Core.Module.Player;
 
 namespace Core.Module.SkillData
 {
     public static class CalculateSkill
     {
-        public static double CalcMagicDam(PlayerInstance attacker, PlayerInstance target, int skillDamage, bool ss,
+        public static double CalcMagicDam(PlayerInstance attacker, Character target, int skillDamage, bool ss,
             bool bss, bool mCrit)
         {
             double damage = 1;
@@ -20,8 +21,8 @@ namespace Core.Module.SkillData
                 ssModifier = 2;
             }
             
-            double mAtk = attacker.PlayerCombat().GetMagicalAttack();
-            double mDef = target.PlayerCombat().GetMagicalDefence();
+            double mAtk = attacker.GetMagicalAttack();
+            double mDef = target.GetMagicalDefence();
             // apply ss bonus
             mAtk *= ssModifier;
             

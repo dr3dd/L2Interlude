@@ -188,7 +188,7 @@ namespace Core.Module.Player
 
         private IEnumerable<EffectDuration> GetPlayerEffects()
         {
-            return _playerInstance.PlayerEffect().GetEffects().Values;
+            return _playerInstance.CharacterEffect().GetEffects().Values;
         }
 
         /// <summary>

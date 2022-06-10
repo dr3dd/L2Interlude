@@ -1,4 +1,5 @@
 ﻿using Core.GeoEngine;
+using Core.Module.CharacterData;
 using Core.Module.Player;
 using Helpers;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,7 +8,7 @@ namespace Core.Module.SkillData.Helper
 {
     public static class CheckUseSkillHelper
     {
-        public static EffectResult CanPlayerUseSkill(SkillDataModel skill, PlayerInstance playerInstance, PlayerInstance targetInstance)
+        public static EffectResult CanPlayerUseSkill(SkillDataModel skill, PlayerInstance playerInstance, Character targetInstance)
         {
             var effectiveRange = skill.EffectiveRange;
             var effectResult = new EffectResult
@@ -26,14 +27,14 @@ namespace Core.Module.SkillData.Helper
             return effectResult;
         }
 
-        private static bool CheckIfInRange(int effectiveRange, PlayerInstance playerInstance, PlayerInstance targetInstance)
+        private static bool CheckIfInRange(int effectiveRange, PlayerInstance playerInstance, Character targetInstance)
         {
             return CalculateRange.CheckIfInRange(effectiveRange, playerInstance.GetX(), playerInstance.GetY(),
                 playerInstance.GetZ(), 33, targetInstance.GetX(), targetInstance.GetY(), targetInstance.GetZ(), 33,
                 true);
         }
 
-        private static bool CanSeeTarget(PlayerInstance playerInstance, PlayerInstance targetInstance)
+        private static bool CanSeeTarget(PlayerInstance playerInstance, Character targetInstance)
         {
             return playerInstance.ServiceProvider.GetRequiredService<GeoEngineInit>().CanSee(playerInstance.GetX(),
                 playerInstance.GetY(), playerInstance.GetZ(), 33,

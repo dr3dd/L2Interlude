@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Core.Module.CharacterData;
 using Core.Module.SkillData;
 using Core.NetworkPacket.ServerPacket;
 
@@ -36,7 +37,8 @@ namespace Core.Module.Player
             await _playerInstance.SendPacketAsync(sm);
         }
 
-        public async Task SendDamageMessageAsync(PlayerInstance targetInstance, double damage, bool isMagicalCritical, bool pcrit = false, bool miss = false)
+        public async Task SendDamageMessageAsync(Character targetInstance, double damage, bool isMagicalCritical,
+            bool pcrit = false, bool miss = false)
         {
             // Check if hit is missed
             if (miss)

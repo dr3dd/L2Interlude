@@ -12,6 +12,8 @@ namespace Core.Module.NpcData
         private readonly NpcTemplateInit _npcTemplate;
         private readonly NpcKnownList _playerKnownList;
         private readonly NpcUseSkill _npcUseSkill;
+        private readonly NpcCombat _npcCombat;
+        private readonly NpcStatus _npcStatus;
         public readonly int NpcHashId;
         public int Heading;
         public NpcInstance(int objectId, NpcTemplateInit npcTemplateInit)
@@ -21,6 +23,8 @@ namespace Core.Module.NpcData
             _playerKnownList = new NpcKnownList(this);
             _npcUseSkill = new NpcUseSkill(this);
             _npcTemplate = npcTemplateInit;
+            _npcCombat = new NpcCombat(this);
+            _npcStatus = new NpcStatus(this);
         }
 
         public NpcKnownList NpcKnownList() => _playerKnownList;
@@ -106,6 +110,26 @@ namespace Core.Module.NpcData
         public async Task LearnSkillRequest(PlayerInstance playerInstance)
         {
             await NpcLearnSkill.LearnSkillRequest(playerInstance, this);
+        }
+
+        public override int GetMaxHp()
+        {
+            return _npcStatus.GetMaxHp();
+        }
+
+        public override int GetMagicalAttack()
+        {
+            return _npcCombat.GetMagicalAttack();
+        }
+
+        public override int GetMagicalDefence()
+        {
+            return _npcCombat.GetMagicalDefence();
+        }
+
+        public override int GetPhysicalDefence()
+        {
+            return _npcCombat.GetPhysicalDefence();
         }
     }
 }

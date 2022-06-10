@@ -77,7 +77,7 @@ namespace Core.Module.Player
                 if (skill.Value.Effects is null)
                     continue;
                 var effect = skill.Value.Effects.SingleOrDefault().Value;
-                _playerInstance.PlayerEffect().AddEffect(effect, 0, 0);
+                _playerInstance.CharacterEffect().AddEffect(effect, 0, 0);
             }
         }
         

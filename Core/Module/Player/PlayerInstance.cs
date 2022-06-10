@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Core.Controller;
 using Core.Module.CharacterData;
@@ -86,7 +84,7 @@ namespace Core.Module.Player
         public PlayerInventory PlayerInventory() => _playerInventory;
         public PlayerUseItem PlayerUseItem() => _playerUseItem;
         public PlayerSkill PlayerSkill() => _playerSkill;
-        public PlayerEffect PlayerEffect() => _playerEffect;
+        //public PlayerEffect PlayerEffect() => _playerEffect;
         public PlayerSkillMagic PlayerSkillMagic() => _playerSkillMagic;
         public PlayerMessage PlayerMessage() => _playerMessage;
         public PlayerZone PlayerZone() => _playerZone;
@@ -302,6 +300,26 @@ namespace Core.Module.Player
             
             PlayerKnownList().RemoveMeFromKnownObjects();
             PlayerKnownList().RemoveAllKnownObjects();
+        }
+
+        public override int GetMaxHp()
+        {
+            return _playerStatus.GetMaxHp();
+        }
+
+        public override int GetMagicalAttack()
+        {
+            return _playerCombat.GetMagicalAttack();
+        }
+
+        public override int GetMagicalDefence()
+        {
+            return _playerCombat.GetMagicalDefence();
+        }
+
+        public override int GetPhysicalDefence()
+        {
+            return _playerCombat.GetPhysicalDefence();
         }
     }
 }

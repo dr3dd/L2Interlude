@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.Module.CharacterData;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
 
@@ -14,7 +15,7 @@ namespace Core.Module.SkillData.Effects
             _magicDamage = Convert.ToInt32(param[1]);
             SkillDataModel = skillDataModel;
         }
-        public override async Task Process(PlayerInstance playerInstance, PlayerInstance targetInstance)
+        public override async Task Process(PlayerInstance playerInstance, Character targetInstance)
         {
             var effectResult = CanPlayerUseSkill(playerInstance, targetInstance);
             if (effectResult.IsNotValid)
@@ -27,21 +28,17 @@ namespace Core.Module.SkillData.Effects
             var isBss = false;
             var isSs = false;
             var damage = CalculateSkill.CalcMagicDam(playerInstance, targetInstance, _magicDamage, isSs, isBss, isMagicalCriticalHit);
-            targetInstance.PlayerStatus().DecreaseCurrentHp(damage);
+            targetInstance.CharacterStatus().DecreaseCurrentHp(damage);
             await SendStatusUpdate(targetInstance);
             //LoggerManager.Info($"Magic Attack: {damage}"); debug
             await SendDamageMessage(playerInstance, targetInstance, damage, isMagicalCriticalHit);
         }
 
-        private async Task SendDamageMessage(PlayerInstance playerInstance, PlayerInstance targetInstance, double damage,
+        private async Task SendDamageMessage(PlayerInstance playerInstance, Character targetInstance, double damage,
             bool isMagicalCriticalHit)
         {
             await playerInstance.PlayerMessage().SendDamageMessageAsync(targetInstance, damage, isMagicalCriticalHit);
         }
 
-        private async Task SendStatusUpdate(PlayerInstance targetInstance)
-        {
-            await targetInstance.SendPacketAsync(new StatusUpdate(targetInstance));
-        }
     }
 }
