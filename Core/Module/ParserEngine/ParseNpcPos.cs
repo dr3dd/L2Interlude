@@ -66,6 +66,7 @@ namespace Core.Module.ParserEngine
                 bool endValue = false;
                 var tmpPosLoc = new List<string>();
                 IDictionary<string, int> tmpLocation = new Dictionary<string, int>();
+                IList<IDictionary<string, int>> tmpLocationAny = new List<IDictionary<string, int>>();
 
                 foreach (var item in newLine)
                 {
@@ -161,7 +162,13 @@ namespace Core.Module.ParserEngine
                             tmpItem = null;
                             anywhere = true;
 
+                            if (_makerName == "gludio32_qm1725_00")
+                            {
+                                var d = 1;
+                            }
                             var listPos = _territoryCollection[_makerName];
+                            
+                            /*
                             int rnd = Rnd.Next(listPos.Count);
                             var territoryPosition = listPos[rnd];
                             var tmpX = territoryPosition["X"];
@@ -178,6 +185,11 @@ namespace Core.Module.ParserEngine
                             tmpLocation.TryAdd("Y", tmpY + rndPosY);
                             tmpLocation.TryAdd("Z", tmpZ + rndPosZ);
                             tmpLocation.TryAdd("H", tmpH + rndPosH);
+                            */
+                            foreach (var listPo in listPos)
+                            {
+                                tmpLocationAny.Add(new Dictionary<string, int>(listPo));
+                            }
                             continue;
                         case "ai_parameters": //TODO need develop
                             tmpItem = null;
@@ -192,7 +204,7 @@ namespace Core.Module.ParserEngine
                     tmpLocation.Add("Z", Convert.ToInt32(tmpPosLoc[2]));
                     tmpLocation.Add("H", Convert.ToInt32(tmpPosLoc[3]));
                 }
-                _npcBegins.Add(new NpcBegin(npcName, tmpLocation, npcTotal));
+                _npcBegins.Add(new NpcBegin(npcName, tmpLocation, npcTotal, tmpLocationAny));
                 tmpItem = null;
             }
             catch (Exception ex)
@@ -260,7 +272,12 @@ namespace Core.Module.ParserEngine
                     case '}':
                         curlyBracketsOpen = false;
                         if (tmpItem is "")
+                        {
+                            location.Add(new Dictionary<string, int>(tmpLocation));
+                            tmpLocation.Clear();
                             continue;
+                        }
+                            
                         var tmp = tmpItem.Split(";");
                         tmpLocation.Add("X", Convert.ToInt32(tmp[0]));
                         tmpLocation.Add("Y", Convert.ToInt32(tmp[1]));

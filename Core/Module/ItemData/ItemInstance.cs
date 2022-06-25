@@ -108,5 +108,10 @@ namespace Core.Module.ItemData
         {
             return ItemData.ActionType == ActionType.ActionEquip;
         }
+
+        public override Task RequestActionAsync(PlayerInstance player)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

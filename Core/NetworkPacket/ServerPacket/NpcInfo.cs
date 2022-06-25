@@ -14,7 +14,7 @@ namespace Core.NetworkPacket.ServerPacket
             WriteByte(0x16);
             WriteInt(_npcInstance.ObjectId);
             WriteInt(_npcInstance.NpcHashId); //_npcInstance.NpcHashId
-            WriteInt(0); //_npcInstance.Attackable
+            WriteInt(_npcInstance.GetTemplate().GetStat().CanBeAttacked); //_npcInstance.Attackable
             WriteInt(_npcInstance.GetX());
             WriteInt(_npcInstance.GetY());
             WriteInt(_npcInstance.GetZ());

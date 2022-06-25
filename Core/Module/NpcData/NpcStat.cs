@@ -25,7 +25,7 @@ namespace Core.Module.NpcData
         public string Race { get; set; }
         public string Sex { get; set; }
         public bool UnDying { get; set; }
-        public bool CanBeAttacked { get; set; }
+        public short CanBeAttacked { get; set; }
         public short CorpseTime { get; set; }
         public bool NoSleepMode { get; set; }
         public short AgroRange { get; set; }

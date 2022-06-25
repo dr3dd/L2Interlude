@@ -321,5 +321,31 @@ namespace Core.Module.Player
         {
             return _playerCombat.GetPhysicalDefence();
         }
+
+        private Task<bool> IsTargetSelected(PlayerInstance playerInstance)
+        {
+            return Task.FromResult(this == playerInstance.PlayerTargetAction().GetTarget());
+        }
+        
+        public override async Task RequestActionAsync(PlayerInstance targetPlayer)
+        {
+            if (!await IsTargetSelected(targetPlayer))
+            {
+                await base.RequestActionAsync(targetPlayer);
+                await SendPacketAsync(new MyTargetSelected(targetPlayer.ObjectId, 0));
+                return;
+            }
+            PlayerDesire().AddDesire(Desire.InteractDesire, targetPlayer);
+        }
+
+        public override void SpawnMe(int x, int y, int z)
+        {
+            base.SpawnMe(x, y, z);
+            StorePlayerObject();
+        }
+        private void StorePlayerObject()
+        {
+            Initializer.WorldInit().StorePlayerObject(this);
+        }
     }
 }

@@ -34,7 +34,7 @@ namespace Core.Module.NpcData
             _stat.Race = (string) setStats["race"];
             _stat.Sex = (string) setStats["sex"];
             _stat.UnDying = ToBool(setStats["undying"]);
-            _stat.CanBeAttacked = ToBool(setStats["can_be_attacked"]);
+            _stat.CanBeAttacked = ToShort(setStats["can_be_attacked"]);
             _stat.CorpseTime = ToShort(setStats["corpse_time"]);
             _stat.NoSleepMode = ToBool(setStats["no_sleep_mode"]);
             _stat.AgroRange = ToShort(setStats["agro_range"]);

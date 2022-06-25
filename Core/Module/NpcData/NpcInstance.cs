@@ -131,5 +131,37 @@ namespace Core.Module.NpcData
         {
             return _npcCombat.GetPhysicalDefence();
         }
+
+        public override async Task RequestActionAsync(PlayerInstance playerInstance)
+        {
+            if (await IsTargetSelected(playerInstance))
+            {
+                await SendRequestAsync(playerInstance);
+                return;
+            }
+            await base.RequestActionAsync(playerInstance);
+            await ShowTargetInfoAsync(playerInstance);
+        }
+        
+        private Task<bool> IsTargetSelected(PlayerInstance playerInstance)
+        {
+            return Task.FromResult(this == playerInstance.PlayerTargetAction().GetTarget());
+        }
+        
+        private async Task ShowTargetInfoAsync(PlayerInstance playerInstance)
+        {
+            if (_npcTemplate.GetStat().CanBeAttacked == 1)
+            {
+                await playerInstance.SendPacketAsync(new MyTargetSelected(ObjectId, playerInstance.PlayerStatus().Level - _npcTemplate.GetStat().Level));
+                // Send a Server->Client packet StatusUpdate of the NpcInstance to the PlayerInstance to update its HP bar
+                StatusUpdate su = new StatusUpdate(ObjectId);
+                su.AddAttribute(StatusUpdate.CurHp, (int) CharacterStatus().CurrentHp);
+                su.AddAttribute(StatusUpdate.MaxHp, (int) _npcTemplate.GetStat().OrgHp);
+                await playerInstance.SendPacketAsync(su);
+                return;
+            }
+            await playerInstance.SendPacketAsync(new MyTargetSelected(ObjectId, 0));
+            await playerInstance.SendPacketAsync(new ValidateLocation(this));
+        }
     }
 }

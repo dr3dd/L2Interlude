@@ -1,4 +1,7 @@
-﻿using Core.Module.WorldData;
+﻿using System.Threading.Tasks;
+using Core.Module.Player;
+using Core.Module.WorldData;
+using Core.NetworkPacket.ServerPacket;
 
 namespace Core.Module.CharacterData
 {
@@ -16,6 +19,13 @@ namespace Core.Module.CharacterData
         {
             _characterStatus = new CharacterStatus(this);
             _characterEffect = new CharacterEffect(this);
+        }
+
+        public override async Task RequestActionAsync(PlayerInstance playerInstance)
+        {
+            // Set the target of the PlayerInstance player
+            playerInstance.PlayerTargetAction().SetTarget(this);
+            await playerInstance.SendPacketAsync(new ValidateLocation(this));
         }
 
     }

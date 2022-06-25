@@ -1,5 +1,5 @@
-﻿using Core.Module.Player;
-using Core.NetworkPacket.ServerPacket.CharacterPacket;
+﻿using System.Threading.Tasks;
+using Core.Module.Player;
 
 namespace Core.Module.WorldData
 {
@@ -7,6 +7,8 @@ namespace Core.Module.WorldData
     {
         public int ObjectId { get; set; }
         private ObjectPosition _position;
+        
+        public abstract Task RequestActionAsync(PlayerInstance playerInstance);
         
         public int GetX()
         {
@@ -37,14 +39,21 @@ namespace Core.Module.WorldData
         {
             return _position ??= new ObjectPosition(this);
         }
+        
+        /// <summary>
+        /// Store World Object in collection
+        /// </summary>
+        private void StoreWorldObject()
+        {
+            Initializer.WorldInit().StoreWorldObject(this);
+        }
 
-        public void SpawnMe(int x, int y, int z)
+        public virtual void SpawnMe(int x, int y, int z)
         {
             WorldObjectPosition().SetWorldPosition(x, y, z);
             WorldObjectPosition().SetWorldRegion(GetRegionByLocation());
             StoreWorldObject();
             AddVisibleObject();
-            StorePlayerObject();
         }
 
         private void AddVisibleObject()
@@ -53,25 +62,9 @@ namespace Core.Module.WorldData
             worldRegion.AddVisibleObject(this);
         }
 
-        private void StorePlayerObject()
-        {
-            if (this is PlayerInstance playerInstance)
-            {
-                Initializer.WorldInit().StorePlayerObject(playerInstance);
-            }
-        }
-
         private WorldRegionData GetRegionByLocation()
         {
             return Initializer.WorldInit().GetRegion(WorldObjectPosition().GetWorldPosition());
-        }
-
-        /// <summary>
-        /// Store World Object in collection
-        /// </summary>
-        private void StoreWorldObject()
-        {
-            Initializer.WorldInit().StoreWorldObject(this);
         }
     }
 }

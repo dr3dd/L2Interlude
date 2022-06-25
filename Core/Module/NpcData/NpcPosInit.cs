@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Core.Module.ParserEngine;
 using Core.Module.WorldData;
+using Helpers;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -43,18 +44,77 @@ namespace Core.Module.NpcData
                     foreach (var npcBegin in npcMakerBegin.NpcBegins)
                     {
                         LoggerManager.Info("Test Spawn NPC " + npcBegin.Name);
-                        var x = npcBegin.Pos["X"];
-                        var y = npcBegin.Pos["Y"];
-                        var z = npcBegin.Pos["Z"];
-                        var h = npcBegin.Pos["H"];
-
-                        var npcTemplate = _npcDataInit.GetNpcTemplate(npcBegin.Name);
-                        if (npcTemplate.GetStat().Type == "citizen" || npcTemplate.GetStat().Type == "teleporter" || npcTemplate.GetStat().Type == "guard" )
-                        {
-                            var npcInstance = new NpcInstance(_objectIdInit.NextObjectId(), npcTemplate);
-                            npcInstance.OnSpawn(x, y, z, h);
-                        }
                         
+                        var npcTemplate = _npcDataInit.GetNpcTemplate(npcBegin.Name);
+                        if (npcBegin.Pos.Count > 0)
+                        {
+                            var x = npcBegin.Pos["X"];
+                            var y = npcBegin.Pos["Y"];
+                            var z = npcBegin.Pos["Z"];
+                            var h = npcBegin.Pos["H"];
+                            
+                            if (npcTemplate.GetStat().Type == "citizen" || npcTemplate.GetStat().Type == "teleporter" || npcTemplate.GetStat().Type == "guard")
+                            {
+                                var npcInstance = new NpcInstance(_objectIdInit.NextObjectId(), npcTemplate);
+                                npcInstance.OnSpawn(x, y, z, h);
+                            }
+                        }
+
+                        if (npcBegin.PosAny.Count > 0)
+                        {
+                            if (npcBegin.Name == "tutorial_gremlin")
+                            {
+
+                                var maxX = npcBegin.PosAny.Aggregate((x1, x2) => x1["X"] > x2["X"] ? x1 : x2)["X"];
+                                var minX = npcBegin.PosAny.Aggregate((x1, x2) => x1["X"] < x2["X"] ? x1 : x2)["X"];
+
+                                var maxY = npcBegin.PosAny.Aggregate((y1, y2) => y1["Y"] > y2["Y"] ? y1 : y2)["Y"];
+                                var minY = npcBegin.PosAny.Aggregate((y1, y2) => y1["Y"] < y2["Y"] ? y1 : y2)["Y"];
+                                
+                                var radiusX = 50;
+                                var radiusY = 50;
+
+                                var z = npcBegin.PosAny[0]["H"];
+
+                                Polygon.Point[] polygon = new Polygon.Point[npcBegin.PosAny.Count];
+
+                                for (var index = 0; index < npcBegin.PosAny.Count; index++)
+                                {
+                                    var dictionary = npcBegin.PosAny[index];
+                                    polygon[index] = new Polygon.Point(dictionary["X"], dictionary["Y"]);
+                                }
+
+                                var n = polygon.Length;
+                                var lst = new List<Dictionary<string, int>>();
+                                for (var y = minY; y<=maxY; y++)
+                                {
+                                    for (var x = minX; x<=maxX; x++)
+                                    {
+                                        var p = new Polygon.Point(x, y);
+                                        if (Polygon.isInside(polygon, n, p))
+                                        {
+                                            lst.Add(new Dictionary<string, int>
+                                                {
+                                                    {"x", x},
+                                                    {"y", y},
+                                                    {"z", z}
+                                                }
+                                            );
+                                            //Console.WriteLine("X: {0}, Y:{1}", x, y);
+                                        }
+                                        x += radiusX;
+                                    }
+                                    y += radiusY;
+                                }
+                                
+                                foreach (var item in lst.OrderBy(x => Rnd.Next()).Take(npcBegin.Total))
+                                {
+                                    var npcInstance = new NpcInstance(_objectIdInit.NextObjectId(), npcTemplate);
+                                    npcInstance.CharacterStatus().CurrentHp = npcTemplate.GetStat().OrgHp;
+                                    npcInstance.OnSpawn(item["x"], item["y"], item["z"], (int)npcTemplate.GetStat().CollisionHeight[0]);
+                                }
+                            }
+                        }
                     }
                 }
                 /*

@@ -31,8 +31,9 @@ namespace Core.NetworkPacket.ClientPacket
 
         public override async Task Execute()
         {
-            var worldObject = GetWorldObject();
-            await _playerInstance.OnActionAsync(worldObject);
+            //var worldObject = GetWorldObject();
+            //await _playerInstance.OnActionAsync(worldObject);
+            await GetWorldObject().RequestActionAsync(_playerInstance);
         }
         
         private WorldObject GetWorldObject()
