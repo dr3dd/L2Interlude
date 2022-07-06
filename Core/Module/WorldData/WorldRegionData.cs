@@ -42,9 +42,9 @@ namespace Core.Module.WorldData
             _zoneManager.RegisterNewZone(baseArea);
         }
 
-        public void RevalidateZones(PlayerInstance playerInstance)
+        public void RevalidateZones(Character character)
         {
-            _zoneManager?.RevalidateZones(playerInstance);
+            _zoneManager?.RevalidateZones(character);
         }
 
         public void AddVisibleObject(WorldObject worldObject)

@@ -1,4 +1,5 @@
 ﻿using System;
+using Core.Module.CharacterData;
 using Core.Module.Player;
 using L2Logger;
 
@@ -10,12 +11,12 @@ namespace Core.Module.AreaData
         {
         }
 
-        protected override void OnEnter(PlayerInstance character)
+        protected override void OnEnter(Character character)
         {
             LoggerManager.Info("OnEnter Damage");
         }
 
-        protected override void OnExit(PlayerInstance character)
+        protected override void OnExit(Character character)
         {
             LoggerManager.Info("OnExit Damage");
         }

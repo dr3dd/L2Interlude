@@ -68,9 +68,9 @@ namespace Core.Module.Player
                 _moveToPawnTimeout += /* 1000 */ 200 / Initializer.TimeController().MillisInTick;
                 
                 // Calculate movement data for a move to location action and add the actor to movingObjects of GameTimeController
-                _playerInstance.PlayerMovement().MoveToLocation(worldObject.GetX(), worldObject.GetY(), worldObject.GetZ(), offset);
+                _playerInstance.CharacterMovement().MoveToLocation(worldObject.GetX(), worldObject.GetY(), worldObject.GetZ(), offset);
                 await _playerInstance.SendPacketAsync(new CharMoveToLocation(_playerInstance));
-                if (!_playerInstance.PlayerMovement().IsMoving)
+                if (!_playerInstance.CharacterMovement().IsMoving)
                 {
                     await _playerInstance.SendActionFailedPacketAsync();
                     return;
@@ -95,7 +95,7 @@ namespace Core.Module.Player
             // Set AI movement data
             _clientMoving = true;
             _clientMovingToPawnOffset = 0;
-            _playerInstance.PlayerMovement().MoveToLocation(x, y, z, 0);
+            _playerInstance.CharacterMovement().MoveToLocation(x, y, z, 0);
             await _playerInstance.SendPacketAsync(new CharMoveToLocation(_playerInstance));
             await _playerInstance.SendToKnownPlayers(new CharMoveToLocation(_playerInstance));
         }
@@ -108,6 +108,16 @@ namespace Core.Module.Player
         public bool IsSkillDisabled(SkillDataModel skill)
         {
             return _playerDesireCast.IsSkillDisabled(skill);
+        }
+        
+        protected override async Task IntentionAttackAsync(Character target)
+        {
+            if (GetDesire() == Desire.AttackDesire)
+            {
+                await _playerInstance.SendActionFailedPacketAsync();
+                return;
+            }
+            ChangeDesire(Desire.AttackDesire);
         }
     }
 }

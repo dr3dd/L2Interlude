@@ -1,39 +1,43 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Core.Module.CharacterData;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
 using Helpers;
-using Network;
 
 namespace Core.Module.NpcData
 {
     public sealed class NpcInstance : Character
     {
         private readonly NpcTemplateInit _npcTemplate;
-        private readonly NpcKnownList _playerKnownList;
+        private readonly NpcKnownList _npcKnownList;
         private readonly NpcUseSkill _npcUseSkill;
         private readonly NpcCombat _npcCombat;
         private readonly NpcStatus _npcStatus;
+        private readonly NpcDesire _npcDesire;
         public readonly int NpcHashId;
-        public int Heading;
+        
+        public int SpawnX { get; set; }
+        public int SpawnY { get; set; }
+        public int SpawnZ { get; set; }
+        
         public NpcInstance(int objectId, NpcTemplateInit npcTemplateInit)
         {
             ObjectId = objectId;
             NpcHashId = npcTemplateInit.GetStat().Id + 1000000;
-            _playerKnownList = new NpcKnownList(this);
+            _npcKnownList = new NpcKnownList(this);
             _npcUseSkill = new NpcUseSkill(this);
             _npcTemplate = npcTemplateInit;
             _npcCombat = new NpcCombat(this);
             _npcStatus = new NpcStatus(this);
+            _npcDesire = new NpcDesire(this);
         }
 
-        public NpcKnownList NpcKnownList() => _playerKnownList;
         public NpcUseSkill NpcUseSkill() => _npcUseSkill;
-        
-        public NpcTemplateInit GetTemplate()
-        {
-            return _npcTemplate;
-        }
+        public override ICharacterCombat CharacterCombat() => _npcCombat;
+        public override ICharacterKnownList CharacterKnownList() => _npcKnownList;
+        public NpcTemplateInit GetTemplate() => _npcTemplate;
+        public NpcDesire NpcDesire() => _npcDesire;
         
         public void OnSpawn(int x, int y, int z, int h)
         {
@@ -41,16 +45,20 @@ namespace Core.Module.NpcData
             SpawnMe(x, y, z);
         }
 
-        public async Task OnActionAsync(PlayerInstance playerInstance)
-        {
-            await SendRequestAsync(playerInstance);
-        }
-
         private async Task SendRequestAsync(PlayerInstance playerInstance)
         {
+            if (_npcTemplate.GetStat().CanBeAttacked == 1)
+            {
+                await playerInstance.SendPacketAsync(new ValidateLocation(this));
+                if (Math.Abs(playerInstance.GetZ() - GetZ()) < 400) // this max height difference might need some tweaking
+                {
+                    // Set the PlayerInstance Intention to AI_INTENTION_ATTACK
+                    playerInstance.PlayerDesire().AddDesire(Desire.AttackDesire, this);
+                }
+            }
             var npcServerRequest = new NpcServerRequest
             {
-                EventName = EventName.Talked,
+                EventName = _npcTemplate.GetStat().CanBeAttacked == 1 ? EventName.Attacked : EventName.Talked,
                 NpcName = GetTemplate().GetStat().Name,
                 NpcType = GetTemplate().GetStat().Type,
                 PlayerObjectId = playerInstance.ObjectId,
@@ -62,14 +70,6 @@ namespace Core.Module.NpcData
         public async Task ShowPage(PlayerInstance player, string fnHi)
         {
             await NpcChatWindow.ShowPage(player, fnHi, this);
-        }
-
-        public async Task SendToKnownPlayers(ServerPacket packet)
-        {
-            foreach (var (objectId, playerInstance) in NpcKnownList().GetKnownPlayers())
-            {
-                await playerInstance.SendPacketAsync(packet);
-            }
         }
 
         public async Task TeleportRequest(PlayerInstance playerInstance)

@@ -9,13 +9,15 @@ namespace NpcService.Model
         private readonly ProcessBusinessLogic _blLogic;
         private readonly NpcService _npcService;
         private readonly PriorityQueue<DesireObject> _priorityDesire;
+        private readonly NpcCreature _npcCreature;
 
-        public Desire(int objectId, int playerObjectId, NpcService npcNpcService)
+        public Desire(NpcCreature npcCreature, int playerObjectId, NpcService npcNpcService)
         {
             _priorityDesire = new PriorityQueue<DesireObject>();
             _npcService = npcNpcService;
             _playerObjectId = playerObjectId;
-            _npcObjectId = objectId;
+            _npcObjectId = npcCreature.NpcObjectId;
+            _npcCreature = npcCreature;
             _blLogic = new ProcessBusinessLogic();
             _blLogic.ProcessCompleted += bl_ProcessCompleted; // register with an event
         }
@@ -27,7 +29,6 @@ namespace NpcService.Model
                 ActionDesire = ActionDesire.AddEffectActionDesire,
                 ObjectId = _npcObjectId,
                 ActionId = actionId,
-                PlayerObjectId = _playerObjectId
             };
             _priorityDesire.Enqueue(new DesireObject(desire, ActionDesire.AddEffectActionDesire, npcDesire));
             _blLogic.StartProcess();
@@ -37,9 +38,8 @@ namespace NpcService.Model
         {
             var npcDesire = new NpcDesire
             {
-                ActionDesire = ActionDesire.AddEffectActionDesire,
+                ActionDesire = ActionDesire.AddMoveAroundDesire,
                 ObjectId = _npcObjectId,
-                PlayerObjectId = _playerObjectId
             };
             _priorityDesire.Enqueue(new DesireObject(desire, ActionDesire.AddEffectActionDesire, npcDesire));
             _blLogic.StartProcess();
@@ -54,7 +54,7 @@ namespace NpcService.Model
         public async void bl_ProcessCompleted(object sender, ProcessEventArgs e)
         {
             var desire = GetDesire();
-
+            _npcCreature.SetDesire(desire.ActionDesire);
             NpcServerResponse npcServiceResponse;
             switch (desire.ActionDesire)
             {
@@ -73,7 +73,6 @@ namespace NpcService.Model
                     {
                         EventName = EventName.AddMoveAroundDesire,
                         NpcObjectId = desire.ObjectId,
-                        PlayerObjectId = desire.PlayerObjectId,
                     };
                     await _npcService.SendMessageAsync(npcServiceResponse);
                     break;
@@ -82,6 +81,15 @@ namespace NpcService.Model
                     {
                         EventName = EventName.AddUseSkillDesire,
                         PchSkillId = desire.PchSkillId,
+                        NpcObjectId = desire.ObjectId,
+                        PlayerObjectId = desire.PlayerObjectId,
+                    };
+                    await _npcService.SendMessageAsync(npcServiceResponse);
+                    break;
+                case ActionDesire.AddAttackDesire:
+                    npcServiceResponse = new NpcServerResponse
+                    {
+                        EventName = EventName.AddAttackDesire,
                         NpcObjectId = desire.ObjectId,
                         PlayerObjectId = desire.PlayerObjectId,
                     };
@@ -102,6 +110,19 @@ namespace NpcService.Model
                 PlayerObjectId = _playerObjectId
             };
             _priorityDesire.Enqueue(new DesireObject(desire, ActionDesire.AddUseSkillDesire, npcDesire));
+            _blLogic.StartProcess();
+        }
+
+        public void AddAttackDesire(Talker attacker, int actionId, int desire)
+        {
+            var npcDesire = new NpcDesire
+            {
+                ActionDesire = ActionDesire.AddAttackDesire,
+                ObjectId = _npcObjectId,
+                ActionId = actionId,
+                PlayerObjectId = _playerObjectId
+            };
+            _priorityDesire.Enqueue(new DesireObject(desire, ActionDesire.AddAttackDesire, npcDesire));
             _blLogic.StartProcess();
         }
     }

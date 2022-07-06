@@ -4,9 +4,12 @@
     {
         Created,
         NoDesire,
+        SpawnAllNpc,
         EffectActionDesire,
         AddMoveAroundDesire,
         Talked,
+        Attacked,
+        AddAttackDesire,
         TeleportRequest,
         TeleportRequested,
         MenuSelect,

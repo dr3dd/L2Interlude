@@ -14,7 +14,7 @@ namespace Core.Module.CharacterData
         protected override async Task MoveToDesireAsync(Location destination)
         {
             ChangeDesire(Desire.MoveToDesire);
-           // await MoveToAsync(destination.GetX(), destination.GetY(), destination.GetZ()).ContinueWith(HandleException);
+            await MoveToAsync(destination.GetX(), destination.GetY(), destination.GetZ()).ContinueWith(HandleException);
         }
 
         protected override Task CastDesireAsync(SkillDataModel arg0)
@@ -36,6 +36,10 @@ namespace Core.Module.CharacterData
             }
         }
 
+        protected override async Task IntentionAttackAsync(Character target)
+        {
+            
+        }
         
     }
 }

@@ -1,4 +1,4 @@
-﻿using Core.Module.Player;
+﻿using Core.Module.CharacterData;
 
 namespace Core.NetworkPacket.ServerPacket.CharacterPacket
 {
@@ -12,15 +12,15 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
         private readonly int _yDst;
         private readonly int _zDst;
 
-        public CharMoveToLocation(PlayerInstance playerInstance)
+        public CharMoveToLocation(Character character)
         {
-            _objectId = playerInstance.ObjectId;
-            _x = playerInstance.GetX();
-            _y = playerInstance.GetY();
-            _z = playerInstance.GetZ();
-            _xDst = playerInstance.PlayerMovement().GetXDestination();
-            _yDst = playerInstance.PlayerMovement().GetYDestination();
-            _zDst = playerInstance.PlayerMovement().GetZDestination();
+            _objectId = character.ObjectId;
+            _x = character.GetX();
+            _y = character.GetY();
+            _z = character.GetZ();
+            _xDst = character.CharacterMovement().GetXDestination();
+            _yDst = character.CharacterMovement().GetYDestination();
+            _zDst = character.CharacterMovement().GetZDestination();
         }
         
         public override void Write()

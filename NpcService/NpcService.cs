@@ -36,8 +36,11 @@ namespace NpcService
                 _client = new TcpClient("127.0.0.1", 3333);
                 _stream = _client.GetStream();
 
-                //await SendMessageAsync(message);
                 await Task.Factory.StartNew(ReadAsync);
+                await SendMessageAsync(new NpcServerResponse
+                {
+                    EventName = EventName.SpawnAllNpc
+                });
             }
             catch (Exception ex)
             {

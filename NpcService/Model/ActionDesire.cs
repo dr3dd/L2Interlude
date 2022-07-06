@@ -4,6 +4,7 @@
     {
         AddMoveAroundDesire,
         AddEffectActionDesire,
-        AddUseSkillDesire
+        AddUseSkillDesire,
+        AddAttackDesire
     }
 }

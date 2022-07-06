@@ -10,16 +10,16 @@ namespace Core.NetworkPacket.ServerPacket
         private readonly int _y;
         private readonly int _z;
         private readonly int _heading;
-        private PlayerInstance _playerInstance;
+        private Character _character;
 
-        public StopMove(PlayerInstance playerInstance) : this(playerInstance.PlayerCharacterInfo().CharacterId,
-            playerInstance.GetX(), playerInstance.GetY(),
-            playerInstance.GetZ(), playerInstance.Heading)
+        public StopMove(Character character) : this(character.ObjectId,
+            character.GetX(), character.GetY(),
+            character.GetZ(), character.Heading)
         {
-            _playerInstance = playerInstance;
+            _character = character;
         }
 
-        public StopMove(int objectId, int x, int y, int z, int heading)
+        private StopMove(int objectId, int x, int y, int z, int heading)
         {
             _objectId = objectId;
             _x = x;

@@ -17,11 +17,11 @@ namespace Core.Controller
         public int GameTicks { get; private set; }
         private long GameStartTime { get; set; }
         public bool IsNight { get; set; } = false;
-        private readonly List<PlayerInstance> _movingObjects;
+        private readonly List<Character> _movingObjects;
 
         public GameTimeController()
         {
-            _movingObjects = new List<PlayerInstance>();
+            _movingObjects = new List<Character>();
             MillisInTick = 1000 / TicksPerSecond;
         }
 
@@ -91,35 +91,41 @@ namespace Core.Controller
         {
             try
             {
-                PlayerInstance[] PlayerInstances = _movingObjects.ToArray();
+                Character[] characters = _movingObjects.ToArray();
                 // Create an ArrayList to contain all Creature that are arrived to destination
-                List<PlayerInstance> ended = null;
+                List<Character> ended = null;
 
-                foreach (var l2Character in PlayerInstances)
+                foreach (var l2Character in characters)
                 {
                     if (l2Character is null)
                         continue;
                     // Update the position of the Creature and return True if the movement is finished
-                    var end = await l2Character.PlayerMovement().UpdatePosition(GameTicks);
+                    var end = await l2Character.CharacterMovement().UpdatePosition(GameTicks);
                     // If movement is finished, the Creature is removed from movingObjects and added to the ArrayList ended
                     if (end)
                     {
                         _movingObjects.Remove(l2Character);
                         if (ended == null)
                         {
-                            ended = new List<PlayerInstance>();
+                            ended = new List<Character>();
                         }
                         ended.Add(l2Character);
                     }
                     await l2Character.UpdateKnownObjects();
+                    if (l2Character is PlayerInstance playerInstance)
+                    {
+                        await playerInstance.FindCloseNpc();
+                    }
                     await l2Character.RemoveKnownObjects();
                 }
 
                 if (ended != null)
                 {
-                    foreach (PlayerInstance playerInstance in ended)
+                    foreach (Character character in ended)
                     {
                         //character.AI.NotifyEvent(CtrlEvent.EvtArrived);
+                        character.CharacterZone().RevalidateZone();
+                        await character.CharacterMovement().StopMoveAsync(new Location(character.GetX(), character.GetY(), character.GetZ(), character.Heading));
                     }
                 }
             }
@@ -129,13 +135,13 @@ namespace Core.Controller
             }
         }
         
-        public void RegisterMovingObject(PlayerInstance playerInstance)
+        public void RegisterMovingObject(Character character)
         {
             try
             {
-                if (!_movingObjects.Contains(playerInstance))
+                if (!_movingObjects.Contains(character))
                 {
-                    _movingObjects.Add(playerInstance);
+                    _movingObjects.Add(character);
                 }
             }
             catch (Exception ex)

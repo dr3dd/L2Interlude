@@ -28,7 +28,7 @@ namespace Test
             {
                 await value.Process(_playerInstance, _playerInstance);
             }
-            var speed = _playerInstance.PlayerCombat().GetGroundHighSpeed();
+            var speed = _playerInstance.CharacterCombat().GetCharacterSpeed();
             Assert.Equal(146, speed);
         }
         
@@ -42,7 +42,7 @@ namespace Test
                 await value.Process(_playerInstance, _playerInstance);
             }
 
-            var speed = _playerInstance.PlayerCombat().GetGroundHighSpeed();
+            var speed = _playerInstance.CharacterCombat().GetCharacterSpeed();
             Assert.Equal(159, speed);
         }
 
@@ -63,7 +63,7 @@ namespace Test
                 await value.Process(_playerInstance, _playerInstance);
             }
             
-            var speed = _playerInstance.PlayerCombat().GetGroundHighSpeed();
+            var speed = _playerInstance.CharacterCombat().GetCharacterSpeed();
             Assert.Equal(179, speed);
         }
     }

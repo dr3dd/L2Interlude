@@ -4,7 +4,7 @@ using Core.Module.Player;
 
 namespace Core.Module.NpcData
 {
-    public class NpcCombat
+    public class NpcCombat : ICharacterCombat
     {
         private readonly NpcInstance _npcInstance;
         
@@ -50,6 +50,26 @@ namespace Core.Module.NpcData
         private IEnumerable<EffectDuration> GetNpcEffects()
         {
             return _npcInstance.CharacterEffect().GetEffects().Values;
+        }
+
+        public int GetCharacterSpeed()
+        {
+            if (_npcInstance.CharacterMovement().IsRunning())
+            {
+                return GetRunSpeed();
+            }
+		
+            return GetWalkSpeed();
+        }
+        
+        public int GetRunSpeed()
+        {
+            return (int)_npcInstance.GetTemplate().GetStat().GroundHigh[0];
+        }
+
+        public int GetWalkSpeed()
+        {
+            return (int)_npcInstance.GetTemplate().GetStat().GroundLow[0];
         }
     }
 }

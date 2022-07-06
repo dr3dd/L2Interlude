@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Core.Module.Player;
 using Core.Module.SkillData;
 using Core.Module.WorldData;
+using Core.NetworkPacket.ServerPacket.CharacterPacket;
 
 namespace Core.Module.CharacterData
 {
@@ -62,5 +64,27 @@ namespace Core.Module.CharacterData
         protected abstract Task MoveToDesireAsync(Location arg0);
         protected abstract Task CastDesireAsync(SkillDataModel arg0);
         protected abstract Task IntentionInteractAsync(WorldObject worldObject);
+        protected abstract Task IntentionAttackAsync(Character target);
+        
+        /// <summary>
+        /// TODO Refactor
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public async Task MoveToAsync(int x, int y, int z)
+        {
+            // Calculate movement data for a move to location action and add the actor to movingObjects of GameTimeController
+            _character.CharacterMovement().MoveToLocation(x, y, z, 0);
+            // Send a Server->Client packet CharMoveToLocation to the actor and all L2Player in its _knownPlayers
+            
+            foreach (WorldObject worldObject in _character.CharacterKnownList().GetKnownObjects().Values)
+            {
+                if (worldObject is PlayerInstance playerInstance)
+                {
+                    await playerInstance.SendPacketAsync(new CharMoveToLocation(_character));
+                }
+            }
+        }
     }
 }

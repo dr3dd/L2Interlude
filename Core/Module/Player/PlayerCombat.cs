@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player
 {
-    public class PlayerCombat
+    public class PlayerCombat : ICharacterCombat
     {
         private readonly ITemplateHandler _templateHandler;
         private readonly PcParameterInit _statBonusInit;
@@ -238,7 +238,17 @@ namespace Core.Module.Player
             return (int) result;
         }
 
-        public int GetGroundHighSpeed()
+        public int GetCharacterSpeed()
+        {
+            if (_playerInstance.CharacterMovement().IsRunning())
+            {
+                return GetRunSpeed();
+            }
+		
+            return GetWalkSpeed();
+        }
+
+        public int GetRunSpeed()
         {
             var baseGroundHighSpeed= _templateHandler.GetBaseGroundHighSpeed();
             var dexStat = _templateHandler.GetDex();
@@ -249,7 +259,12 @@ namespace Core.Module.Player
             result = CalculateStats.CalculateSpeed(effects, result);
             return (int) result;
         }
-        
+
+        public int GetWalkSpeed()
+        {
+            return GetRunSpeed() * 70 / 100;
+        }
+
         public int GetGroundLowSpeed()
         {
             var baseGroundHighSpeed = _templateHandler.GetBaseGroundLowSpeed();
@@ -262,7 +277,7 @@ namespace Core.Module.Player
         public float GetMovementSpeedMultiplier()
         {
             var baseGroundHighSpeed= _templateHandler.GetBaseGroundHighSpeed();
-            return GetGroundHighSpeed() / (float)baseGroundHighSpeed;
+            return GetCharacterSpeed() / (float)baseGroundHighSpeed;
         }
 
         public float GetAttackSpeedMultiplier()

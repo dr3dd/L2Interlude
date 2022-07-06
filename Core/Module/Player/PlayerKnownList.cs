@@ -1,12 +1,13 @@
 ﻿using System.Collections.Concurrent;
+using Core.Module.CharacterData;
 using Core.Module.NpcData;
 using Core.Module.WorldData;
 
 namespace Core.Module.Player
 {
-    public class PlayerKnownList
+    public class PlayerKnownList : ICharacterKnownList
     {
-        private PlayerInstance _playerInstance;
+        private readonly PlayerInstance _playerInstance;
         private readonly ConcurrentDictionary<int, WorldObject> _playerKnownList;
         
         public PlayerKnownList(PlayerInstance playerInstance)
@@ -51,10 +52,10 @@ namespace Core.Module.Player
                 switch (worldObject)
                 {
                     case PlayerInstance playerInstance:
-                        playerInstance.PlayerKnownList().RemoveKnownObject(_playerInstance);
+                        playerInstance.CharacterKnownList().RemoveKnownObject(_playerInstance);
                         break;
                     case NpcInstance npcInstance:
-                        npcInstance.NpcKnownList().RemoveKnownObject(_playerInstance);
+                        npcInstance.CharacterKnownList().RemoveKnownObject(_playerInstance);
                         break;
                 }
             }

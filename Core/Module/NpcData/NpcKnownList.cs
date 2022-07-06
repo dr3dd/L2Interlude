@@ -1,23 +1,23 @@
 ﻿using System.Collections.Concurrent;
-using Core.Module.Player;
+using Core.Module.CharacterData;
 using Core.Module.WorldData;
 
 namespace Core.Module.NpcData
 {
-    public class NpcKnownList
+    public class NpcKnownList : ICharacterKnownList
     {
         private NpcInstance _npcInstance;
-        private readonly ConcurrentDictionary<int, PlayerInstance> _npcKnownList;
+        private readonly ConcurrentDictionary<int, WorldObject> _npcKnownList;
         
         public NpcKnownList(NpcInstance npcInstance)
         {
-            _npcKnownList = new ConcurrentDictionary<int, PlayerInstance>();
+            _npcKnownList = new ConcurrentDictionary<int, WorldObject>();
             _npcInstance = npcInstance;
         }
         
-        public void AddToKnownList(int objectId, PlayerInstance playerInstance)
+        public void AddToKnownList(int objectId, WorldObject worldObject)
         {
-            _npcKnownList.TryAdd(objectId, playerInstance);
+            _npcKnownList.TryAdd(objectId, worldObject);
         }
         
         public bool HasObjectInKnownList(int objectId)
@@ -25,23 +25,28 @@ namespace Core.Module.NpcData
             return _npcKnownList.ContainsKey(objectId);
         }
 
-        public ConcurrentDictionary<int, PlayerInstance> GetKnownPlayers()
+        public ConcurrentDictionary<int, WorldObject> GetKnownObjects()
         {
             return _npcKnownList;
         }
-        
-        public void RemoveKnownObject(PlayerInstance playerInstance)
+
+        public void RemoveKnownObject(WorldObject worldObject)
         {
-            if (playerInstance == null)
+            if (worldObject == null)
             {
                 return;
             }
-            _npcKnownList.TryRemove(playerInstance.ObjectId, out _);
+            _npcKnownList.TryRemove(worldObject.ObjectId, out _);
         }
         
         public void RemoveAllKnownObjects()
         {
-            GetKnownPlayers().Clear();
+            GetKnownObjects().Clear();
+        }
+
+        public void RemoveMeFromKnownObjects()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

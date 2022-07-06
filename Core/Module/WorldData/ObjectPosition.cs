@@ -53,7 +53,9 @@ namespace Core.Module.WorldData
             WorldRegionData newRegionData = Initializer.WorldInit().GetRegion(GetWorldPosition());
             if (newRegionData != GetWorldRegion())
             {
+                GetWorldRegion().RemoveVisibleObject(_activeObject);
                 SetWorldRegion(newRegionData);
+                GetWorldRegion().AddVisibleObject(_activeObject);
             }
         }
 

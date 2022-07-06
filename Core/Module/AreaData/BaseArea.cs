@@ -24,13 +24,13 @@ namespace Core.Module.AreaData
         public int[] Y { get; set; }
 
         public ZoneForm Zone { get; set; }
-        private readonly ConcurrentDictionary<int, PlayerInstance> _characterList;
+        private readonly ConcurrentDictionary<int, Character> _characterList;
 
         protected BaseArea(string name, Type area)
         {
             Name = name;
             Area = area;
-            _characterList = new ConcurrentDictionary<int, PlayerInstance>();
+            _characterList = new ConcurrentDictionary<int, Character>();
         }
         
         public bool IsInsideZone(int x, int y, int z)
@@ -43,26 +43,26 @@ namespace Core.Module.AreaData
             return Zone.GetDistanceToZone(x, y);
         }
         
-        protected abstract void OnEnter(PlayerInstance character);
-        protected abstract void OnExit(PlayerInstance character);
+        protected abstract void OnEnter(Character character);
+        protected abstract void OnExit(Character character);
 
-        public void RevalidateInZone(PlayerInstance playerInstance)
+        public void RevalidateInZone(Character character)
         {
             // If the object is inside the zone...
-            if (Zone.IsInsideZone(playerInstance.GetX(), playerInstance.GetY(), playerInstance.GetZ()))
+            if (Zone.IsInsideZone(character.GetX(), character.GetY(), character.GetZ()))
             {
-                if (!_characterList.ContainsKey(playerInstance.ObjectId))
+                if (!_characterList.ContainsKey(character.ObjectId))
                 {
                     // Was the character not yet inside this zone?
-                    _characterList.TryAdd(playerInstance.ObjectId, playerInstance);
-                    OnEnter(playerInstance);
+                    _characterList.TryAdd(character.ObjectId, character);
+                    OnEnter(character);
                 }
             }
             // Was the character inside this zone?
-            else if (_characterList.ContainsKey(playerInstance.ObjectId))
+            else if (_characterList.ContainsKey(character.ObjectId))
             {
-                _characterList.TryRemove(playerInstance.ObjectId, out _);
-                OnExit(playerInstance);
+                _characterList.TryRemove(character.ObjectId, out _);
+                OnExit(character);
             }
         }
         
@@ -70,7 +70,7 @@ namespace Core.Module.AreaData
         {
             if (_characterList.TryRemove(character.ObjectId, out _))
             {
-                OnExit((PlayerInstance)character);
+                OnExit(character);
             }
         }
     }

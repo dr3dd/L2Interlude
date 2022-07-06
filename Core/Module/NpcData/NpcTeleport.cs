@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Core.Module.CharacterData;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
 using Helpers;
@@ -37,11 +38,11 @@ namespace Core.Module.NpcData
         
         public static async Task TeleportToLocation(int getX, int getY, int getZ, PlayerInstance playerInstance)
         {
-            await playerInstance.PlayerMovement().StopMoveAsync();
+            await playerInstance.CharacterMovement().StopMoveAsync(new Location(playerInstance.GetX(), playerInstance.GetY(), playerInstance.GetZ(), playerInstance.Heading));
             playerInstance.PlayerAction().SetTeleporting(true);
             await playerInstance.PlayerTargetAction().RemoveTargetAsync();
-            playerInstance.PlayerKnownList().RemoveMeFromKnownObjects();
-            playerInstance.PlayerKnownList().RemoveAllKnownObjects();
+            playerInstance.CharacterKnownList().RemoveMeFromKnownObjects();
+            playerInstance.CharacterKnownList().RemoveAllKnownObjects();
             playerInstance.WorldObjectPosition().GetWorldRegion().RemoveFromZones(playerInstance);
 
             var teleportToLocation = new TeleportToLocation(playerInstance, getX, getY, getZ);

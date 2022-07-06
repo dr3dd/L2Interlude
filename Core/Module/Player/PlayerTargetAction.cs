@@ -1,6 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Core.Module.CharacterData;
-using Core.Module.NpcData;
 using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
 
@@ -24,30 +22,6 @@ namespace Core.Module.Player
         public void SetTarget(WorldObject playerInstance)
         {
             _currentTarget = playerInstance;
-        }
-        
-        public async Task OnTargetAsync(WorldObject targetPlayer)
-        {
-            if (GetTarget() != targetPlayer)
-            {
-                _playerInstance.PlayerTargetAction().SetTarget(targetPlayer);
-                await _playerInstance.SendPacketAsync(new MyTargetSelected(targetPlayer.ObjectId, 0));
-                if (targetPlayer != _playerInstance)
-                {
-                    await _playerInstance.SendPacketAsync(new ValidateLocation((Character)targetPlayer));
-                }
-                return;
-            }
-            if (targetPlayer != _playerInstance)
-            {
-                await _playerInstance.SendPacketAsync(new ValidateLocation((Character)targetPlayer));
-            }
-
-            if (targetPlayer is NpcInstance npcInstance)
-            {
-                await npcInstance.OnActionAsync(_playerInstance);
-            } 
-            _playerInstance.PlayerDesire().AddDesire(Desire.InteractDesire, targetPlayer);
         }
         
         public async Task CancelTargetAsync(int unselect)

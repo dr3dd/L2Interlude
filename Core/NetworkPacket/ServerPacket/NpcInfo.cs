@@ -21,8 +21,8 @@ namespace Core.NetworkPacket.ServerPacket
             WriteInt(_npcInstance.Heading);
             WriteInt(0x00);
             
-            int runSpeed = 85;//_npcInstance.GetTemplate().GetStat().Stat.GetRunSpeed()
-            int walkSpeed = 60; //_npcInstance.Stat.GetWalkSpeed();
+            int runSpeed = _npcInstance.CharacterCombat().GetRunSpeed();//_npcInstance.GetTemplate().GetStat().Stat.GetRunSpeed()
+            int walkSpeed = _npcInstance.CharacterCombat().GetWalkSpeed(); //_npcInstance.Stat.GetWalkSpeed();
             int pAtkSpd = 10; //_npcInstance.Stat.GetPAtkSpd();
             int mAtkSpd = 10; //_npcInstance.Stat.GetMAtkSpd();
 
@@ -50,7 +50,7 @@ namespace Core.NetworkPacket.ServerPacket
             WriteByte(0); //_npc.IsAlikeDead()
             WriteByte(0); // _npc.Summoned ? 2 : 0 invisible ?? 0=false  1=true   2=summoned (only works if model has a summon animation)
             WriteString(""); //_npcInstance.GetTemplate().GetStat().Name
-            WriteString("NPC_ID: " + _npcInstance.GetTemplate().GetStat().Id); //_npcInstance.Template.Stat.Title
+            WriteString("NPC_ID: " + _npcInstance.GetTemplate().GetStat().Id + " OBJ_ID: " + _npcInstance.ObjectId); //_npcInstance.Template.Stat.Title
             WriteInt(0x00); // Title color 0=client default
             WriteInt(0x00); //pvp flag
             WriteInt(0x00); // karma

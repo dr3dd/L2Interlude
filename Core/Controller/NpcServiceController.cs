@@ -4,11 +4,14 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Core.Module.CharacterData;
 using Core.Module.NpcData;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
+using Core.NetworkPacket.ServerPacket.CharacterPacket;
 using Helpers;
 using L2Logger;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Controller
 {
@@ -69,44 +72,67 @@ namespace Core.Controller
         private async Task HandleMessage(string message)
         {
             var npcServerContract = JsonSerializer.Deserialize<NpcServerResponse>(message);
-            var world = Initializer.WorldInit();
-            var player = (PlayerInstance) world.GetWorldObject(npcServerContract.PlayerObjectId);
-            var npc = (NpcInstance) world.GetWorldObject(npcServerContract.NpcObjectId);
+
+            if (npcServerContract.EventName == EventName.SpawnAllNpc)
+            {
+                Initializer.ServiceProvider.GetRequiredService<NpcPosInit>().Run();
+                return;
+            }
             
+            var world = Initializer.WorldInit();
+            var npc = (NpcInstance) world.GetWorldObject(npcServerContract.NpcObjectId);
+
+            PlayerInstance player;
             switch (npcServerContract.EventName)
             {
-                case EventName.Created:
-                    player.PlayerKnownList().AddToKnownList(npc.ObjectId, npc);
-                    npc.NpcKnownList().AddToKnownList(player.ObjectId, player);
-                    await player.SendPacketAsync(new NpcInfo(npc));
-                    break;
                 case EventName.EffectActionDesire:
                     await npc.SendToKnownPlayers(new SocialAction(npc.ObjectId, npcServerContract.SocialId));
                     break;
                 case EventName.Talked:
+                    player = (PlayerInstance) world.GetWorldObject(npcServerContract.PlayerObjectId);
                     await npc.ShowPage(player, npcServerContract.FnHi);
                     break;
                 case EventName.AddMoveAroundDesire:
                     // If NPC with fixed coord
-                    var x1 = (npc.GetX() + Rnd.Next(300 * 2)) - 300;
-                    var y1 = (npc.GetY() + Rnd.Next(300 * 2)) - 300;
-                    var z1 = npc.GetZ();
-                    LoggerManager.Info("Npc " + npc.GetTemplate().GetStat().Name +  " running: X: " + x1 + " Y: " + y1 + " Z: " + z1);
+                    if (Rnd.Next(15) != 0)
+                    {
+                        //return;
+                    }
+                    var x1 = (npc.SpawnX + Rnd.Next(300 * 2)) - 300;
+                    var y1 = (npc.SpawnY + Rnd.Next(300 * 2)) - 300;
+                    var z1 = npc.SpawnZ;
+
+                    if (npc.CharacterMovement().IsMoving)
+                    {
+                        return;                        
+                    }
+                    
+                    npc.NpcDesire().AddDesire(Desire.MoveToDesire, new Location(x1, y1, z1));
+                    //await npc.SendToKnownPlayers(new CharMoveToLocation(npc));
+                    //LoggerManager.Info("Npc " + npc.GetTemplate().GetStat().Name +  " running: X: " + x1 + " Y: " + y1 + " Z: " + z1);
                     break;
                 case EventName.TeleportRequest:
+                    player = (PlayerInstance) world.GetWorldObject(npcServerContract.PlayerObjectId);
                     await npc.ShowTeleportList(npcServerContract.Html, player); 
                     break;
                 case EventName.TeleportRequested:
+                    player = (PlayerInstance) world.GetWorldObject(npcServerContract.PlayerObjectId);
                     await npc.DoTeleportToLocation(npcServerContract.TeleportList, player); 
                     break;
                 case EventName.CastleGateOpenClose:
+                    player = (PlayerInstance) world.GetWorldObject(npcServerContract.PlayerObjectId);
                     await npc.CastleGateOpenClose(npcServerContract.DoorName, npcServerContract.OpenClose, player);
                     break;
                 case EventName.AddUseSkillDesire:
+                    player = (PlayerInstance) world.GetWorldObject(npcServerContract.PlayerObjectId);
                     await npc.NpcUseSkill().UseSkill(npcServerContract.PchSkillId, player);
                     break;
                 case EventName.ShowSkillList:
+                    player = (PlayerInstance) world.GetWorldObject(npcServerContract.PlayerObjectId);
                     await npc.ShowSkillList(player);
+                    break;
+                case EventName.AddAttackDesire:
+                    LoggerManager.Info("Npc " + npc.GetTemplate().GetStat().Name +  " attack");
                     break;
             }
         }

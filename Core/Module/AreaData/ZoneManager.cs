@@ -18,7 +18,7 @@ namespace Core.Module.AreaData
             _zones.Add(zone);
         }
         
-        public void RevalidateZones(PlayerInstance character)
+        public void RevalidateZones(Character character)
         {
             _zones.ForEach(e =>
             {

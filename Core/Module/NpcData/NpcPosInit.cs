@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Core.Module.ParserEngine;
 using Core.Module.WorldData;
 using Helpers;
@@ -57,6 +58,8 @@ namespace Core.Module.NpcData
                             {
                                 var npcInstance = new NpcInstance(_objectIdInit.NextObjectId(), npcTemplate);
                                 npcInstance.OnSpawn(x, y, z, h);
+
+                                InitNpcInNpcService(npcInstance);
                             }
                         }
 
@@ -107,11 +110,15 @@ namespace Core.Module.NpcData
                                     y += radiusY;
                                 }
                                 
-                                foreach (var item in lst.OrderBy(x => Rnd.Next()).Take(npcBegin.Total))
+                                foreach (var item in lst.OrderBy(x => Rnd.Next()).Take(1))
                                 {
                                     var npcInstance = new NpcInstance(_objectIdInit.NextObjectId(), npcTemplate);
                                     npcInstance.CharacterStatus().CurrentHp = npcTemplate.GetStat().OrgHp;
-                                    npcInstance.OnSpawn(item["x"], item["y"], item["z"], (int)npcTemplate.GetStat().CollisionHeight[0]);
+                                    npcInstance.SpawnX = item["x"];
+                                    npcInstance.SpawnY = item["y"];
+                                    npcInstance.SpawnZ = item["z"];
+                                    npcInstance.OnSpawn(item["x"], item["y"], item["z"], Rnd.Next(61794));
+                                    InitNpcInNpcService(npcInstance);
                                 }
                             }
                         }
@@ -126,6 +133,65 @@ namespace Core.Module.NpcData
             {
                 LoggerManager.Error(GetType().Name + ": " + ex.Message);
             }
+        }
+
+        private async Task InitNpcInNpcService(NpcInstance npcInstance)
+        {
+            
+            var npcServerRequest = new NpcServerRequest
+            {
+                EventName = EventName.NoDesire,
+                NpcName = npcInstance.GetTemplate().GetStat().Name,
+                NpcType = npcInstance.GetTemplate().GetStat().Type,
+                NpcObjectId = npcInstance.ObjectId,
+                Level = npcInstance.GetTemplate().GetStat().Level,
+                Race = npcInstance.GetTemplate().GetStat().Race,
+                CanBeAttacked = npcInstance.GetTemplate().GetStat().CanBeAttacked == 1
+            };
+            
+            var npcAi = npcInstance.GetTemplate().GetStat().NpcAi;
+            npcAi.TryGetValue("MoveAroundSocial", out var moveAroundSocial);
+            npcAi.TryGetValue("MoveAroundSocial1", out var moveAroundSocial1);
+            npcAi.TryGetValue("MoveAroundSocial2", out var moveAroundSocial2);
+            npcAi.TryGetValue("fnHi", out var fnHi);
+            npcAi.TryGetValue("fnNobless", out var fnNobless);
+            npcAi.TryGetValue("fnNoNobless", out var fnNoNobless);
+            npcAi.TryGetValue("fnNoNoblessItem", out var fnNoNoblessItem);
+            npcAi.TryGetValue("fnYouAreChaotic", out var fnYouAreChaotic);
+            
+            if (moveAroundSocial != null)
+            {
+                npcServerRequest.MoveAroundSocial = Convert.ToInt16(moveAroundSocial);
+            }
+            if (moveAroundSocial1 != null)
+            {
+                npcServerRequest.MoveAroundSocial1 = Convert.ToInt16(moveAroundSocial1);
+            }
+            if (moveAroundSocial2 != null)
+            {
+                npcServerRequest.MoveAroundSocial2 = Convert.ToInt16(moveAroundSocial2);
+            }
+            if (fnHi != null)
+            {
+                npcServerRequest.FnHi = fnHi;
+            }
+            if (fnNobless != null)
+            {
+                npcServerRequest.FnNobless = fnNobless;
+            }
+            if (fnNoNobless != null)
+            {
+                npcServerRequest.FnNoNobless = fnNoNobless;
+            }
+            if (fnNoNoblessItem != null)
+            {
+                npcServerRequest.FnNoNoblessItem = fnNoNoblessItem;
+            }
+            if (fnYouAreChaotic != null)
+            {
+                npcServerRequest.FnYouAreChaotic = fnYouAreChaotic;
+            }
+            await Initializer.SendMessageToNpcService(npcServerRequest);
         }
 
         public IList<NpcMakerBegin> GetMakerList()

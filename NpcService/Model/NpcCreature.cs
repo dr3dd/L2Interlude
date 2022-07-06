@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Helpers;
+using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 using NpcService.Ai;
 
@@ -16,19 +18,38 @@ namespace NpcService.Model
         public int NpcObjectId { get; set; }
         public int PlayerObjectId { get; set; }
         public int Race { get; set; }
+        public int Level { get; set; }
+        public bool CanBeAttacked { get; set; }
         private readonly Desire _desire;
         private readonly NpcService _npcService;
         private int _additionalTime; 
+        private CancellationTokenSource _cts;
+        private ActionDesire _currentDesire;
+        public bool IsActiveNpc { get; set; }
+        private Task _aiTask;
         public NpcCreature(DefaultNpc defaultNpc, NpcServerRequest npcServerRequest, IServiceProvider serviceProvider)
         {
             NpcObjectId = npcServerRequest.NpcObjectId;
             PlayerObjectId = npcServerRequest.PlayerObjectId;
             _npcService = serviceProvider.GetRequiredService<NpcService>();
-            _desire = new Desire(NpcObjectId, PlayerObjectId, _npcService);
+            _desire = new Desire(this, PlayerObjectId, _npcService);
             _defaultNpc = defaultNpc;
             _tasks = new ConcurrentDictionary<int, Task>();
             Sm = this;
+            CanBeAttacked = npcServerRequest.CanBeAttacked;
             Race = 1;
+            Level = npcServerRequest.Level;
+            StartAiTask();
+        }
+        
+        public void SetDesire(ActionDesire desire)
+        {
+            _currentDesire = desire;
+        }
+
+        public ActionDesire GetCurrentDesire()
+        {
+            return _currentDesire;
         }
         
         public void ShowPage(Talker talker, string fnHi)
@@ -37,7 +58,7 @@ namespace NpcService.Model
             {
                 EventName = EventName.Talked,
                 NpcObjectId = NpcObjectId,
-                PlayerObjectId = PlayerObjectId,
+                PlayerObjectId = talker.ObjectId,
                 FnHi = fnHi
             };
             _npcService.SendMessageAsync(npcServiceResponse);
@@ -45,17 +66,26 @@ namespace NpcService.Model
         
         public void AddEffectActionDesire (NpcCreature sm, int actionId, int moveAround, int desire)
         {
+            if (!IsActiveNpc)
+            {
+                return;
+            }
             _additionalTime = moveAround;
             _desire.AddEffectActionDesire(sm, actionId, moveAround, desire);
         }
 
         public void AddMoveAroundDesire(int moveAround, int desire)
         {
+            if (!IsActiveNpc)
+            {
+                return;
+            }
             _additionalTime = moveAround * 1000;
-            _desire.AddMoveAroundDesire(moveAround, desire);
+            ScheduleAtFixedRate(() =>
+            {
+                _desire.AddMoveAroundDesire(moveAround, desire);
+            }, _additionalTime, _additionalTime, _cts.Token);
         }
-            
-            
         
         public int OwnItemCount(Talker talker, int friendShip1)
         {
@@ -77,6 +107,39 @@ namespace NpcService.Model
             _additionalTime = 0;
         }
         
+        private void StartAiTask()
+        {
+            if (!CanBeAttacked)
+            {
+                //return;
+            }
+            _cts = new CancellationTokenSource();
+            _aiTask = ScheduleAtFixedRate(Run, 1000, 1000, _cts.Token);
+        }
+        
+        private void StopAiTask()
+        {
+            if (!_aiTask.IsCanceled)
+            {
+                _cts.Cancel();
+            }
+        }
+
+        
+        private void Run()
+        {
+            if (!IsActiveNpc)
+            {
+                return;
+            }
+
+            if (_currentDesire == ActionDesire.AddEffectActionDesire)
+            {
+                var d = 1;
+            }
+            LoggerManager.Info("CurrentDesire: " + _currentDesire);
+        }
+        
         private Task ScheduleAtFixed(Action action, int delay)
         {
             return Task.Run( async () =>
@@ -84,6 +147,34 @@ namespace NpcService.Model
                 await Task.Delay(delay);
                 action.Invoke();
             });
+        }
+        
+        public Task ScheduleAtFixedRate(Action action, int delay, int period, CancellationToken token)
+        {
+            try
+            {
+                return Task.Run(async () =>
+                {
+                    try
+                    {
+                        using var timer = new TaskTimer(period).CancelWith(token).Start(delay);
+                        foreach (var task in timer)
+                        {
+                            await task;
+                            action.Invoke();
+                        }
+                    }
+                    catch (TaskCanceledException)
+                    {
+
+                    }
+                }, token);
+            }
+            catch (Exception ex)
+            {
+                LoggerManager.Error("ScheduleAtFixedRate: " + ex.Message);
+                throw;
+            }
         }
 
         public async Task Teleport(Talker talker, IList<TeleportList> position, string shopName, string empty, string s,
@@ -105,7 +196,7 @@ namespace NpcService.Model
             {
                 EventName = EventName.TeleportRequest,
                 NpcObjectId = NpcObjectId,
-                PlayerObjectId = PlayerObjectId,
+                PlayerObjectId = talker.ObjectId,
                 Html = "<html><body>&$556;<br><br>" + html + "</body></html>"
             };
             await _npcService.SendMessageAsync(npcServiceResponse);
@@ -122,6 +213,11 @@ namespace NpcService.Model
             return false;
         }
 
+        /// <summary>
+        /// TODO possible bug with PlayerObjectId
+        /// </summary>
+        /// <param name="doorName1"></param>
+        /// <param name="p1"></param>
         public void CastleGateOpenClose2(string doorName1, int p1)
         {
             var npcServiceResponse = new NpcServerResponse
@@ -183,6 +279,11 @@ namespace NpcService.Model
         public void ShowGrowSkillMessage(Talker talker, int skillNameId, string empty)
         {
             throw new NotImplementedException();
+        }
+
+        public void AddAttackDesire(Talker attacker, int actionId, int desire)
+        {
+            _desire.AddAttackDesire(attacker, 1, desire);
         }
     }
 }

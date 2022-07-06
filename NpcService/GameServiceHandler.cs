@@ -32,17 +32,23 @@ namespace NpcService
             try
             {
                 var defaultNpc = HandleNpc(npcServerRequest, npcService);
+
+                if (npcServerRequest.EventName == EventName.NoDesire)
+                {
+                    defaultNpc.NoDesire();
+                }
+                
                 if (npcServerRequest.EventName == EventName.Created)
                 {
                     defaultNpc.Created();
+                    defaultNpc.NoDesire();
 
                     var npcServiceResponse = new NpcServerResponse
                     {
                         EventName = EventName.Created,
                         NpcObjectId = npcServerRequest.NpcObjectId,
-                        PlayerObjectId = npcServerRequest.PlayerObjectId
                     };
-                    await npcService.SendMessageAsync(npcServiceResponse);
+                    //await npcService.SendMessageAsync(npcServiceResponse);
                     return;
                 }
                 if (npcServerRequest.EventName == EventName.Talked)
@@ -103,6 +109,14 @@ namespace NpcService
                     if (defaultNpc is GuildCoach guildCoach)
                     {
                         guildCoach.LearnSkillRequested(defaultNpc.Talker);
+                    }
+                }
+
+                if (npcServerRequest.EventName == EventName.Attacked)
+                {
+                    if (defaultNpc is WarriorParameter warriorParameter)
+                    {
+                        warriorParameter.Attacked(defaultNpc.Talker, 20);
                     }
                 }
                 
@@ -183,6 +197,8 @@ namespace NpcService
             {
                 defaultNpc.MySelf = new NpcCreature(defaultNpc, npcServerRequest, _serviceProvider);
             }
+
+            defaultNpc.MySelf.IsActiveNpc = npcServerRequest.IsActiveNpc;
 
             defaultNpc.Talker = new Talker(npcServerRequest.PlayerObjectId, 0);
 

@@ -1,5 +1,6 @@
 ﻿using Core.Module.CharacterData;
 using Core.Module.Player;
+using L2Logger;
 
 namespace Core.NetworkPacket.ServerPacket
 {
@@ -17,7 +18,7 @@ namespace Core.NetworkPacket.ServerPacket
             _x = character.GetX();
             _y = character.GetY();
             _z = character.GetZ();
-            _heading = 0; //character.Heading;
+            _heading = character.Heading;
         }
         
         public override void Write()

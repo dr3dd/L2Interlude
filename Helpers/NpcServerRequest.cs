@@ -9,6 +9,7 @@ namespace Helpers
         public string NpcType { get; set; }
         public int PlayerObjectId { get; set; }
         public string Race { get; set; }
+        public int Level { get; set; }
         public int NpcObjectId { get; set; }
         public short MoveAroundSocial { get; set; }
         public short MoveAroundSocial1 { get; set; }
@@ -22,5 +23,7 @@ namespace Helpers
         public int TeleportId { get; set; }
         public int AskId { get; set; }
         public int ReplyId { get; set; }
+        public bool CanBeAttacked { get; set; }
+        public bool IsActiveNpc { get; set; }
     }
 }
