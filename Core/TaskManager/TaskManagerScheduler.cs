@@ -45,12 +45,49 @@ namespace Core.TaskManager
             }
         }
         
+        public static Task ScheduleAtFixedRate(Func<Task> action, int delay, int period)
+        {
+            try
+            {
+                return Task.Run(async () =>
+                {
+                    try
+                    {
+                        using var timer = new TaskTimer(period).Start(delay);
+                        foreach (var task in timer)
+                        {
+                            await task;
+                            await action.Invoke();
+                        }
+                    }
+                    catch (TaskCanceledException)
+                    {
+
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                LoggerManager.Error("ScheduleAtFixedRate: " + ex.Message);
+                throw;
+            }
+        }
+        
         public static void Schedule(Action action, int delay)
         {
             Task.Run(async () =>
             {
                 await Task.Delay(delay);
                 action.Invoke();
+            });
+        }
+        
+        public static void Schedule(Func<Task> func, int delay)
+        {
+            Task.Run(async () =>
+            {
+                await Task.Delay(delay);
+                await func.Invoke();
             });
         }
     }

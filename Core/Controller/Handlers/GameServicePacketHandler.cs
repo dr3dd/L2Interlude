@@ -25,6 +25,7 @@ namespace Core.Controller.Handlers
             _clientPackets.TryAdd(0x04, typeof(ActionRequest));
             _clientPackets.TryAdd(0x08, typeof(AuthLogin));
             _clientPackets.TryAdd(0x09, typeof(Logout));
+            _clientPackets.TryAdd(0x0A, typeof(AttackRequest));
             _clientPackets.TryAdd(0x11, typeof(RequestUnEquipItem));
             _clientPackets.TryAdd(0x14, typeof(UseItem));
             _clientPackets.TryAdd(0x2F, typeof(RequestMagicSkillUse));

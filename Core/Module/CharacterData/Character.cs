@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Core.Module.ItemData;
 using Core.Module.NpcData;
 using Core.Module.Player;
 using Core.Module.WorldData;
@@ -15,16 +16,25 @@ namespace Core.Module.CharacterData
         private readonly CharacterEffect _characterEffect;
         private readonly CharacterMovement _characterMovement;
         private readonly CharacterZone _characterZone;
+        private readonly CharacterPhysicalAttack _characterPhysicalAttack;
+        protected CharacterNotifyEvent _notifyEvent;
+        protected CharacterDesire _desire;
         
         public int Heading { get; set; }
+        public string CharacterName { get; protected set; }
         public abstract int GetMaxHp();
         public abstract int GetMagicalAttack();
         public abstract int GetMagicalDefence();
         public abstract int GetPhysicalDefence();
+        public abstract int GetPhysicalAttackSpeed();
         public CharacterStatus CharacterStatus() => _characterStatus;
         public CharacterEffect CharacterEffect() => _characterEffect;
         public CharacterMovement CharacterMovement() => _characterMovement;
         public CharacterZone CharacterZone() => _characterZone;
+        public CharacterPhysicalAttack PhysicalAttack() => _characterPhysicalAttack;
+        public abstract Weapon GetActiveWeaponItem();
+        public CharacterNotifyEvent CharacterNotifyEvent() => _notifyEvent;
+        public CharacterDesire CharacterDesire() => _desire;
 
         public abstract ICharacterCombat CharacterCombat();
         public abstract ICharacterKnownList CharacterKnownList();
@@ -34,6 +44,9 @@ namespace Core.Module.CharacterData
             _characterEffect = new CharacterEffect(this);
             _characterMovement = new CharacterMovement(this);
             _characterZone = new CharacterZone(this);
+            _characterPhysicalAttack = new CharacterPhysicalAttack(this);
+            _notifyEvent = new CharacterNotifyEvent(this);
+            _desire = new CharacterDesire(this);
         }
 
         public override async Task RequestActionAsync(PlayerInstance playerInstance)
@@ -135,5 +148,20 @@ namespace Core.Module.CharacterData
             }
         }
 
+        public override async Task RequestForcedAttack(PlayerInstance playerInstance)
+        {
+            // Notify AI with AI_INTENTION_ATTACK
+            playerInstance.CharacterDesire().AddDesire(Desire.AttackDesire, this);
+        }
+
+        public virtual Task SendActionFailedPacketAsync()
+        {
+            return Task.CompletedTask;
+        }
+        
+        public virtual Task SendPacketAsync(ServerPacket serverPacket)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

@@ -1,5 +1,8 @@
-﻿namespace Core.Module.ItemData
+﻿using System;
+
+namespace Core.Module.ItemData
 {
+    [Flags]
     public enum WeaponType
     {
         None,
@@ -9,6 +12,7 @@
         Pole,
         Bow,
         DualFist,
+        Dual,
         Etc
     }
 }

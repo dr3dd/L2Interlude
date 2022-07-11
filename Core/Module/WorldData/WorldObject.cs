@@ -9,6 +9,11 @@ namespace Core.Module.WorldData
         private ObjectPosition _position;
         
         public abstract Task RequestActionAsync(PlayerInstance playerInstance);
+
+        public virtual async Task RequestForcedAttack(PlayerInstance playerInstance)
+        {
+            await playerInstance.SendActionFailedPacketAsync();
+        }
         
         public int GetX()
         {

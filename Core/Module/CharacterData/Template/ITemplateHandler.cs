@@ -37,5 +37,7 @@ namespace Core.Module.CharacterData.Template
         int GetBaseGroundLowSpeed();
         IEnumerable<string> GetInitialEquipment();
         Location GetInitialStartPoint();
+        float GetCollisionRadius();
+        float GetCollisionHeight();
     }
 }

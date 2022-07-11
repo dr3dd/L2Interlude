@@ -59,5 +59,16 @@ namespace Core.Module.CharacterData
                     : effectPhysicalAttack.GetPhysicalDefence()));
             return result;
         }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="effects"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static double CalculateAccuracy(IEnumerable<EffectDuration> effects, double result)
+        {
+            return 0;
+        }
     }
 }

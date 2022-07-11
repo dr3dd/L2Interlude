@@ -29,5 +29,7 @@
         public string WeaponType { get; set; }
         public int Critical { get; set; }
         public int AttackSpeed { get; set; }
+        public int ReuseDelay { get; set; }
+        public string CrystalType { get; set; }
     }
 }

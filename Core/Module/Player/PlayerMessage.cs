@@ -13,6 +13,22 @@ namespace Core.Module.Player
             _playerInstance = playerInstance;
         }
         
+        public void SendMessageToPlayerByNpc(int npcId, int damage)
+        {
+            SystemMessage sm = new SystemMessage(SystemMessageId.S1GaveYouS2Dmg);
+            sm.AddNpcName(npcId);
+            sm.AddNumber(damage);
+            _playerInstance.SendPacketAsync(sm);		
+        }
+        
+        public void SendMessageToPlayer(string name, int damage)
+        {
+            SystemMessage sm = new SystemMessage(SystemMessageId.S1GaveYouS2Dmg);
+            sm.AddString(name);
+            sm.AddNumber(damage);
+            _playerInstance.SendPacketAsync(sm);		
+        }
+        
         public async Task SendMessageToPlayerAsync(SkillDataModel skill, int skillId)
         {
             SystemMessage sm = new SystemMessage(SystemMessageId.UseS1);
@@ -61,6 +77,13 @@ namespace Core.Module.Player
                 sm.AddNumber(damage);
                 await _playerInstance.SendPacketAsync(sm);
             }
+        }
+        
+        public async Task SendMessageAsync(string message)
+        {
+            SystemMessage sm = new SystemMessage(SystemMessageId.S1);
+            sm.AddString(message);
+            await _playerInstance.SendPacketAsync(sm);
         }
     }
 }

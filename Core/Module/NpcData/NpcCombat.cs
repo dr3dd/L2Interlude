@@ -39,7 +39,12 @@ namespace Core.Module.NpcData
             var effects = GetNpcEffects();
             return (int) CalculateStats.CalculateMagicalDefence(effects, result);
         }
-        
+
+        public int GetPhysicalAttack()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public int GetPhysicalDefence()
         {
             var baseStat = (int) _npcInstance.GetTemplate().GetStat().BaseDefend;
@@ -50,6 +55,16 @@ namespace Core.Module.NpcData
         private IEnumerable<EffectDuration> GetNpcEffects()
         {
             return _npcInstance.CharacterEffect().GetEffects().Values;
+        }
+
+        public float GetCollisionRadius()
+        {
+            return _npcInstance.GetTemplate().GetStat().CollisionRadius[0];
+        }
+
+        public float GetCollisionHeight()
+        {
+            return _npcInstance.GetTemplate().GetStat().CollisionHeight[0];
         }
 
         public int GetCharacterSpeed()
@@ -70,6 +85,21 @@ namespace Core.Module.NpcData
         public int GetWalkSpeed()
         {
             return (int)_npcInstance.GetTemplate().GetStat().GroundLow[0];
+        }
+
+        public int GetEvasion()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetAccuracy()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetCriticalRate()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

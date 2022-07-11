@@ -36,5 +36,34 @@ namespace Core.Module.CharacterData
         {
             _character.GetWorldRegion().RevalidateZones(_character);
         }
+
+        public bool IsInsideRadius(WorldObject worldObject, int radius, bool checkZ, bool strictCheck)
+        {
+            if (worldObject == null)
+            {
+                return false;
+            }
+            return IsInsideRadius(worldObject.GetX(), worldObject.GetY(), worldObject.GetZ(), radius, checkZ, strictCheck);
+        }
+        
+        private bool IsInsideRadius(int x, int y, int z, int radius, bool checkZ, bool strictCheck)
+        {
+            double dx = x - _character.GetX();
+            double dy = y - _character.GetY();
+            double dz = z - _character.GetZ();
+            if (strictCheck)
+            {
+                if (checkZ)
+                {
+                    return ((dx * dx) + (dy * dy) + (dz * dz)) < (radius * radius);
+                }
+                return ((dx * dx) + (dy * dy)) < (radius * radius);
+            }
+            if (checkZ)
+            {
+                return ((dx * dx) + (dy * dy) + (dz * dz)) <= (radius * radius);
+            }
+            return ((dx * dx) + (dy * dy)) <= (radius * radius);
+        }
     }
 }

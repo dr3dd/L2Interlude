@@ -201,6 +201,8 @@ namespace Core.Module.Player
             var itemWeapon = GetWeapon();
             var weaponAccuracy = itemWeapon.UserItemId == 0 ? 0 : itemWeapon.ItemData.HitModify;
             var result = Math.Sqrt(dexStat) * 6 + _level + weaponAccuracy;
+            var effects = GetPlayerEffects();
+            //result = CalculateStats.CalculateAccuracy(effects, result);
             return (int) result;
         }
 
@@ -236,6 +238,16 @@ namespace Core.Module.Player
             float dexBonus = (_statBonusInit.GetDexBonus(dexStat) + 100) / 100f;
             var result = dexBonus * baseAttackSpeed;
             return (int) result;
+        }
+
+        public float GetCollisionRadius()
+        {
+            return _templateHandler.GetCollisionRadius();
+        }
+
+        public float GetCollisionHeight()
+        {
+            return _templateHandler.GetCollisionHeight();
         }
 
         public int GetCharacterSpeed()
@@ -296,6 +308,15 @@ namespace Core.Module.Player
             float witBonus = (_statBonusInit.GetWitBonus(witStat) + 100) / 100f;
             var result = attackSpeed * witBonus;
             return (int) result;
+        }
+
+        /// <summary>
+        /// GetBaseAttackRange
+        /// </summary>
+        /// <returns></returns>
+        public int GetBaseAttackRange()
+        {
+            return _templateHandler.GetBaseAttackRange();
         }
     }
 }

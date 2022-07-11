@@ -180,6 +180,16 @@ namespace Core.Module.ParserEngine
                         var attackSpeed = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
                         itemData.AttackSpeed = Convert.ToInt32(attackSpeed);
                     }
+                    if (item.StartsWith("reuse_delay"))
+                    {
+                        var reuseDelay = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
+                        itemData.ReuseDelay = Convert.ToInt32(reuseDelay);
+                    }
+                    if (item.StartsWith("crystal_type"))
+                    {
+                        var crystalType = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
+                        itemData.CrystalType = crystalType;
+                    }
                 }
                 _result.AddItem(itemData.Id, itemData);
             }

@@ -8,23 +8,15 @@ using L2Logger;
 
 namespace Core.Module.Player
 {
-    public class PlayerDesire : AbstractDesire
+    public class PlayerDesire : CharacterDesire
     {
         private readonly PlayerInstance _playerInstance;
         private readonly PlayerDesireCast _playerDesireCast;
-        private bool _clientMoving;
-        private int _clientMovingToPawnOffset;
         private int _moveToPawnTimeout;
         public PlayerDesire(PlayerInstance playerInstance) : base(playerInstance)
         {
             _playerInstance = playerInstance;
             _playerDesireCast = new PlayerDesireCast(_playerInstance);
-        }
-        protected override async Task MoveToDesireAsync(Location destination)
-        {
-            // Move the actor to Location (x,y,z) server side AND client side by sending Server->Client packet CharMoveToLocation (broadcast)
-            ChangeDesire(Desire.MoveToDesire);
-            await MoveToAsync(destination.GetX(), destination.GetY(), destination.GetZ()).ContinueWith(HandleException);
         }
 
         protected override async Task CastDesireAsync(SkillDataModel skill)
@@ -82,7 +74,7 @@ namespace Core.Module.Player
             }
         }
 
-        private void HandleException(Task obj)
+        protected internal void HandleException(Task obj)
         {
             if (obj.IsFaulted)
             {
@@ -90,16 +82,6 @@ namespace Core.Module.Player
             }
         }
         
-        private async Task MoveToAsync(int x, int y, int z)
-        {
-            // Set AI movement data
-            _clientMoving = true;
-            _clientMovingToPawnOffset = 0;
-            _playerInstance.CharacterMovement().MoveToLocation(x, y, z, 0);
-            await _playerInstance.SendPacketAsync(new CharMoveToLocation(_playerInstance));
-            await _playerInstance.SendToKnownPlayers(new CharMoveToLocation(_playerInstance));
-        }
-
         public bool IsCastingNow()
         {
             return _playerDesireCast.IsCastingNow();
@@ -110,14 +92,15 @@ namespace Core.Module.Player
             return _playerDesireCast.IsSkillDisabled(skill);
         }
         
-        protected override async Task IntentionAttackAsync(Character target)
+        private async Task ProceedAttackAsync()
         {
-            if (GetDesire() == Desire.AttackDesire)
+            Character target = AttackTarget;
+            if (await MaybeMoveToPawnAsync(target, _playerInstance.PlayerCombat().GetBaseAttackRange()))
             {
-                await _playerInstance.SendActionFailedPacketAsync();
                 return;
             }
-            ChangeDesire(Desire.AttackDesire);
+            LoggerManager.Info($"Start Attack Target: {target.ObjectId}");
+            await _playerInstance.PhysicalAttack().DoAttackAsync(target).ContinueWith(HandleException);
         }
     }
 }

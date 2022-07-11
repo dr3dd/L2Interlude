@@ -17,7 +17,9 @@ namespace Core.Module.ItemData
         public int AttackSpeed { get; }
         public float HitModify { get; } //increase or decrease accuracy
         public int Critical { get; }
-        
+        public int ReuseDelay { get; }
+        public CrystalType CrystalType { get; }
+
         public ItemDataModel(KeyValuePair<object, object> keyValuePair)
         {
             ItemId = (int) keyValuePair.Key;
@@ -33,6 +35,8 @@ namespace Core.Module.ItemData
             AttackSpeed = itemBegin.AttackSpeed;
             HitModify = itemBegin.HitModify;
             Critical = itemBegin.Critical;
+            ReuseDelay = itemBegin.ReuseDelay;
+            CrystalType = GetCrystalType(itemBegin.CrystalType);
         }
 
         private ItemType GetItemType(string itemType)
@@ -87,6 +91,7 @@ namespace Core.Module.ItemData
                 "pole" => WeaponType.Pole,
                 "bow" => WeaponType.Bow,
                 "dualfist" => WeaponType.DualFist,
+                "dual" => WeaponType.Dual,
                 "etc" => WeaponType.Etc,
                 _ => WeaponType.None
             };
@@ -106,6 +111,20 @@ namespace Core.Module.ItemData
                 "action_fishingshot" => ActionType.ActionFishingShot,
                 "action_skill_maintain" => ActionType.ActionSkillMaintain,
                 _ => ActionType.ActionNone
+            };
+        }
+
+        private CrystalType GetCrystalType(string crystalType)
+        {
+            return crystalType switch
+            {
+                "none" => CrystalType.None,
+                "d" => CrystalType.D,
+                "c" => CrystalType.C,
+                "b" => CrystalType.B,
+                "a" => CrystalType.A,
+                "s" => CrystalType.S,
+                _ => CrystalType.None
             };
         }
 

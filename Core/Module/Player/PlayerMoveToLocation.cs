@@ -28,11 +28,13 @@ namespace Core.Module.Player
                 return;
             }
             //todo move to validator
-            if (_playerInstance.PlayerDesire().IsCastingNow())
+            /*
+            if (_playerInstance.CharacterDesire().IsCastingNow())
             {
                 await _playerInstance.SendActionFailedPacketAsync();
                 return;
             }
+            */
             
             if ((targetX == originX) && (targetY == originY) && (targetZ == originZ))
             {
@@ -51,7 +53,7 @@ namespace Core.Module.Player
 
             //var loc = _geoEngine.GetValidLocation(originX, originY, originZ, targetX, targetY, targetZ);
             //var d =_geoEngine.FindPath(originX, originY, originZ, targetX, targetY, targetZ);
-            _playerInstance.PlayerDesire().AddDesire(Desire.MoveToDesire, new Location(targetX, targetY, targetZ));
+            _playerInstance.CharacterDesire().AddDesire(Desire.MoveToDesire, new Location(targetX, targetY, targetZ));
         }
         
 

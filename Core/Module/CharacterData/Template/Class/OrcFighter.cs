@@ -10,6 +10,7 @@ namespace Core.Module.CharacterData.Template.Class
         private readonly IDictionary<byte, float> _cpTable;
         private readonly IDictionary<byte, float> _hpTable;
         private readonly IDictionary<byte, float> _mpTable;
+        private readonly IList<float> _collision; //collision Radius, Height
 
         public OrcFighter(PcParameterInit pcParameter)
         {
@@ -20,6 +21,7 @@ namespace Core.Module.CharacterData.Template.Class
             _cpTable = (IDictionary<byte, float>) fighterCp;
             _hpTable = (IDictionary<byte, float>) fighterHp;
             _mpTable = (IDictionary<byte, float>) fighterMp;
+            _collision = new List<float>{ 11f, 28f };
         }
 
         public byte GetClassId()
@@ -43,6 +45,14 @@ namespace Core.Module.CharacterData.Template.Class
         public float GetMpBegin(byte level)
         {
             return _mpTable[level];
+        }
+        public float GetCollisionRadius()
+        {
+            return _collision[0];
+        }
+        public float GetCollisionHeight()
+        {
+            return _collision[1];
         }
     }
 }

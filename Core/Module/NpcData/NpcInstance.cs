@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Core.Module.CharacterData;
+using Core.Module.ItemData;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
 using Helpers;
@@ -15,6 +16,7 @@ namespace Core.Module.NpcData
         private readonly NpcCombat _npcCombat;
         private readonly NpcStatus _npcStatus;
         private readonly NpcDesire _npcDesire;
+        public readonly int NpcId;
         public readonly int NpcHashId;
         
         public int SpawnX { get; set; }
@@ -25,6 +27,8 @@ namespace Core.Module.NpcData
         {
             ObjectId = objectId;
             NpcHashId = npcTemplateInit.GetStat().Id + 1000000;
+            CharacterName = npcTemplateInit.GetStat().Name;
+            NpcId = npcTemplateInit.GetStat().Id;
             _npcKnownList = new NpcKnownList(this);
             _npcUseSkill = new NpcUseSkill(this);
             _npcTemplate = npcTemplateInit;
@@ -34,6 +38,11 @@ namespace Core.Module.NpcData
         }
 
         public NpcUseSkill NpcUseSkill() => _npcUseSkill;
+        public override Weapon GetActiveWeaponItem()
+        {
+            throw new NotImplementedException();
+        }
+
         public override ICharacterCombat CharacterCombat() => _npcCombat;
         public override ICharacterKnownList CharacterKnownList() => _npcKnownList;
         public NpcTemplateInit GetTemplate() => _npcTemplate;
@@ -53,7 +62,7 @@ namespace Core.Module.NpcData
                 if (Math.Abs(playerInstance.GetZ() - GetZ()) < 400) // this max height difference might need some tweaking
                 {
                     // Set the PlayerInstance Intention to AI_INTENTION_ATTACK
-                    playerInstance.PlayerDesire().AddDesire(Desire.AttackDesire, this);
+                    playerInstance.CharacterDesire().AddDesire(Desire.AttackDesire, this);
                 }
             }
             var npcServerRequest = new NpcServerRequest
@@ -130,6 +139,11 @@ namespace Core.Module.NpcData
         public override int GetPhysicalDefence()
         {
             return _npcCombat.GetPhysicalDefence();
+        }
+
+        public override int GetPhysicalAttackSpeed()
+        {
+            throw new NotImplementedException();
         }
 
         public override async Task RequestActionAsync(PlayerInstance playerInstance)

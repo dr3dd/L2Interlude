@@ -149,7 +149,7 @@ namespace Core.Module.Player
             await _characterRepository.UpdateCharacterAsync(entity);
         }
 
-        private void EquipCharacter(CharacterEntity entity, ItemDataModel item, int userItemId)
+        private void EquipCharacter(CharacterEntity entity, ItemDataAbstract item, int userItemId)
         {
             if (!IsEquippable(item)) return;
 
@@ -215,12 +215,12 @@ namespace Core.Module.Player
             }
         }
 
-        private bool IsEquippable(ItemDataModel item)
+        private bool IsEquippable(ItemDataAbstract item)
         {
             return item.ActionType == ActionType.ActionEquip;
         }
 
-        private async Task<int> AddItemsToInventory(int characterId, ItemDataModel item)
+        private async Task<int> AddItemsToInventory(int characterId, ItemDataAbstract item)
         {
             return await _itemRepository.AddAsync(new UserItemEntity
             {

@@ -15,7 +15,7 @@ namespace Core.Module.Player.Validators
 
         private bool IsCastingNow(PlayerInstance playerInstance)
         {
-            return playerInstance.PlayerDesire().IsCastingNow();
+            return false; //playerInstance.PlayerDesire().IsCastingNow();
         }
         
         private bool IsSkillDisabled(PlayerInstance playerInstance, SkillDataModel skill)

@@ -23,7 +23,7 @@ namespace Core.Module.Player
                 await _playerInstance.SendActionFailedPacketAsync();
                 return;
             }
-            _playerInstance.PlayerDesire().AddDesire(Desire.CastDesire, skill);
+            _playerInstance.CharacterDesire().AddDesire(Desire.CastDesire, skill);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Core.Module.ItemData
         
         public int UserItemId { get; set; }
         public int ItemId { get; set; }
-        public ItemDataModel ItemData { get; set; }
+        public ItemDataAbstract ItemData { get; set; }
         public int Amount { get; set; }
         public byte Change { get; set; }
 

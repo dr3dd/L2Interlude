@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Core.Controller;
 using Core.Module.CharacterData;
 using Core.Module.CharacterData.Template;
+using Core.Module.ItemData;
 using Core.Module.NpcData;
 using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
@@ -45,6 +46,7 @@ namespace Core.Module.Player
         public PlayerInstance(ITemplateHandler template, PlayerAppearance playerAppearance, IServiceProvider provider, IUnitOfWork unitOfWork)
         {
             ServiceProvider = provider;
+            CharacterName = playerAppearance.CharacterName;
             _templateHandler = template;
             _playerAppearance = playerAppearance;
             _unitOfWork = unitOfWork;
@@ -64,6 +66,7 @@ namespace Core.Module.Player
             _playerZone = new PlayerZone(this);
             _playerTargetAction = new PlayerTargetAction(this);
             _playerKnownList = new PlayerKnownList(this);
+            _notifyEvent = new PlayerNotifyEvent(this);
 
             _worldInit = provider.GetRequiredService<WorldInit>();
         }
@@ -86,6 +89,13 @@ namespace Core.Module.Player
         public PlayerZone PlayerZone() => _playerZone;
         internal PlayerTargetAction PlayerTargetAction() => _playerTargetAction;
         public PlayerAction PlayerAction() => _playerAction;
+        public override Weapon GetActiveWeaponItem()
+        {
+            var itemInstance = PlayerInventory().GetBodyPartBySlotId((int)SlotBitType.RightHand);
+            itemInstance.ItemData ??= new Weapon(0, WeaponType.None);
+            return itemInstance.ItemData as Weapon;
+        }
+
         public override ICharacterCombat CharacterCombat() => _playerCombat;
         public override ICharacterKnownList CharacterKnownList() => _playerKnownList;
 
@@ -99,14 +109,14 @@ namespace Core.Module.Player
             return PlayerLoader(serviceProvider).Load(objectId);
         }
         
-        public Task SendPacketAsync(ServerPacket serverPacket)
+        public override Task SendPacketAsync(ServerPacket serverPacket)
         {
             if (Controller is null)
                 return Task.CompletedTask;
             return Controller.SendPacketAsync(serverPacket);
         }
         
-        public async Task SendActionFailedPacketAsync()
+        public override async Task SendActionFailedPacketAsync()
         {
             await Controller.SendPacketAsync(new ActionFailed());
         }
@@ -207,6 +217,11 @@ namespace Core.Module.Player
             return _playerCombat.GetPhysicalDefence();
         }
 
+        public override int GetPhysicalAttackSpeed()
+        {
+            return _playerCombat.GetPhysicalAttackSpeed();
+        }
+
         private Task<bool> IsTargetSelected(PlayerInstance playerInstance)
         {
             return Task.FromResult(this == playerInstance.PlayerTargetAction().GetTarget());
@@ -221,7 +236,7 @@ namespace Core.Module.Player
                 await playerInstance.SendPacketAsync(new MyTargetSelected(this.ObjectId, 0));
                 return;
             }
-            playerInstance.PlayerDesire().AddDesire(Desire.InteractDesire, this);
+            playerInstance.CharacterDesire().AddDesire(Desire.InteractDesire, this);
         }
 
         public override void SpawnMe(int x, int y, int z)
