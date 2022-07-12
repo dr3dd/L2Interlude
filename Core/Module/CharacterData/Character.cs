@@ -27,6 +27,7 @@ namespace Core.Module.CharacterData
         public abstract int GetMagicalDefence();
         public abstract int GetPhysicalDefence();
         public abstract int GetPhysicalAttackSpeed();
+        public abstract double GetHpRegenRate();
         public CharacterStatus CharacterStatus() => _characterStatus;
         public CharacterEffect CharacterEffect() => _characterEffect;
         public CharacterMovement CharacterMovement() => _characterMovement;

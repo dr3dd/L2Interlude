@@ -1,6 +1,6 @@
 ﻿namespace Core.Module.CharacterData.Template.Race
 {
-    public abstract class Human
+    public abstract class Human : CreatureAbstract
     {
         private const byte RaceId = 0;
 

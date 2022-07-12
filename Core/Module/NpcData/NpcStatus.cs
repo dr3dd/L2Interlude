@@ -13,5 +13,9 @@
         {
             return (int)_npcInstance.GetTemplate().GetStat().OrgHp;
         }
+        public double GetHpRegenRate()
+        {
+            return 1.5f;
+        }
     }
 }

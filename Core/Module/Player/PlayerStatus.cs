@@ -53,6 +53,19 @@ namespace Core.Module.Player
             var menStat =  _playerInstance.TemplateHandler().GetMen();
             return (int) (mpBegin + (mpBegin * _statBonusInit.GetMenBonus(menStat) / 100));
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public double GetHpRegenRate()
+        {
+            var init = _playerInstance.TemplateHandler().GetBaseHpRegen(Level);
+            var conStat = _playerInstance.TemplateHandler().GetCon();
+            var conBonus = (_statBonusInit.GetConBonus(conStat) + 100) / 100f;
+            init *= conBonus;
+            return init;
+        }
 
         private IEnumerable<EffectDuration> GetPlayerEffects()
         {

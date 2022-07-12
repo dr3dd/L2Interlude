@@ -90,6 +90,11 @@ namespace Core.Module.SkillData
             {
                 damage *= 2;
             }
+            //TMP
+            if (crit) 
+            {
+                damage *= 2;
+            }
             // defence modifier depending of the attacker weapon
             var weapon = attacker.GetActiveWeaponItem();
             

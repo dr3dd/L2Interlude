@@ -89,7 +89,7 @@ namespace Core.Module.CharacterData
         /// <returns></returns>
         private bool IsSoulShotCharged(Weapon weapon)
         {
-            return false;
+            return true;
         }
         
         private Weapon GetActiveWeapon() => _character.GetActiveWeaponItem();

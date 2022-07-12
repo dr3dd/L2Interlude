@@ -146,6 +146,11 @@ namespace Core.Module.NpcData
             throw new NotImplementedException();
         }
 
+        public override double GetHpRegenRate()
+        {
+            return _npcStatus.GetHpRegenRate();
+        }
+
         public override async Task RequestActionAsync(PlayerInstance playerInstance)
         {
             if (await IsTargetSelected(playerInstance))

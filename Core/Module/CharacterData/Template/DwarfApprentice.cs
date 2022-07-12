@@ -50,6 +50,12 @@ namespace Core.Module.CharacterData.Template
         {
             InitialEquipment();
             InitialStartPoint();
+            InitialHpRegen();
+        }
+        
+        private void InitialHpRegen()
+        {
+            _baseHpRegen = new List<double> { 6.0, 7.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5 };
         }
         
         private void InitialStartPoint()

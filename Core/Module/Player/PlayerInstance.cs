@@ -201,6 +201,11 @@ namespace Core.Module.Player
         {
             return _playerStatus.GetMaxHp();
         }
+        
+        public override double GetHpRegenRate()
+        {
+            return _playerStatus.GetHpRegenRate();
+        }
 
         public override int GetMagicalAttack()
         {
@@ -229,6 +234,7 @@ namespace Core.Module.Player
 
         public override async Task RequestActionAsync(PlayerInstance playerInstance)
         {
+            if (!await IsTargetSelected(playerInstance))
             if (!await IsTargetSelected(playerInstance))
             {
                 await base.RequestActionAsync(playerInstance);

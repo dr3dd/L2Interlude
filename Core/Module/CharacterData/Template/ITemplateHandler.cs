@@ -39,5 +39,6 @@ namespace Core.Module.CharacterData.Template
         Location GetInitialStartPoint();
         float GetCollisionRadius();
         float GetCollisionHeight();
+        double GetBaseHpRegen(int level);
     }
 }
