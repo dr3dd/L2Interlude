@@ -6,7 +6,7 @@ namespace Core.Module.SkillData.Effects
 {
     public class AttackSpeedByWeapon : Effect
     {
-        public override Task Process(PlayerInstance playerInstance, Character targetInstance)
+        public override Task Process(Character currentInstance, Character targetInstance)
         {
             throw new System.NotImplementedException();
         }

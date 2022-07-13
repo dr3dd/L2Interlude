@@ -8,36 +8,36 @@ namespace Core.Module.SkillData.Helper
 {
     public static class CheckUseSkillHelper
     {
-        public static EffectResult CanPlayerUseSkill(SkillDataModel skill, PlayerInstance playerInstance, Character targetInstance)
+        public static EffectResult CanPlayerUseSkill(SkillDataModel skill, Character currentInstance, Character targetInstance)
         {
             var effectiveRange = skill.EffectiveRange;
             var effectResult = new EffectResult
             {
                 IsNotValid = false
             };
-            if (!CheckIfInRange(effectiveRange, playerInstance, targetInstance))
+            if (!CheckIfInRange(effectiveRange, currentInstance, targetInstance))
             {
                 effectResult.IsNotValid = true;
                 effectResult.SystemMessageId = SystemMessageId.TargetTooFar;
             }
-            if (!CanSeeTarget(playerInstance, targetInstance)) {
+            if (!CanSeeTarget(currentInstance, targetInstance)) {
                 effectResult.IsNotValid = true;
                 effectResult.SystemMessageId = SystemMessageId.CantSeeTarget;
             }
             return effectResult;
         }
 
-        private static bool CheckIfInRange(int effectiveRange, PlayerInstance playerInstance, Character targetInstance)
+        private static bool CheckIfInRange(int effectiveRange, Character currentInstance, Character targetInstance)
         {
-            return CalculateRange.CheckIfInRange(effectiveRange, playerInstance.GetX(), playerInstance.GetY(),
-                playerInstance.GetZ(), 33, targetInstance.GetX(), targetInstance.GetY(), targetInstance.GetZ(), 33,
+            return CalculateRange.CheckIfInRange(effectiveRange, currentInstance.GetX(), currentInstance.GetY(),
+                currentInstance.GetZ(), 33, targetInstance.GetX(), targetInstance.GetY(), targetInstance.GetZ(), 33,
                 true);
         }
 
-        private static bool CanSeeTarget(PlayerInstance playerInstance, Character targetInstance)
+        private static bool CanSeeTarget(Character currentInstance, Character targetInstance)
         {
-            return playerInstance.ServiceProvider.GetRequiredService<GeoEngineInit>().CanSee(playerInstance.GetX(),
-                playerInstance.GetY(), playerInstance.GetZ(), 33,
+            return Initializer.ServiceProvider.GetRequiredService<GeoEngineInit>().CanSee(currentInstance.GetX(),
+                currentInstance.GetY(), currentInstance.GetZ(), 33,
                 targetInstance.GetX(), targetInstance.GetY(), targetInstance.GetZ(), 33
             );
         }

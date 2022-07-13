@@ -40,7 +40,7 @@ namespace Core.Module.NpcData
         {
             await playerInstance.CharacterMovement().StopMoveAsync(new Location(playerInstance.GetX(), playerInstance.GetY(), playerInstance.GetZ(), playerInstance.Heading));
             playerInstance.PlayerAction().SetTeleporting(true);
-            await playerInstance.PlayerTargetAction().RemoveTargetAsync();
+            await playerInstance.CharacterTargetAction().RemoveTargetAsync();
             playerInstance.CharacterKnownList().RemoveMeFromKnownObjects();
             playerInstance.CharacterKnownList().RemoveAllKnownObjects();
             playerInstance.WorldObjectPosition().GetWorldRegion().RemoveFromZones(playerInstance);

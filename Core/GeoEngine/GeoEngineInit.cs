@@ -514,7 +514,7 @@ namespace Core.GeoEngine
 			return goz == gtz ? new Location(tx, ty, gtz) : new Location(ox, oy, oz);
         }
         
-        public bool CanSee(int ox, int oy, int oz, double oheight, int tx, int ty, int tz, double theight)
+        public bool CanSee(int ox, int oy, int oz, float oheight, int tx, int ty, int tz, float theight)
         {
 			// Get origin geodata coordinates.
 			int gox = GetGeoX(ox);

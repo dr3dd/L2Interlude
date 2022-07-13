@@ -19,7 +19,7 @@ namespace Core.NetworkPacket.ClientPacket
 
         public override async Task Execute()
         {
-            await _playerInstance.PlayerTargetAction().CancelTargetAsync(_unselect);
+            await _playerInstance.CharacterTargetAction().CancelTargetAsync(_unselect);
         }
     }
 }

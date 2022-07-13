@@ -15,29 +15,29 @@ namespace Core.Module.SkillData.Effects
             _magicDamage = Convert.ToInt32(param[1]);
             SkillDataModel = skillDataModel;
         }
-        public override async Task Process(PlayerInstance playerInstance, Character targetInstance)
+        public override async Task Process(Character currentInstance, Character targetInstance)
         {
-            var effectResult = CanPlayerUseSkill(playerInstance, targetInstance);
+            var effectResult = CanPlayerUseSkill(currentInstance, targetInstance);
             if (effectResult.IsNotValid)
             {
-                await playerInstance.SendPacketAsync(new SystemMessage(effectResult.SystemMessageId));
+                await currentInstance.SendPacketAsync(new SystemMessage(effectResult.SystemMessageId));
                 return;
             }
             
             var isMagicalCriticalHit = false;
             var isBss = false;
             var isSs = false;
-            var damage = CalculateSkill.CalcMagicDam(playerInstance, targetInstance, _magicDamage, isSs, isBss, isMagicalCriticalHit);
+            var damage = CalculateSkill.CalcMagicDam(currentInstance, targetInstance, _magicDamage, isSs, isBss, isMagicalCriticalHit);
             targetInstance.CharacterStatus().DecreaseCurrentHp(damage);
             await SendStatusUpdate(targetInstance);
             //LoggerManager.Info($"Magic Attack: {damage}"); debug
-            await SendDamageMessage(playerInstance, targetInstance, damage, isMagicalCriticalHit);
+            await SendDamageMessage(currentInstance, targetInstance, damage, isMagicalCriticalHit);
         }
 
-        private async Task SendDamageMessage(PlayerInstance playerInstance, Character targetInstance, double damage,
+        private async Task SendDamageMessage(Character currentInstance, Character targetInstance, double damage,
             bool isMagicalCriticalHit)
         {
-            await playerInstance.PlayerMessage().SendDamageMessageAsync(targetInstance, damage, isMagicalCriticalHit);
+            await CharacterMessage.SendDamageMessageAsync(currentInstance, targetInstance, damage, isMagicalCriticalHit);
         }
 
     }

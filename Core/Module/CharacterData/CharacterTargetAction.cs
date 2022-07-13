@@ -2,16 +2,16 @@
 using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
 
-namespace Core.Module.Player
+namespace Core.Module.CharacterData
 {
-    internal class PlayerTargetAction
+    public class CharacterTargetAction
     {
         private WorldObject _currentTarget;
-        private readonly PlayerInstance _playerInstance;
+        private readonly Character _character;
 
-        public PlayerTargetAction(PlayerInstance playerInstance)
+        public CharacterTargetAction(Character character)
         {
-            _playerInstance = playerInstance;
+            _character = character;
         }
 
         public WorldObject GetTarget()
@@ -19,9 +19,9 @@ namespace Core.Module.Player
             return _currentTarget;
         }
 
-        public void SetTarget(WorldObject playerInstance)
+        public void SetTarget(WorldObject character)
         {
-            _currentTarget = playerInstance;
+            _currentTarget = character;
         }
         
         public async Task CancelTargetAsync(int unselect)
@@ -38,7 +38,7 @@ namespace Core.Module.Player
         
         public async Task RemoveTargetAsync()
         {
-            await _playerInstance.SendPacketAsync(new TargetUnselected(_playerInstance));
+            await _character.SendPacketAsync(new TargetUnselected(_character));
             _currentTarget = null;
         }
     }

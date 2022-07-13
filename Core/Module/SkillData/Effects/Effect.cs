@@ -20,7 +20,7 @@ namespace Core.Module.SkillData.Effects
         public SkillDataModel SkillDataModel { get; protected set; }
         public bool IsModPer { get; protected set; }
 
-        public abstract Task Process(PlayerInstance playerInstance, Character targetInstance);
+        public abstract Task Process(Character currentInstance, Character targetInstance);
         
         protected async Task StartEffectTask(int duration, Character targetInstance)
         {
@@ -89,9 +89,9 @@ namespace Core.Module.SkillData.Effects
         /// <param name="playerInstance"></param>
         /// <param name="targetInstance"></param>
         /// <returns></returns>
-        protected EffectResult CanPlayerUseSkill(PlayerInstance playerInstance, Character targetInstance)
+        protected EffectResult CanPlayerUseSkill(Character currentInstance, Character targetInstance)
         {
-            return CheckUseSkillHelper.CanPlayerUseSkill(SkillDataModel, playerInstance, targetInstance);
+            return CheckUseSkillHelper.CanPlayerUseSkill(SkillDataModel, currentInstance, targetInstance);
         }
         
         protected async Task SendStatusUpdate(Character targetInstance)

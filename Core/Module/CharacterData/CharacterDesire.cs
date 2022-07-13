@@ -8,8 +8,11 @@ namespace Core.Module.CharacterData
 {
     public class CharacterDesire : AbstractDesire
     {
+        private readonly CharacterDesireCast _characterDesireCast;
+        public CharacterDesireCast DesireCast() => _characterDesireCast;
         public CharacterDesire(Character character) : base(character)
         {
+            _characterDesireCast = new CharacterDesireCast(character);
         }
         
         protected override async Task MoveToDesireAsync(Location destination)
@@ -26,9 +29,10 @@ namespace Core.Module.CharacterData
             await MoveToAsync(destination.GetX(), destination.GetY(), destination.GetZ()).ContinueWith(HandleException);
         }
 
-        protected override Task CastDesireAsync(SkillDataModel arg0)
+        protected override async Task CastDesireAsync(SkillDataModel skill)
         {
-            throw new System.NotImplementedException();
+            ChangeDesire(Desire.CastDesire);
+            await _characterDesireCast.DoCastAsync(skill);
         }
 
         protected override Task IntentionInteractAsync(WorldObject worldObject)
@@ -81,9 +85,10 @@ namespace Core.Module.CharacterData
 			
                 StopFollow();
 
+                await CharacterMessage.SendMessageAsync(_character, "DEBUG: Hello dr3dd");
                 if (_character is PlayerInstance instance)
                 {
-                    await instance.PlayerMessage().SendMessageAsync("DEBUG: Hello dr3dd");
+                    //await instance.PlayerMessage().SendMessageAsync("DEBUG: Hello dr3dd");
                 }
 			
                 // Launch the Think Event

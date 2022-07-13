@@ -50,8 +50,8 @@ namespace Helpers
             return Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2);
         }
         
-        public static bool CheckIfInRange(int range, int origX, int origY, int origZ, int origCollisionRadius, int targetX,
-            int targetY, int targetZ, int targetCollisionRadius, bool includeZAxis)
+        public static bool CheckIfInRange(int range, int origX, int origY, int origZ, float origCollisionRadius, int targetX,
+            int targetY, int targetZ, float targetCollisionRadius, bool includeZAxis)
         {
             if (range == -1)
             {

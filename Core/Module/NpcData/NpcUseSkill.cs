@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Module.CharacterData;
 using Core.Module.Player;
 using Core.Module.SkillData;
 using Core.NetworkPacket.ServerPacket;
@@ -32,7 +33,7 @@ namespace Core.Module.NpcData
             short reuseDelay = (short)(skill.ReuseDelay * 1000);
             await HandleMagicSkill(skill, player, hitTime);
             await SendToKnownListAsync(skill, player, hitTime, reuseDelay);
-            await player.PlayerMessage().SendMessageToPlayerAsync(skill, skillId);
+            await CharacterMessage.SendMessageToPlayerAsync(player, skill, skillId);
             await player.SendUserInfoAsync();
         }
         

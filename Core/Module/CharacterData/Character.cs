@@ -17,6 +17,7 @@ namespace Core.Module.CharacterData
         private readonly CharacterMovement _characterMovement;
         private readonly CharacterZone _characterZone;
         private readonly CharacterPhysicalAttack _characterPhysicalAttack;
+        private readonly CharacterTargetAction _characterTargetAction;
         protected CharacterNotifyEvent _notifyEvent;
         protected CharacterDesire _desire;
         
@@ -36,6 +37,7 @@ namespace Core.Module.CharacterData
         public abstract Weapon GetActiveWeaponItem();
         public CharacterNotifyEvent CharacterNotifyEvent() => _notifyEvent;
         public CharacterDesire CharacterDesire() => _desire;
+        internal CharacterTargetAction CharacterTargetAction() => _characterTargetAction;
 
         public abstract ICharacterCombat CharacterCombat();
         public abstract ICharacterKnownList CharacterKnownList();
@@ -48,12 +50,13 @@ namespace Core.Module.CharacterData
             _characterPhysicalAttack = new CharacterPhysicalAttack(this);
             _notifyEvent = new CharacterNotifyEvent(this);
             _desire = new CharacterDesire(this);
+            _characterTargetAction = new CharacterTargetAction(this);
         }
 
         public override async Task RequestActionAsync(PlayerInstance playerInstance)
         {
             // Set the target of the PlayerInstance player
-            playerInstance.PlayerTargetAction().SetTarget(this);
+            playerInstance.CharacterTargetAction().SetTarget(this);
             await playerInstance.SendPacketAsync(new ValidateLocation(this));
         }
         

@@ -27,14 +27,6 @@ namespace Core.Module.Player
                 await _playerInstance.SendActionFailedPacketAsync();
                 return;
             }
-            //todo move to validator
-            /*
-            if (_playerInstance.CharacterDesire().IsCastingNow())
-            {
-                await _playerInstance.SendActionFailedPacketAsync();
-                return;
-            }
-            */
             
             if ((targetX == originX) && (targetY == originY) && (targetZ == originZ))
             {

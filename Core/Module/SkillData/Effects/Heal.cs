@@ -18,12 +18,12 @@ namespace Core.Module.SkillData.Effects
             SkillDataModel = skillDataModel;
         }
         
-        public override async Task Process(PlayerInstance playerInstance, Character targetInstance)
+        public override async Task Process(Character currentInstance, Character targetInstance)
         {
-            var effectResult = CanPlayerUseSkill(playerInstance, targetInstance);
+            var effectResult = CanPlayerUseSkill(currentInstance, targetInstance);
             if (effectResult.IsNotValid)
             {
-                await playerInstance.SendPacketAsync(new SystemMessage(effectResult.SystemMessageId));
+                await currentInstance.SendPacketAsync(new SystemMessage(effectResult.SystemMessageId));
                 return;
             }
             var heal = (_healPoint + Math.Sqrt(targetInstance.GetMagicalAttack()));

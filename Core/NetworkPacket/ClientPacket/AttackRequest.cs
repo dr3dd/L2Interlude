@@ -33,16 +33,16 @@ namespace Core.NetworkPacket.ClientPacket
         public override async Task Execute()
         {
             WorldObject target;
-            if (_playerInstance.PlayerTargetAction().GetTarget().ObjectId == _objectId)
+            if (_playerInstance.CharacterTargetAction().GetTarget().ObjectId == _objectId)
             {
-                target = _playerInstance.PlayerTargetAction().GetTarget();
+                target = _playerInstance.CharacterTargetAction().GetTarget();
             }
             else
             {
                 target = GetWorldObject();
             }
 
-            if (_playerInstance.PlayerTargetAction().GetTarget().ObjectId == _playerInstance.ObjectId)
+            if (_playerInstance.CharacterTargetAction().GetTarget().ObjectId == _playerInstance.ObjectId)
             {
                 await _playerInstance.SendActionFailedPacketAsync();
             }

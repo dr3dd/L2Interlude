@@ -23,7 +23,6 @@ namespace Core.Module.Player
         private readonly ITemplateHandler _templateHandler;
         private static PlayerLoader _playerLoader;
         private readonly PlayerMoveToLocation _toLocation;
-        private readonly PlayerDesire _playerDesire;
         private readonly PlayerStatus _playerStatus;
         private readonly PlayerCombat _playerCombat;
         private readonly PlayerInventory _playerInventory;
@@ -31,9 +30,7 @@ namespace Core.Module.Player
         private readonly PlayerSkill _playerSkill;
         private readonly PlayerEffect _playerEffect;
         private readonly PlayerSkillMagic _playerSkillMagic;
-        private readonly PlayerMessage _playerMessage;
         private readonly PlayerZone _playerZone;
-        private readonly PlayerTargetAction _playerTargetAction;
         private readonly PlayerKnownList _playerKnownList;
         private readonly PlayerAction _playerAction;
             
@@ -54,7 +51,6 @@ namespace Core.Module.Player
             _playerAction = new PlayerAction(this);
             _playerCharacterInfo = new PlayerCharacterInfo(this);
             _toLocation = new PlayerMoveToLocation(this);
-            _playerDesire = new PlayerDesire(this);
             _playerStatus = new PlayerStatus(this);
             _playerCombat = new PlayerCombat(this);
             _playerInventory = new PlayerInventory(this);
@@ -62,9 +58,7 @@ namespace Core.Module.Player
             _playerSkill = new PlayerSkill(this);
             _playerEffect = new PlayerEffect(this);
             _playerSkillMagic = new PlayerSkillMagic(this);
-            _playerMessage = new PlayerMessage(this);
             _playerZone = new PlayerZone(this);
-            _playerTargetAction = new PlayerTargetAction(this);
             _playerKnownList = new PlayerKnownList(this);
             _notifyEvent = new PlayerNotifyEvent(this);
 
@@ -77,7 +71,6 @@ namespace Core.Module.Player
         public PlayerAppearance PlayerAppearance() => _playerAppearance;
         public PlayerModel PlayerModel() => _playerModel;
         public PlayerCharacterInfo PlayerCharacterInfo() => _playerCharacterInfo;
-        public PlayerDesire PlayerDesire() => _playerDesire;
         public PlayerStatus PlayerStatus() => _playerStatus;
         public PlayerCombat PlayerCombat() => _playerCombat;
         public PlayerInventory PlayerInventory() => _playerInventory;
@@ -85,9 +78,7 @@ namespace Core.Module.Player
         public PlayerSkill PlayerSkill() => _playerSkill;
         //public PlayerEffect PlayerEffect() => _playerEffect;
         public PlayerSkillMagic PlayerSkillMagic() => _playerSkillMagic;
-        public PlayerMessage PlayerMessage() => _playerMessage;
         public PlayerZone PlayerZone() => _playerZone;
-        internal PlayerTargetAction PlayerTargetAction() => _playerTargetAction;
         public PlayerAction PlayerAction() => _playerAction;
         public override Weapon GetActiveWeaponItem()
         {
@@ -138,8 +129,8 @@ namespace Core.Module.Player
             foreach (NpcInstance npcInstance in _worldInit.GetVisibleNpc(this))
             {
                 if (!CalculateRange.CheckIfInRange(2000, npcInstance.GetX(), npcInstance.GetY(),
-                        npcInstance.GetZ(), 20,
-                        GetX(), GetY(), GetZ(), 20, true))
+                        npcInstance.GetZ(), npcInstance.CharacterCombat().GetCollisionRadius(),
+                        GetX(), GetY(), GetZ(), CharacterCombat().GetCollisionRadius(), true))
                 {
                     continue;
                 }
@@ -187,7 +178,7 @@ namespace Core.Module.Player
             {
                 GetWorldRegion().RemoveFromZones(this);
             }
-            await PlayerTargetAction().RemoveTargetAsync();
+            await CharacterTargetAction().RemoveTargetAsync();
             //_worldInit.RemoveObject(this);
             _worldInit.RemoveFromAllPlayers(this);
             _worldInit.RemoveVisibleObject(this, WorldObjectPosition().GetWorldRegion());
@@ -229,12 +220,11 @@ namespace Core.Module.Player
 
         private Task<bool> IsTargetSelected(PlayerInstance playerInstance)
         {
-            return Task.FromResult(this == playerInstance.PlayerTargetAction().GetTarget());
+            return Task.FromResult(this == playerInstance.CharacterTargetAction().GetTarget());
         }
 
         public override async Task RequestActionAsync(PlayerInstance playerInstance)
         {
-            if (!await IsTargetSelected(playerInstance))
             if (!await IsTargetSelected(playerInstance))
             {
                 await base.RequestActionAsync(playerInstance);

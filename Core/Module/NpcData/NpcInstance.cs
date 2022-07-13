@@ -164,7 +164,7 @@ namespace Core.Module.NpcData
         
         private Task<bool> IsTargetSelected(PlayerInstance playerInstance)
         {
-            return Task.FromResult(this == playerInstance.PlayerTargetAction().GetTarget());
+            return Task.FromResult(this == playerInstance.CharacterTargetAction().GetTarget());
         }
         
         private async Task ShowTargetInfoAsync(PlayerInstance playerInstance)

@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Controller;
 using Core.GeoEngine;
-using Core.Module.CharacterData;
+using Core.Module.Player;
 using Core.Module.SkillData;
 using Core.NetworkPacket.ServerPacket;
 using Core.TaskManager;
@@ -12,11 +12,11 @@ using Helpers;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Core.Module.Player
+namespace Core.Module.CharacterData
 {
-    public class PlayerDesireCast
+    public class CharacterDesireCast
     {
-        private readonly PlayerInstance _playerInstance;
+        private readonly Character _character;
         private CancellationTokenSource _cts;
         private readonly GeoEngineInit _geoEngine;
         private int _castEndTime;
@@ -24,11 +24,11 @@ namespace Core.Module.Player
         private readonly GameTimeController _timeController;
         private readonly IList<SkillDataModel> _disabledSkills;
         
-        public PlayerDesireCast(PlayerInstance playerInstance)
+        public CharacterDesireCast(Character character)
         {
-            _playerInstance = playerInstance;
-            _geoEngine = _playerInstance.ServiceProvider.GetRequiredService<GeoEngineInit>();
-            _timeController = _playerInstance.ServiceProvider.GetRequiredService<GameTimeController>();
+            _character = character;
+            _geoEngine = Initializer.ServiceProvider.GetRequiredService<GeoEngineInit>();
+            _timeController = Initializer.ServiceProvider.GetRequiredService<GameTimeController>();
             _disabledSkills = new List<SkillDataModel>();
         }
 
@@ -37,23 +37,25 @@ namespace Core.Module.Player
             var target = GetTarget(skill.TargetType);
             if (target == null)
             {
-                await _playerInstance.SendPacketAsync(new SystemMessage(SystemMessageId.CantSeeTarget));
+                await _character.SendPacketAsync(new SystemMessage(SystemMessageId.CantSeeTarget));
                 return;
             }
             var castRange = skill.CastRange;
-            if (!CalculateRange.CheckIfInRange(castRange, _playerInstance.GetX(), _playerInstance.GetY(),
-                _playerInstance.GetZ(), 33, target.GetX(), target.GetY(), target.GetZ(), 33, true)
+            if (!CalculateRange.CheckIfInRange(castRange, _character.GetX(), _character.GetY(),
+                    _character.GetZ(), _character.CharacterCombat().GetCollisionRadius(), target.GetX(), target.GetY(),
+                    target.GetZ(), target.CharacterCombat().GetCollisionRadius(), true)
             )
             {
-                await _playerInstance.SendPacketAsync(new SystemMessage(SystemMessageId.TargetTooFar));
+                await _character.SendPacketAsync(new SystemMessage(SystemMessageId.TargetTooFar));
                 return;
             }
             
-            if (!_geoEngine.CanSee(_playerInstance.GetX(), _playerInstance.GetY(), _playerInstance.GetZ(), 33,
-                    target.GetX(), target.GetY(), target.GetZ(), 20
-                    )
-            ) {
-                await _playerInstance.SendPacketAsync(new SystemMessage(SystemMessageId.CantSeeTarget));
+            if (!_geoEngine.CanSee(_character.GetX(), _character.GetY(), _character.GetZ(),
+                    _character.CharacterCombat().GetCollisionHeight(),
+                    target.GetX(), target.GetY(), target.GetZ(), target.CharacterCombat().GetCollisionHeight()
+                )
+               ) {
+                await _character.SendPacketAsync(new SystemMessage(SystemMessageId.CantSeeTarget));
                 return;
             }
 
@@ -70,10 +72,13 @@ namespace Core.Module.Player
             await HandleMagicSkill(skill, target, hitTime);
             
             await SendToKnownListAsync(skill, target, hitTime, reuseDelay);
-            await _playerInstance.SendPacketAsync(new SetupGauge(SetupGauge.Blue, hitTime));
+            await _character.SendPacketAsync(new SetupGauge(SetupGauge.Blue, hitTime));
             // Send a system message to the Player
-            await _playerInstance.PlayerMessage().SendMessageToPlayerAsync(skill, skillId);
-            await _playerInstance.SendUserInfoAsync();
+            if (_character is PlayerInstance playerInstance)
+            {
+                await CharacterMessage.SendMessageToPlayerAsync(_character, skill, skillId);
+                await playerInstance.SendUserInfoAsync();                
+            }
         }
 
         private void SetCastTime(short coolTime, short hitTime)
@@ -121,15 +126,15 @@ namespace Core.Module.Player
             switch (targetType)
             {
                 case TargetType.Self:
-                    return _playerInstance;
+                    return _character;
                 case TargetType.Target:
-                    return (Character) _playerInstance.PlayerTargetAction().GetTarget();
+                    return (Character) _character.CharacterTargetAction().GetTarget();
                 case TargetType.None:
                     break;
                 case TargetType.EnemyOnly:
-                    return (Character) _playerInstance.PlayerTargetAction().GetTarget();
+                    return (Character) _character.CharacterTargetAction().GetTarget();
                 case TargetType.Enemy:
-                    return (Character) _playerInstance.PlayerTargetAction().GetTarget();
+                    return (Character) _character.CharacterTargetAction().GetTarget();
                 case TargetType.HolyThing:
                     break;
                 case TargetType.Summon:
@@ -149,7 +154,7 @@ namespace Core.Module.Player
                 default:
                     throw new ArgumentOutOfRangeException(nameof(targetType), targetType, null);
             }
-            return _playerInstance;
+            return _character;
         }
 
         private async Task HandleMagicSkill(SkillDataModel skill, Character target, float hitTime)
@@ -164,7 +169,7 @@ namespace Core.Module.Player
                     {
                         TaskManagerScheduler.ScheduleAtFixed(async () =>
                         {
-                            await value.Process(_playerInstance, target);
+                            await value.Process(_character, target);
                         }, (int)hitTime, _cts.Token);
                     }
                 }
@@ -177,9 +182,9 @@ namespace Core.Module.Player
 
         private async Task SendToKnownListAsync(SkillDataModel skill, Character target, float hitTime, float reuseDelay)
         {
-            var skillUse = new MagicSkillUse(_playerInstance, target, skill.SkillId, skill.Level, hitTime, reuseDelay);
-            await _playerInstance.SendPacketAsync(skillUse);
-            await _playerInstance.SendToKnownPlayers(skillUse);
+            var skillUse = new MagicSkillUse(_character, target, skill.SkillId, skill.Level, hitTime, reuseDelay);
+            await _character.SendPacketAsync(skillUse);
+            await _character.SendToKnownPlayers(skillUse);
         }
     }
 }
