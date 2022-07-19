@@ -245,5 +245,11 @@ namespace Core.Module.Player
         {
             Initializer.WorldInit().StorePlayerObject(this);
         }
+
+        public override async Task SendStatusUpdate()
+        {
+            var su = new StatusUpdate(this);
+            await SendPacketAsync(su);
+        }
     }
 }

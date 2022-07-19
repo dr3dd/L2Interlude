@@ -167,5 +167,13 @@ namespace Core.Module.CharacterData
         {
             return Task.CompletedTask;
         }
+        
+        public virtual async Task SendStatusUpdate()
+        {
+            var su = new StatusUpdate(ObjectId);
+            su.AddAttribute(StatusUpdate.CurHp, (int) CharacterStatus().CurrentHp);
+            su.AddAttribute(StatusUpdate.CurMp, (int) CharacterStatus().CurrentMp);
+            await SendToKnownPlayers(su);
+        }
     }
 }

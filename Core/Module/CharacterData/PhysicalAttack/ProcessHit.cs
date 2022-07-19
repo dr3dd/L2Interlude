@@ -61,7 +61,7 @@ namespace Core.Module.CharacterData.PhysicalAttack
 				ReflectedDamage(weapon, damage);
 				//await target.ReduceCurrentHpAsync(damage, _character);
 				_hitTarget.CharacterStatus().DecreaseCurrentHp(damage);
-				
+				await _hitTarget.SendStatusUpdate();
 				// Notify AI with EVT_ATTACKED
 				_hitTarget.CharacterNotifyEvent().NotifyEvent(CtrlEvent.EvtAttacked, _character);
 				await _character.CharacterNotifyEvent().ClientStartAutoAttackAsync();

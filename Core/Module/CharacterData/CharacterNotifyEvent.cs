@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using L2Logger;
 
 namespace Core.Module.CharacterData
 {
@@ -66,20 +67,27 @@ namespace Core.Module.CharacterData
 
         public override async Task OnEvtArrivedAsync()
         {
-            _character.CharacterZone().RevalidateZone();
-            // If the Intention was AI_INTENTION_MOVE_TO, set the Intention to AI_INTENTION_ACTIVE
-            if (await _character.CharacterMovement().MoveToNextRoutePoint())
+            try
             {
-                return;
-            }
-            await _character.CharacterDesire().ClientStoppedMovingAsync();
-            if (_character.CharacterDesire().GetDesire() == Desire.MoveToDesire)
-            {
-                _character.CharacterDesire().AddDesire(Desire.ActiveDesire, null);
-            }
+                _character.CharacterZone().RevalidateZone();
+                // If the Intention was AI_INTENTION_MOVE_TO, set the Intention to AI_INTENTION_ACTIVE
+                if (await _character.CharacterMovement().MoveToNextRoutePoint())
+                {
+                    return;
+                }
+                await _character.CharacterDesire().ClientStoppedMovingAsync();
+                if (_character.CharacterDesire().GetDesire() == Desire.MoveToDesire)
+                {
+                    _character.CharacterDesire().AddDesire(Desire.ActiveDesire, null);
+                }
 		
-            // Launch actions corresponding to the Event Think
-            await OnEvtThinkAsync();
+                // Launch actions corresponding to the Event Think
+                await OnEvtThinkAsync();
+            }
+            catch (Exception ex)
+            {
+                LoggerManager.Error(GetType().Name + ": OnEvtArrivedAsync:  " + ex.Message);
+            }
         }
 
         public override Task OnEvtArrivedBlockedAsync(Location arg0)

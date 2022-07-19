@@ -218,11 +218,11 @@ namespace Core.Module.CharacterData
             {
                 // Cancel the move action
                 _move = null;
-                await Task.FromResult(false);
+                return false;
             }
             
             // Get the Move Speed of the Creature
-            float speed = _character.CharacterCombat().GetCharacterSpeed();
+            var speed = _character.CharacterCombat().GetCharacterSpeed();
             if ((speed <= 0))
             {
                 // Cancel the move action

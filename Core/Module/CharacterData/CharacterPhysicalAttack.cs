@@ -62,7 +62,7 @@ namespace Core.Module.CharacterData
         
         private void DoRegularAttack(IRunnable hitTask, int timeToHit, int timeAtk, int reuse)
         {
-            TaskManagerScheduler.Schedule(hitTask.Run, timeToHit);
+            TaskManagerScheduler.Schedule(hitTask.Run, timeAtk + reuse);
             TaskManagerScheduler.Schedule(() => { _character.CharacterNotifyEvent().NotifyEvent(CtrlEvent.EvtReadyToAct); },
                 timeAtk + reuse);
         }

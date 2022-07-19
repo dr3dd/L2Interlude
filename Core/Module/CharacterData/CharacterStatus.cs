@@ -69,18 +69,10 @@ namespace Core.Module.CharacterData
                 }
                 SetCurrentHp(CurrentHp); // Set Hp
                 StartHpMpRegeneration();
-                SendStatusUpdate();
             }
         }
 
-        private void SendStatusUpdate()
-        {
-            if (_character is PlayerInstance playerInstance)
-            {
-                var su = new StatusUpdate(playerInstance);
-                playerInstance.SendPacketAsync(su);
-            }
-        }
+        
 
         private void SetCurrentHp(double newHp)
         {
@@ -98,7 +90,7 @@ namespace Core.Module.CharacterData
                 lock (this)
                 {
                     IncreaseCurrentHp(_character.GetHpRegenRate());
-                    SendStatusUpdate();
+                    _character.SendStatusUpdate().GetAwaiter();
                 }
             }, period, period, _cts.Token);
         }

@@ -9,13 +9,17 @@
             _npcInstance = npcInstance;
         }
 
+        private NpcTemplateInit GetTemplate() => _npcInstance.GetTemplate();
+        private NpcStat GetStat() => GetTemplate().GetStat();
+        
+
         public int GetMaxHp()
         {
-            return (int)_npcInstance.GetTemplate().GetStat().OrgHp;
+            return (int)GetStat().OrgHp;
         }
         public double GetHpRegenRate()
         {
-            return 1.5f;
+            return GetStat().OrgHpRegen;
         }
     }
 }
