@@ -29,7 +29,7 @@ namespace Core.Module.CharacterData
         public void MoveToLocation(int x, int y, int z, int offset)
         {
             // Get the Move Speed of the Creature
-            int speed = _character.CharacterCombat().GetCharacterSpeed();
+            float speed = _character.CharacterCombat().GetCharacterSpeed();
             
             // Get current position of the Creature
             int curX = _character.GetX();
@@ -63,8 +63,7 @@ namespace Core.Module.CharacterData
                 if ((distance < 1) || ((distance - offset) <= 0))
                 {
                     // Notify the AI that the Creature is arrived at destination
-                    _character.CharacterZone().RevalidateZone();
-                    _character.CharacterMovement().StopMoveAsync(new Location(curX, curY, curZ, _character.Heading));
+                    _character.CharacterNotifyEvent().NotifyEvent(CtrlEvent.EvtArrived);
                     return;
                 }
 			
@@ -132,6 +131,16 @@ namespace Core.Module.CharacterData
             _move = m;
             
             _timeController.RegisterMovingObject(_character);
+            
+            
+            // Create a task to notify the AI that Creature arrives at a check point of the movement
+            if ((ticksToMove * _timeController.MillisInTick) > 3000)
+            {
+                TaskManagerScheduler.Schedule(() => 
+                {
+                    _character.CharacterNotifyEvent().NotifyEvent(CtrlEvent.EvtArrivedRevalidate);
+                }, 2000);
+            }
         }
         
         public async Task<bool> UpdatePosition(int gameTicks)
@@ -167,9 +176,9 @@ namespace Core.Module.CharacterData
             dy = m.YDestination - m.YAccurate;
             dz = m.ZDestination - zPrev;
 
-            int speed = _character.CharacterCombat().GetCharacterSpeed();
+            float speed = _character.CharacterCombat().GetCharacterSpeed();
 
-            int distPassed = (speed * (gameTicks - m.MoveTimestamp)) / _timeController.TicksPerSecond;
+            float distPassed = (speed * (gameTicks - m.MoveTimestamp)) / _timeController.TicksPerSecond;
             if ((((dx * dx) + (dy * dy)) < 10000) && ((dz * dz) > 2500)) // close enough, allows error between client and server geodata if it cannot be avoided
             {
                 distFraction = distPassed / Math.Sqrt((dx * dx) + (dy * dy));
@@ -193,7 +202,7 @@ namespace Core.Module.CharacterData
                 _character.SetXYZ((int) m.XAccurate, (int) m.YAccurate, zPrev + (int) ((dz * distFraction) + 0.5));
             }
             
-            //LoggerManager.Info($"curX: {_character.GetX()} curY: {_character.GetY()} curZ: {_character.GetZ()} gameTicks: {gameTicks} speed: {speed}");
+            LoggerManager.Info($"curX: {_character.GetX()} curY: {_character.GetY()} curZ: {_character.GetZ()} gameTicks: {gameTicks} speed: {speed}");
             
             // Set the timer of last position update to now
             m.MoveTimestamp = gameTicks;
@@ -201,6 +210,84 @@ namespace Core.Module.CharacterData
             //await _character.SendToKnownPlayers(new CharMoveToLocation(_character));
 		
             return await Task.FromResult(distFraction > 1);
+        }
+        
+        public async Task<bool> MoveToNextRoutePoint()
+        {
+            if (!IsOnGeoDataPath())
+            {
+                // Cancel the move action
+                _move = null;
+                await Task.FromResult(false);
+            }
+            
+            // Get the Move Speed of the Creature
+            float speed = _character.CharacterCombat().GetCharacterSpeed();
+            if ((speed <= 0))
+            {
+                // Cancel the move action
+                _move = null;
+                await Task.FromResult(false);
+            }
+            MoveData md = _move;
+            if (md == null)
+            {
+                await Task.FromResult(false);
+            }
+            
+            // Create and Init a MoveData object
+            MoveData m = new MoveData();
+		
+            // Update MoveData object
+            m.OnGeodataPathIndex = md.OnGeodataPathIndex + 1; // next segment
+            m.GeoPath = md.GeoPath;
+            m.GeoPathGtx = md.GeoPathGtx;
+            m.GeoPathGty = md.GeoPathGty;
+            m.GeoPathAccurateTx = md.GeoPathAccurateTx;
+            m.GeoPathAccurateTy = md.GeoPathAccurateTy;
+            
+            if (md.OnGeodataPathIndex == (md.GeoPath.Count - 2))
+            {
+                m.XDestination = md.GeoPathAccurateTx;
+                m.YDestination = md.GeoPathAccurateTy;
+                m.ZDestination = md.GeoPath[m.OnGeodataPathIndex].GetZ();
+            }
+            else
+            {
+                m.XDestination = md.GeoPath[m.OnGeodataPathIndex].GetX();
+                m.YDestination = md.GeoPath[m.OnGeodataPathIndex].GetY();
+                m.ZDestination = md.GeoPath[m.OnGeodataPathIndex].GetZ();
+            }
+            double distance = Utility.Hypot(m.XDestination - _character.GetX(), m.YDestination - _character.GetY());
+            // Calculate and set the heading of the Creature
+            if (distance != 0)
+            {
+                _character.Heading = CalculateRange.CalculateHeadingFrom(_character.GetX(), _character.GetY(), m.XDestination, m.YDestination);
+            }
+            
+            // Calculate the number of ticks between the current position and the destination
+            // One tick added for rounding reasons
+            int ticksToMove = 1 + (int) ((_timeController.TicksPerSecond * distance) / speed);
+            m.Heading = 0; // initial value for coordinate sync
+            m.MoveStartTime = _timeController.GetGameTicks();
+            // Set the Creature _move object to MoveData object
+            _move = m;
+            _timeController.RegisterMovingObject(_character);
+            
+            // Create a task to notify the AI that Creature arrives at a check point of the movement
+            if ((ticksToMove * _timeController.TicksPerSecond) > 3000)
+            {
+                TaskManagerScheduler.Schedule(() =>
+                {
+                    _character.CharacterNotifyEvent().NotifyEvent(CtrlEvent.EvtArrivedRevalidate);
+                }, 2000);
+            }
+            
+            // the CtrlEvent.EVT_ARRIVED will be sent when the character will actually arrive to destination by GameTimeController
+		
+            // Send a Server->Client packet CharMoveToLocation to the actor and all PlayerInstance in its _knownPlayers
+            await _character.SendToKnownPlayers(new CharMoveToLocation(_character));
+            return await Task.FromResult(true);
         }
         
         public int GetXDestination()
@@ -268,6 +355,30 @@ namespace Core.Module.CharacterData
             {
                 _isRunning = false;
             }
+        }
+        
+        /// <summary>
+        /// TODO Geo Engine
+        /// </summary>
+        /// <returns></returns>
+        public bool IsOnGeoDataPath()
+        {
+            MoveData m = _move;
+            if (m == null)
+            {
+                return false;
+            }
+            /*
+             * if (m.onGeodataPathIndex == -1)
+		        {
+			        return false;
+		        }
+		        if (m.onGeodataPathIndex >= (m.geoPath.size() - 1))
+		        {
+			        return false;
+		        }
+             */
+            return false;
         }
     }
 }

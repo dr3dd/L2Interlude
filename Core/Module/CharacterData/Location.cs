@@ -64,7 +64,7 @@
         
         public Location Clone()
         {
-            return new (_x, _y, _z);
+            return new Location(_x, _y, _z);
         }
 
         public void SetXYZ(int mXDestination, int mYDestination, int mZDestination)
@@ -74,7 +74,7 @@
             _z = mZDestination;
         }
 
-        protected void Clean()
+        public virtual void Clean()
         {
             _z = 0;
         }

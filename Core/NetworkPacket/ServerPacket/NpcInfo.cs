@@ -1,13 +1,20 @@
-﻿using Core.Module.NpcData;
+﻿using System;
+using Core.Module.NpcData;
 
 namespace Core.NetworkPacket.ServerPacket
 {
     public class NpcInfo : Network.ServerPacket
     {
         private readonly NpcInstance _npcInstance;
+        private readonly int _runSpd;
+        private readonly int _walkSpd;
+        private readonly double _moveMultiplier;
         public NpcInfo(NpcInstance npcInstance)
         {
             _npcInstance = npcInstance;
+            _moveMultiplier = _npcInstance.CharacterCombat().GetMovementSpeedMultiplier();
+            _runSpd = Convert.ToInt32(Math.Round(_npcInstance.CharacterCombat().GetRunSpeed() / _moveMultiplier));
+            _walkSpd = Convert.ToInt32(Math.Round(_npcInstance.CharacterCombat().GetWalkSpeed() / _moveMultiplier));
         }
         public override void Write()
         {
@@ -21,15 +28,13 @@ namespace Core.NetworkPacket.ServerPacket
             WriteInt(_npcInstance.Heading);
             WriteInt(0x00);
             
-            int runSpeed = _npcInstance.CharacterCombat().GetRunSpeed();//_npcInstance.GetTemplate().GetStat().Stat.GetRunSpeed()
-            int walkSpeed = _npcInstance.CharacterCombat().GetWalkSpeed(); //_npcInstance.Stat.GetWalkSpeed();
             int pAtkSpd = 10; //_npcInstance.Stat.GetPAtkSpd();
             int mAtkSpd = 10; //_npcInstance.Stat.GetMAtkSpd();
 
             WriteInt(mAtkSpd);
             WriteInt(pAtkSpd);
-            WriteInt(runSpeed);
-            WriteInt(walkSpeed);
+            WriteInt(_runSpd);
+            WriteInt(_walkSpd);
             WriteInt(0); // swimspeed
             WriteInt(0); // swimspeed
             WriteInt(0);
@@ -37,10 +42,10 @@ namespace Core.NetworkPacket.ServerPacket
             WriteInt(0);
             WriteInt(0);
             
-            WriteDouble(1.1);
+            WriteDouble(_moveMultiplier);
             WriteDouble(pAtkSpd / 277.478340719);
-            WriteDouble(_npcInstance.GetTemplate().GetStat().CollisionRadius[0]);
-            WriteDouble(_npcInstance.GetTemplate().GetStat().CollisionHeight[0]);
+            WriteDouble(_npcInstance.CharacterCombat().GetCollisionRadius());
+            WriteDouble(_npcInstance.CharacterCombat().GetCollisionHeight());
             WriteInt(0); // _npcInstance.Template.Stat.RHand right hand weapon
             WriteInt(0);
             WriteInt(0); // _npcInstance.Template.Stat.LHand left hand weapon
@@ -63,8 +68,8 @@ namespace Core.NetworkPacket.ServerPacket
             WriteByte(0); // _npc.IsFlying() ? 2 : 0 C2
 
             WriteByte(0); //_npc.TeamId
-            WriteDouble(_npcInstance.GetTemplate().GetStat().CollisionRadius[0]);
-            WriteDouble(_npcInstance.GetTemplate().GetStat().CollisionHeight[0]);
+            WriteDouble(_npcInstance.CharacterCombat().GetCollisionRadius());
+            WriteDouble(_npcInstance.CharacterCombat().GetCollisionHeight());
             WriteInt(0); // enchant
             WriteInt(0); //_npc.IsFlying() ? 1 : 0 C6
         }

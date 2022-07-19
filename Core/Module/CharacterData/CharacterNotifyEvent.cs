@@ -54,9 +54,9 @@ namespace Core.Module.CharacterData
             await ClientStartAutoAttackAsync();
         }
 
-        public override Task OnEvtArrivedRevalidate()
+        public override async Task OnEvtArrivedRevalidate()
         {
-            throw new NotImplementedException();
+            await OnEvtThinkAsync();
         }
 
         public override async Task OnEvtReadyToAct()
@@ -67,8 +67,12 @@ namespace Core.Module.CharacterData
         public override async Task OnEvtArrivedAsync()
         {
             _character.CharacterZone().RevalidateZone();
-            await _character.CharacterDesire().ClientStoppedMovingAsync();
             // If the Intention was AI_INTENTION_MOVE_TO, set the Intention to AI_INTENTION_ACTIVE
+            if (await _character.CharacterMovement().MoveToNextRoutePoint())
+            {
+                return;
+            }
+            await _character.CharacterDesire().ClientStoppedMovingAsync();
             if (_character.CharacterDesire().GetDesire() == Desire.MoveToDesire)
             {
                 _character.CharacterDesire().AddDesire(Desire.ActiveDesire, null);

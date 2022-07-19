@@ -110,6 +110,7 @@ namespace Core.Module.NpcData
                                     y += radiusY;
                                 }
                                 
+                                //npcBegin.Total
                                 foreach (var item in lst.OrderBy(x => Rnd.Next()).Take(1))
                                 {
                                     var npcInstance = new NpcInstance(_objectIdInit.NextObjectId(), npcTemplate);

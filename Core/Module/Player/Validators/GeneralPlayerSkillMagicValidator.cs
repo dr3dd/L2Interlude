@@ -8,8 +8,8 @@ namespace Core.Module.Player.Validators
     {
         public async Task<bool> IsValid(PlayerInstance playerInstance, SkillDataModel skill)
         {
-            if (IsCastingNow(playerInstance)) return await Task.FromResult(IsCastingNow(playerInstance));
-            if (IsSkillDisabled(playerInstance, skill)) return await Task.FromResult(IsSkillDisabled(playerInstance, skill));
+            if (IsCastingNow(playerInstance)) return await Task.FromResult(false);
+            if (IsSkillDisabled(playerInstance, skill)) return await Task.FromResult(false);
             return await Task.FromResult(true);
         }
 

@@ -250,17 +250,12 @@ namespace Core.Module.Player
             return _templateHandler.GetCollisionHeight();
         }
 
-        public int GetCharacterSpeed()
+        public float GetCharacterSpeed()
         {
-            if (_playerInstance.CharacterMovement().IsRunning())
-            {
-                return GetRunSpeed();
-            }
-		
-            return GetWalkSpeed();
+            return _playerInstance.CharacterMovement().IsRunning() ? GetRunSpeed() : GetWalkSpeed();
         }
 
-        public int GetRunSpeed()
+        public float GetRunSpeed()
         {
             var baseGroundHighSpeed= _templateHandler.GetBaseGroundHighSpeed();
             var dexStat = _templateHandler.GetDex();
@@ -269,10 +264,10 @@ namespace Core.Module.Player
 
             var effects = GetPlayerEffects();
             result = CalculateStats.CalculateSpeed(effects, result);
-            return (int) result;
+            return result;
         }
 
-        public int GetWalkSpeed()
+        public float GetWalkSpeed()
         {
             return GetRunSpeed() * 70 / 100;
         }
@@ -286,10 +281,10 @@ namespace Core.Module.Player
             return (int) result;
         }
 
-        public float GetMovementSpeedMultiplier()
+        public double GetMovementSpeedMultiplier()
         {
             var baseGroundHighSpeed= _templateHandler.GetBaseGroundHighSpeed();
-            return GetCharacterSpeed() / (float)baseGroundHighSpeed;
+            return GetCharacterSpeed() / baseGroundHighSpeed;
         }
 
         public float GetAttackSpeedMultiplier()

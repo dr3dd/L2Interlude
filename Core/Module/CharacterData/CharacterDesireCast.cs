@@ -112,7 +112,7 @@ namespace Core.Module.CharacterData
             return _disabledSkills.Contains(skill);
         }
         
-        public bool IsCastingNow()
+        public bool IsCastingNow()  
         {
             return _castEndTime > _timeController.GameTicks;
         }

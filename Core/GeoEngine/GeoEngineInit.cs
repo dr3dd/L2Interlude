@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Linq;
@@ -222,14 +223,14 @@ namespace Core.GeoEngine
             return (geoY << 4) + _worldInit.MapMinY + 8;
         }
 
-        public LinkedList<Location> FindPath(int ox, int oy, int oz, int tx, int ty, int tz)
+        public ICollection<Location> FindPath(int ox, int oy, int oz, int tx, int ty, int tz)
         {
 	        // Get origin and check existing geo coords.
 	        int gox = GetGeoX(ox);
 	        int goy = GetGeoY(oy);
 	        if (!HasGeoPos(gox, goy))
 	        {
-		        return new LinkedList<Location>();
+		        return new List<Location>();
 	        }
 		
 	        int goz = GetHeightNearest(gox, goy, oz);
@@ -239,7 +240,7 @@ namespace Core.GeoEngine
 	        int gty = GetGeoY(ty);
 	        if (!HasGeoPos(gtx, gty))
 	        {
-		        return new LinkedList<Location>();
+		        return new List<Location>();
 	        }
 
 	        var oBlock = GetBlock(gox, goy);
@@ -251,22 +252,22 @@ namespace Core.GeoEngine
 	        NodeBuffer buffer = GetBuffer(300 + (10 * (Math.Abs(gox - gtx) + Math.Abs(goy - gty) + Math.Abs(goz - gtz))));
 	        if (buffer == null)
 	        {
-		        return new LinkedList<Location>();
+		        return new List<Location>();
 	        }
 		
 	        // Find path.
-	        LinkedList<Location> path = null;
+	        ICollection<Location> path = null;
 	        try
 	        {
 		        path = buffer.FindPath(gox, goy, goz, gtx, gty, gtz);
 		        if (!path.Any())
 		        {
-			        return new LinkedList<Location>();
+			        return new List<Location>();
 		        }
 	        }
-	        catch (Exception)
+	        catch (Exception exception)
 	        {
-		        return new LinkedList<Location>();
+		        return new List<Location>();
 	        }
 	        finally
 	        {

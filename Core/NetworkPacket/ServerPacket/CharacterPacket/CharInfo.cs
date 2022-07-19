@@ -17,7 +17,7 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
         private readonly int _walkSpd;
         private readonly int _flyRunSpd;
         private readonly int _flyWalkSpd;
-        private readonly float _moveMultiplier;
+        private readonly double _moveMultiplier;
         private readonly float _attackSpeedMultiplier;
         private readonly ITemplateHandler _template;
         private readonly PlayerAppearance _playerAppearance;

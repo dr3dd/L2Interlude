@@ -2,13 +2,14 @@
 {
     public interface ICharacterCombat
     {
+        double GetMovementSpeedMultiplier();
         int GetPhysicalAttack();
         int GetPhysicalDefence();
         float GetCollisionRadius();
         float GetCollisionHeight();
-        int GetCharacterSpeed();
-        int GetRunSpeed();
-        int GetWalkSpeed();
+        float GetCharacterSpeed();
+        float GetRunSpeed();
+        float GetWalkSpeed();
         int GetEvasion();
         int GetAccuracy();
         int GetCriticalRate();

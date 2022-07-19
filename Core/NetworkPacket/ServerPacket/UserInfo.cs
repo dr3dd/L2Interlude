@@ -8,7 +8,7 @@ namespace Core.NetworkPacket.ServerPacket
     public class UserInfo : Network.ServerPacket
     {
         private readonly PlayerInstance _playerInstance;
-        private readonly float _moveMultiplier;
+        private readonly double _moveMultiplier;
         private readonly int _runSpd;
         private readonly int _walkSpd;
         private readonly int _flyRunSpd;

@@ -4,13 +4,14 @@
 &lt;/SessionState&gt;</s:String>
 	
 	
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=bb644a1f_002D230a_002D489a_002Dbd17_002Ded5b4e6e45c7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="AddSongOfWindTest #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=bb644a1f_002D230a_002D489a_002Dbd17_002Ded5b4e6e45c7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AddSongOfWindTest #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Project Location="C:\Users\Kitsya\source\repos\Interlude\Test" Presentation="&amp;lt;Test&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fee15176_002D94fe_002D4ada_002Db4f4_002De6e4dff00359/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AddWindWalkAndSongOfWindTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fee15176_002D94fe_002D4ada_002Db4f4_002De6e4dff00359/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="AddWindWalkAndSongOfWindTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::9BA1548D-81C5-4793-B2D7-E070D0DAAB47::.NETCoreApp,Version=v3.1::Test.PlayerEffectTest.AddWindWalkAndSongOfWindTest&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::9BA1548D-81C5-4793-B2D7-E070D0DAAB47::.NETCoreApp,Version=v3.1::Test.PlayerEffectTest.AddSongOfWindTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::9BA1548D-81C5-4793-B2D7-E070D0DAAB47::.NETCoreApp,Version=v3.1::Test.ParseEffectTest.EffectTest&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Equippable/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

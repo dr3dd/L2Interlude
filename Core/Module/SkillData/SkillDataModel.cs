@@ -69,6 +69,8 @@ namespace Core.Module.SkillData
                 case "s_song_of_vitality":
                 case "s_might1":
                 case "s_shield1":
+                case "s_power_strike13":
+                case "s_mortal_blow13": 
                     Effects = GetEffects(skillBegin.Effect, effectInit);
                     break;
             }

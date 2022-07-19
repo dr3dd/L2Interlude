@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading;
 using Core.Module.CharacterData;
+using Helpers;
 
 namespace Core.GeoEngine.PathFinding
 {
@@ -18,6 +20,9 @@ namespace Core.GeoEngine.PathFinding
         private int _gtx;
         private int _gty;
         private int _gtz;
+        // Pathfinding statistics.
+        private long _timeStamp;
+        private long _lastElapsedTime;
 
         public NodeBuffer(int size)
         {
@@ -33,10 +38,10 @@ namespace Core.GeoEngine.PathFinding
             }
         }
         
-        public LinkedList<Location> FindPath(int gox, int goy, int goz, int gtx, int gty, int gtz)
+        public ICollection<Location> FindPath(int gox, int goy, int goz, int gtx, int gty, int gtz)
         {
             // Set start timestamp.
-            //_timeStamp = System.currentTimeMillis();
+            _timeStamp = DateTimeHelper.CurrentUnixTimeMillis();
 		
             // Set target coordinates.
             _gtx = gtx;
@@ -71,7 +76,7 @@ namespace Core.GeoEngine.PathFinding
             while ((_current != null) && (_bufferIndex < _buffer.Length) && (++count < 3500));
 		
             // Iteration failed, return empty path.
-            return new LinkedList<Location>();
+            return new Collection<Location>();
         }
         
         public void Free()
@@ -87,11 +92,11 @@ namespace Core.GeoEngine.PathFinding
 		
             _current = null;
 		
-            //_lastElapsedTime = System.currentTimeMillis() - _timeStamp;
+            _lastElapsedTime = DateTimeHelper.CurrentUnixTimeMillis() - _timeStamp;
             Monitor.Exit(_lock);
         }
         
-        private LinkedList<Location> ConstructPath()
+        private ICollection<Location> ConstructPath()
         {
             // Create result.
             LinkedList<Location> path = new LinkedList<Location>();
@@ -268,5 +273,7 @@ namespace Core.GeoEngine.PathFinding
             // Calculate the diagonal distance of the node to the target.
             return (dd * 18) + ((da + dz) * 12);
         }
+        
+        public long GetElapsedTime() => _lastElapsedTime;
     }
 }

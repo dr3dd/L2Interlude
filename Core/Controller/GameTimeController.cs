@@ -123,7 +123,6 @@ namespace Core.Controller
                 {
                     foreach (Character character in ended)
                     {
-                        await character.CharacterMovement().StopMoveAsync(new Location(character.GetX(), character.GetY(), character.GetZ(), character.Heading));
                         character.CharacterNotifyEvent().NotifyEvent(CtrlEvent.EvtArrived);
                     }
                 }

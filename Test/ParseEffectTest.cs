@@ -15,6 +15,10 @@ namespace Test
             effectA.Replace("{all}", "all");
             var pattern = @"\{.*?\}";
             var matches = Regex.Matches(effectA, pattern);
+            
+            string test = "{{equip_weapon;{dual;sword;blunt}};{energy_have;2}}";
+            var d = Regex.Matches(test, @"\{[^}]+\}|\S+");
+
 
         }
     }

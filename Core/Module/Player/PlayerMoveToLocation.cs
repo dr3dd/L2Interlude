@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Core.GeoEngine;
 using Core.Module.AreaData;
 using Core.Module.CharacterData;
@@ -44,7 +45,16 @@ namespace Core.Module.Player
             }
 
             //var loc = _geoEngine.GetValidLocation(originX, originY, originZ, targetX, targetY, targetZ);
-            //var d =_geoEngine.FindPath(originX, originY, originZ, targetX, targetY, targetZ);
+            try
+            {
+                //TODO
+                //var d = Initializer.GeoEngineInit().FindPath(originX, originY, originZ, targetX, targetY, targetZ);
+            }
+            catch (Exception ex)
+            {
+                LoggerManager.Error(ex.Message);
+            }
+            
             _playerInstance.CharacterDesire().AddDesire(Desire.MoveToDesire, new Location(targetX, targetY, targetZ));
         }
         

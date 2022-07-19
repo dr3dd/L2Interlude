@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Core.Module.CharacterData;
 using Core.Module.Player;
 
@@ -40,6 +41,12 @@ namespace Core.Module.NpcData
             return (int) CalculateStats.CalculateMagicalDefence(effects, result);
         }
 
+        public double GetMovementSpeedMultiplier()
+        {
+            var baseSpeed = GetWalkSpeed();
+            return GetCharacterSpeed() / baseSpeed;
+        }
+
         public int GetPhysicalAttack()
         {
             throw new System.NotImplementedException();
@@ -67,34 +74,35 @@ namespace Core.Module.NpcData
             return _npcInstance.GetTemplate().GetStat().CollisionHeight[0];
         }
 
-        public int GetCharacterSpeed()
+        public float GetCharacterSpeed()
         {
-            if (_npcInstance.CharacterMovement().IsRunning())
-            {
-                return GetRunSpeed();
-            }
-		
-            return GetWalkSpeed();
+            return _npcInstance.CharacterMovement().IsRunning() ? GetRunSpeed() : GetWalkSpeed();
         }
         
-        public int GetRunSpeed()
+        public float GetRunSpeed()
         {
-            return (int)_npcInstance.GetTemplate().GetStat().GroundHigh[0];
+            return _npcInstance.GetTemplate().GetStat().GroundHigh[0];
         }
 
-        public int GetWalkSpeed()
+        public float GetWalkSpeed()
         {
-            return (int)_npcInstance.GetTemplate().GetStat().GroundLow[0];
+            return _npcInstance.GetTemplate().GetStat().GroundLow[0];
         }
 
         public int GetEvasion()
         {
-            throw new System.NotImplementedException();
+            var dexStat = _npcInstance.GetTemplate().GetStat().Dex;
+            var result = Math.Sqrt(dexStat) * 6 + _npcInstance.GetTemplate().GetStat().Level;
+            return (int) result;
         }
 
         public int GetAccuracy()
         {
-            throw new System.NotImplementedException();
+            var dexStat = _npcInstance.GetTemplate().GetStat().Dex;
+            var weaponAccuracy = _npcInstance.GetTemplate().GetStat().PhysicalHitModify;
+            var result = Math.Sqrt(dexStat) * 6 + _npcInstance.GetTemplate().GetStat().Level + weaponAccuracy;
+            //result = CalculateStats.CalculateAccuracy(effects, result);
+            return (int) result;
         }
 
         public int GetCriticalRate()
