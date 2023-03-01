@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Core.Module.ParserEngine;
 
 namespace Core.Module.NpcData
 {
@@ -20,8 +19,8 @@ namespace Core.Module.NpcData
             _stat.AcquireExpRate = ToFloat(setStats["acquire_exp_rate"]);
             _stat.AcquireSp = ToInt(setStats["acquire_sp"]);
             _stat.UnSowing = ToBool(setStats["unsowing"]);
-            _stat.Clan = ParseClanList((string) setStats["clan"]); //TODO
-            _stat.IgnoreClanList = (string) setStats["ignore_clan_list"]; // TODO
+            _stat.Clan = ParseClanList((string) setStats["clan"]);
+            _stat.IgnoreClanList = ParseClanList((string) setStats["ignore_clan_list"]);
             _stat.ClanHelpRange = ToInt(setStats["clan_help_range"]);
             _stat.SlotChest = (string) setStats["slot_chest"]; //TODO
             _stat.SlotRHand = (string) setStats["slot_rhand"];
@@ -71,16 +70,42 @@ namespace Core.Module.NpcData
             _stat.HitTimeFactor = ToFloat(setStats["hit_time_factor"]);
             _stat.ItemMakeList = (string) setStats["item_make_list"]; //TODO
             _stat.CorpseMakeList = (string) setStats["corpse_make_list"]; //TODO
-            _stat.AdditionalMakeList = (string) setStats["additional_make_list"]; //TODO
-            _stat.AdditionalMakeMultiList = (string) setStats["additional_make_multi_list"]; //TODO
+            _stat.AdditionalMakeList = ParseAdditionalList((string) setStats["additional_make_list"]);
+            _stat.AdditionalMakeMultiList = ParseAdditionalList((string) setStats["additional_make_multi_list"]);
             _stat.HpIncrease = ToShort(setStats["hp_increase"]);
             _stat.MpIncrease = ToShort(setStats["mp_increase"]);
             _stat.SafeHeight = ToShort(setStats["safe_height"]);
         }
 
+        /// <summary>
+        /// Parse Drop List
+        /// </summary>
+        /// <param name="additionalMakeMultiList"></param>
+        /// <returns></returns>
+        private IList<ParseNpcAdditionalList> ParseAdditionalList(string additionalMakeMultiList)
+        {
+            var pattern = @"\{(\[([^\]]+)\]);(\d+);(\d+);(\d+\.?\d*)}";
+            var rgx = new Regex(pattern);
+            var itemList = new List<ParseNpcAdditionalList>();
+            var matches = rgx.Matches(additionalMakeMultiList);
+            foreach (Match match in matches)
+            {
+                ParseNpcAdditionalList item = new ParseNpcAdditionalList();
+                item.Name = match.Groups[2].Value;
+                item.Min = int.Parse(match.Groups[3].Value);
+                item.Max = int.Parse(match.Groups[4].Value);
+                item.Chance = double.Parse(match.Groups[5].Value);
+
+                itemList.Add(item);
+            }
+
+            return itemList;
+        }
+
         private IList<float> ToFloatList(object setStat)
         {
-            var items = ((string) setStat).Split(";");
+            Regex regex = new Regex(@"{(.+?)}");
+            string[] items = regex.Match(setStat.ToString()).Groups[1].Value.Split(';');
             return items.Select(ToFloat).ToList();
         }
 
@@ -89,8 +114,83 @@ namespace Core.Module.NpcData
             return ((string) setStat).Split(";").ToList();
         }
 
-        private IDictionary<string, string> ParseNpcAi(object setStat)
+        private ParseNpcAi ParseNpcAi(object setStat)
         {
+            var npcAiName = new ParseNpcAi();
+            var npcAiMatch = Regex.Match(setStat.ToString(), @"{*\[(\w+)\];*");
+            npcAiName.NpcAiName = npcAiMatch.Groups[1].Value;
+            var matches = Regex.Matches(setStat.ToString(), @"{*\[(\w+)]=\[([\w\.]+)\]};*");
+            foreach (Match match in matches)
+            {
+                if (match.Groups[1].Value == "fnHi")
+                {
+                    npcAiName.FnHi = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnSell")
+                {
+                    npcAiName.FnSell = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnBuy")
+                {
+                    npcAiName.FnBuy = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnUnableItemSell")
+                {
+                    npcAiName.FnUnableItemSell = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnYouAreChaotic")
+                {
+                    npcAiName.FnYouAreChaotic = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnNowSiege")
+                {
+                    npcAiName.FnNowSiege = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "FnNotMyLord")
+                {
+                    npcAiName.FnNotMyLord = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnUnderSiege")
+                {
+                    npcAiName.FnUnderSiege = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnNobless")
+                {
+                    npcAiName.FnNobless = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnNoNobless")
+                {
+                    npcAiName.FnNoNobless = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnNoNoblessItem")
+                {
+                    npcAiName.FnNoNoblessItem = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "MoveAroundSocial")
+                {
+                    npcAiName.MoveAroundSocial = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "MoveAroundSocial1")
+                {
+                    npcAiName.MoveAroundSocial1 = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "MoveAroundSocial2")
+                {
+                    npcAiName.MoveAroundSocial2 = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "DoorName1")
+                {
+                    npcAiName.DoorName1 = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "DoorName2")
+                {
+                    npcAiName.DoorName2 = match.Groups[2].Value;
+                }
+            }
+
+            return npcAiName;
+            /*
+            
             var npcAi = new Dictionary<string, string>();
             if (setStat is List<object> list)
             {
@@ -105,12 +205,20 @@ namespace Core.Module.NpcData
             }
             npcAi.TryAdd("npcAi", setStat.ToString());
             return npcAi;
+            */
         }
 
-        private string ParseClanList(string setStat)
+        /// <summary>
+        /// Parse Clan List
+        /// </summary>
+        /// <param name="setStat"></param>
+        /// <returns></returns>
+        private IList<string> ParseClanList(string setStat)
         {
-            string clanList = setStat.RemoveBrackets();
-            return clanList;
+            var clanRegex = new Regex(@"{(.+?)}");
+            var value = clanRegex.Match(setStat).Groups[1].Value;
+            var clanList = value.Replace("@", "").Split(';');
+            return clanList[0] != "" ? clanList.ToList() : new List<string>();
         }
 
         public NpcStat GetStat() => _stat;

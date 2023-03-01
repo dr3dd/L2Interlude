@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Core.Module.ParserEngine
 {
@@ -6,82 +7,44 @@ namespace Core.Module.ParserEngine
     {
         private readonly IResult _result;
         private readonly IDictionary<string, object> _setStats;
+        private readonly string _basePattern = @"npc_begin\s+(\w+)\s+(\d+)\s+\[(\w+)\]\s+(.*)\s+npc_end";
+        private readonly string _subPattern = @"\s*(\w+)=({.*?}\s|[^;\s]*)"; //split expression by key=value1|value2
 
         public ParseNpcData()
         {
             _result = new Result();
             _setStats = new Dictionary<string, object>();
         }
-        
+
+        /// <summary>
+        /// Parse Line of string
+        /// </summary>
+        /// <param name="line"></param>
         public void ParseLine(string line)
         {
-            var split = line.Split("\t");
-            for (int i = 0; i < split.Length; i++)
+            Match matchesBase = Regex.Match(line, _basePattern);
+            _setStats["npc_type"] = matchesBase.Groups[1].Value;
+            _setStats["npc_id"] = matchesBase.Groups[2].Value;
+            _setStats["npc_name"] = matchesBase.Groups[3].Value;
+            
+            if (int.Parse((string) _setStats["npc_id"]) == 29066)
             {
-                var item = split[i];
-                if (item.Contains("npc_begin"))
-                    continue;
-                if (item.Contains("npc_end"))
-                {
-                    _result.AddItem((string) _setStats["npc_name"], new Dictionary<string, object>(_setStats));
-                    _setStats.Clear();
-                    continue;
-                }
-                var parseItem = item.Split("=");
-                switch (parseItem.Length)
-                {
-                    case 2 when IsDropList(parseItem):
-                        _setStats.Add(parseItem[0], parseItem[1]);
-                        continue;
-                    case 2:
-                        _setStats.Add(parseItem[0], parseItem[1].RemoveBrackets());
-                        break;
-                    case > 2:
-                    {
-                        var tmpItem = item.Split(";{");
-                        var fieldName = "";
-                        List<object> fieldValue = new List<object>();
-                        for (int j = 0; j < tmpItem.Length; j++)
-                        {
-                            if (j == 0)
-                            {
-                                var parseItem1 = tmpItem[0].Split("=");
-                                fieldName = parseItem1[0].RemoveBrackets();
-                                fieldValue.Add(parseItem1[1].RemoveBrackets());
-                                continue;
-                            }
-                            fieldValue.Add(tmpItem[j].RemoveBrackets());
-                        }
-                        _setStats.Add(fieldName, fieldValue);
-                        break;
-                    }
-                    default:
-                    {
-                        switch (i)
-                        {
-                            case 1:
-                                _setStats.Add("npc_type", item);
-                                break;
-                            case 2:
-                                _setStats.Add("npc_id", item);
-                                break;
-                            case 3:
-                                _setStats.Add("npc_name", item.Replace("[", "").Replace("]", ""));
-                                break;
-                        }
-                        break;
-                    }
-                }
+                var d = 1;
             }
-        }
-        
-        private bool IsDropList(string[] parseItem)
-        {
-            return parseItem[0] == "corpse_make_list" ||
-                   parseItem[0] == "additional_make_list" ||
-                   parseItem[0] == "additional_make_multi_list";
+            
+            MatchCollection matchesSub = Regex.Matches(line, _subPattern);
+            foreach (Match match in matchesSub)
+            {
+                _setStats[match.Groups[1].Value] = match.Groups[2].Value;
+            }
+            _result.AddItem((string) _setStats["npc_name"], new Dictionary<string, object>(_setStats));
+            _setStats.Clear();
         }
 
+        /// <summary>
+        /// Return Result
+        /// </summary>
+        /// <returns></returns>
         public IResult GetResult()
         {
             return _result;

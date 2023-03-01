@@ -11,8 +11,8 @@ namespace Core.Module.NpcData
         public float AcquireExpRate { get; set; }
         public int AcquireSp { get; set; }
         public bool UnSowing { get; set; }
-        public string Clan { get; set; }
-        public string IgnoreClanList { get; set; }
+        public IList<string> Clan { get; set; }
+        public IList<string> IgnoreClanList { get; set; }
         public int ClanHelpRange { get; set; }
         public string SlotChest { get; set; }
         public string SlotRHand { get; set; }
@@ -20,7 +20,7 @@ namespace Core.Module.NpcData
         public short ShieldDefenseRate { get; set; }
         public short ShieldDefense { get; set; }
         public IList<string> SkillList { get; set; }
-        public IDictionary<string, string> NpcAi { get; set; }
+        public ParseNpcAi NpcAi { get; set; }
         public string Category { get; set; }
         public string Race { get; set; }
         public string Sex { get; set; }
@@ -62,8 +62,8 @@ namespace Core.Module.NpcData
         public float HitTimeFactor { get; set; }
         public string ItemMakeList { get; set; }
         public string CorpseMakeList { get; set; }
-        public string AdditionalMakeList { get; set; }
-        public string AdditionalMakeMultiList { get; set; }
+        public IList<ParseNpcAdditionalList> AdditionalMakeList { get; set; }
+        public IList<ParseNpcAdditionalList> AdditionalMakeMultiList { get; set; }
         public short HpIncrease { get; set; }
         public short MpIncrease { get; set; }
         public short SafeHeight { get; set; }

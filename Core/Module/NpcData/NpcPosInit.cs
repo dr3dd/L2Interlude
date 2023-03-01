@@ -151,14 +151,15 @@ namespace Core.Module.NpcData
             };
             
             var npcAi = npcInstance.GetTemplate().GetStat().NpcAi;
-            npcAi.TryGetValue("MoveAroundSocial", out var moveAroundSocial);
-            npcAi.TryGetValue("MoveAroundSocial1", out var moveAroundSocial1);
-            npcAi.TryGetValue("MoveAroundSocial2", out var moveAroundSocial2);
-            npcAi.TryGetValue("fnHi", out var fnHi);
-            npcAi.TryGetValue("fnNobless", out var fnNobless);
-            npcAi.TryGetValue("fnNoNobless", out var fnNoNobless);
-            npcAi.TryGetValue("fnNoNoblessItem", out var fnNoNoblessItem);
-            npcAi.TryGetValue("fnYouAreChaotic", out var fnYouAreChaotic);
+            var moveAroundSocial = npcAi.MoveAroundSocial;
+            var moveAroundSocial1 = npcAi.MoveAroundSocial1;
+            var moveAroundSocial2 = npcAi.MoveAroundSocial2;
+            var fnHi = npcAi.FnHi;
+            var fnNobless = npcAi.FnNobless;
+            var fnNoNobless = npcAi.FnNoNobless;
+            var fnNoNoblessItem = npcAi.FnNoNoblessItem;
+            var fnYouAreChaotic = npcAi.FnYouAreChaotic;
+            
             
             if (moveAroundSocial != null)
             {
