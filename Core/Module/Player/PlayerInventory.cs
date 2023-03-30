@@ -41,7 +41,7 @@ namespace Core.Module.Player
                 {
                     var itemData = _itemDataInit.GetItemById(item.ItemId);
                     int objectId = _objectIdInit.NextObjectId();
-                    ItemInstance itemInstance = new ItemInstance(objectId)
+                    ItemInstance itemInstance = new ItemInstance(objectId, _playerInstance.ServiceProvider)
                     {
                         UserItemId = item.UserItemId,
                         ItemId = itemData.ItemId,
@@ -266,7 +266,7 @@ namespace Core.Module.Player
         {
             return _items.ContainsKey(userItemId)
                 ? _items[userItemId]
-                : new ItemInstance(0);
+                : new ItemInstance(0, _playerInstance.ServiceProvider);
         }
 
         public List<ItemInstance> GetInventoryItems()

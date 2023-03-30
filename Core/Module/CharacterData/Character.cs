@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Core.Module.ItemData;
 using Core.Module.NpcData;
 using Core.Module.Player;
@@ -41,7 +42,7 @@ namespace Core.Module.CharacterData
 
         public abstract ICharacterCombat CharacterCombat();
         public abstract ICharacterKnownList CharacterKnownList();
-        protected Character()
+        protected Character(IServiceProvider serviceProvider) : base(serviceProvider)
         {
             _characterStatus = new CharacterStatus(this);
             _characterEffect = new CharacterEffect(this);
@@ -133,7 +134,8 @@ namespace Core.Module.CharacterData
                                         PlayerObjectId = ObjectId,
                                         NpcObjectId = npcInstance.ObjectId
                                     };
-                                    await playerInstance.SendObjectToNpcServerAsync(npcServerRequest);
+                                    npcInstance.NpcAi().NoDesire();
+                                    //await playerInstance.SendObjectToNpcServerAsync(npcServerRequest);
                                 }
                             }
                             break;

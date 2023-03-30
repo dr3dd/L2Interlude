@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Core.Module.Player;
 using Core.Module.WorldData;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.ItemData
 {
@@ -17,7 +19,7 @@ namespace Core.Module.ItemData
         public int Amount { get; set; }
         public byte Change { get; set; }
 
-        public ItemInstance(int objectId)
+        public ItemInstance(int objectId, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             ObjectId = objectId;
         }

@@ -7,7 +7,7 @@ using Core.Module.Player;
 
 namespace Core.Module.WorldData
 {
-    internal abstract class World
+    public abstract class World
     {
         public const int ShiftBy = 12;
 

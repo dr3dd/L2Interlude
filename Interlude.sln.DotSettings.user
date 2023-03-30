@@ -2,19 +2,17 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
   &lt;Assembly Path="C:\Users\Viacheslav\.nuget\packages\dbup-core\4.5.0\lib\netstandard2.0\dbup-core.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=08f53c45_002Dbb85_002D4e5a_002Db768_002D7c75c636b69f/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;Solution /&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
-	
-	
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=bb644a1f_002D230a_002D489a_002Dbd17_002Ded5b4e6e45c7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AddSongOfWindTest #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;Project Location="C:\Users\Kitsya\source\repos\Interlude\Test" Presentation="&amp;lt;Test&amp;gt;" /&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fee15176_002D94fe_002D4ada_002Db4f4_002De6e4dff00359/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="AddWindWalkAndSongOfWindTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=6fc46fad_002D2a51_002D4bd3_002Db7ed_002Dc906369efd8c/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AddSongOfWindTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::9BA1548D-81C5-4793-B2D7-E070D0DAAB47::.NETCoreApp,Version=v3.1::Test.PlayerEffectTest.AddWindWalkAndSongOfWindTest&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::9BA1548D-81C5-4793-B2D7-E070D0DAAB47::.NETCoreApp,Version=v3.1::Test.PlayerEffectTest.AddSongOfWindTest&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::9BA1548D-81C5-4793-B2D7-E070D0DAAB47::.NETCoreApp,Version=v3.1::Test.ParseEffectTest.EffectTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::9BA1548D-81C5-4793-B2D7-E070D0DAAB47::net6.0::Test.PlayerEffectTest.AddSongOfWindTest&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7efb9651_002D908a_002D4788_002Da334_002D982514be4bdd/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="AddSongOfWindTest #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Project Location="C:\Users\Viacheslav\RiderProjects\L2Interlude\Test" Presentation="&amp;lt;Test&amp;gt;" /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	
+	
+	
+	
+	
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Equippable/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

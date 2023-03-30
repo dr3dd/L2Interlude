@@ -1,30 +1,46 @@
-﻿using System.Threading.Tasks;
-using Core.Module.CharacterData;
-using Core.Module.SkillData;
-using Core.Module.WorldData;
+﻿using NpcAi.Ai;
+using NpcAi.Handlers;
+using NpcAi.Model;
 
 namespace Core.Module.NpcData
 {
-    public class NpcDesire : CharacterDesire
+    public class NpcAi
     {
         private readonly NpcInstance _npcInstance;
+        private readonly DefaultNpc _defaultNpc;
         
-        public NpcDesire(NpcInstance npcInstance) : base(npcInstance)
+        public NpcAi(NpcInstance npcInstance)
         {
             _npcInstance = npcInstance;
+            var npcName = _npcInstance.GetStat().Name;
+            var npcType = _npcInstance.GetStat().Type;
+            _defaultNpc = NpcHandler.GetNpcHandler(npcName, npcType);
+            var npcAiData = _npcInstance.GetStat().NpcAiData;
+            NpcAiDefault.SetDefaultAiParams(_defaultNpc, npcAiData);
         }
 
-        protected override Task CastDesireAsync(SkillDataModel arg0)
+        public void Created()
+        {
+            _defaultNpc.MySelf = new NpcCreature
+            {
+                Level = _npcInstance.GetStat().Level,
+                Race = 1,
+                NpcObjectId = _npcInstance.ObjectId
+            };
+            _defaultNpc.Created();
+        }
+
+        public void NoDesire()
+        {
+            _defaultNpc.NoDesire();
+        }
+
+        public void Attacker()
         {
             throw new System.NotImplementedException();
         }
 
-        protected override Task IntentionInteractAsync(WorldObject worldObject)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        protected override Task DesireAttackAsync(Character target)
+        public void Talked()
         {
             throw new System.NotImplementedException();
         }

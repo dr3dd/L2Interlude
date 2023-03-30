@@ -8,6 +8,7 @@ using Core.NetworkPacket.ServerPacket.CharacterPacket;
 using Core.TaskManager;
 using Helpers;
 using L2Logger;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.CharacterData
 {
@@ -19,11 +20,13 @@ namespace Core.Module.CharacterData
         private readonly Character _character;
         private bool _cursorKeyMovement = false;
         public bool IsMoving => _move != null;
+        private WorldInit _worldInit;
 
         public CharacterMovement(Character character)
         {
             _character = character;
-            _timeController = Initializer.TimeController();
+            _timeController = character.ServiceProvider.GetRequiredService<GameTimeController>();
+            _worldInit = _character.ServiceProvider.GetRequiredService<WorldInit>();
         }
         
         public void MoveToLocation(int x, int y, int z, int offset)
@@ -93,8 +96,8 @@ namespace Core.Module.CharacterData
             int originalY = y;
             int originalZ = z;
             
-            int gtx = (originalX - Initializer.WorldInit().MapMinX) >> 4;
-            int gty = (originalY - Initializer.WorldInit().MapMinY) >> 4;
+            int gtx = (originalX - _worldInit.MapMinX) >> 4;
+            int gty = (originalY - _worldInit.MapMinY) >> 4;
             
             // Pathfinding checks.
             if (((originalDistance - distance) > 30))

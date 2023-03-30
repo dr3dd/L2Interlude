@@ -20,7 +20,7 @@ namespace Core.Module.NpcData
         public short ShieldDefenseRate { get; set; }
         public short ShieldDefense { get; set; }
         public IList<string> SkillList { get; set; }
-        public ParseNpcAi NpcAi { get; set; }
+        public NpcAiData NpcAiData { get; set; }
         public string Category { get; set; }
         public string Race { get; set; }
         public string Sex { get; set; }
@@ -62,8 +62,8 @@ namespace Core.Module.NpcData
         public float HitTimeFactor { get; set; }
         public string ItemMakeList { get; set; }
         public string CorpseMakeList { get; set; }
-        public IList<ParseNpcAdditionalList> AdditionalMakeList { get; set; }
-        public IList<ParseNpcAdditionalList> AdditionalMakeMultiList { get; set; }
+        public IList<NpcAdditionalListData> AdditionalMakeList { get; set; }
+        public IList<NpcAdditionalListData> AdditionalMakeMultiList { get; set; }
         public short HpIncrease { get; set; }
         public short MpIncrease { get; set; }
         public short SafeHeight { get; set; }

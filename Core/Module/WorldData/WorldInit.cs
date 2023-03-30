@@ -4,7 +4,7 @@ using L2Logger;
 
 namespace Core.Module.WorldData
 {
-	internal class WorldInit : World
+	public class WorldInit : World
     {
 	    public WorldInit()
 	    {

@@ -1,20 +1,26 @@
 using Core.Module.CharacterData;
+using Core.Module.Player;
 using Xunit;
 
-namespace Test
+namespace Test;
+
+public class PlayerMovementTest : IClassFixture<PlayerInstanceFixture>
 {
-    public class PlayerMovementTest : PlayerBase
+    private readonly PlayerInstance _playerInstance;
+    public PlayerMovementTest(PlayerInstanceFixture playerInstanceFixture)
     {
-        [Fact]
-        public void MoveToLocationTest()
-        {
-            var playerInstance = GetPlayerInstance();
-            playerInstance.Location = new Location(-71453, 258305, -3104);
-            playerInstance.CharacterMovement().MoveToLocation(-71953, 258905, -3154, 0);
+        _playerInstance = playerInstanceFixture.GetPlayerInstance();
+        _playerInstance.CharacterEffect().RemoveEffects();
+    }
+
+    [Fact]
+    public void MoveToLocationTest()
+    {
+        _playerInstance.Location = new Location(-71453, 258305, -3104);
+        _playerInstance.CharacterMovement().MoveToLocation(-71953, 258905, -3154, 0);
             
-            Assert.Equal(-71953, playerInstance.CharacterMovement().GetXDestination());
-            Assert.Equal(258905, playerInstance.CharacterMovement().GetYDestination());
-            Assert.Equal(-3154, playerInstance.CharacterMovement().GetZDestination());
-        }
+        Assert.Equal(-71953, _playerInstance.CharacterMovement().GetXDestination());
+        Assert.Equal(258905, _playerInstance.CharacterMovement().GetYDestination());
+        Assert.Equal(-3154, _playerInstance.CharacterMovement().GetZDestination());
     }
 }

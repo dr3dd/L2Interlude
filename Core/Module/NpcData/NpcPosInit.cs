@@ -16,9 +16,11 @@ namespace Core.Module.NpcData
         private IList<NpcMakerBegin> _makerBegins;
         private readonly ObjectIdInit _objectIdInit;
         private readonly NpcDataInit _npcDataInit;
+        private readonly IServiceProvider _serviceProvider;
 
         public NpcPosInit(IServiceProvider provider) : base(provider)
         {
+            _serviceProvider = provider;
             _objectIdInit = provider.GetRequiredService<ObjectIdInit>();
             _npcDataInit = provider.GetRequiredService<NpcDataInit>();
             _parse = new ParseNpcPos(new Result());
@@ -56,10 +58,10 @@ namespace Core.Module.NpcData
                             
                             if (npcTemplate.GetStat().Type == "citizen" || npcTemplate.GetStat().Type == "teleporter" || npcTemplate.GetStat().Type == "guard")
                             {
-                                var npcInstance = new NpcInstance(_objectIdInit.NextObjectId(), npcTemplate);
+                                var npcInstance = new NpcInstance(_objectIdInit.NextObjectId(), npcTemplate, _serviceProvider);
                                 npcInstance.OnSpawn(x, y, z, h);
 
-                                InitNpcInNpcService(npcInstance);
+                                //InitNpcInNpcService(npcInstance);
                             }
                         }
 
@@ -113,13 +115,13 @@ namespace Core.Module.NpcData
                                 //npcBegin.Total
                                 foreach (var item in lst.OrderBy(x => Rnd.Next()).Take(1))
                                 {
-                                    var npcInstance = new NpcInstance(_objectIdInit.NextObjectId(), npcTemplate);
+                                    var npcInstance = new NpcInstance(_objectIdInit.NextObjectId(), npcTemplate, _serviceProvider);
                                     npcInstance.CharacterStatus().CurrentHp = npcTemplate.GetStat().OrgHp;
                                     npcInstance.SpawnX = item["x"];
                                     npcInstance.SpawnY = item["y"];
                                     npcInstance.SpawnZ = item["z"];
                                     npcInstance.OnSpawn(item["x"], item["y"], item["z"], Rnd.Next(61794));
-                                    InitNpcInNpcService(npcInstance);
+                                    //InitNpcInNpcService(npcInstance);
                                 }
                             }
                         }
@@ -150,7 +152,7 @@ namespace Core.Module.NpcData
                 CanBeAttacked = npcInstance.GetTemplate().GetStat().CanBeAttacked == 1
             };
             
-            var npcAi = npcInstance.GetTemplate().GetStat().NpcAi;
+            var npcAi = npcInstance.GetTemplate().GetStat().NpcAiData;
             var moveAroundSocial = npcAi.MoveAroundSocial;
             var moveAroundSocial1 = npcAi.MoveAroundSocial1;
             var moveAroundSocial2 = npcAi.MoveAroundSocial2;
