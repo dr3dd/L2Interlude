@@ -28,7 +28,7 @@ namespace Core.Module.NpcData
             _stat.ShieldDefenseRate = ToShort(setStats["shield_defense_rate"]);
             _stat.ShieldDefense = ToShort(setStats["shield_defense"]);
             _stat.SkillList = ParseSkill(setStats["skill_list"]);
-            _stat.NpcAi = ParseNpcAi(setStats["npc_ai"]);
+            _stat.NpcAiData = ParseNpcAi(setStats["npc_ai"]);
             _stat.Category = (string) setStats["category"]; //TODO
             _stat.Race = (string) setStats["race"];
             _stat.Sex = (string) setStats["sex"];
@@ -82,15 +82,15 @@ namespace Core.Module.NpcData
         /// </summary>
         /// <param name="additionalMakeMultiList"></param>
         /// <returns></returns>
-        private IList<ParseNpcAdditionalList> ParseAdditionalList(string additionalMakeMultiList)
+        private IList<NpcAdditionalListData> ParseAdditionalList(string additionalMakeMultiList)
         {
             var pattern = @"\{(\[([^\]]+)\]);(\d+);(\d+);(\d+\.?\d*)}";
             var rgx = new Regex(pattern);
-            var itemList = new List<ParseNpcAdditionalList>();
+            var itemList = new List<NpcAdditionalListData>();
             var matches = rgx.Matches(additionalMakeMultiList);
             foreach (Match match in matches)
             {
-                ParseNpcAdditionalList item = new ParseNpcAdditionalList();
+                NpcAdditionalListData item = new NpcAdditionalListData();
                 item.Name = match.Groups[2].Value;
                 item.Min = int.Parse(match.Groups[3].Value);
                 item.Max = int.Parse(match.Groups[4].Value);
@@ -114,9 +114,9 @@ namespace Core.Module.NpcData
             return ((string) setStat).Split(";").ToList();
         }
 
-        private ParseNpcAi ParseNpcAi(object setStat)
+        private NpcAiData ParseNpcAi(object setStat)
         {
-            var npcAiName = new ParseNpcAi();
+            var npcAiName = new NpcAiData();
             var npcAiMatch = Regex.Match(setStat.ToString(), @"{*\[(\w+)\];*");
             npcAiName.NpcAiName = npcAiMatch.Groups[1].Value;
             var matches = Regex.Matches(setStat.ToString(), @"{*\[(\w+)]=\[([\w\.]+)\]};*");
@@ -168,15 +168,15 @@ namespace Core.Module.NpcData
                 }
                 if (match.Groups[1].Value == "MoveAroundSocial")
                 {
-                    npcAiName.MoveAroundSocial = match.Groups[2].Value;
+                    npcAiName.MoveAroundSocial = short.Parse(match.Groups[2].Value);
                 }
                 if (match.Groups[1].Value == "MoveAroundSocial1")
                 {
-                    npcAiName.MoveAroundSocial1 = match.Groups[2].Value;
+                    npcAiName.MoveAroundSocial1 = short.Parse(match.Groups[2].Value);
                 }
                 if (match.Groups[1].Value == "MoveAroundSocial2")
                 {
-                    npcAiName.MoveAroundSocial2 = match.Groups[2].Value;
+                    npcAiName.MoveAroundSocial2 = short.Parse(match.Groups[2].Value);
                 }
                 if (match.Groups[1].Value == "DoorName1")
                 {

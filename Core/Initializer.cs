@@ -94,7 +94,7 @@ namespace Core
             ServiceProvider.GetRequiredService<WorldInit>().Run();
             ServiceProvider.GetRequiredService<AreaDataInit>().Run();
             ServiceProvider.GetRequiredService<NpcDataInit>().Run();
-            //ServiceProvider.GetRequiredService<NpcPosInit>().Run();
+            ServiceProvider.GetRequiredService<NpcPosInit>().Run();
             ServiceProvider.GetRequiredService<GeoEngineInit>().Run();
             LoggerManager.Info("----Html Cache----");
             ServiceProvider.GetRequiredService<HtmlCacheInit>().Run();

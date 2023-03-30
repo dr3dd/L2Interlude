@@ -1,32 +1,35 @@
-﻿using Xunit;
+﻿using Core.Module.Player;
+using Xunit;
 
-namespace Test
+namespace Test;
+
+public class PlayerStatusTest : IClassFixture<PlayerInstanceFixture>
 {
-    public class PlayerStatusTest : PlayerBase
+    private readonly PlayerInstance _playerInstance;
+    public PlayerStatusTest(PlayerInstanceFixture playerInstanceFixture)
     {
-        
-        [Fact]
-        public void GetMaxCpTest()
-        {
-            var playerInstance = GetPlayerInstance();
-            var status = playerInstance.PlayerStatus();
-            Assert.Equal(50, status.GetMaxCp());
-        }
-        [Fact]
-        public void GetMaxHpTest()
-        {
-            var playerInstance = GetPlayerInstance();
-            var status = playerInstance.PlayerStatus();
-            Assert.Equal(126, status.GetMaxHp());
-        }
+        _playerInstance = playerInstanceFixture.GetPlayerInstance();
+        _playerInstance.CharacterEffect().RemoveEffects();
+    }
 
-        [Fact]
-        public void GetMaxMpTest()
-        {
-            var playerInstance = GetPlayerInstance();
-            var status = playerInstance.PlayerStatus();
-            Assert.Equal(38, status.GetMaxMp());
-        }
-        
+    [Fact]
+    public void GetMaxCpTest()
+    {
+        var status = _playerInstance.PlayerStatus();
+        Assert.Equal(50, status.GetMaxCp());
+    }
+
+    [Fact]
+    public void GetMaxHpTest()
+    {
+        var status = _playerInstance.PlayerStatus();
+        Assert.Equal(126, status.GetMaxHp());
+    }
+
+    [Fact]
+    public void GetMaxMpTest()
+    {
+        var status = _playerInstance.PlayerStatus();
+        Assert.Equal(38, status.GetMaxMp());
     }
 }

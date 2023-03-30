@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Core.Module.Player;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.WorldData
 {
@@ -7,6 +9,12 @@ namespace Core.Module.WorldData
     {
         public int ObjectId { get; set; }
         private ObjectPosition _position;
+        public IServiceProvider ServiceProvider { get; }
+
+        protected WorldObject(IServiceProvider serviceProvider)
+        {
+            ServiceProvider = serviceProvider;
+        }
         
         public abstract Task RequestActionAsync(PlayerInstance playerInstance);
 
@@ -50,7 +58,7 @@ namespace Core.Module.WorldData
         /// </summary>
         private void StoreWorldObject()
         {
-            Initializer.WorldInit().StoreWorldObject(this);
+            ServiceProvider.GetRequiredService<WorldInit>().StoreWorldObject(this);
         }
 
         public virtual void SpawnMe(int x, int y, int z)
@@ -67,9 +75,13 @@ namespace Core.Module.WorldData
             worldRegion.AddVisibleObject(this);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private WorldRegionData GetRegionByLocation()
         {
-            return Initializer.WorldInit().GetRegion(WorldObjectPosition().GetWorldPosition());
+            return ServiceProvider.GetRequiredService<WorldInit>().GetRegion(WorldObjectPosition().GetWorldPosition());
         }
     }
 }

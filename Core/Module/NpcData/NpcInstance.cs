@@ -16,6 +16,7 @@ namespace Core.Module.NpcData
         private readonly NpcCombat _npcCombat;
         private readonly NpcStatus _npcStatus;
         private readonly NpcDesire _npcDesire;
+        private readonly NpcAi _npcAi;
         public readonly int NpcId;
         public readonly int NpcHashId;
         
@@ -23,18 +24,19 @@ namespace Core.Module.NpcData
         public int SpawnY { get; set; }
         public int SpawnZ { get; set; }
         
-        public NpcInstance(int objectId, NpcTemplateInit npcTemplateInit)
+        public NpcInstance(int objectId, NpcTemplateInit npcTemplateInit, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             ObjectId = objectId;
-            NpcHashId = npcTemplateInit.GetStat().Id + 1000000;
-            CharacterName = npcTemplateInit.GetStat().Name;
-            NpcId = npcTemplateInit.GetStat().Id;
+            _npcTemplate = npcTemplateInit;
+            NpcHashId = GetStat().Id + 1000000;
+            CharacterName = GetStat().Name;
+            NpcId = GetStat().Id;
             _npcKnownList = new NpcKnownList(this);
             _npcUseSkill = new NpcUseSkill(this);
-            _npcTemplate = npcTemplateInit;
             _npcCombat = new NpcCombat(this);
             _npcStatus = new NpcStatus(this);
             _npcDesire = new NpcDesire(this);
+            _npcAi = new NpcAi(this);
         }
 
         public NpcUseSkill NpcUseSkill() => _npcUseSkill;
@@ -47,6 +49,8 @@ namespace Core.Module.NpcData
         public override ICharacterKnownList CharacterKnownList() => _npcKnownList;
         public NpcTemplateInit GetTemplate() => _npcTemplate;
         public NpcDesire NpcDesire() => _npcDesire;
+        public NpcAi NpcAi() => _npcAi;
+        public NpcStat GetStat() => _npcTemplate.GetStat();
         
         public void OnSpawn(int x, int y, int z, int h)
         {
@@ -65,15 +69,25 @@ namespace Core.Module.NpcData
                     playerInstance.CharacterDesire().AddDesire(Desire.AttackDesire, this);
                 }
             }
+
+            if (_npcTemplate.GetStat().CanBeAttacked == 1)
+            {
+                NpcAi().Attacker();
+                return;
+            }
+            NpcAi().Talked();
+            /*
             var npcServerRequest = new NpcServerRequest
             {
                 EventName = _npcTemplate.GetStat().CanBeAttacked == 1 ? EventName.Attacked : EventName.Talked,
-                NpcName = GetTemplate().GetStat().Name,
-                NpcType = GetTemplate().GetStat().Type,
+                NpcName = GetStat().Name,
+                NpcType = GetStat().Type,
                 PlayerObjectId = playerInstance.ObjectId,
                 NpcObjectId = ObjectId
             };
+            
             await Initializer.SendMessageToNpcService(npcServerRequest);
+            */
         }
 
         public async Task ShowPage(PlayerInstance player, string fnHi)

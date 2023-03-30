@@ -27,8 +27,8 @@ namespace Core.Module.CharacterData
         public CharacterDesireCast(Character character)
         {
             _character = character;
-            _geoEngine = Initializer.ServiceProvider.GetRequiredService<GeoEngineInit>();
-            _timeController = Initializer.ServiceProvider.GetRequiredService<GameTimeController>();
+            _geoEngine = character.ServiceProvider.GetRequiredService<GeoEngineInit>();
+            _timeController = character.ServiceProvider.GetRequiredService<GameTimeController>();
             _disabledSkills = new List<SkillDataModel>();
         }
 

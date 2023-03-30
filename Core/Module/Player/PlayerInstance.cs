@@ -35,14 +35,12 @@ namespace Core.Module.Player
         private readonly PlayerAction _playerAction;
             
         public Location Location { get; set; }
-        public IServiceProvider ServiceProvider { get; }
         public NpcInstance LastTalkedNpc { get; set; }
         public GameServiceController Controller { get; set; }
         private readonly IUnitOfWork _unitOfWork;
         private readonly WorldInit _worldInit;
-        public PlayerInstance(ITemplateHandler template, PlayerAppearance playerAppearance, IServiceProvider provider, IUnitOfWork unitOfWork)
+        public PlayerInstance(ITemplateHandler template, PlayerAppearance playerAppearance, IServiceProvider provider, IUnitOfWork unitOfWork) : base(provider)
         {
-            ServiceProvider = provider;
             CharacterName = playerAppearance.CharacterName;
             _templateHandler = template;
             _playerAppearance = playerAppearance;
@@ -138,6 +136,7 @@ namespace Core.Module.Player
                 {
                     continue;
                 }
+                /*
                 var npcServerRequest = new NpcServerRequest
                 {
                     EventName = EventName.Created,
@@ -147,17 +146,22 @@ namespace Core.Module.Player
                     IsActiveNpc = true
                 };
                 await SendObjectToNpcServerAsync(npcServerRequest);
+                */
+
+                npcInstance.NpcAi().Created();
                 CharacterKnownList().AddToKnownList(npcInstance.ObjectId, npcInstance);
                 npcInstance.CharacterKnownList().AddToKnownList(ObjectId, this);
                 await SendPacketAsync(new NpcInfo(npcInstance));
             }
         }
 
+        /* delete
         public async Task SendObjectToNpcServerAsync(NpcServerRequest npcServerRequest)
         {
             await ServiceProvider.GetRequiredService<NpcServiceController>()
                     .SendMessageToNpcService(npcServerRequest);
         }
+        */
 
 
         public override async Task SendToKnownPlayers(ServerPacket packet)
