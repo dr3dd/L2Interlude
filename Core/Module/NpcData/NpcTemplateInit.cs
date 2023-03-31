@@ -92,9 +92,9 @@ namespace Core.Module.NpcData
             {
                 NpcAdditionalListData item = new NpcAdditionalListData();
                 item.Name = match.Groups[2].Value;
-                item.Min = int.Parse(match.Groups[3].Value);
-                item.Max = int.Parse(match.Groups[4].Value);
-                item.Chance = double.Parse(match.Groups[5].Value);
+                item.Min = ToInt(match.Groups[3].Value);
+                item.Max = ToInt(match.Groups[4].Value);
+                item.Chance = ToFloat(match.Groups[5].Value);
 
                 itemList.Add(item);
             }

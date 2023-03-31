@@ -5,6 +5,6 @@
         public string Name { get; set; }
         public int Min { get; set; }
         public int Max { get; set; }
-        public double Chance { get; set; }
+        public float Chance { get; set; }
     }
 }
