@@ -14,7 +14,13 @@ namespace Core.TaskManager
             {
                 await Task.Delay(delay, token);
                 action.Invoke();
-            }, token);
+            }, token).ContinueWith(ex =>
+            {
+                if (ex.IsFaulted)
+                {
+                    LoggerManager.Error("ScheduleAtFixed: " + ex.Exception.Message);
+                }
+            });
         }
         
         public static Task ScheduleAtFixedRate(Action action, int delay, int period, CancellationToken token)

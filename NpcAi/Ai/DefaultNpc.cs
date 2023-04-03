@@ -40,7 +40,7 @@ namespace NpcAi.Ai
         protected double EffectActionBoostValue = 0.000000;
         protected double MoveToTargetBoostValue = 0.000000;
         
-        public NpcCreature MySelf { get; set; }
+        public dynamic MySelf { get; set; }
         public Talker Talker { get; set; }
 
         public abstract void Created();

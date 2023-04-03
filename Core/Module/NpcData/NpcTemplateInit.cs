@@ -117,9 +117,10 @@ namespace Core.Module.NpcData
         private NpcAiData ParseNpcAi(object setStat)
         {
             var npcAiName = new NpcAiData();
-            var npcAiMatch = Regex.Match(setStat.ToString(), @"{*\[(\w+)\];*");
+            var input = setStat.ToString().TrimEnd();
+            var npcAiMatch = Regex.Match(input, @"{*\[(\w+)\];*");
             npcAiName.NpcAiName = npcAiMatch.Groups[1].Value;
-            var matches = Regex.Matches(setStat.ToString(), @"{*\[(\w+)]=\[([\w\.]+)\]};*");
+            var matches = Regex.Matches(input, @"{*\[(\w+)]=\[([\w\.]+)\]};*");
             foreach (Match match in matches)
             {
                 if (match.Groups[1].Value == "fnHi")
@@ -166,18 +167,6 @@ namespace Core.Module.NpcData
                 {
                     npcAiName.FnNoNoblessItem = match.Groups[2].Value;
                 }
-                if (match.Groups[1].Value == "MoveAroundSocial")
-                {
-                    npcAiName.MoveAroundSocial = short.Parse(match.Groups[2].Value);
-                }
-                if (match.Groups[1].Value == "MoveAroundSocial1")
-                {
-                    npcAiName.MoveAroundSocial1 = short.Parse(match.Groups[2].Value);
-                }
-                if (match.Groups[1].Value == "MoveAroundSocial2")
-                {
-                    npcAiName.MoveAroundSocial2 = short.Parse(match.Groups[2].Value);
-                }
                 if (match.Groups[1].Value == "DoorName1")
                 {
                     npcAiName.DoorName1 = match.Groups[2].Value;
@@ -187,7 +176,23 @@ namespace Core.Module.NpcData
                     npcAiName.DoorName2 = match.Groups[2].Value;
                 }
             }
-
+            var matchesSocial = Regex.Matches(input, @"{(\[([\w\s]+)\])=(\d+|[\w\d\s.]+)}");
+            foreach (Match match in matchesSocial)
+            {
+                if (match.Groups[2].Value == "MoveAroundSocial")
+                {
+                    npcAiName.MoveAroundSocial = ToShort(match.Groups[3].Value);
+                }
+                if (match.Groups[2].Value == "MoveAroundSocial1")
+                {
+                    npcAiName.MoveAroundSocial1 = ToShort(match.Groups[3].Value);
+                }
+                if (match.Groups[2].Value == "MoveAroundSocial2")
+                {
+                    npcAiName.MoveAroundSocial2 = ToShort(match.Groups[3].Value);
+                }
+            }
+            
             return npcAiName;
             /*
             
