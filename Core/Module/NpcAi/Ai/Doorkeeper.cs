@@ -22,12 +22,12 @@ public class Doorkeeper : Citizen
         await base.Talked(talker);
     }
 
-    public override void MenuSelected(Talker talker, int ask, int reply, string fhtml0)
+    public override async Task MenuSelected(Talker talker, int ask, int reply, string fhtml0)
     {
         switch (ask)
         {
             case -201 when MySelf.CastleIsUnderSiege():
-                MySelf.ShowPage(talker, FnUnderSiege);
+                await MySelf.ShowPage(talker, FnUnderSiege);
                 break;
             case -201:
                 switch (reply)

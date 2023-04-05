@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -152,7 +153,7 @@ namespace Core.Module.NpcData
 
         public string MakeFString(int i, string empty, string s, string empty1, string s1, string empty2)
         {
-            throw new System.NotImplementedException();
+            return "TmpItemName";
         }
 
         public void ShowSkillList(Talker talker, string empty)
@@ -183,6 +184,12 @@ namespace Core.Module.NpcData
         public void AddAttackDesire(Talker attacked, int i, int f0)
         {
             throw new System.NotImplementedException();
+        }
+
+        public async Task MenuSelect(int askId, int replyId, PlayerInstance playerInstance)
+        {
+            var talker = new Talker(playerInstance.ObjectId, playerInstance.Level);
+            await _defaultNpc.MenuSelected(talker, askId, replyId, String.Empty);
         }
     }
 }

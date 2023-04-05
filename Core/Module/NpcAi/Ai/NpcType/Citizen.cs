@@ -75,7 +75,7 @@ public class Citizen : DefaultNpc
         MySelf.AddTimerEx(1671, 10000);
     }
 
-    public virtual void MenuSelected(Talker talker, int ask, int reply, string fhtml0)
+    public override Task MenuSelected(Talker talker, int ask, int reply, string fhtml0)
     {
         if (ask == -1000)
         {
@@ -86,6 +86,8 @@ public class Citizen : DefaultNpc
         {
                 
         }
+
+        return Task.FromResult(1);
     }
             
 }
