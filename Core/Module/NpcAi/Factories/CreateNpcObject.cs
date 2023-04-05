@@ -19,7 +19,7 @@ public class CreateNpcObject<T>
     /// <returns></returns>
     public T CreateNpc()
     {
-        var namespaceName = "NpcAi.Ai.Npc" + char.ToUpper(_npcType[0]) + _npcType.Substring(1);
+        var namespaceName = "Core.Module.NpcAi.Ai.Npc" + char.ToUpper(_npcType[0]) + _npcType.Substring(1);
         var className = namespaceName + "." + _className;
         var objectType = Type.GetType(className)!;
         return (T)Activator.CreateInstance(objectType)!;
