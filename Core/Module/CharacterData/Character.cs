@@ -7,6 +7,7 @@ using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
 using Core.NetworkPacket.ServerPacket.CharacterPacket;
 using Helpers;
+using Microsoft.VisualBasic.CompilerServices;
 using Network;
 
 namespace Core.Module.CharacterData
@@ -24,6 +25,7 @@ namespace Core.Module.CharacterData
         
         public int Heading { get; set; }
         public string CharacterName { get; protected set; }
+        public byte Level { get; set; }
         public abstract int GetMaxHp();
         public abstract int GetMagicalAttack();
         public abstract int GetMagicalDefence();
