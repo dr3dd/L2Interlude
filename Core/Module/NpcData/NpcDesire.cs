@@ -46,32 +46,29 @@ namespace Core.Module.NpcData
             {
                 _currentDesirePriority = 0;
                 _npcInstance.NpcAi().NoDesire();
-            }, timeDesire);
+            }, timeDesire * 1000);
         }
 
         public async Task AddMoveAroundDesire(int timeDesire, int desire)
         {
-            if (_currentDesirePriority > desire)
-                return;
             _currentDesirePriority = desire;
             
-            var x1 = (_npcInstance.SpawnX + Rnd.Next(300 * 2)) - 300;
-            var y1 = (_npcInstance.SpawnY + Rnd.Next(300 * 2)) - 300;
-            var z1 = _npcInstance.SpawnZ;
-
-            if (_npcInstance.CharacterMovement().IsMoving)
+            if (Rnd.Next(100) < 30)
             {
-                return;
+                var x1 = (_npcInstance.SpawnX + Rnd.Next(300 * 2)) - 300;
+                var y1 = (_npcInstance.SpawnY + Rnd.Next(300 * 2)) - 300;
+                var z1 = _npcInstance.SpawnZ;
+                await _npcInstance.NpcDesire().MoveToAsync(x1, y1, z1);
             }
-
-            await _npcInstance.NpcDesire().MoveToAsync(x1, y1, z1);
+            
+            
             
             //start no desire when moving finished 
             TaskManagerScheduler.Schedule(() =>
             {
                 _currentDesirePriority = 0;
                 _npcInstance.NpcAi().NoDesire();
-            }, timeDesire);
+            }, timeDesire * 1000);
         }
     }
 }

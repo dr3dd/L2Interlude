@@ -28,13 +28,13 @@ namespace Core.Module.NpcData
             _defaultNpc = NpcHandler.GetNpcHandler(npcName, npcType);
             var npcAiData = _npcInstance.GetStat().NpcAiData;
             NpcAiDefault.SetDefaultAiParams(_defaultNpc, npcAiData);
-            NoDesire();
         }
 
         public void Created()
         {
             _defaultNpc.MySelf = this;
             _defaultNpc.Created();
+            _defaultNpc.NoDesire();
         }
 
         public void NoDesire()
