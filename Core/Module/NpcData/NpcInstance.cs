@@ -118,7 +118,7 @@ namespace Core.Module.NpcData
 
         public async Task MenuSelect(int askId, int replyId, PlayerInstance playerInstance)
         {
-            await NpcChatWindow.MenuSelect(askId, replyId, playerInstance, this);
+            await NpcAi().MenuSelect(askId, replyId, playerInstance);
         }
 
         public async Task CastleGateOpenClose(string doorName, int openClose, PlayerInstance player)
