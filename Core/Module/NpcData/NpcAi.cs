@@ -28,6 +28,7 @@ namespace Core.Module.NpcData
             _defaultNpc = NpcHandler.GetNpcHandler(npcName, npcType);
             var npcAiData = _npcInstance.GetStat().NpcAiData;
             NpcAiDefault.SetDefaultAiParams(_defaultNpc, npcAiData);
+            NoDesire();
         }
 
         public void Created()
@@ -66,9 +67,15 @@ namespace Core.Module.NpcData
             _additionalTime = 0;
         }
         
-        public async Task AddEffectActionDesire (NpcAi sm, int actionId, int moveAround, int desire)
+        public void AddEffectActionDesire (NpcAi sm, int actionId, int moveAround, int desire)
         {
-            await _npcInstance.SendToKnownPlayers(new SocialAction(_npcInstance.ObjectId, actionId));
+            _npcInstance.NpcDesire().AddEffectActionDesire(actionId, moveAround, desire);
+            //await _npcInstance.SendToKnownPlayers(new SocialAction(_npcInstance.ObjectId, actionId));
+        }
+
+        public void AddMoveAroundDesire(int moveAround, int desire)
+        {
+            _npcInstance.NpcDesire().AddMoveAroundDesire(moveAround, desire);
         }
     }
 }
