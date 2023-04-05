@@ -113,7 +113,7 @@ namespace Core.Module.NpcData
                                 }
                                 
                                 //npcBegin.Total
-                                foreach (var item in lst.OrderBy(x => Rnd.Next()).Take(1))
+                                foreach (var item in lst.OrderBy(x => Rnd.Next()).Take(npcBegin.Total))
                                 {
                                     var npcInstance = new NpcInstance(_objectIdInit.NextObjectId(), npcTemplate, _serviceProvider);
                                     npcInstance.CharacterStatus().CurrentHp = npcTemplate.GetStat().OrgHp;
