@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Core.Module.CharacterData;
+using Core.Module.NpcAi.Ai.NpcType;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
-using Helpers;
 
 namespace Core.Module.NpcData
 {
@@ -11,29 +11,14 @@ namespace Core.Module.NpcData
         
         public static async Task TeleportRequest(PlayerInstance playerInstance, NpcInstance npcInstance)
         {
-            var npcServerRequest = new NpcServerRequest
-            {
-                EventName = EventName.TeleportRequest,
-                NpcName = npcInstance.GetTemplate().GetStat().Name,
-                NpcType = npcInstance.GetTemplate().GetStat().Type,
-                PlayerObjectId = playerInstance.ObjectId,
-                NpcObjectId = npcInstance.ObjectId
-            };
-            await Initializer.SendMessageToNpcService(npcServerRequest);
+            await npcInstance.NpcAi().TeleportRequested(playerInstance);
         }
         
         public static async Task TeleportToLocation(int teleportId, PlayerInstance playerInstance, NpcInstance npcInstance)
         {
-            var npcServerRequest = new NpcServerRequest
-            {
-                EventName = EventName.TeleportRequested,
-                NpcName = npcInstance.GetTemplate().GetStat().Name,
-                NpcType = npcInstance.GetTemplate().GetStat().Type,
-                PlayerObjectId = playerInstance.ObjectId,
-                NpcObjectId = npcInstance.ObjectId,
-                TeleportId = teleportId
-            };
-            await Initializer.SendMessageToNpcService(npcServerRequest);
+            var npcTeleport = (Teleporter) npcInstance.NpcAi().GetDefaultNpc();
+            var teleportList = npcTeleport.Position[teleportId];
+            await npcInstance.DoTeleportToLocation(teleportList, playerInstance);
         }
         
         public static async Task TeleportToLocation(int getX, int getY, int getZ, PlayerInstance playerInstance)

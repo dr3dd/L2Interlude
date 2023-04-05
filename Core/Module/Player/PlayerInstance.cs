@@ -60,6 +60,7 @@ namespace Core.Module.Player
             _playerKnownList = new PlayerKnownList(this);
             _notifyEvent = new PlayerNotifyEvent(this);
 
+            Level = PlayerStatus().Level;
             _worldInit = provider.GetRequiredService<WorldInit>();
         }
 

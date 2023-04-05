@@ -9,7 +9,6 @@
       <ProjectReference Include="..\DataBase\DataBase.csproj" />
       <ProjectReference Include="..\L2Logger\L2Logger.csproj" />
       <ProjectReference Include="..\Network\Network.csproj" />
-      <ProjectReference Include="..\NpcAi\NpcAi.csproj" />
     </ItemGroup>
 
 </Project>

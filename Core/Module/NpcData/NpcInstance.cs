@@ -31,6 +31,7 @@ namespace Core.Module.NpcData
             NpcHashId = GetStat().Id + 1000000;
             CharacterName = GetStat().Name;
             NpcId = GetStat().Id;
+            Level = GetStat().Level;
             _npcKnownList = new NpcKnownList(this);
             _npcUseSkill = new NpcUseSkill(this);
             _npcCombat = new NpcCombat(this);
@@ -72,10 +73,10 @@ namespace Core.Module.NpcData
 
             if (_npcTemplate.GetStat().CanBeAttacked == 1)
             {
-                NpcAi().Attacker();
+                NpcAi().Attacked(playerInstance);
                 return;
             }
-            NpcAi().Talked();
+            NpcAi().Talked(playerInstance);
             /*
             var npcServerRequest = new NpcServerRequest
             {
