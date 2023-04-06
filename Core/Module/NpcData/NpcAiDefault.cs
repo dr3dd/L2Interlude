@@ -26,6 +26,12 @@ public class NpcAiDefault
             guard.FnHi = fnHi;
         }
 
+        if (defaultNpc is Doorkeeper doorkeeper)
+        {
+            doorkeeper.DoorName1 = npcAiData.DoorName1;
+            doorkeeper.DoorName2 = npcAiData.DoorName2;
+        }
+
         defaultNpc.MoveAroundSocial = npcAiData.MoveAroundSocial;
         defaultNpc.MoveAroundSocial1 = npcAiData.MoveAroundSocial1;
         defaultNpc.MoveAroundSocial2 = npcAiData.MoveAroundSocial2;

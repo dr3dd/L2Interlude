@@ -17,6 +17,7 @@ namespace Core.Module.NpcData
         private readonly NpcStatus _npcStatus;
         private readonly NpcDesire _npcDesire;
         private readonly NpcAi _npcAi;
+        private readonly NpcTeleport _npcTeleport;
         public readonly int NpcId;
         public readonly int NpcHashId;
         
@@ -38,9 +39,11 @@ namespace Core.Module.NpcData
             _npcStatus = new NpcStatus(this);
             _npcDesire = new NpcDesire(this);
             _npcAi = new NpcAi(this);
+            _npcTeleport = new NpcTeleport(this);
         }
 
         public NpcUseSkill NpcUseSkill() => _npcUseSkill;
+        public NpcTeleport NpcTeleport() => _npcTeleport;
         public override Weapon GetActiveWeaponItem()
         {
             throw new NotImplementedException();
@@ -77,43 +80,11 @@ namespace Core.Module.NpcData
                 return;
             }
             NpcAi().Talked(playerInstance);
-            /*
-            var npcServerRequest = new NpcServerRequest
-            {
-                EventName = _npcTemplate.GetStat().CanBeAttacked == 1 ? EventName.Attacked : EventName.Talked,
-                NpcName = GetStat().Name,
-                NpcType = GetStat().Type,
-                PlayerObjectId = playerInstance.ObjectId,
-                NpcObjectId = ObjectId
-            };
-            
-            await Initializer.SendMessageToNpcService(npcServerRequest);
-            */
         }
 
         public async Task ShowPage(PlayerInstance player, string fnHi)
         {
             await NpcChatWindow.ShowPage(player, fnHi, this);
-        }
-
-        public async Task TeleportRequest(PlayerInstance playerInstance)
-        {
-            await NpcTeleport.TeleportRequest(playerInstance, this);
-        }
-
-        public async Task ShowTeleportList(string html, PlayerInstance player)
-        {
-            await NpcTeleport.ShowTeleportList(html, player, this);
-        }
-
-        public async Task TeleportToLocation(int teleportId, PlayerInstance playerInstance)
-        {
-            await NpcTeleport.TeleportToLocation(teleportId, playerInstance, this);
-        }
-
-        public async Task DoTeleportToLocation(TeleportList teleport, PlayerInstance player)
-        {
-            await NpcTeleport.TeleportToLocation(teleport.GetX, teleport.GetY, teleport.GetZ, player);
         }
 
         public async Task MenuSelect(int askId, int replyId, PlayerInstance playerInstance)

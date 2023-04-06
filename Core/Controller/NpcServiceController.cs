@@ -113,11 +113,11 @@ namespace Core.Controller
                     break;
                 case EventName.TeleportRequest:
                     player = (PlayerInstance) world.GetWorldObject(npcServerContract.PlayerObjectId);
-                    await npc.ShowTeleportList(npcServerContract.Html, player); 
+                    //await npc.ShowTeleportList(npcServerContract.Html, player); 
                     break;
                 case EventName.TeleportRequested:
                     player = (PlayerInstance) world.GetWorldObject(npcServerContract.PlayerObjectId);
-                    await npc.DoTeleportToLocation(npcServerContract.TeleportList, player); 
+                    //await npc.DoTeleportToLocation(npcServerContract.TeleportList, player); 
                     break;
                 case EventName.CastleGateOpenClose:
                     player = (PlayerInstance) world.GetWorldObject(npcServerContract.PlayerObjectId);
