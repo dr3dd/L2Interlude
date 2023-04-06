@@ -21,6 +21,7 @@ namespace Core.Module.NpcData
         private readonly WorldInit _worldInit;
         private readonly DefaultNpc _defaultNpc;
         private readonly ConcurrentDictionary<int, Task> _tasks;
+        private readonly NpcAiTeleport _aiTeleport;
         private int _additionalTime;
         private readonly CancellationTokenSource _cts;
         public NpcAi Sm { get; set; } //PTS object AI require
@@ -32,6 +33,7 @@ namespace Core.Module.NpcData
         public NpcAi(NpcInstance npcInstance)
         {
             _npcInstance = npcInstance;
+            _aiTeleport = new NpcAiTeleport(this);
             Level = _npcInstance.Level;
             _worldInit = npcInstance.ServiceProvider.GetRequiredService<WorldInit>();
             _tasks = new ConcurrentDictionary<int, Task>();
@@ -55,16 +57,16 @@ namespace Core.Module.NpcData
             _defaultNpc.NoDesire();
         }
 
-        public void Attacked(Character character)
+        public void Attacked(PlayerInstance playerInstance)
         {
-            var attacker = new Talker(character.ObjectId, character.Level);
-            _npcInstance.NpcDesire().AddDesire(Desire.AttackDesire, character);
+            var attacker = new Talker(playerInstance);
+            _npcInstance.NpcDesire().AddDesire(Desire.AttackDesire, playerInstance);
             //_defaultNpc.Attacked(attacker, damage);
         }
 
-        public void Talked(Character character)
+        public void Talked(PlayerInstance playerInstance)
         {
-            var talker = new Talker(character.ObjectId, character.Level);
+            var talker = new Talker(playerInstance);
             _defaultNpc.Talked(talker);
         }
         
@@ -108,47 +110,33 @@ namespace Core.Module.NpcData
         public async Task Teleport(Talker talker, IList<TeleportList> position, string shopName, string empty, string s,
             string empty1, int itemId, string itemName)
         {
-            var url = @"<a action=""bypass -h teleport_goto##objectId#?teleportId=#id#"" msg=""811;#Name#""> #Name# - #Price# Adena </a><br1>";
-            string html = null;
-            for (var i1 = 0; i1 < position.Count; i1++)
-            {
-                var teleportName = position[i1].Name;
-                var replace = url.Replace("#objectId#", _npcInstance.ObjectId.ToString());
-                replace = replace.Replace("#id#", i1.ToString());
-                replace = replace.Replace("#Name#", teleportName);
-                replace = replace.Replace("#Price#", position[i1].Price.ToString());
-                html += replace;
-            }
-
-            var Html = "<html><body>&$556;<br><br>" + html + "</body></html>";
-            var player = (PlayerInstance) _worldInit.GetWorldObject(talker.ObjectId);
-            await _npcInstance.ShowTeleportList(Html, player);
+            await _npcInstance.NpcTeleport().Teleport(talker, position, shopName, string.Empty, string.Empty,
+                string.Empty, itemId, itemName);
         }
 
         public async Task TeleportRequested(PlayerInstance playerInstance)
         {
-            var talker = new Talker(playerInstance.ObjectId, playerInstance.Level);
-            await _defaultNpc.TeleportRequested(talker);
+            await _aiTeleport.TeleportRequested(playerInstance);
         }
 
         public bool CastleIsUnderSiege()
         {
-            throw new System.NotImplementedException();
+            return false;
         }
 
         public void CastleGateOpenClose2(string doorName1, int p1)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void InstantTeleport(Talker talker, int posX01, int posY01, int posZ01)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public int OwnItemCount(Talker talker, int friendShip1)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public string MakeFString(int i, string empty, string s, string empty1, string s1, string empty2)
@@ -158,37 +146,37 @@ namespace Core.Module.NpcData
 
         public void ShowSkillList(Talker talker, string empty)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void ShowGrowSkillMessage(Talker talker, int skillNameId, string empty)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public bool IsInCategory(int p0, int talkerOccupation)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public bool IsNewbie(Talker talker)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void AddUseSkillDesire(Talker talker, int p1, int p2, int p3, int p4)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void AddAttackDesire(Talker attacked, int i, int f0)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public async Task MenuSelect(int askId, int replyId, PlayerInstance playerInstance)
         {
-            var talker = new Talker(playerInstance.ObjectId, playerInstance.Level);
+            var talker = new Talker(playerInstance);
             await _defaultNpc.MenuSelected(talker, askId, replyId, String.Empty);
         }
     }

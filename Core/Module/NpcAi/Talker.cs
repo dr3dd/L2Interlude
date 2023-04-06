@@ -1,20 +1,23 @@
-﻿namespace Core.Module.NpcAi
-{
-    public struct Talker
-    {
-        public int ObjectId { get; set; }
-        public int Karma { get; set; }
-        public int Level { get; set; }
-        public int Occupation { get; set; }
-        public int Race { get; set; }
+﻿using Core.Module.Player;
 
-        public Talker(int objectId, int level)
-        {
-            ObjectId = objectId;
-            Karma = 0;
-            Level = level;
-            Occupation = 1;
-            Race = 1;
-        }
+namespace Core.Module.NpcAi;
+
+public struct Talker
+{
+    public int ObjectId { get; }
+    public int Karma { get; }
+    public int Level { get; }
+    public int Occupation { get; }
+    public int Race { get; }
+    public PlayerInstance PlayerInstance { get; }
+
+    public Talker(PlayerInstance playerInstance)
+    {
+        ObjectId = playerInstance.ObjectId;
+        Karma = 0;
+        Level = playerInstance.Level;
+        Occupation = 1;
+        Race = 1;
+        PlayerInstance = playerInstance;
     }
 }

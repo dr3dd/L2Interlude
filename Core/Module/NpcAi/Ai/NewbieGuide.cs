@@ -28,11 +28,11 @@ public class NewbieGuide : Citizen
 		{new("Orc Village - Newbie Travel Token", -45186, -112459, -236, 0, 0 )},
 	};
         
-	public virtual async Task TeleportRequested(Talker talker)
+	public override async Task TeleportRequested(Talker talker)
 	{
 		if(talker.Level > 20)
 		{
-			MySelf.ShowPage(talker, FnHighLevel);
+			await MySelf.ShowPage(talker, FnHighLevel);
 			return;
 		}
 		await MySelf.Teleport(talker, NewbieTokenTeleports, ShopName, "", "", "", 8542, "Newbie Travel Token");
