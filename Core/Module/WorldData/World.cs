@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Module.CharacterData;
+using Core.Module.DoorData;
 using Core.Module.NpcData;
 using Core.Module.Player;
 
@@ -95,6 +96,21 @@ namespace Core.Module.WorldData
             foreach (var worldRegion in region.GetSurroundingRegions())
             {
                 result.AddRange(worldRegion.GetVisibleNpc().Where(wo => wo != null)
+                    .Where(wo => !wo.Equals(worldObject)));
+            }
+            return result;
+        }
+        
+        public List<DoorInstance> GetVisibleDoor(WorldObject worldObject)
+        {
+            var region = worldObject.GetWorldRegion();
+            
+            // Create a list in order to contain all visible WorldObject
+            var result = new List<DoorInstance>();
+            // Go through the list of region
+            foreach (var worldRegion in region.GetSurroundingRegions())
+            {
+                result.AddRange(worldRegion.GetVisibleDoor().Where(wo => wo != null)
                     .Where(wo => !wo.Equals(worldObject)));
             }
             return result;

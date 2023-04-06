@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Core.Module.AreaData;
 using Core.Module.CharacterData;
+using Core.Module.DoorData;
 using Core.Module.NpcData;
 using Core.Module.Player;
 
@@ -13,6 +14,7 @@ namespace Core.Module.WorldData
         private int _regionY;
         
         private readonly ConcurrentDictionary<int, NpcInstance> _visibleNpc;
+        private readonly ConcurrentDictionary<int, DoorInstance> _visibleDoor;
         private readonly ConcurrentDictionary<int, PlayerInstance> _playerObjects;
         
         private readonly ZoneManager _zoneManager;
@@ -23,6 +25,7 @@ namespace Core.Module.WorldData
             _regionX = regionX;
             _regionY = regionY;
             _visibleNpc = new ConcurrentDictionary<int, NpcInstance>();
+            _visibleDoor = new ConcurrentDictionary<int, DoorInstance>();
             _playerObjects = new ConcurrentDictionary<int, PlayerInstance>();
             _zoneManager = new ZoneManager();
         }
@@ -54,6 +57,9 @@ namespace Core.Module.WorldData
                 case NpcInstance npcInstance:
                     _visibleNpc.TryAdd(npcInstance.ObjectId, npcInstance);
                     break;
+                case DoorInstance doorInstance:
+                    _visibleDoor.TryAdd(doorInstance.ObjectId, doorInstance);
+                    break;
                 case PlayerInstance playerInstance:
                     _playerObjects.TryAdd(playerInstance.ObjectId, playerInstance);
                     break;
@@ -66,6 +72,9 @@ namespace Core.Module.WorldData
             {
                 case NpcInstance:
                     _visibleNpc.TryRemove(worldObject.ObjectId, out _);
+                    break;
+                case DoorInstance doorInstance:
+                    _visibleDoor.TryRemove(doorInstance.ObjectId, out _);
                     break;
                 case PlayerInstance:
                     _playerObjects.TryRemove(worldObject.ObjectId, out _);
@@ -81,6 +90,11 @@ namespace Core.Module.WorldData
         public IEnumerable<PlayerInstance> GetAllPlayers()
         {
             return _playerObjects.Values;
+        }
+        
+        public IEnumerable<DoorInstance> GetVisibleDoor()
+        {
+            return _visibleDoor.Values;
         }
         
         public void RemoveFromZones(Character character)

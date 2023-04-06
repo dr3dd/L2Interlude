@@ -79,7 +79,8 @@ namespace Core.Module.CharacterData
             await FindClosePlayers();
             if (this is PlayerInstance playerInstance)
             {
-                await playerInstance.FindCloseNpc();                
+                await playerInstance.FindCloseNpc();
+                await playerInstance.FindCloseDoor();
             }
         }
         

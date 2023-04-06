@@ -2,6 +2,7 @@
 using Core.GeoEngine;
 using Core.Module.AreaData;
 using Core.Module.CharacterData.Template;
+using Core.Module.DoorData;
 using Core.Module.HtmlCacheData;
 using Core.Module.ItemData;
 using Core.Module.ManualData;
@@ -30,6 +31,7 @@ namespace Core
             services.AddSingleton<HtmlCacheInit>();
             services.AddSingleton<NpcPosInit>();
             services.AddSingleton<NpcDataInit>();
+            services.AddSingleton<DoorDataInit>();
             services.AddSingleton<ItemPchInit>();
             services.AddSingleton<ItemDataInit>();
             services.AddSingleton<SkillPchInit>();

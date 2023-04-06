@@ -5,6 +5,7 @@ using Core.Controller;
 using Core.GeoEngine;
 using Core.Module.AreaData;
 using Core.Module.CharacterData.Template;
+using Core.Module.DoorData;
 using Core.Module.HtmlCacheData;
 using Core.Module.ItemData;
 using Core.Module.ManualData;
@@ -94,6 +95,7 @@ namespace Core
             ServiceProvider.GetRequiredService<WorldInit>().Run();
             ServiceProvider.GetRequiredService<AreaDataInit>().Run();
             ServiceProvider.GetRequiredService<NpcDataInit>().Run();
+            ServiceProvider.GetRequiredService<DoorDataInit>().Run();
             ServiceProvider.GetRequiredService<NpcPosInit>().Run();
             ServiceProvider.GetRequiredService<GeoEngineInit>().Run();
             LoggerManager.Info("----Html Cache----");
