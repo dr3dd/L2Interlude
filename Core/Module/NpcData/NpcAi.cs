@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Module.CharacterData;
+using Core.Module.DoorData;
 using Core.Module.NpcAi;
 using Core.Module.NpcAi.Ai;
 using Core.Module.NpcAi.Handlers;
 using Core.Module.Player;
 using Core.Module.WorldData;
+using Core.NetworkPacket.ServerPacket;
 using Core.TaskManager;
 using Helpers;
 using Microsoft.Extensions.DependencyInjection;
@@ -124,9 +126,17 @@ namespace Core.Module.NpcData
             return false;
         }
 
-        public void CastleGateOpenClose2(string doorName1, int p1)
+        public async Task CastleGateOpenClose2(string doorName1, int openClose)
         {
-            throw new NotImplementedException();
+            var doorInit = _npcInstance.ServiceProvider.GetRequiredService<DoorDataInit>();
+            var doorInstance = doorInit.GetDoorInstance(doorName1);
+            foreach (var (objectId, worldObject) in doorInstance.DoorKnownList().GetKnownObjects())
+            {
+                if (worldObject is PlayerInstance targetInstance)
+                {
+                    await targetInstance.SendPacketAsync(new DoorStatusUpdate(doorInstance, targetInstance, openClose));
+                }
+            }
         }
 
         public void InstantTeleport(Talker talker, int posX01, int posY01, int posZ01)

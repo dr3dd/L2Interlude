@@ -115,6 +115,7 @@ namespace Core.Controller
                     if (l2Character is PlayerInstance playerInstance)
                     {
                         await playerInstance.FindCloseNpc();
+                        await playerInstance.FindCloseDoor();
                     }
                     await l2Character.RemoveKnownObjects();
                 }

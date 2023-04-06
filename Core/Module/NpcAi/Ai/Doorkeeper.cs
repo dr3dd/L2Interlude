@@ -33,12 +33,12 @@ public class Doorkeeper : Citizen
                 switch (reply)
                 {
                     case 1:
-                        MySelf.CastleGateOpenClose2(DoorName1, 0);
-                        MySelf.CastleGateOpenClose2(DoorName2, 0);
+                        await MySelf.CastleGateOpenClose2(DoorName1, 0);
+                        await MySelf.CastleGateOpenClose2(DoorName2, 0);
                         break;
                     case 2:
-                        MySelf.CastleGateOpenClose2(DoorName1, 1);
-                        MySelf.CastleGateOpenClose2(DoorName2, 1);
+                        await MySelf.CastleGateOpenClose2(DoorName1, 1);
+                        await MySelf.CastleGateOpenClose2(DoorName2, 1);
                         break;
                 }
                 break;

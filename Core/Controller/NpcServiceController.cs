@@ -121,7 +121,7 @@ namespace Core.Controller
                     break;
                 case EventName.CastleGateOpenClose:
                     player = (PlayerInstance) world.GetWorldObject(npcServerContract.PlayerObjectId);
-                    await npc.CastleGateOpenClose(npcServerContract.DoorName, npcServerContract.OpenClose, player);
+                    //await npc.CastleGateOpenClose(npcServerContract.DoorName, npcServerContract.OpenClose, player);
                     break;
                 case EventName.AddUseSkillDesire:
                     player = (PlayerInstance) world.GetWorldObject(npcServerContract.PlayerObjectId);

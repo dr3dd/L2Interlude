@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Core.Controller;
 using Core.Module.CharacterData;
 using Core.Module.CharacterData.Template;
+using Core.Module.DoorData;
 using Core.Module.ItemData;
 using Core.Module.NpcData;
 using Core.Module.WorldData;
@@ -137,18 +138,6 @@ namespace Core.Module.Player
                 {
                     continue;
                 }
-                /*
-                var npcServerRequest = new NpcServerRequest
-                {
-                    EventName = EventName.Created,
-                    NpcName = npcInstance.GetTemplate().GetStat().Name,
-                    NpcType = npcInstance.GetTemplate().GetStat().Type,
-                    NpcObjectId = npcInstance.ObjectId,
-                    IsActiveNpc = true
-                };
-                await SendObjectToNpcServerAsync(npcServerRequest);
-                */
-
                 npcInstance.NpcAi().Created();
                 CharacterKnownList().AddToKnownList(npcInstance.ObjectId, npcInstance);
                 npcInstance.CharacterKnownList().AddToKnownList(ObjectId, this);
@@ -156,14 +145,25 @@ namespace Core.Module.Player
             }
         }
 
-        /* delete
-        public async Task SendObjectToNpcServerAsync(NpcServerRequest npcServerRequest)
+        public async Task FindCloseDoor()
         {
-            await ServiceProvider.GetRequiredService<NpcServiceController>()
-                    .SendMessageToNpcService(npcServerRequest);
+            foreach (DoorInstance doorInstance in _worldInit.GetVisibleDoor(this))
+            {
+                if (!CalculateRange.CheckIfInRange(2000, doorInstance.GetX(), doorInstance.GetY(),
+                        doorInstance.GetZ(), 70,
+                        GetX(), GetY(), GetZ(), CharacterCombat().GetCollisionRadius(), true))
+                {
+                    continue;
+                }
+                if (CharacterKnownList().HasObjectInKnownList(doorInstance.ObjectId))
+                {
+                    continue;
+                }
+                CharacterKnownList().AddToKnownList(doorInstance.ObjectId, doorInstance);
+                doorInstance.DoorKnownList().AddToKnownList(ObjectId, this);
+                await SendPacketAsync(new DoorInfo(doorInstance, true));
+            }
         }
-        */
-
 
         public override async Task SendToKnownPlayers(ServerPacket packet)
         {

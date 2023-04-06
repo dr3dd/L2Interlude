@@ -92,11 +92,6 @@ namespace Core.Module.NpcData
             await NpcAi().MenuSelect(askId, replyId, playerInstance);
         }
 
-        public async Task CastleGateOpenClose(string doorName, int openClose, PlayerInstance player)
-        {
-            await player.SendPacketAsync(new DoorStatusUpdate(ObjectId, openClose));
-        }
-
         public async Task ShowSkillList(PlayerInstance playerInstance)
         {
             await NpcLearnSkill.ShowSkillList(playerInstance);
