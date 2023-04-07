@@ -1,7 +1,5 @@
-using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai.NpcCitizen;
 
-public class PreacherOfDoom1 : Citizen
+public class PreacherOfDoom1 : SsqNpcPreacherOfDoom
 {
 }

@@ -31,6 +31,7 @@ namespace Core
             services.AddSingleton<HtmlCacheInit>();
             services.AddSingleton<NpcPosInit>();
             services.AddSingleton<NpcDataInit>();
+            services.AddSingleton<NpcAiObj>();
             services.AddSingleton<DoorDataInit>();
             services.AddSingleton<ItemPchInit>();
             services.AddSingleton<ItemDataInit>();

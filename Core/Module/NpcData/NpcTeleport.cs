@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Core.Module.CharacterData;
 using Core.Module.NpcAi;
-using Core.Module.NpcAi.Ai.NpcType;
+using Core.Module.NpcAi.Ai;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
 using Helpers;

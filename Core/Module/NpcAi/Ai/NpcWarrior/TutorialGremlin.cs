@@ -1,6 +1,5 @@
-﻿namespace Core.Module.NpcAi.Ai.NpcWarrior;
+namespace Core.Module.NpcAi.Ai.NpcWarrior;
 
 public class TutorialGremlin : WarriorPassive
 {
-
 }

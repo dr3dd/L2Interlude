@@ -1,7 +1,5 @@
-using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai.NpcTeleporter;
 
-public class GodadSideDoorman2 : Teleporter
+public class GodadSideDoorman2 : Doorkeeper
 {
 }

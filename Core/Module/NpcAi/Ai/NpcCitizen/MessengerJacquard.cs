@@ -1,7 +1,5 @@
-using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai.NpcCitizen;
 
-public class MessengerJacquard : Citizen
+public class MessengerJacquard : ChiefRoyalGuard
 {
 }

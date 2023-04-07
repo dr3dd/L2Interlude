@@ -1,7 +1,5 @@
-using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai.NpcCitizen;
 
-public class OratorOfRevelations1 : Citizen
+public class OratorOfRevelations1 : SsqNpcOratorOfRevelations
 {
 }

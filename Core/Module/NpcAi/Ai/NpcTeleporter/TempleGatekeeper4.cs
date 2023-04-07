@@ -1,7 +1,5 @@
-using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai.NpcTeleporter;
 
-public class TempleGatekeeper4 : Teleporter
+public class TempleGatekeeper4 : Citizen
 {
 }

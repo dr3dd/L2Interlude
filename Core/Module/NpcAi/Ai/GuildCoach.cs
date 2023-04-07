@@ -1,5 +1,3 @@
-﻿using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai;
 
 public class GuildCoach : Citizen

@@ -1,7 +1,5 @@
-using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai.NpcCitizen;
 
-public class ManorManager4 : Citizen
+public class ManorManager4 : CastleMerchant
 {
 }

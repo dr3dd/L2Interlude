@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Core.Module.NpcAi.Ai.NpcType;
+using System.Threading.Tasks;
 
 namespace Core.Module.NpcAi.Ai;
 

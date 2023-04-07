@@ -1,7 +1,5 @@
-using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai.NpcCitizen;
 
-public class DuskPriestessOren : Citizen
+public class DuskPriestessOren : SsqNpcPriest
 {
 }

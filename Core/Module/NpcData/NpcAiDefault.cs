@@ -1,5 +1,4 @@
 ﻿using Core.Module.NpcAi.Ai;
-using Core.Module.NpcAi.Ai.NpcType;
 
 namespace Core.Module.NpcData;
 

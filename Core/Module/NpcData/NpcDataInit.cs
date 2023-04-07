@@ -42,5 +42,15 @@ namespace Core.Module.NpcData
         {
             return _npcDataCollection[name];
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool IsNpcTemplateExist(string name)
+        {
+            return _npcDataCollection.ContainsKey(name);
+        }
     }
 }

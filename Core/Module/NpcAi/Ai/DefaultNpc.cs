@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace Core.Module.NpcAi.Ai;
 
@@ -10,7 +10,7 @@ public abstract class DefaultNpc
     public virtual int MoveAroundSocial { get; set; }
     public virtual int MoveAroundSocial1 { get; set; }
     public virtual int MoveAroundSocial2 { get; set; }
-        
+
     protected double IdleDesireDecayRatio = 0.000000;
     protected double MoveAroundDecayRatio = 0.000000;
     protected double DoNothingDecayRatio = 0.000000;
@@ -39,19 +39,27 @@ public abstract class DefaultNpc
     protected double MoveToBoostValue = 0.000000;
     protected double EffectActionBoostValue = 0.000000;
     protected double MoveToTargetBoostValue = 0.000000;
-        
+
     public NpcData.NpcAi MySelf { get; set; }
     public Talker Talker { get; set; }
 
-    public abstract void Created();
-    public abstract Task Talked(Talker talker);
-    public abstract void TimerFiredEx(int timerId);
+    public virtual void Created()
+    {
+    }
 
-        
+    public virtual Task Talked(Talker talker)
+    {
+        return Task.FromResult(1);
+    }
+
+    public virtual void TimerFiredEx(int timerId)
+    {
+    }
+
     public virtual void NoDesire()
     {
     }
-        
+
     public virtual void Attacked(Talker talker, int damage)
     {
     }
@@ -60,11 +68,12 @@ public abstract class DefaultNpc
     {
         return Task.FromResult(1);
     }
+
     public virtual Task MenuSelected(Talker talker, int ask, int reply, string fhtml0)
     {
         return Task.FromResult(1);
     }
-        
+
     public virtual async Task TalkSelected(Talker talker)
     {
         await MySelf.ShowPage(talker, "noquest.htm");

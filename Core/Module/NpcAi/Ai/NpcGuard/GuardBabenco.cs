@@ -1,7 +1,5 @@
-using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai.NpcGuard;
 
-public class GuardBabenco : Guard
+public class GuardBabenco : GuardFixed
 {
 }

@@ -58,10 +58,16 @@ namespace Core.Module.NpcData
                             
                             if (npcTemplate.GetStat().Type == "citizen" || npcTemplate.GetStat().Type == "teleporter" || npcTemplate.GetStat().Type == "guard")
                             {
-                                var npcInstance = new NpcInstance(_objectIdInit.NextObjectId(), npcTemplate, _serviceProvider);
-                                npcInstance.OnSpawn(x, y, z, h);
-
-                                //InitNpcInNpcService(npcInstance);
+                                try
+                                {
+                                    var npcInstance = new NpcInstance(_objectIdInit.NextObjectId(), npcTemplate,
+                                        _serviceProvider);
+                                    npcInstance.OnSpawn(x, y, z, h);
+                                }
+                                catch (Exception ex)
+                                {
+                                    LoggerManager.Error(ex.Message);
+                                }
                             }
                         }
 
