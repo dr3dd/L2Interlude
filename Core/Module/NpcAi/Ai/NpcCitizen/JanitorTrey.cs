@@ -1,7 +1,5 @@
-using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai.NpcCitizen;
 
-public class JanitorTrey : Citizen
+public class JanitorTrey : Janitor
 {
 }

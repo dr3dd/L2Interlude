@@ -1,13 +1,10 @@
 using System.Collections.Generic;
-using Core.Module.NpcAi.Ai.NpcType;
 using Helpers;
 
 namespace Core.Module.NpcAi.Ai.NpcTeleporter;
 
 public class Mint : Teleporter
 {
-    public override int PrimeHours => 1;
-
     public override IList<TeleportList> Position => new List<TeleportList>
     {
         new("The Town of Gludio", -12694, 122776, -3114, 9200, 1),

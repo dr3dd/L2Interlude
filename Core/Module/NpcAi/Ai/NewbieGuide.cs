@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.Module.NpcAi.Ai.NpcType;
 using Helpers;
 
 namespace Core.Module.NpcAi.Ai;
 
 public class NewbieGuide : Citizen
 {
-	public override string FnHi { get; set; } = "";
+    public override string FnHi { get; set; } = "";
 	public virtual string FnHighLevel { get; set; } = "";
 	public virtual string FnRaceMisMatch { get; set; } = "";
 	public virtual string FnGuideF05 { get; set; } = "";

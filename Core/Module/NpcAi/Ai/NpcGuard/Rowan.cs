@@ -1,7 +1,5 @@
-using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai.NpcGuard;
 
-public class Rowan : Guard
+public class Rowan : GuardFixed
 {
 }

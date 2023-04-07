@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Core.Module.NpcAi.Ai.NpcType;
 using Helpers;
 
 namespace Core.Module.NpcAi.Ai.NpcTeleporter;
@@ -18,5 +17,4 @@ public class Rapunzel : Teleporter
         new("Talking Island, Western Territory (Northern Area)", -106696, 214691, -3424, 1000, 0 ),
         new("Obelisk of Victory", -99586, 237637, -3568, 470, 0 )
     };
-        
 }

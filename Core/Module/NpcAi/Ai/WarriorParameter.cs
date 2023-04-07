@@ -1,8 +1,7 @@
-﻿namespace Core.Module.NpcAi.Ai;
+namespace Core.Module.NpcAi.Ai;
 
 public abstract class WarriorParameter : MonsterParameter
 {
-
     public override void Attacked(Talker attacked, int damage)
     {
         int f0 = 0;

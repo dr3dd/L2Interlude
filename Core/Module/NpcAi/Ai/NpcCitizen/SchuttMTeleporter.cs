@@ -1,7 +1,7 @@
-using Core.Module.NpcAi.Ai.NpcType;
+using Core.Module.NpcAi.Ai.NpcWarrior;
 
 namespace Core.Module.NpcAi.Ai.NpcCitizen;
 
-public class SchuttMTeleporter : Citizen
+public class SchuttMTeleporter : MassTeleporter
 {
 }

@@ -1,7 +1,5 @@
-using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai.NpcCitizen;
 
-public class AdventurerAgentTown15 : Citizen
+public class AdventurerAgentTown15 : AnnounceRaidBossPosition
 {
 }

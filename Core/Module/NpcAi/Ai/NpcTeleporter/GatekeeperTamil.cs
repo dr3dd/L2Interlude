@@ -1,7 +1,5 @@
-using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai.NpcTeleporter;
 
-public class GatekeeperTamil : Teleporter
+public class GatekeeperTamil : TeleporterNeedItem
 {
 }

@@ -1,7 +1,5 @@
-using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai.NpcCitizen;
 
-public class WarehouseChiefDonal : Citizen
+public class WarehouseChiefDonal : MasterLv3Ware
 {
 }

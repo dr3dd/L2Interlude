@@ -1,7 +1,5 @@
-using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai.NpcCitizen;
 
-public class R18InvaderTeleport : Citizen
+public class R18InvaderTeleport : TeleportDungeonManagerNpc
 {
 }

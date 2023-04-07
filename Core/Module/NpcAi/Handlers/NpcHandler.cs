@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Core.Module.NpcAi.Ai;
-using Core.Module.NpcAi.Ai.NpcType;
 using Core.Module.NpcAi.Factories;
 using Core.Module.NpcAi.Getters;
 
@@ -17,6 +16,8 @@ public static class NpcHandler
     {
         var spl = npcName.Split("_");
         var className = spl.Aggregate("", (current, s) => current + (char.ToUpper(s[0]) + s.Substring(1)));
+        return HandleDefaultNpc(className, npcType);
+        /*
         return npcType switch
         {
             "citizen" => HandleCitizen(className, npcType),
@@ -25,6 +26,7 @@ public static class NpcHandler
             "warrior" => HandleWarrior(className, npcType),
             _ => HandleCitizen(className, npcType)
         };
+        */
     }
 
 
@@ -73,5 +75,11 @@ public static class NpcHandler
     {
         var teleportNpc = new CreateNpcObject<Teleporter>(className, npcType);
         return new NpcObjectGetter<Teleporter>(teleportNpc.CreateNpc()).GetNpcObject();
+    }
+    
+    private static DefaultNpc HandleDefaultNpc(string className, string npcType)
+    {
+        var defaultNpc = new CreateNpcObject<DefaultNpc>(className, npcType);
+        return new NpcObjectGetter<DefaultNpc>(defaultNpc.CreateNpc()).GetNpcObject();
     }
 }

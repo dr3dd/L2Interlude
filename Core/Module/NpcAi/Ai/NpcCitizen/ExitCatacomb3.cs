@@ -1,7 +1,5 @@
-using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai.NpcCitizen;
 
-public class ExitCatacomb3 : Citizen
+public class ExitCatacomb3 : SsqNpcSsTeleporter
 {
 }

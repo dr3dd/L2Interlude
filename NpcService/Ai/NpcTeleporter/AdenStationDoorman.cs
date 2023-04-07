@@ -1,9 +1,8 @@
 using System;
 using NpcService.Ai.NpcType;
 
-namespace NpcService.Ai.NpcTeleporter
+namespace NpcService.Ai.NpcTeleporter;
+
+public class AdenStationDoorman : Teleporter
 {
-    public class AdenStationDoorman : Teleporter
-    {
-    }
 }

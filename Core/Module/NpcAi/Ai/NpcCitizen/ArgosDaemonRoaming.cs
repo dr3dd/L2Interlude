@@ -1,7 +1,5 @@
-using Core.Module.NpcAi.Ai.NpcType;
-
 namespace Core.Module.NpcAi.Ai.NpcCitizen;
 
-public class ArgosDaemonRoaming : Citizen
+public class ArgosDaemonRoaming : GreatEye
 {
 }

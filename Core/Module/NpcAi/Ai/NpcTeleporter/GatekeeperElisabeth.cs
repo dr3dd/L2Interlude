@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Core.Module.NpcAi.Ai.NpcType;
 using Helpers;
 
 namespace Core.Module.NpcAi.Ai.NpcTeleporter;
