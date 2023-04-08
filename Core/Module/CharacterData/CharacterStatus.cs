@@ -1,39 +1,22 @@
 ﻿using System.Threading;
-using System.Threading.Tasks;
-using Core.Module.Player;
-using Core.NetworkPacket.ServerPacket;
-using Core.TaskManager;
 
 namespace Core.Module.CharacterData
 {
     public class CharacterStatus
     {
         private readonly Character _character;
-        private double _currentHp;
-        private Task _regTask;
-        private CancellationTokenSource _cts;
+        private CancellationTokenSource _cancellationTokenSource;
+        private Timer _regenerationTimer;
+        private readonly SemaphoreSlim _semaphore;
         public CharacterStatus(Character character)
         {
             _character = character;
+            _semaphore = new SemaphoreSlim(1);
         }
         
         public float CurrentMp { get; set; }
         
-        public double CurrentHp
-        {
-            get
-            {
-                lock (this)
-                {
-                    if (_currentHp >= _character.GetMaxHp())
-                    {
-                        return _character.GetMaxHp();
-                    }
-                }
-                return _currentHp;
-            }
-            set => _currentHp = value;
-        }
+        public double CurrentHp { get; set; }
         
         /// <summary>
         /// Increase Current Hp of Character
@@ -41,15 +24,11 @@ namespace Core.Module.CharacterData
         /// <param name="heal"></param>
         public void IncreaseCurrentHp(double heal)
         {
-            lock (this)
+            CurrentHp += heal;
+            if (CurrentHp >= _character.GetMaxHp())
             {
-                CurrentHp += heal; // Get diff of Hp vs value
-                if (CurrentHp >= _character.GetMaxHp())
-                {
-                    CurrentHp = _character.GetMaxHp();
-                    StopHpMpRegeneration();
-                }
-                SetCurrentHp(CurrentHp); // Set Hp
+                CurrentHp = _character.GetMaxHp();
+                StopHpMpRegeneration();
             }
         }
         
@@ -59,51 +38,49 @@ namespace Core.Module.CharacterData
         /// <param name="damage"></param>
         public void DecreaseCurrentHp(double damage)
         {
-            lock (this)
+            if (damage <= 0) return;
+            CurrentHp -= damage;
+            if (CurrentHp <= 0)
             {
-                if (!(damage > 0)) return;
-                CurrentHp -= damage; // Get diff of Hp vs value
-                if (CurrentHp <= 0)
-                {
-                    CurrentHp = 0;
-                }
-                SetCurrentHp(CurrentHp); // Set Hp
-                StartHpMpRegeneration();
+                CurrentHp = 0;
             }
-        }
-
-        
-
-        private void SetCurrentHp(double newHp)
-        {
-            CurrentHp = newHp;
+            StartHpMpRegeneration();
         }
 
         public void StartHpMpRegeneration()
         {
             // Get the Regeneration period
             var period = 3000;
-            if (_regTask != null) return;
-            _cts = new CancellationTokenSource();
-            _regTask = TaskManagerScheduler.ScheduleAtFixedRate(() =>
+            if (_regenerationTimer != null) return;
+            _cancellationTokenSource = new CancellationTokenSource();
+            _regenerationTimer = new Timer(async state =>
             {
-                lock (this)
+                await _semaphore.WaitAsync();
+                try
                 {
-                    IncreaseCurrentHp(_character.GetHpRegenRate());
-                    _character.SendStatusUpdate().GetAwaiter();
+                    CurrentHp += _character.GetHpRegenRate();
+                    if (CurrentHp >= _character.GetMaxHp())
+                    {
+                        CurrentHp = _character.GetMaxHp();
+                        StopHpMpRegeneration();
+                    }
+                    await _character.SendStatusUpdate();
                 }
-            }, period, period, _cts.Token);
+                finally
+                {
+                    _semaphore.Release();
+                }
+            }, null, period, period);
         }
         
         public void StopHpMpRegeneration()
         {
-            if (_regTask == null) return;
-            // Stop the HP/MP/CP Regeneration task
-            if (!_regTask.IsCanceled)
-            {
-                _cts.Cancel();
-                _regTask = null;
-            }
+            if (_regenerationTimer == null) return;
+            _regenerationTimer.Dispose();
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource = null;
+            _regenerationTimer = null;
         }
     }
 }
