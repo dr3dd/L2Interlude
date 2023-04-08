@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Core.Module.CharacterData
 {
@@ -47,33 +48,41 @@ namespace Core.Module.CharacterData
             StartHpMpRegeneration();
         }
 
-        public void StartHpMpRegeneration()
+        private void StartHpMpRegeneration()
         {
             // Get the Regeneration period
-            var period = 3000;
+            var period = 3300;
+            var start = 0;
             if (_regenerationTimer != null) return;
             _cancellationTokenSource = new CancellationTokenSource();
-            _regenerationTimer = new Timer(async state =>
-            {
-                await _semaphore.WaitAsync();
-                try
-                {
-                    CurrentHp += _character.GetHpRegenRate();
-                    if (CurrentHp >= _character.GetMaxHp())
-                    {
-                        CurrentHp = _character.GetMaxHp();
-                        StopHpMpRegeneration();
-                    }
-                    await _character.SendStatusUpdate();
-                }
-                finally
-                {
-                    _semaphore.Release();
-                }
-            }, null, period, period);
+            _regenerationTimer = new Timer( _ => HpMpRegenerationCallback(), null, start,
+                period);
         }
         
-        public void StopHpMpRegeneration()
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void HpMpRegenerationCallback()
+        {
+            _semaphore.Wait();
+            try
+            {
+                CurrentHp += _character.GetHpRegenRate();
+                if (CurrentHp >= _character.GetMaxHp())
+                {
+                    CurrentHp = _character.GetMaxHp();
+                    StopHpMpRegeneration();
+                }
+                Task.Run(() => _character.SendStatusUpdate());
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
+        }
+
+        private void StopHpMpRegeneration()
         {
             if (_regenerationTimer == null) return;
             _regenerationTimer.Dispose();
