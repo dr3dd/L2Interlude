@@ -7,7 +7,6 @@ using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
 using Core.NetworkPacket.ServerPacket.CharacterPacket;
 using Helpers;
-using Microsoft.VisualBasic.CompilerServices;
 using Network;
 
 namespace Core.Module.CharacterData
@@ -41,6 +40,7 @@ namespace Core.Module.CharacterData
         public CharacterNotifyEvent CharacterNotifyEvent() => _notifyEvent;
         public CharacterDesire CharacterDesire() => _desire;
         internal CharacterTargetAction CharacterTargetAction() => _characterTargetAction;
+        public abstract void DoDieProcess();
 
         public abstract ICharacterCombat CharacterCombat();
         public abstract ICharacterKnownList CharacterKnownList();

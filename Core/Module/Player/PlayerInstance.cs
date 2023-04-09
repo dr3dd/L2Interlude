@@ -256,5 +256,10 @@ namespace Core.Module.Player
             var su = new StatusUpdate(this);
             await SendPacketAsync(su);
         }
+
+        public override void DoDieProcess()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
