@@ -3,8 +3,11 @@ using System.Threading.Tasks;
 using Core.Module.CharacterData;
 using Core.Module.ItemData;
 using Core.Module.Player;
+using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
+using Core.TaskManager;
 using Helpers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.NpcData
 {
@@ -142,7 +145,27 @@ namespace Core.Module.NpcData
             await base.RequestActionAsync(playerInstance);
             await ShowTargetInfoAsync(playerInstance);
         }
-        
+
+        public override void DoDieProcess()
+        {
+            SendToKnownPlayers(new Die(this));
+            TaskManagerScheduler.Schedule(async () =>
+            {
+                if (GetWorldRegion() != null)
+                {
+                    GetWorldRegion().RemoveFromZones(this);
+                }
+                await CharacterTargetAction().RemoveTargetAsync();
+                //_worldInit.RemoveObject(this);
+                var worldInit = ServiceProvider.GetRequiredService<WorldInit>();
+                worldInit.RemoveVisibleObject(this, WorldObjectPosition().GetWorldRegion());
+                WorldObjectPosition().SetWorldRegion(null);
+            
+                CharacterKnownList().RemoveMeFromKnownObjects();
+                CharacterKnownList().RemoveAllKnownObjects();
+            }, _npcTemplate.GetStat().CorpseTime);
+        }
+
         private Task<bool> IsTargetSelected(PlayerInstance playerInstance)
         {
             return Task.FromResult(this == playerInstance.CharacterTargetAction().GetTarget());

@@ -44,8 +44,23 @@ namespace Core.Module.CharacterData
             if (CurrentHp <= 0)
             {
                 CurrentHp = 0;
+                StartDieProcess();
+                return;
             }
             StartHpMpRegeneration();
+        }
+
+        private void StartDieProcess()
+        {
+            //stop hp mp regeneration
+            StopHpMpRegeneration();
+            //stop attack, who attack and whom attack
+            _character.PhysicalAttack().AbortAttackAsync();
+            var killer = (Character) _character.CharacterTargetAction().GetTarget();
+            killer.PhysicalAttack().AbortAttackAsync();
+            killer.CharacterTargetAction().RemoveTargetAsync();
+            _character.CharacterTargetAction().RemoveTargetAsync();
+            _character.DoDieProcess();
         }
 
         private void StartHpMpRegeneration()
