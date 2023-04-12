@@ -146,24 +146,25 @@ namespace Core.Module.NpcData
             await ShowTargetInfoAsync(playerInstance);
         }
 
-        public override void DoDieProcess()
+        public override async Task DoDieProcess()
         {
-            SendToKnownPlayers(new Die(this));
+            await SendToKnownPlayers(new Die(this));
             TaskManagerScheduler.Schedule(async () =>
             {
                 if (GetWorldRegion() != null)
                 {
                     GetWorldRegion().RemoveFromZones(this);
                 }
-                await CharacterTargetAction().RemoveTargetAsync();
+                //await CharacterTargetAction().RemoveTargetAsync();
                 //_worldInit.RemoveObject(this);
                 var worldInit = ServiceProvider.GetRequiredService<WorldInit>();
                 worldInit.RemoveVisibleObject(this, WorldObjectPosition().GetWorldRegion());
                 WorldObjectPosition().SetWorldRegion(null);
-            
+                
+                await SendToKnownPlayers(new DeleteObject(ObjectId));
                 CharacterKnownList().RemoveMeFromKnownObjects();
                 CharacterKnownList().RemoveAllKnownObjects();
-            }, _npcTemplate.GetStat().CorpseTime);
+            }, _npcTemplate.GetStat().CorpseTime * 1000);
         }
 
         private Task<bool> IsTargetSelected(PlayerInstance playerInstance)

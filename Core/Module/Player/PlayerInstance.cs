@@ -257,7 +257,7 @@ namespace Core.Module.Player
             await SendPacketAsync(su);
         }
 
-        public override void DoDieProcess()
+        public override Task DoDieProcess()
         {
             throw new NotImplementedException();
         }

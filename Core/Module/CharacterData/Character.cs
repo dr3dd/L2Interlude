@@ -40,7 +40,7 @@ namespace Core.Module.CharacterData
         public CharacterNotifyEvent CharacterNotifyEvent() => _notifyEvent;
         public CharacterDesire CharacterDesire() => _desire;
         internal CharacterTargetAction CharacterTargetAction() => _characterTargetAction;
-        public abstract void DoDieProcess();
+        public abstract Task DoDieProcess();
 
         public abstract ICharacterCombat CharacterCombat();
         public abstract ICharacterKnownList CharacterKnownList();

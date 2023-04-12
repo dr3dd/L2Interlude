@@ -55,11 +55,11 @@ namespace Core.Module.CharacterData
             //stop hp mp regeneration
             StopHpMpRegeneration();
             //stop attack, who attack and whom attack
-            _character.PhysicalAttack().AbortAttackAsync();
-            var killer = (Character) _character.CharacterTargetAction().GetTarget();
-            killer.PhysicalAttack().AbortAttackAsync();
-            killer.CharacterTargetAction().RemoveTargetAsync();
-            _character.CharacterTargetAction().RemoveTargetAsync();
+            //_character.PhysicalAttack().AbortAttackAsync();
+            //var killer = (Character) _character.CharacterTargetAction().GetTarget();
+            //killer.PhysicalAttack().AbortAttackAsync();
+            //killer.CharacterTargetAction().RemoveTargetAsync();
+            //_character.CharacterTargetAction().RemoveTargetAsync();
             _character.DoDieProcess();
         }
 
