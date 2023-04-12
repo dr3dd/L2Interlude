@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using Core.Module.CharacterData;
+using Core.Module.Player;
 using Core.Module.WorldData;
 
 namespace Core.Module.NpcData
@@ -46,7 +47,15 @@ namespace Core.Module.NpcData
 
         public void RemoveMeFromKnownObjects()
         {
-            throw new System.NotImplementedException();
+            foreach (var worldObject in _npcKnownList.Values)
+            {
+                switch (worldObject)
+                {
+                    case PlayerInstance playerInstance:
+                        playerInstance.CharacterKnownList().RemoveKnownObject(_npcInstance);
+                        break;
+                }
+            }
         }
     }
 }
