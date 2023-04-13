@@ -1,8 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Core.Module.NpcAi;
+using Core.Module.NpcAi.Ai;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
-using Helpers;
 
 namespace Core.Module.NpcData
 {
@@ -10,16 +11,11 @@ namespace Core.Module.NpcData
     {
         public static async Task LearnSkillRequest(PlayerInstance playerInstance, NpcInstance npcInstance)
         {
-            var npcServerRequest = new NpcServerRequest
+            var talker = new Talker(playerInstance);
+            if (npcInstance.NpcAi().GetDefaultNpc() is GuildCoach guildCoach)
             {
-                EventName = EventName.LearnSkillRequested,
-                NpcName = npcInstance.GetTemplate().GetStat().Name,
-                NpcType = npcInstance.GetTemplate().GetStat().Type,
-                PlayerObjectId = playerInstance.ObjectId,
-                NpcObjectId = npcInstance.ObjectId
-            };
-            playerInstance.LastTalkedNpc = npcInstance;
-            await Initializer.SendMessageToNpcService(npcServerRequest);
+                await guildCoach.LearnSkillRequested(talker);
+            }
         }
         
         public static async Task ShowSkillList(PlayerInstance player)

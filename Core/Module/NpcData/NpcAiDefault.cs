@@ -30,6 +30,19 @@ public class NpcAiDefault
             doorkeeper.DoorName1 = npcAiData.DoorName1;
             doorkeeper.DoorName2 = npcAiData.DoorName2;
         }
+        
+        if (defaultNpc is NewbieGuide newbieGuide)
+        {
+            newbieGuide.FnHighLevel = npcAiData.FnHighLevel;
+            newbieGuide.FnRaceMisMatch = npcAiData.FnRaceMisMatch;
+            newbieGuide.FnGuideF05 = npcAiData.FnGuideF05;
+            newbieGuide.FnGuideF10 = npcAiData.FnGuideF10;
+            newbieGuide.FnGuideF15 = npcAiData.FnGuideF15;
+            newbieGuide.FnGuideF20 = npcAiData.FnGuideF20;
+            newbieGuide.FnGuideM07 = npcAiData.FnGuideM07;
+            newbieGuide.FnGuideM14 = npcAiData.FnGuideM14;
+            newbieGuide.FnGuideM20 = npcAiData.FnGuideM20;
+        }
 
         defaultNpc.MoveAroundSocial = npcAiData.MoveAroundSocial;
         defaultNpc.MoveAroundSocial1 = npcAiData.MoveAroundSocial1;

@@ -26,9 +26,7 @@ namespace Core.Module.NpcData
         private readonly NpcAiTeleport _aiTeleport;
         private int _additionalTime;
         private readonly CancellationTokenSource _cts;
-        public NpcAi Sm { get; set; } //PTS object AI require
-        public int Race { get; set; }
-        public int Level { get; set; }
+        public NpcAiSm Sm { get; } //PTS object AI require
 
         public DefaultNpc GetDefaultNpc() => _defaultNpc;
         
@@ -36,17 +34,42 @@ namespace Core.Module.NpcData
         {
             _npcInstance = npcInstance;
             _aiTeleport = new NpcAiTeleport(this);
-            Level = _npcInstance.Level;
             _worldInit = npcInstance.ServiceProvider.GetRequiredService<WorldInit>();
             _tasks = new ConcurrentDictionary<int, Task>();
             _cts = new CancellationTokenSource();
             var npcName = _npcInstance.GetStat().Name;
             var npcType = _npcInstance.GetStat().Type;
             _defaultNpc = NpcHandler.GetNpcHandler(npcName, npcType);
+            
+            if (_defaultNpc is null) return;
             var npcAiData = _npcInstance.GetStat().NpcAiData;
             NpcAiDefault.SetDefaultAiParams(_defaultNpc, npcAiData);
+            
+            Sm = new NpcAiSm
+            {
+                Level = _npcInstance.Level,
+                Race = GetNpcRaceId(_npcInstance.GetStat().Race)
+            };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="race"></param>
+        /// <returns></returns>
+        private int GetNpcRaceId(string race)
+        {
+            return race switch
+            {
+                "human" => 0,
+                "elf" => 1,
+                "darkelf" => 2,
+                "orc" => 3,
+                "dwarf" => 4,
+                _ => -1
+            };
+        }
+        
         public void Created()
         {
             _defaultNpc.MySelf = this;
@@ -87,7 +110,7 @@ namespace Core.Module.NpcData
             _additionalTime = 0;
         }
         
-        public async Task AddEffectActionDesire (NpcAi sm, int actionId, int moveAround, int desire)
+        public async Task AddEffectActionDesire (NpcAiSm sm, int actionId, int moveAround, int desire)
         {
             await _npcInstance.NpcDesire().AddEffectActionDesire(actionId, moveAround, desire);
             //await _npcInstance.SendToKnownPlayers(new SocialAction(_npcInstance.ObjectId, actionId));
@@ -154,19 +177,26 @@ namespace Core.Module.NpcData
             return "TmpItemName";
         }
 
-        public void ShowSkillList(Talker talker, string empty)
+        public async Task ShowSkillList(Talker talker, string empty)
+        {
+            var player = (PlayerInstance) _worldInit.GetWorldObject(talker.ObjectId);
+            await _npcInstance.ShowSkillList(player);
+        }
+
+        public async Task ShowGrowSkillMessage(Talker talker, int skillNameId, string empty)
         {
             throw new NotImplementedException();
         }
 
-        public void ShowGrowSkillMessage(Talker talker, int skillNameId, string empty)
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p0"></param>
+        /// <param name="talkerOccupation"></param>
+        /// <returns></returns>
         public bool IsInCategory(int p0, int talkerOccupation)
         {
-            throw new NotImplementedException();
+            return (p0 == talkerOccupation);
         }
 
         public bool IsNewbie(Talker talker)
@@ -187,7 +217,35 @@ namespace Core.Module.NpcData
         public async Task MenuSelect(int askId, int replyId, PlayerInstance playerInstance)
         {
             var talker = new Talker(playerInstance);
+            if (_defaultNpc is NewbieGuide newbieGuide)
+            {
+                await newbieGuide.MenuSelected(talker, askId, replyId);
+                return;
+            } 
             await _defaultNpc.MenuSelected(talker, askId, replyId, String.Empty);
+        }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="talker"></param>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <param name="p3"></param>
+        /// <param name="p4"></param>
+        public void DeleteRadar(Talker talker, int p1, int p2, int p3, int p4)
+        {
+            
+        }
+
+        public async Task ShowEnchantSkillList(Talker talker)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task ShowEnchantSkillMessage(Talker talker, int skillNameId)
+        {
+            throw new NotImplementedException();
         }
     }
 }
