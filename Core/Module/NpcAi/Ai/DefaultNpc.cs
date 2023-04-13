@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace Core.Module.NpcAi.Ai;
 
-public abstract class DefaultNpc
+public class DefaultNpc
 {
     protected int ResidenceId = 0;
     protected int DesirePqSize = 50;
