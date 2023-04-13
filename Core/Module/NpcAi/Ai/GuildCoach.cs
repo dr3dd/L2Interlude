@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Core.Module.NpcAi.Ai;
 
 public class GuildCoach : Citizen
@@ -8,13 +10,35 @@ public class GuildCoach : Citizen
     public virtual string FnLevelMismatch { get; set; } = "skillenchant_levelmismatch.htm";
     public override string FnYouAreChaotic { get; set; } = "wyac.htm";
 
-    public virtual void LearnSkillRequested(Talker talker)
+    public override async Task Talked(Talker talker)
     {
-        MySelf.ShowSkillList(talker, "");
+        if (talker.Karma > 0)
+        {
+            await MySelf.ShowPage(talker, FnYouAreChaotic);
+        }
+        else
+        {
+            await MySelf.ShowPage(talker, FnHi);
+        }
+    }
+    
+    public virtual async Task LearnSkillRequested(Talker talker)
+    {
+        await MySelf.ShowSkillList(talker, "");
     }
         
-    public virtual void OneSkillSelected(Talker talker, int skillNameId, bool needQuest)
+    public virtual async Task OneSkillSelected(Talker talker, int skillNameId, bool needQuest)
     {
-        MySelf.ShowGrowSkillMessage(talker, skillNameId, "");
+        await MySelf.ShowGrowSkillMessage(talker, skillNameId, "");
+    }
+    
+    public virtual async Task EnchantSkillRequested(Talker talker)
+    {
+        await MySelf.ShowEnchantSkillList(talker);
+    }
+    
+    public virtual async Task OneEnchantSkillSelected(Talker talker, int skillNameId)
+    {
+        await MySelf.ShowEnchantSkillMessage(talker, skillNameId);
     }
 }

@@ -53,7 +53,7 @@ public class NpcAiObj : BaseParse
                     var npcDirectoryName = "Npc" + char.ToUpper(npcType[0]) + npcType.Substring(1);
                     var namespaceName = "Core.NpcAiTest.Ai." + npcDirectoryName;
                     
-                    string path = @"C:/Users/Viacheslav/RiderProjects/L2Interlude/Core/NpcAiTest/Ai/" + npcDirectoryName + "/" ;
+                    string path = @"C:/Users/Viacheslav/NpcAiTest/Ai/" + npcDirectoryName + "/" ;
                     if (File.Exists(path + className + ".cs"))
                     {
                         continue;
@@ -73,7 +73,7 @@ public class NpcAiObj : BaseParse
                 {
                     //create class in main directory
                     var namespaceName = "Core.NpcAiTest.Ai";
-                    string path = @"C:/Users/Viacheslav/RiderProjects/L2Interlude/Core/NpcAiTest/Ai/";
+                    string path = @"C:/Users/Viacheslav/NpcAiTest/Ai/";
                     if (File.Exists(path + className + ".cs"))
                     {
                         continue;

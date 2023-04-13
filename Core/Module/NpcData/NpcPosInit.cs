@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Core.Module.ParserEngine;
 using Core.Module.WorldData;
 using Helpers;
@@ -13,7 +12,7 @@ namespace Core.Module.NpcData
     public class NpcPosInit : BaseParse
     {
         private readonly IParse _parse;
-        private IList<NpcMakerBegin> _makerBegins;
+        private IList<NpcMakerBeginNew> _makerBegins;
         private readonly ObjectIdInit _objectIdInit;
         private readonly NpcDataInit _npcDataInit;
         private readonly IServiceProvider _serviceProvider;
@@ -23,8 +22,8 @@ namespace Core.Module.NpcData
             _serviceProvider = provider;
             _objectIdInit = provider.GetRequiredService<ObjectIdInit>();
             _npcDataInit = provider.GetRequiredService<NpcDataInit>();
-            _parse = new ParseNpcPos(new Result());
-            _makerBegins = new List<NpcMakerBegin>();
+            _parse = new ParseNpcPosNew(new Result());
+            _makerBegins = new List<NpcMakerBeginNew>();
         }
         
         public override void Run()
@@ -33,20 +32,24 @@ namespace Core.Module.NpcData
             {
                 LoggerManager.Info("NpcPos start...");
                 IResult result = Parse("npcpos.txt", _parse);
-                _makerBegins = result.GetResult()["NpcMakerCollection"] as List<NpcMakerBegin>;
+                _makerBegins = result.GetResult()["NpcMakerCollection"] as List<NpcMakerBeginNew>;
 
                 /*
                 var testOren = _makerBegins
                     .Where(l => l.Name is "oren04_npc2119_013" or "oren04_npc2119_017" or "oren02_qm2119_00" or "oren04_npc2019_01" or "oren04_npc2119_wp1");
                     */
-                var testOren = _makerBegins;
-                foreach (var npcMakerBegin in testOren)
+                foreach (var npcMakerBegin in _makerBegins)
                 {
                     var name = npcMakerBegin.Name;
+                    if (npcMakerBegin.EventName != string.Empty)
+                    {
+                        //skip events
+                        continue;
+                    }
                     LoggerManager.Info("Test Spawn Territory " + name);
                     foreach (var npcBegin in npcMakerBegin.NpcBegins)
                     {
-                        LoggerManager.Info("Test Spawn NPC " + npcBegin.Name);
+                        //LoggerManager.Info("Test Spawn NPC " + npcBegin.Name);
                         
                         var npcTemplate = _npcDataInit.GetNpcTemplate(npcBegin.Name);
                         if (npcBegin.Pos.Count > 0)
@@ -56,7 +59,8 @@ namespace Core.Module.NpcData
                             var z = npcBegin.Pos["Z"];
                             var h = npcBegin.Pos["H"];
                             
-                            if (npcTemplate.GetStat().Type == "citizen" || npcTemplate.GetStat().Type == "teleporter" || npcTemplate.GetStat().Type == "guard")
+                            if (npcTemplate.GetStat().Type == "citizen" || npcTemplate.GetStat().Type == "teleporter" ||
+                                npcTemplate.GetStat().Type == "guard" || npcTemplate.GetStat().Type == "guild_coach")
                             {
                                 try
                                 {
@@ -144,67 +148,7 @@ namespace Core.Module.NpcData
             }
         }
 
-        private async Task InitNpcInNpcService(NpcInstance npcInstance)
-        {
-            
-            var npcServerRequest = new NpcServerRequest
-            {
-                EventName = EventName.NoDesire,
-                NpcName = npcInstance.GetTemplate().GetStat().Name,
-                NpcType = npcInstance.GetTemplate().GetStat().Type,
-                NpcObjectId = npcInstance.ObjectId,
-                Level = npcInstance.GetTemplate().GetStat().Level,
-                Race = npcInstance.GetTemplate().GetStat().Race,
-                CanBeAttacked = npcInstance.GetTemplate().GetStat().CanBeAttacked == 1
-            };
-            
-            var npcAi = npcInstance.GetTemplate().GetStat().NpcAiData;
-            var moveAroundSocial = npcAi.MoveAroundSocial;
-            var moveAroundSocial1 = npcAi.MoveAroundSocial1;
-            var moveAroundSocial2 = npcAi.MoveAroundSocial2;
-            var fnHi = npcAi.FnHi;
-            var fnNobless = npcAi.FnNobless;
-            var fnNoNobless = npcAi.FnNoNobless;
-            var fnNoNoblessItem = npcAi.FnNoNoblessItem;
-            var fnYouAreChaotic = npcAi.FnYouAreChaotic;
-            
-            
-            if (moveAroundSocial != null)
-            {
-                npcServerRequest.MoveAroundSocial = Convert.ToInt16(moveAroundSocial);
-            }
-            if (moveAroundSocial1 != null)
-            {
-                npcServerRequest.MoveAroundSocial1 = Convert.ToInt16(moveAroundSocial1);
-            }
-            if (moveAroundSocial2 != null)
-            {
-                npcServerRequest.MoveAroundSocial2 = Convert.ToInt16(moveAroundSocial2);
-            }
-            if (fnHi != null)
-            {
-                npcServerRequest.FnHi = fnHi;
-            }
-            if (fnNobless != null)
-            {
-                npcServerRequest.FnNobless = fnNobless;
-            }
-            if (fnNoNobless != null)
-            {
-                npcServerRequest.FnNoNobless = fnNoNobless;
-            }
-            if (fnNoNoblessItem != null)
-            {
-                npcServerRequest.FnNoNoblessItem = fnNoNoblessItem;
-            }
-            if (fnYouAreChaotic != null)
-            {
-                npcServerRequest.FnYouAreChaotic = fnYouAreChaotic;
-            }
-            await Initializer.SendMessageToNpcService(npcServerRequest);
-        }
-
-        public IList<NpcMakerBegin> GetMakerList()
+        public IList<NpcMakerBeginNew> GetMakerList()
         {
             return _makerBegins;
         }

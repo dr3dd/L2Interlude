@@ -97,6 +97,7 @@ namespace Core
             ServiceProvider.GetRequiredService<NpcDataInit>().Run();
             //ServiceProvider.GetRequiredService<NpcAiObj>().Run(); use only once 
             ServiceProvider.GetRequiredService<DoorDataInit>().Run();
+            //ServiceProvider.GetRequiredService<NpcPosInitNew>().Run();
             ServiceProvider.GetRequiredService<NpcPosInit>().Run();
             ServiceProvider.GetRequiredService<GeoEngineInit>().Run();
             LoggerManager.Info("----Html Cache----");

@@ -19,5 +19,14 @@
         public string FnNobless { get; set; }
         public string FnNoNobless { get; set; }
         public string FnNoNoblessItem { get; set; }
+        public string FnHighLevel { get; set; }
+        public string FnRaceMisMatch { get; set; }
+        public string FnGuideF05 { get; set; }
+        public string FnGuideF10 { get; set; }
+        public string FnGuideF15 { get; set; }
+        public string FnGuideF20 { get; set; }
+        public string FnGuideM07 { get; set; }
+        public string FnGuideM14 { get; set; }
+        public string FnGuideM20 { get; set; }
     }
 }

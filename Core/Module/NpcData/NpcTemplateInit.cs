@@ -175,6 +175,42 @@ namespace Core.Module.NpcData
                 {
                     npcAiName.DoorName2 = match.Groups[2].Value;
                 }
+                if (match.Groups[1].Value == "fnHighLevel")
+                {
+                    npcAiName.FnHighLevel = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnRaceMisMatch")
+                {
+                    npcAiName.FnRaceMisMatch = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnGuideF05")
+                {
+                    npcAiName.FnGuideF05 = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnGuideF10")
+                {
+                    npcAiName.FnGuideF10 = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnGuideF15")
+                {
+                    npcAiName.FnGuideF15 = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnGuideF20")
+                {
+                    npcAiName.FnGuideF20 = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnGuideM07")
+                {
+                    npcAiName.FnGuideM07 = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnGuideM14")
+                {
+                    npcAiName.FnGuideM14 = match.Groups[2].Value;
+                }
+                if (match.Groups[1].Value == "fnGuideM20")
+                {
+                    npcAiName.FnGuideM20 = match.Groups[2].Value;
+                }
             }
             var matchesSocial = Regex.Matches(input, @"{(\[([\w\s]+)\])=(\d+|[\w\d\s.]+)}");
             foreach (Match match in matchesSocial)

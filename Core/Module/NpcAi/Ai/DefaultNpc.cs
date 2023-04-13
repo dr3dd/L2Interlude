@@ -73,6 +73,11 @@ public abstract class DefaultNpc
     {
         return Task.FromResult(1);
     }
+    
+    public virtual Task MenuSelected(Talker talker, int ask, int reply)
+    {
+        return Task.FromResult(1);
+    }
 
     public virtual async Task TalkSelected(Talker talker)
     {

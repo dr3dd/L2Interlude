@@ -30,6 +30,7 @@ namespace Core
             services.AddSingleton<GameTimeController>();
             services.AddSingleton<HtmlCacheInit>();
             services.AddSingleton<NpcPosInit>();
+            services.AddSingleton<NpcPosInitNew>();
             services.AddSingleton<NpcDataInit>();
             services.AddSingleton<NpcAiObj>();
             services.AddSingleton<DoorDataInit>();

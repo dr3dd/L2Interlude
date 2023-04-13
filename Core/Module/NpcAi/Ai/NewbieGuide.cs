@@ -26,7 +26,18 @@ public class NewbieGuide : Citizen
 		{new("Elven Village",46890, 51531, -2976, 0, 0 )},
 		{new("Orc Village - Newbie Travel Token", -45186, -112459, -236, 0, 0 )},
 	};
-        
+
+	public override async Task Talked(Talker talker)
+	{
+		MySelf.DeleteRadar(talker, -71073, 258711, -3099, 2);
+		MySelf.DeleteRadar(talker, -84081, 243277, -3723, 2);
+		MySelf.DeleteRadar(talker, 45492, 48359, -3060, 2);
+		MySelf.DeleteRadar(talker, 12111, 16686, -4582, 2);
+		MySelf.DeleteRadar(talker, -45042, -113598, -192, 2);
+		MySelf.DeleteRadar(talker, 115632, -177996, -905, 2);
+		await MySelf.ShowPage(talker, FnHi);
+	}
+
 	public override async Task TeleportRequested(Talker talker)
 	{
 		if(talker.Level > 20)
@@ -37,7 +48,7 @@ public class NewbieGuide : Citizen
 		await MySelf.Teleport(talker, NewbieTokenTeleports, ShopName, "", "", "", 8542, "Newbie Travel Token");
 	}
 
-	public virtual async Task MenuSelected(Talker talker, int ask, int reply)
+	public override async Task MenuSelected(Talker talker, int ask, int reply)
 	{
 		if (ask == -7 && reply == 1)
 		{
@@ -156,7 +167,14 @@ public class NewbieGuide : Citizen
 		}
 		if (ask == -7 && reply == 3)
 		{
-                
+			if(MySelf.IsNewbie(talker) && talker.Level < 40)
+			{
+				MySelf.AddUseSkillDesire(talker, 1326593, 1, 0, 1000000);
+			}
+			else
+			{
+				await MySelf.ShowPage(talker, FnHighLevel);
+			}
 		}
 	}
 }
