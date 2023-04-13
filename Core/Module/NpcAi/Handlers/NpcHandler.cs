@@ -14,8 +14,7 @@ public static class NpcHandler
     /// <returns></returns>
     public static DefaultNpc GetNpcHandler(string npcName, string npcType)
     {
-        var spl = npcName.Split("_");
-        var className = spl.Aggregate("", (current, s) => current + (char.ToUpper(s[0]) + s.Substring(1)));
+        var className = ConvertToPascalCase(npcName);
         return HandleDefaultNpc(className, npcType);
         /*
         return npcType switch
@@ -27,6 +26,17 @@ public static class NpcHandler
             _ => HandleCitizen(className, npcType)
         };
         */
+    }
+    
+    public static string ConvertToPascalCase(string className)
+    {
+        var parts = className.Split('_');
+        for (int i = 0; i < parts.Length; i++)
+        {
+            parts[i] = char.ToUpper(parts[i][0]) + parts[i].Substring(1);
+        }
+
+        return string.Join("", parts);
     }
 
 
