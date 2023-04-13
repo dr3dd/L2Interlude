@@ -23,7 +23,11 @@ public class CreateNpcObject<T>
         var namespaceName = "Core.Module.NpcAi.Ai.Npc" + NpcHandler.ConvertToPascalCase(_npcType);
         var className = namespaceName + "." + _className;
         var objectType = Type.GetType(className);
-        if (objectType == null) return default;
+        if (objectType == null)
+        {
+            var defaultClassName = "Core.Module.NpcAi.Ai.DefaultNpc";
+            return (T) Activator.CreateInstance(Type.GetType(defaultClassName)!);
+        }
         try
         {
             return (T) Activator.CreateInstance(objectType)!;

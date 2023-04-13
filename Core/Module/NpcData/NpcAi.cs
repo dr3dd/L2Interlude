@@ -41,7 +41,6 @@ namespace Core.Module.NpcData
             var npcType = _npcInstance.GetStat().Type;
             _defaultNpc = NpcHandler.GetNpcHandler(npcName, npcType);
             
-            if (_defaultNpc is null) return;
             var npcAiData = _npcInstance.GetStat().NpcAiData;
             NpcAiDefault.SetDefaultAiParams(_defaultNpc, npcAiData);
             
