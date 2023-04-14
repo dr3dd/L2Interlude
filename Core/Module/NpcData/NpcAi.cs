@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Module.CategoryData;
 using Core.Module.CharacterData;
 using Core.Module.DoorData;
 using Core.Module.NpcAi;
@@ -190,12 +192,18 @@ namespace Core.Module.NpcData
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="p0"></param>
+        /// <param name="groupId"></param>
         /// <param name="talkerOccupation"></param>
         /// <returns></returns>
-        public bool IsInCategory(int p0, int talkerOccupation)
+        public bool IsInCategory(int groupId, string talkerOccupation)
         {
-            return (p0 == talkerOccupation);
+            var categoryPchInit = _npcInstance.ServiceProvider.GetRequiredService<CategoryPchInit>();
+            var categoryName = categoryPchInit.GetCategoryNameById(groupId);
+            
+            var categoryData = _npcInstance.ServiceProvider.GetRequiredService<CategoryDataInit>();
+            var categoryList = categoryData.GetCategoryListByName(categoryName);
+
+            return categoryList.Any(s => s == talkerOccupation);
         }
 
         public bool IsNewbie(Talker talker)

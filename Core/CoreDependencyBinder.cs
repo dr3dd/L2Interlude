@@ -1,6 +1,7 @@
 ﻿using Core.Controller;
 using Core.GeoEngine;
 using Core.Module.AreaData;
+using Core.Module.CategoryData;
 using Core.Module.CharacterData.Template;
 using Core.Module.DoorData;
 using Core.Module.HtmlCacheData;
@@ -23,6 +24,8 @@ namespace Core
             services.AddSingleton<NetworkWriter>();
             services.AddTransient<ClientManager>();
             services.AddSingleton<AreaDataInit>();
+            services.AddSingleton<CategoryPchInit>();
+            services.AddSingleton<CategoryDataInit>();
             services.AddSingleton<WorldInit>();
             services.AddSingleton<TemplateInit>();
             services.AddSingleton<ManualPchInit>();

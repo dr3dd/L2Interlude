@@ -1,75 +1,50 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Core.Module.ParserEngine
 {
     public class ParseCategoryData : IParse
     {
-        private bool _isCategoryBegin;
-        private bool _squareBracketsOpen;
-        private bool _curlyBracketsOpen;
-        private bool _isFoundField;
-        private string _tmpItem;
-        
-        private string _fieldName;
-        private string _categoryName;
-        private readonly IList<string> _categoryList;
         private readonly IResult _result;
+        private bool isCategoryDefineBegin;
+        private string newString;
 
         public ParseCategoryData()
         {
-            _categoryList = new List<string>();
             _result = new Result();
         }
         public void ParseLine(string line)
         {
-            switch (line)
+            if (isCategoryDefineBegin)
             {
-                case "category_define_begin":
-                    _isCategoryBegin = true;
-                    return;
-                case "category_define_end":
-                    _isCategoryBegin = false;
-                    _result.AddItem(_categoryName, new List<string>(_categoryList));
-                    _categoryList.Clear();
-                    return;
+                newString += line;
+            }
+            
+            if (line.StartsWith("category_define_begin"))
+            {
+                isCategoryDefineBegin = true;
             }
 
-            if (!_isCategoryBegin)
-                return;
-            
-            foreach (var item in line)
+            if (line.StartsWith("category_define_end"))
             {
-                switch (item)
+                isCategoryDefineBegin = false;
+                var pattern = @"name=\[(?<name>[\w\s]+)\]category=\{(?<categories>.*?)\}";
+                var categoryPattern = @"@(?<category>[\w\s]+)";
+                
+                var match = Regex.Match(newString, pattern);
+                var groupName = match.Groups["name"].Value;
+                var categories = match.Groups["categories"].Value;
+                
+                var categoryMatches = Regex.Matches(categories, categoryPattern);
+                var categoryList = new List<string>();
+                foreach (Match categoryMatch in categoryMatches)
                 {
-                    case '=':
-                        _fieldName = _tmpItem;
-                        _tmpItem = string.Empty;
-                        _isFoundField = true;
-                        continue;
-                    case ';' when _isFoundField && _curlyBracketsOpen:
-                        _categoryList.Add(_tmpItem);
-                        _tmpItem = string.Empty;
-                        continue;
-                    case '{':
-                        _curlyBracketsOpen = true;
-                        continue;
-                    case '}':
-                        _curlyBracketsOpen = false;
-                        _isFoundField = false;
-                        continue;
-                    case '[':
-                        _squareBracketsOpen = true;
-                        continue;
-                    case ']':
-                        _categoryName = _tmpItem;
-                        _tmpItem = string.Empty;
-                        _isFoundField = false;
-                        _squareBracketsOpen = false;
-                        continue;
-                    case '\t':
-                        continue;
+                    var category = categoryMatch.Groups["category"].Value;
+                    categoryList.Add(category);
                 }
-                _tmpItem += item;
+                newString = string.Empty;
+                _result.AddItem(groupName, categoryList);
             }
         }
 

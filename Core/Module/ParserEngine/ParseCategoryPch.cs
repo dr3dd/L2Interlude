@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace Core.Module.ParserEngine
 {
@@ -12,10 +13,10 @@ namespace Core.Module.ParserEngine
         
         public void ParseLine(string line)
         {
-            var newLine = line.Replace("[", "")
-                .Replace("]", "")
-                .Replace(" ", " ").Replace("\t", "").Split("=");
-            _result.AddItem(newLine[0], Convert.ToByte(newLine[1]));
+            var match = Regex.Match(line, @"\[(\w+)\]\s*=\s*(\d+)");
+            var key = match.Groups[1].Value;
+            var value = match.Groups[2].Value;
+            _result.AddItem(key, value);
         }
 
         public IResult GetResult()
