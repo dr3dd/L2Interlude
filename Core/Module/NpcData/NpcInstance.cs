@@ -97,6 +97,7 @@ namespace Core.Module.NpcData
 
         public async Task ShowSkillList(PlayerInstance playerInstance)
         {
+            playerInstance.LastTalkedNpc = this;
             await NpcLearnSkill.ShowSkillList(playerInstance);
         }
 
