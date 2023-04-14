@@ -4,6 +4,7 @@ using Config;
 using Core.Controller;
 using Core.GeoEngine;
 using Core.Module.AreaData;
+using Core.Module.CategoryData;
 using Core.Module.CharacterData.Template;
 using Core.Module.DoorData;
 using Core.Module.HtmlCacheData;
@@ -92,6 +93,8 @@ namespace Core
         {
             ServiceProvider.GetRequiredService<ObjectIdInit>();
             ServiceProvider.GetRequiredService<GameTimeController>().Run();
+            ServiceProvider.GetRequiredService<CategoryPchInit>().Run();
+            ServiceProvider.GetRequiredService<CategoryDataInit>().Run();
             ServiceProvider.GetRequiredService<WorldInit>().Run();
             ServiceProvider.GetRequiredService<AreaDataInit>().Run();
             ServiceProvider.GetRequiredService<NpcDataInit>().Run();
