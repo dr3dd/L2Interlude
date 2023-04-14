@@ -59,10 +59,9 @@ namespace Core.Module.NpcData
                             var z = npcBegin.Pos["Z"];
                             var h = npcBegin.Pos["H"];
                             
-                            if (npcTemplate.GetStat().Type == "citizen" || npcTemplate.GetStat().Type == "teleporter" ||
-                                npcTemplate.GetStat().Type == "guard" || npcTemplate.GetStat().Type == "guild_coach" ||
-                                npcTemplate.GetStat().Type == "guild_master" || npcTemplate.GetStat().Type == "warehouse_keeper"
-                                || npcTemplate.GetStat().Type == "package_keeper" || npcTemplate.GetStat().Type == "blacksmith")
+                            if (npcTemplate.GetStat().Type is "citizen" or "teleporter" or "guard" or 
+                                "guild_coach" or "guild_master" or "warehouse_keeper" or 
+                                "package_keeper" or "blacksmith" or "merchant" or "chamberlain" or "holything")
                             {
                                 try
                                 {
