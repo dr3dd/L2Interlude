@@ -22,8 +22,8 @@ namespace Core.Module.SkillData
                 ssModifier = 2;
             }
             
-            double mAtk = attacker.GetMagicalAttack();
-            double mDef = target.GetMagicalDefence();
+            double mAtk = attacker.CharacterCombat().GetMagicalAttack();
+            double mDef = target.CharacterCombat().GetMagicalDefence();
             // apply ss bonus
             mAtk *= ssModifier;
             
@@ -98,6 +98,14 @@ namespace Core.Module.SkillData
             // defence modifier depending of the attacker weapon
             var weapon = attacker.GetActiveWeaponItem();
             
+            damage = (70 * damage) / defence;
+            damage += (Rnd.NextDouble() * damage) / 10;
+            return Math.Round(damage);
+        }
+        
+        public static double CalcPhysSkillDam(Character target, double damage)
+        {
+            double defence = target.CharacterCombat().GetPhysicalDefence();
             damage = (70 * damage) / defence;
             damage += (Rnd.NextDouble() * damage) / 10;
             return Math.Round(damage);

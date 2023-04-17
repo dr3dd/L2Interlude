@@ -46,7 +46,8 @@ namespace Core.Module.Player
                 await _playerInstance.PlayerInventory().UnEquipItemInBodySlot((int) bodyPart);
                 return;
             }
-            await _playerInstance.PlayerInventory().EquipItemInBodySlot(itemInstance);
+            _playerInstance.PlayerInventory().EquipItemInBodySlot(itemInstance);
+            await _playerInstance.PlayerModel().UpdateCharacter();
             await SendMessageEquipAsync(itemInstance);
         }
         

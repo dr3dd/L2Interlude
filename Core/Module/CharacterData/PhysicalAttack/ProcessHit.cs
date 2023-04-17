@@ -88,7 +88,7 @@ namespace Core.Module.CharacterData.PhysicalAttack
 		        //double absorbPercent = _character.Stat.GetCalc().CalcStat(CharacterStatId.AbsorbDamagePercent, 0, null, null);
 		        if (absorbPercent > 0)
 		        {
-			        int maxCanAbsorb = (int) (_character.GetMaxHp() - _character.CharacterStatus().CurrentHp);
+			        int maxCanAbsorb = (int) (_character.CharacterBaseStatus().GetMaxHp() - _character.CharacterStatus().CurrentHp);
 			        int absorbDamage = (int) ((absorbPercent / 100) * damage);
 			        if (absorbDamage > maxCanAbsorb)
 			        {

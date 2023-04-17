@@ -51,7 +51,7 @@ namespace Core.Module.CharacterData
             return result;
         }
 
-        public static double CalculatePhysicalDefence(IEnumerable<EffectDuration> effects, double result)
+        public static float CalculatePhysicalDefence(IEnumerable<EffectDuration> effects, float result)
         {
             result = effects.Where(e => e.Effect is PPhysicalDefence).Select(effect => (PPhysicalDefence)effect.Effect).Aggregate(result,
                 (current, effectPhysicalAttack) => current + (effectPhysicalAttack.GetPhysicalDefence() < 0

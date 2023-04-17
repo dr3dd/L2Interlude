@@ -95,6 +95,7 @@ namespace Core
             ServiceProvider.GetRequiredService<GameTimeController>().Run();
             ServiceProvider.GetRequiredService<CategoryPchInit>().Run();
             ServiceProvider.GetRequiredService<CategoryDataInit>().Run();
+            ServiceProvider.GetRequiredService<PcParameterInit>().Run();
             ServiceProvider.GetRequiredService<WorldInit>().Run();
             ServiceProvider.GetRequiredService<AreaDataInit>().Run();
             ServiceProvider.GetRequiredService<NpcDataInit>().Run();
@@ -109,7 +110,6 @@ namespace Core
             LoggerManager.Info("----Players----");
             ServiceProvider.GetRequiredService<ItemPchInit>().Run();
             ServiceProvider.GetRequiredService<ManualPchInit>().Run();
-            ServiceProvider.GetRequiredService<PcParameterInit>().Run();
             ServiceProvider.GetService<TemplateInit>();
             LoggerManager.Info("----Bonus Stats----");
             LoggerManager.Info("----Items----");

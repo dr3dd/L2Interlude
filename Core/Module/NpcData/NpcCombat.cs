@@ -8,37 +8,52 @@ namespace Core.Module.NpcData
     public class NpcCombat : ICharacterCombat
     {
         private readonly NpcInstance _npcInstance;
+        private readonly NpcStat _stat;
         
         public NpcCombat(NpcInstance npcInstance)
         {
             _npcInstance = npcInstance;
+            _stat = _npcInstance.GetTemplate().GetStat();
         }
 
         /// <summary>
-        /// TODO
+        /// mAtk = weaponPAtk * mod_lvl * mod_int * mod_per  + mod_diff
+        /// Int bonus = Int Bonus + 100 / 100f
+        /// Weapon M.Atk * Level Bonus * Int bonus
         /// </summary>
         /// <returns></returns>
         public int GetMagicalAttack()
         {
-            return (int) _npcInstance.GetTemplate().GetStat().BaseMagicAttack;
+            var baseMAtk = _stat.BasePhysicalAttack;
+            var intBonus = _stat.IntBonus;
+            var levelBonus = _stat.LevelBonus;
+            
+            var modInt = (intBonus + 100) / 100f;
+            var result = baseMAtk * levelBonus * modInt;
+
+            var effects = GetNpcEffects();
+            result = CalculateStats.CalculatePhysicalAttack(effects, result);
+            return (int) Math.Round(result);
         }
 
         /// <summary>
-        /// 
+        /// mDef =  BaseMagicDefend * mod_lvl * mod_men * mod_per  + mod_diff
+        /// BaseMagicDefend - base magical defence in pts file
+        /// mod_per - skills which are affected on magic defence in per
+        /// mod_diff - skills which are affected on magic defence in diff
         /// </summary>
         /// <returns></returns>
         public int GetMagicalDefence()
         {
-            float levelBonus = Initializer.PcParameterInit().GetLevelBonus(_npcInstance.GetTemplate().GetStat().Level);
-            var baseStat = (int) _npcInstance.GetTemplate().GetStat().BaseMagicDefend;
+            var baseMagicDefend = _stat.BaseMagicDefend;
+            var levelBonus = _stat.LevelBonus;
+            var menBonus = _stat.MenBonus;
             
-            var menStat = _npcInstance.GetTemplate().GetStat().Men;
-            float menBonus = (Initializer.PcParameterInit().GetMenBonus(menStat) + 100) / 100f;
-            
-            var result = baseStat * menBonus * levelBonus;
-            
+            var modMen = (menBonus + 100) / 100f;
+            var result = baseMagicDefend * levelBonus * modMen;
             var effects = GetNpcEffects();
-            return (int) CalculateStats.CalculateMagicalDefence(effects, result);
+            result = CalculateStats.CalculateMagicalDefence(effects, result);
+            return (int) Math.Round(result);
         }
 
         public double GetMovementSpeedMultiplier()
@@ -47,16 +62,38 @@ namespace Core.Module.NpcData
             return GetCharacterSpeed() / baseSpeed;
         }
 
+        /// <summary>
+        /// pAtk = weaponPAtk * mod_lvl * mod_str * mod_per  + mod_diff
+        /// Str bonus = Str Bonus + 100 / 100f
+        /// Weapon P.Atk * Level Bonus * Str bonus
+        /// </summary>
+        /// <returns></returns>
         public int GetPhysicalAttack()
         {
-            throw new System.NotImplementedException();
+            var basePAtk = _stat.BasePhysicalAttack;
+            var strBonus = _stat.StrBonus;
+            var levelBonus = _stat.LevelBonus;
+            
+            var modStr = (strBonus + 100) / 100f;
+            var result = basePAtk * levelBonus * modStr;
+
+            var effects = GetNpcEffects();
+            result = CalculateStats.CalculatePhysicalAttack(effects, result);
+            return (int) Math.Round(result);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public int GetPhysicalDefence()
         {
-            var baseStat = (int) _npcInstance.GetTemplate().GetStat().BaseDefend;
+            var levelBonus = _stat.LevelBonus;
+            var baseDefend = _stat.BaseDefend;
+            var result = (4 + baseDefend) * levelBonus;
             var effects = GetNpcEffects();
-            return (int) CalculateStats.CalculatePhysicalDefence(effects, baseStat);
+            result = CalculateStats.CalculatePhysicalDefence(effects, result);
+            return (int) Math.Round(result);
         }
         
         private IEnumerable<EffectDuration> GetNpcEffects()
@@ -66,12 +103,12 @@ namespace Core.Module.NpcData
 
         public float GetCollisionRadius()
         {
-            return _npcInstance.GetTemplate().GetStat().CollisionRadius[0];
+            return _stat.CollisionRadius[0];
         }
 
         public float GetCollisionHeight()
         {
-            return _npcInstance.GetTemplate().GetStat().CollisionHeight[0];
+            return _stat.CollisionHeight[0];
         }
 
         public float GetCharacterSpeed()
@@ -81,33 +118,58 @@ namespace Core.Module.NpcData
         
         public float GetRunSpeed()
         {
-            return _npcInstance.GetTemplate().GetStat().GroundHigh[0];
+            return _stat.GroundHigh[0];
         }
 
         public float GetWalkSpeed()
         {
-            return _npcInstance.GetTemplate().GetStat().GroundLow[0];
+            return _stat.GroundLow[0];
         }
 
         public int GetEvasion()
         {
-            var dexStat = _npcInstance.GetTemplate().GetStat().Dex;
-            var result = Math.Sqrt(dexStat) * 6 + _npcInstance.GetTemplate().GetStat().Level;
-            return (int) result;
+            var dexStat = _stat.Dex;
+            var result = Math.Sqrt(dexStat) * 6 + _stat.Level;
+            return (int) Math.Round(result);
         }
 
+        /// <summary>
+        /// Accuracy = ((square root of DEX)*6)+Level+PhysicalHitModify+Passive+Guidance SA+M.Def. Bonus+Buffs
+        /// </summary>
+        /// <returns></returns>
         public int GetAccuracy()
         {
-            var dexStat = _npcInstance.GetTemplate().GetStat().Dex;
-            var weaponAccuracy = _npcInstance.GetTemplate().GetStat().PhysicalHitModify;
-            var result = Math.Sqrt(dexStat) * 6 + _npcInstance.GetTemplate().GetStat().Level + weaponAccuracy;
-            //result = CalculateStats.CalculateAccuracy(effects, result);
-            return (int) result;
+            var dexStat = _stat.Dex;
+            var weaponAccuracy = _stat.PhysicalHitModify;
+            var result = Math.Sqrt(dexStat) * 6 + _stat.Level + weaponAccuracy;
+            return (int) Math.Round(result);
         }
 
+        /// <summary>
+        /// Base Critical = DEX Modifier * Base Critical
+        /// Final Critical = Base Critical + Passives + Buffs
+        /// </summary>
+        /// <returns></returns>
         public int GetCriticalRate()
         {
-            throw new System.NotImplementedException();
+            var baseCritical = _stat.BaseCritical * 10;
+            var dexBonus = _stat.DexBonus;
+            var modDex = (dexBonus + 100) / 100f;
+            var result = modDex * baseCritical;
+            return (int) Math.Round(result);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public int GetPhysicalAttackSpeed()
+        {
+            var baseAttackSpeed = _stat.BaseAttackSpeed;
+            var dexBonus = _stat.DexBonus;
+            var modDex = (dexBonus + 100) / 100f;
+            var result = modDex * baseAttackSpeed;
+            return (int) Math.Round(result);
         }
     }
 }

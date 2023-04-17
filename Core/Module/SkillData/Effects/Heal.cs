@@ -26,7 +26,7 @@ namespace Core.Module.SkillData.Effects
                 await currentInstance.SendPacketAsync(new SystemMessage(effectResult.SystemMessageId));
                 return;
             }
-            var heal = (_healPoint + Math.Sqrt(targetInstance.GetMagicalAttack()));
+            var heal = (_healPoint + Math.Sqrt(targetInstance.CharacterCombat().GetMagicalAttack()));
             targetInstance.CharacterStatus().IncreaseCurrentHp(heal);
             await SendStatusUpdate(targetInstance);
             

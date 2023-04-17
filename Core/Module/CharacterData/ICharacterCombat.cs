@@ -5,6 +5,7 @@
         double GetMovementSpeedMultiplier();
         int GetPhysicalAttack();
         int GetPhysicalDefence();
+        int GetMagicalDefence();
         float GetCollisionRadius();
         float GetCollisionHeight();
         float GetCharacterSpeed();
@@ -13,5 +14,7 @@
         int GetEvasion();
         int GetAccuracy();
         int GetCriticalRate();
+        int GetMagicalAttack();
+        int GetPhysicalAttackSpeed();
     }
 }

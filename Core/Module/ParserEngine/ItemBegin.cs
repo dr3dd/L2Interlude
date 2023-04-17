@@ -25,6 +25,7 @@
         public int MagicalDamage { get; set; }
         public int PhysicalDamage { get; set; }
         public int PhysicalDefense { get; set; }
+        public int MagicalDefense { get; set; }
         public float HitModify { get; set; } //increase or decrease accuracy
         public string WeaponType { get; set; }
         public int Critical { get; set; }

@@ -84,7 +84,7 @@ namespace Core.NetworkPacket.ClientPacket
         {
             var npcObjectId = Convert.ToInt32(split.Last());
             var npcInstance = GetNpcInstance(npcObjectId);
-            await npcInstance.LearnSkillRequest(_playerInstance);
+            await npcInstance.NpcLearnSkill().LearnSkillRequest(_playerInstance);
         }
 
         private string BetweenStrings(string text, string start, string end)

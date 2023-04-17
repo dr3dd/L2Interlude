@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Core.Module.CharacterData.Template;
 using Core.Module.ParserEngine;
 using L2Logger;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.NpcData
 {
@@ -11,10 +13,12 @@ namespace Core.Module.NpcData
     {
         private readonly IParse _parse;
         private readonly IDictionary<string, NpcTemplateInit> _npcDataCollection;
+        private readonly PcParameterInit _parameterInit;
 
         public NpcDataInit(IServiceProvider provider) : base(provider)
         {
             _npcDataCollection = new Dictionary<string, NpcTemplateInit>();
+            _parameterInit = provider.GetRequiredService<PcParameterInit>();
             _parse = new ParseNpcData();
         }
         
@@ -27,7 +31,7 @@ namespace Core.Module.NpcData
 
                 foreach (var (key, value) in result.GetResult())
                 {
-                    var npcTemplateInit = new NpcTemplateInit(value as IDictionary<string, object>);
+                    var npcTemplateInit = new NpcTemplateInit(value as IDictionary<string, object>, _parameterInit);
                     _npcDataCollection.Add(key.ToString(), npcTemplateInit);
                 }
             } 

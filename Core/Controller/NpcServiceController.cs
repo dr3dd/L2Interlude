@@ -129,7 +129,7 @@ namespace Core.Controller
                     break;
                 case EventName.ShowSkillList:
                     player = (PlayerInstance) world.GetWorldObject(npcServerContract.PlayerObjectId);
-                    await npc.ShowSkillList(player);
+                    //await npc.ShowSkillList(player);
                     break;
                 case EventName.AddAttackDesire:
                     LoggerManager.Info("Npc " + npc.GetTemplate().GetStat().Name +  " attack");
