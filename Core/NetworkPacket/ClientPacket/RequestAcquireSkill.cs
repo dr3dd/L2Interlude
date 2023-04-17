@@ -46,7 +46,7 @@ namespace Core.NetworkPacket.ClientPacket
             await SendStatusUpdateAsync();
             await SendSpDecreasedAsync();
             await SendLearnedSkillAsync();
-            await npcInstance.ShowSkillList(_playerInstance);
+            await npcInstance.NpcLearnSkill().ShowSkillList(_playerInstance);
 
             await _playerSkill.SendSkillListAsync();
         }

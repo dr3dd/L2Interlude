@@ -23,13 +23,13 @@ namespace Core.Module.CharacterData.Template
             _parse = new ParsePcParameter();
         }
 
-        public float GetLevelBonus(byte level) => _levelBonus[level];
-        public short GetStrBonus(byte str) => _strBonus[str];
-        public short GetIntBonus(byte intelligence) => _intBonus[intelligence];
-        public short GetConBonus(byte con) => _conBonus[con];
-        public short GetMenBonus(byte men) => _menBonus[men];
-        public short GetDexBonus(byte dex) => _dexBonus[dex];
-        public short GetWitBonus(byte wit) => _witBonus[wit];
+        public float GetLevelBonus(byte level) => _levelBonus.ContainsKey(level) ? _levelBonus[level] : 0;
+        public short GetStrBonus(byte str) => _strBonus.ContainsKey(str) ? _strBonus[str] : (short) 0;
+        public short GetIntBonus(byte intelligence) => _intBonus.ContainsKey(intelligence) ? _intBonus[intelligence] : (short) 0;
+        public short GetConBonus(byte con) => _conBonus.ContainsKey(con) ? _conBonus[con] : (short) 0;
+        public short GetMenBonus(byte men) => _menBonus.ContainsKey(men) ? _menBonus[men] : (short) 0;
+        public short GetDexBonus(byte dex) => _dexBonus.ContainsKey(dex) ? _dexBonus[dex] : (short) 0;
+        public short GetWitBonus(byte wit) => _witBonus.ContainsKey(wit) ? _witBonus[wit] : (short) 0;
         public override void Run()
         {
             try

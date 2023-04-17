@@ -44,6 +44,13 @@ namespace Core.Module.NpcData
         public byte Wit { get; set; }
         public byte Con { get; set; }
         public byte Men { get; set; }
+        public short StrBonus { get; set; }
+        public short IntBonus { get; set; }
+        public short DexBonus { get; set; }
+        public short WitBonus { get; set; }
+        public short ConBonus { get; set; }
+        public short MenBonus { get; set; }
+        public float LevelBonus { get; set; }
         public string BaseAttackType { get; set; }
         public short BaseAttackRange { get; set; }
         public IList<float> BaseDamageRange { get; set; }

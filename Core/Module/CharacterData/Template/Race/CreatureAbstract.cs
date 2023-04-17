@@ -4,9 +4,9 @@ namespace Core.Module.CharacterData.Template.Race
 {
     public class CreatureAbstract
     {
-        protected IList<double> _baseHpRegen;
+        protected IList<float> _baseHpRegen;
         
-        public double GetBaseHpRegen(int level)
+        public float GetBaseHpRegen(int level)
         {
             return level switch
             {

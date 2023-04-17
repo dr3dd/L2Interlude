@@ -24,7 +24,7 @@ namespace Core.Module.Player
         private readonly ITemplateHandler _templateHandler;
         private static PlayerLoader _playerLoader;
         private readonly PlayerMoveToLocation _toLocation;
-        private readonly PlayerStatus _playerStatus;
+        private readonly PlayerBaseStatus _playerBaseStatus;
         private readonly PlayerCombat _playerCombat;
         private readonly PlayerInventory _playerInventory;
         private readonly PlayerUseItem _playerUseItem;
@@ -50,7 +50,7 @@ namespace Core.Module.Player
             _playerAction = new PlayerAction(this);
             _playerCharacterInfo = new PlayerCharacterInfo(this);
             _toLocation = new PlayerMoveToLocation(this);
-            _playerStatus = new PlayerStatus(this);
+            _playerBaseStatus = new PlayerBaseStatus(this);
             _playerCombat = new PlayerCombat(this);
             _playerInventory = new PlayerInventory(this);
             _playerUseItem = new PlayerUseItem(this);
@@ -71,7 +71,7 @@ namespace Core.Module.Player
         public PlayerAppearance PlayerAppearance() => _playerAppearance;
         public PlayerModel PlayerModel() => _playerModel;
         public PlayerCharacterInfo PlayerCharacterInfo() => _playerCharacterInfo;
-        public PlayerStatus PlayerStatus() => _playerStatus;
+        public PlayerBaseStatus PlayerStatus() => _playerBaseStatus;
         public PlayerCombat PlayerCombat() => _playerCombat;
         public PlayerInventory PlayerInventory() => _playerInventory;
         public PlayerUseItem PlayerUseItem() => _playerUseItem;
@@ -82,12 +82,13 @@ namespace Core.Module.Player
         public PlayerAction PlayerAction() => _playerAction;
         public override Weapon GetActiveWeaponItem()
         {
-            var itemInstance = PlayerInventory().GetBodyPartBySlotId((int)SlotBitType.RightHand);
+            var itemInstance = _playerCombat.GetWeapon();
             itemInstance.ItemData ??= new Weapon(0, WeaponType.None);
             return itemInstance.ItemData as Weapon;
         }
 
         public override ICharacterCombat CharacterCombat() => _playerCombat;
+        public override ICharacterBaseStatus CharacterBaseStatus() => _playerBaseStatus;
         public override ICharacterKnownList CharacterKnownList() => _playerKnownList;
 
         private static PlayerLoader PlayerLoader(IServiceProvider serviceProvider)
@@ -193,36 +194,6 @@ namespace Core.Module.Player
             CharacterKnownList().RemoveAllKnownObjects();
         }
 
-        public override int GetMaxHp()
-        {
-            return _playerStatus.GetMaxHp();
-        }
-        
-        public override double GetHpRegenRate()
-        {
-            return _playerStatus.GetHpRegenRate();
-        }
-
-        public override int GetMagicalAttack()
-        {
-            return _playerCombat.GetMagicalAttack();
-        }
-
-        public override int GetMagicalDefence()
-        {
-            return _playerCombat.GetMagicalDefence();
-        }
-
-        public override int GetPhysicalDefence()
-        {
-            return _playerCombat.GetPhysicalDefence();
-        }
-
-        public override int GetPhysicalAttackSpeed()
-        {
-            return _playerCombat.GetPhysicalAttackSpeed();
-        }
-
         private Task<bool> IsTargetSelected(PlayerInstance playerInstance)
         {
             return Task.FromResult(this == playerInstance.CharacterTargetAction().GetTarget());
@@ -248,7 +219,7 @@ namespace Core.Module.Player
         }
         private void StorePlayerObject()
         {
-            Initializer.WorldInit().StorePlayerObject(this);
+            ServiceProvider.GetRequiredService<WorldInit>().StorePlayerObject(this);
         }
 
         public override async Task SendStatusUpdate()

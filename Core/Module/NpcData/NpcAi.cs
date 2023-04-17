@@ -181,7 +181,7 @@ namespace Core.Module.NpcData
         public async Task ShowSkillList(Talker talker, string empty)
         {
             var player = (PlayerInstance) _worldInit.GetWorldObject(talker.ObjectId);
-            await _npcInstance.ShowSkillList(player);
+            await _npcInstance.NpcLearnSkill().ShowSkillList(player);
         }
 
         public async Task ShowGrowSkillMessage(Talker talker, int skillNameId, string empty)

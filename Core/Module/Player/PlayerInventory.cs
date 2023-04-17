@@ -59,7 +59,7 @@ namespace Core.Module.Player
             }
         }
 
-        private void InitBodyParts()
+        public void InitBodyParts()
         {
             _items.TryGetValue(_characterInfo.StUnderwear, out var underWear);
             _bodyParts.Add(SlotBitType.UnderWear, underWear?.UserItemId ?? 0);
@@ -183,7 +183,7 @@ namespace Core.Module.Player
             await _playerInstance.PlayerModel().UpdateCharacter();
         }
 
-        public async Task EquipItemInBodySlot(ItemInstance itemInstance)
+        public void EquipItemInBodySlot(ItemInstance itemInstance)
         {
             SlotBitType slot = itemInstance.ItemData.SlotBitType;
             switch (slot)
@@ -197,12 +197,16 @@ namespace Core.Module.Player
                 case SlotBitType.None:
                     break;
                 case SlotBitType.UnderWear:
+                    _characterInfo.StUnderwear = itemInstance.UserItemId;
+                    _bodyParts[SlotBitType.UnderWear] = itemInstance.UserItemId;
                     break;
                 case SlotBitType.RightEarning:
                     break;
                 case SlotBitType.LeftEarning:
                     break;
                 case SlotBitType.Necklace:
+                    _characterInfo.StNeck = itemInstance.UserItemId;
+                    _bodyParts[SlotBitType.Necklace] = itemInstance.UserItemId;
                     break;
                 case SlotBitType.RightFinger:
                     break;
@@ -227,6 +231,8 @@ namespace Core.Module.Player
                     _bodyParts[SlotBitType.Legs] = itemInstance.UserItemId;
                     break;
                 case SlotBitType.Feet:
+                    _characterInfo.StFeet = itemInstance.UserItemId;
+                    _bodyParts[SlotBitType.Feet] = itemInstance.UserItemId;
                     break;
                 case SlotBitType.LeftRightHand:
                     _characterInfo.StBothHand = itemInstance.UserItemId;
@@ -240,10 +246,17 @@ namespace Core.Module.Player
                     break;
                 case SlotBitType.HairAll:
                     break;
+                case SlotBitType.LeftEarning | SlotBitType.RightEarning:
+                    _characterInfo.StLeftEar = itemInstance.UserItemId;
+                    _bodyParts[SlotBitType.LeftEarning] = itemInstance.UserItemId;
+                    break;
+                case SlotBitType.LeftFinger | SlotBitType.RightFinger:
+                    _characterInfo.StLeftFinger = itemInstance.UserItemId;
+                    _bodyParts[SlotBitType.LeftFinger] = itemInstance.UserItemId;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(slot), slot, null);
             }
-            await _playerInstance.PlayerModel().UpdateCharacter();
         }
 
         public ItemInstance GetUnEquippedBodyPartItem(int slot)
@@ -259,6 +272,12 @@ namespace Core.Module.Player
             return GetItemInstance(userItemId);
         }
 
+        public bool IsBodyPartInSlotId(SlotBitType slotBitType)
+        {
+            var userItemId = GetBodyParts()[slotBitType];
+            return userItemId != 0;
+        }
+
         public SlotBitType GetSlotBitByItem(ItemInstance itemInstance) =>
             GetBodyParts().SingleOrDefault(p => p.Value == itemInstance.UserItemId).Key;
 
@@ -272,6 +291,15 @@ namespace Core.Module.Player
         public List<ItemInstance> GetInventoryItems()
         {
             return _items.Values.ToList();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="itemInstance"></param>
+        public void AddItemToInventoryCollection(ItemInstance itemInstance)
+        {
+            _items.Add(itemInstance.UserItemId, itemInstance);
         }
     }
 }

@@ -165,6 +165,11 @@ namespace Core.Module.ParserEngine
                         var physicalDefense = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
                         itemData.PhysicalDefense = Convert.ToInt32(physicalDefense);
                     }
+                    if (item.StartsWith("magical_defense"))
+                    {
+                        var magicalDefense = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
+                        itemData.MagicalDefense = Convert.ToInt32(magicalDefense);
+                    }
                     if (item.StartsWith("weapon_type"))
                     {
                         var weaponType = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);

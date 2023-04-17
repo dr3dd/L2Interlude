@@ -50,6 +50,8 @@ namespace Core.Module.SkillData
             EffectiveRange = skillBegin.EffectiveRange;
             CastRange = skillBegin.CastRange;
 
+            Effects = GetEffects(skillBegin.Effect, effectInit);
+            
             //for debug
             switch (SkillName)
             {
@@ -71,7 +73,7 @@ namespace Core.Module.SkillData
                 case "s_shield1":
                 case "s_power_strike13":
                 case "s_mortal_blow13": 
-                    Effects = GetEffects(skillBegin.Effect, effectInit);
+                    //Effects = GetEffects(skillBegin.Effect, effectInit);
                     break;
             }
         }
@@ -86,9 +88,13 @@ namespace Core.Module.SkillData
                     var effectParams = strEffect.Split(";");
                     //var effect = effectInit.GetEffectHandler(effectParams[0]);
                     //var effect = effectInit.GetEffectHandler(effectParams[0]);
-                    
-                    var effect = (Effect)Activator.CreateInstance(effectInit.GetEffectHandler(effectParams[0]), effectParams, this);
-                    effects.Add(effectParams[0], effect);
+                    var effectName = effectParams[0];
+                    if (!effectInit.HasEffectHandler(effectName))
+                    {
+                        continue;
+                    }
+                    var effect = (Effect)Activator.CreateInstance(effectInit.GetEffectHandler(effectName), effectParams, this);
+                    effects.TryAdd(effectParams[0], effect);
                 }
             }
             catch (Exception ex)

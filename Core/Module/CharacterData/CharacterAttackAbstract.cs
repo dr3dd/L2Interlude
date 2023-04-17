@@ -23,17 +23,17 @@ namespace Core.Module.CharacterData
             {
                 case WeaponType.Bow:
                 {
-                    atkSpd = _character.GetPhysicalAttackSpeed();
+                    atkSpd = _character.CharacterCombat().GetPhysicalAttackSpeed();
                     return ((1500 * 345) / atkSpd);
                 }
                 case WeaponType.Dagger:
                 {
-                    atkSpd = _character.GetPhysicalAttackSpeed();
+                    atkSpd = _character.CharacterCombat().GetPhysicalAttackSpeed();
                     break;
                 }
                 default:
                 {
-                    atkSpd = _character.GetPhysicalAttackSpeed();
+                    atkSpd = _character.CharacterCombat().GetPhysicalAttackSpeed();
                     break;
                 }
             }
@@ -57,7 +57,7 @@ namespace Core.Module.CharacterData
 
             reuse *= 1;// _character.Stat.GetReuseModifier(target);
 		
-            var atkSpd = _character.GetPhysicalAttackSpeed();
+            var atkSpd = _character.CharacterCombat().GetPhysicalAttackSpeed();
 
             return weapon.WeaponType switch
             {

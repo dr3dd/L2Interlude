@@ -24,10 +24,14 @@ namespace Core.Module.SkillData.Effects
         
         protected async Task StartEffectTask(int duration, Character targetInstance)
         {
-            await StartNewEffect(duration, targetInstance);
-            LoggerManager.Info($"The effect {SkillDataModel.SkillName} has been started");
-            await CharacterEffect(targetInstance);
-            await SendEffectMessage(targetInstance, SystemMessageId.YouFeelS1Effect);
+            if (SkillDataModel.OperateType != OperateType.P)
+            {
+                await StartNewEffect(duration, targetInstance);
+                LoggerManager.Info($"The effect {SkillDataModel.SkillName} has been started");
+                await SendEffectMessage(targetInstance, SystemMessageId.YouFeelS1Effect);
+                await UpdateEffectIcons(targetInstance);
+            }
+            CharacterEffect(targetInstance);
         }
 
         private async Task SendEffectMessage(Character targetInstance, SystemMessageId messageId)
@@ -40,10 +44,9 @@ namespace Core.Module.SkillData.Effects
             }
         }
 
-        private async Task CharacterEffect(Character targetInstance)
+        private void CharacterEffect(Character targetInstance)
         {
             targetInstance.CharacterEffect().AddEffect(this, Duration, PeriodStartTime);
-            await UpdateEffectIcons(targetInstance);
         }
 
         private async Task UpdateEffectIcons(Character targetInstance)

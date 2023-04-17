@@ -55,7 +55,7 @@ namespace Core.Module.CharacterData.Template
         
         private void InitialHpRegen()
         {
-            _baseHpRegen = new List<double> { 6.0, 7.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5 };
+            _baseHpRegen = new List<float> { 6.0f, 7.5f, 3.5f, 4.5f, 5.5f, 6.5f, 7.5f, 8.5f };
         }
         
         private void InitialStartPoint()

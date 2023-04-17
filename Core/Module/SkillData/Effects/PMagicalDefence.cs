@@ -9,12 +9,12 @@ namespace Core.Module.SkillData.Effects
 {
     public class PMagicalDefence : Effect
     {
-        private readonly int _defence;
+        private readonly double _defence;
         private readonly int _abnormalTime;
         public PMagicalDefence(IReadOnlyList<string> param, SkillDataModel skillDataModel)
         {
             SkillDataModel = skillDataModel;
-            _defence = Convert.ToInt32(param[2]);
+            _defence = Convert.ToDouble(param[2]);
             _abnormalTime = skillDataModel.AbnormalTime;
             IsModPer = (param[3] == "per");
         }
@@ -31,7 +31,7 @@ namespace Core.Module.SkillData.Effects
 
         public int GetMagicalDefence()
         {
-            return _defence;
+            return (int)_defence;
         }
     }
 }

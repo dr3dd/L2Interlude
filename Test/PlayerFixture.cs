@@ -55,6 +55,7 @@ public class PlayerInstanceFixture
         var templateInit = new TemplateInit(_serviceProvider);
         var playerAppearance = new PlayerAppearance("Test1", "Test1", 0, 0, 0, 0);
         _playerInstance = new PlayerInstance(templateInit.GetTemplateByClassId(0), playerAppearance, _serviceProvider, mock.Object);
+        _playerInstance.PlayerInventory().InitBodyParts();
         return _playerInstance;
     }  
 }

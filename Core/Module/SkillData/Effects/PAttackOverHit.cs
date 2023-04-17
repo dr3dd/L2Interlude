@@ -24,9 +24,15 @@ namespace Core.Module.SkillData.Effects
                 await currentInstance.SendPacketAsync(new SystemMessage(effectResult.SystemMessageId));
                 return;
             }
-            targetInstance.CharacterStatus().DecreaseCurrentHp(_damage);
+            var damage = CalculateSkill.CalcPhysSkillDam(targetInstance, _damage);
+            targetInstance.CharacterStatus().DecreaseCurrentHp(damage);
             await SendStatusUpdate(targetInstance);
-            LoggerManager.Info($"PAttackOverHit Attack: {_damage}");
+            LoggerManager.Info($"PAttackOverHit Attack: {damage}");
+        }
+        
+        public int GetDamage()
+        {
+            return _damage;
         }
     }
 }

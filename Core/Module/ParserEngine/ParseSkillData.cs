@@ -48,7 +48,7 @@ namespace Core.Module.ParserEngine
                             skillBegin.MagicLevel = Convert.ToInt32(value);
                             break;
                         case "effect":
-                            var effects = ParseEffect(value);
+                            var effects = ParseEffect(skillBegin.SkillName, value);
                             skillBegin.Effect = effects;
                             break;
                         case "operate_cond":
@@ -147,14 +147,32 @@ namespace Core.Module.ParserEngine
             }
         }
 
-        private IList<string> ParseEffect(string value)
+        private IList<string> ParseEffect(string skillName, string line)
         {
-            var pattern = @"\{.*?\}";
-            var matches = Regex.Matches(value.Replace("{all}", "all"), pattern);
+            var pattern1 = @"\{.*?\}";
+            line =  line.Replace("{all}", "all");
+            line = line.Replace("{bow}", "bow");
+            line = line.Replace("{dagger}", "dagger");
+            line = line.Replace("{pole}", "pole");
+            line = line.Replace("{blunt}", "blunt");
+            line = line.Replace("{dual}", "dual");
+            line = line.Replace("{sword;blunt}", "sword;blunt");
+            line = line.Replace("{armor_light}", "armor_light");
+            line = line.Replace("{armor_none;armor_light;armor_heavy}", "armor_none;armor_light;armor_heavy");
+            line = line.Replace("{armor_heavy}", "armor_heavy");
+            line = line.Replace("{armor_magic}", "armor_magic");
+            line = line.Replace("{fist;dualfist}", "fist;dualfist");
+            line = line.Replace("{sword;blunt;pole}", "sword;blunt;pole");
+            line = line.Replace("{bow;dualfist}", "bow;dualfist");
+            line = line.Replace("{bow;dagger;fist;dualfist}", "bow;dagger;fist;dualfist");
+            line = line.Replace("{sword;blunt;pole;dualfist;dual}", "sword;blunt;pole;dualfist;dual");
+            
+  
+            var matches1 = Regex.Matches(line, pattern1);
             IList<string> effects = new List<string>();
-            foreach (Match match in matches)
+            foreach (Match match1 in matches1)
             {
-                effects.Add(match.Value.RemoveBrackets());
+                effects.Add(match1.Value.RemoveBrackets());
             }
             return effects;
         }

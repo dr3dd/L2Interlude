@@ -24,7 +24,16 @@ namespace Core.Module.Player
 
         public ItemInstance GetWeapon()
         {
-            return _playerInstance.PlayerInventory().GetBodyPartBySlotId((int)SlotBitType.RightHand);
+            var inventory = _playerInstance.PlayerInventory();
+            if (inventory.IsBodyPartInSlotId(SlotBitType.LeftRightHand))
+            {
+                return inventory.GetBodyPartBySlotId((int)SlotBitType.LeftRightHand);
+            }
+            if (inventory.IsBodyPartInSlotId(SlotBitType.LeftHand))
+            {
+                return inventory.GetBodyPartBySlotId((int)SlotBitType.LeftHand);
+            }
+            return inventory.GetBodyPartBySlotId((int)SlotBitType.RightHand);
         }
 
         public int GetPhysicalWeaponDamage()
@@ -82,7 +91,7 @@ namespace Core.Module.Player
         /// <returns></returns>
         public int GetPhysicalDefence()
         {
-            double result = 0;
+            float result = 0;
             try
             {
                 float levelBonus = _statBonusInit.GetLevelBonus(_level);
@@ -115,7 +124,10 @@ namespace Core.Module.Player
 
         private int GetUnderwear()
         {
-            var underwear = _templateHandler.GetBaseDefendUnderwear(); //TODO
+            var itemUnderwear = _playerInstance.PlayerInventory().GetBodyPartBySlotId((int)SlotBitType.UnderWear);
+            var underwear = itemUnderwear.UserItemId == 0
+                ? _templateHandler.GetBaseDefendUnderwear()
+                : itemUnderwear.ItemData.PhysicalDefense;
             return underwear;
         }
 
@@ -130,7 +142,10 @@ namespace Core.Module.Player
 
         private int GetBoots()
         {
-            var boots = _templateHandler.GetBaseDefendBoots(); // TODO
+            var itemBoots = _playerInstance.PlayerInventory().GetBodyPartBySlotId((int)SlotBitType.Feet);
+            var boots = itemBoots.UserItemId == 0
+                ? _templateHandler.GetBaseDefendBoots()
+                : itemBoots.ItemData.PhysicalDefense;
             return boots;
         }
 
@@ -170,11 +185,11 @@ namespace Core.Module.Player
         public int GetMagicalDefence()
         {
             float levelBonus = _statBonusInit.GetLevelBonus(_level);
-            var leftEarning = _templateHandler.GetBaseMagicDefendLeftEarring();
-            var rightEarning = _templateHandler.GetBaseMagicDefendRightEarring();
-            var leftRing = _templateHandler.GetBaseMagicDefendLeftRing();
-            var rightRing = _templateHandler.GetBaseMagicDefendRightRing();
-            var necklace = _templateHandler.GetBaseMagicDefendNecklace();
+            var leftEarning = GetLeftEarning();
+            var rightEarning = GetRightEarning();
+            var leftRing = GetLeftRing();
+            var rightRing = GetRightRing();
+            var necklace = GetNecklace();
             
             var menStat = _templateHandler.GetMen();
             float menBonus = (_statBonusInit.GetMenBonus(menStat) + 100) / 100f;
@@ -184,6 +199,51 @@ namespace Core.Module.Player
             var effects = GetPlayerEffects();
             result = CalculateStats.CalculateMagicalDefence(effects, result);
             return (int) result;
+        }
+
+        private int GetNecklace()
+        {
+            var itemNecklace = _playerInstance.PlayerInventory().GetBodyPartBySlotId((int)SlotBitType.Necklace);
+            var necklace = itemNecklace.UserItemId == 0
+                ? _templateHandler.GetBaseMagicDefendNecklace()
+                : itemNecklace.ItemData.MagicalDefense;
+            return necklace;
+        }
+
+        private int GetRightRing()
+        {
+            var itemRightRing = _playerInstance.PlayerInventory().GetBodyPartBySlotId((int)SlotBitType.RightFinger);
+            var rightRing = itemRightRing.UserItemId == 0
+                ? _templateHandler.GetBaseMagicDefendRightRing()
+                : itemRightRing.ItemData.MagicalDefense;
+            return rightRing;
+        }
+
+        private int GetLeftRing()
+        {
+            var itemLeftRing = _playerInstance.PlayerInventory().GetBodyPartBySlotId((int)SlotBitType.LeftFinger);
+            var leftRing = itemLeftRing.UserItemId == 0
+                ? _templateHandler.GetBaseMagicDefendLeftRing()
+                : itemLeftRing.ItemData.MagicalDefense;
+            return leftRing;
+        }
+
+        private int GetRightEarning()
+        {
+            var itemRightEarning = _playerInstance.PlayerInventory().GetBodyPartBySlotId((int)SlotBitType.RightEarning);
+            var rightEarring = itemRightEarning.UserItemId == 0
+                ? _templateHandler.GetBaseMagicDefendRightEarring()
+                : itemRightEarning.ItemData.MagicalDefense;
+            return rightEarring;
+        }
+
+        private int GetLeftEarning()
+        {
+            var itemLeftEarning = _playerInstance.PlayerInventory().GetBodyPartBySlotId((int)SlotBitType.LeftEarning);
+            var leftEarring = itemLeftEarning.UserItemId == 0
+                ? _templateHandler.GetBaseMagicDefendLeftEarring()
+                : itemLeftEarning.ItemData.MagicalDefense;
+            return leftEarring;
         }
 
         private IEnumerable<EffectDuration> GetPlayerEffects()

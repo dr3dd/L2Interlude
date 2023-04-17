@@ -14,6 +14,7 @@ namespace Core.Module.ItemData
         public int MagicalDamage { get; }
         public int PhysicalDamage { get; }
         public int PhysicalDefense { get; }
+        public int MagicallDefense { get; }
         public int AttackSpeed { get; }
         public float HitModify { get; } //increase or decrease accuracy
         public int Critical { get; }
@@ -32,6 +33,7 @@ namespace Core.Module.ItemData
             MagicalDamage = itemBegin.MagicalDamage;
             PhysicalDamage = itemBegin.PhysicalDamage;
             PhysicalDefense = itemBegin.PhysicalDefense;
+            MagicallDefense = itemBegin.MagicalDefense;
             AttackSpeed = itemBegin.AttackSpeed;
             HitModify = itemBegin.HitModify;
             Critical = itemBegin.Critical;
@@ -71,7 +73,7 @@ namespace Core.Module.ItemData
                 "onepiece" => SlotBitType.OnePiece,
                 "rear;lear" => SlotBitType.RightEarning | SlotBitType.LeftEarning,
                 "rfinger;lfinger" => SlotBitType.RightFinger | SlotBitType.LeftFinger,
-                "necklace" => SlotBitType.Necklace,
+                "neck" => SlotBitType.Necklace,
                 "back" => SlotBitType.Back,
                 "underwear" => SlotBitType.UnderWear,
                 "hair" => SlotBitType.Hair,

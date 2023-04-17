@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Core.Module.CharacterData.Template;
 
 namespace Core.Module.NpcData
 {
     public class NpcTemplateInit
     {
         private readonly NpcStat _stat;
-        public NpcTemplateInit(IDictionary<string, object> setStats)
+        public NpcTemplateInit(IDictionary<string, object> setStats, PcParameterInit pcParameterInit)
         {
             _stat = new NpcStat();
             _stat.Id = ToInt(setStats["npc_id"]);
@@ -52,6 +53,13 @@ namespace Core.Module.NpcData
             _stat.Wit = ToByte(setStats["wit"]);
             _stat.Con = ToByte(setStats["con"]);
             _stat.Men = ToByte(setStats["men"]);
+            _stat.StrBonus = pcParameterInit.GetStrBonus(_stat.Str);
+            _stat.IntBonus = pcParameterInit.GetIntBonus(_stat.Int);
+            _stat.DexBonus = pcParameterInit.GetDexBonus(_stat.Dex);
+            _stat.WitBonus = pcParameterInit.GetWitBonus(_stat.Wit);
+            _stat.ConBonus = pcParameterInit.GetConBonus(_stat.Con);
+            _stat.MenBonus = pcParameterInit.GetMenBonus(_stat.Men);
+            _stat.LevelBonus = pcParameterInit.GetLevelBonus(_stat.Level);
             _stat.BaseAttackType = (string) setStats["base_attack_type"];
             _stat.BaseAttackRange = ToShort(setStats["base_attack_range"]);
             _stat.BaseDamageRange = ToFloatList(setStats["base_damage_range"]);

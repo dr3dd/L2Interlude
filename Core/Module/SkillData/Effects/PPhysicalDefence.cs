@@ -1,38 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Core.Module.CharacterData;
-using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
 
-namespace Core.Module.SkillData.Effects
-{
-    public class PPhysicalDefence : Effect
-    {
-        private readonly int _defence;
-        private readonly int _abnormalTime;
+namespace Core.Module.SkillData.Effects;
 
-        public PPhysicalDefence(IReadOnlyList<string> param, SkillDataModel skillDataModel)
+public class PPhysicalDefence : Effect
+{
+    private readonly double _defence;
+    private readonly int _abnormalTime;
+
+    public PPhysicalDefence(IReadOnlyList<string> param, SkillDataModel skillDataModel)
+    {
+        SkillDataModel = skillDataModel;
+        var reverse = param.Reverse().ToArray();
+        _defence = Convert.ToDouble(reverse[1]);
+        _abnormalTime = skillDataModel.AbnormalTime;
+        IsModPer = (reverse[0] == "per");
+    }
+    public override async Task Process(Character currentInstance, Character targetInstance)
+    {
+        var effectResult = CanPlayerUseSkill(currentInstance, targetInstance);
+        if (effectResult.IsNotValid)
         {
-            SkillDataModel = skillDataModel;
-            _defence = Convert.ToInt32(param[2]);
-            _abnormalTime = skillDataModel.AbnormalTime;
-            IsModPer = (param[3] == "per");
+            await currentInstance.SendPacketAsync(new SystemMessage(effectResult.SystemMessageId));
+            return;
         }
-        public override async Task Process(Character currentInstance, Character targetInstance)
-        {
-            var effectResult = CanPlayerUseSkill(currentInstance, targetInstance);
-            if (effectResult.IsNotValid)
-            {
-                await currentInstance.SendPacketAsync(new SystemMessage(effectResult.SystemMessageId));
-                return;
-            }
-            await StartEffectTask(_abnormalTime * 1000, targetInstance);
-        }
+        await StartEffectTask(_abnormalTime * 1000, targetInstance);
+    }
         
-        public int GetPhysicalDefence()
-        {
-            return _defence;
-        }
+    public int GetPhysicalDefence()
+    {
+        return (int) _defence;
     }
 }
