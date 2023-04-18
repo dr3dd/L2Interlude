@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Helpers
 {
@@ -23,10 +24,13 @@ namespace Helpers
             return (9.0D * heading) / 1610.0D; // = 360.0 * (heading / 64400.0)
         }
         
-        public static double ToRadians(this double val)
-        {
-            return (Math.PI / 180) * val;
-        }
+        public static float ToFloat(object obj) => Convert.ToSingle(obj, CultureInfo.InvariantCulture.NumberFormat);
+        public static double ToDouble(object obj) => Convert.ToDouble(obj, CultureInfo.InvariantCulture.NumberFormat);
+        public static short ToShort(object obj) => Convert.ToInt16(obj);
+        public static int ToInt(object obj) => Convert.ToInt32(obj);
+        public static byte ToByte(object obj) => Convert.ToByte(obj);
+        
+        public static double ToRadians(this double val) => (Math.PI / 180) * val;
         
         public static int Limit(int numToTest, int min, int max)
         {

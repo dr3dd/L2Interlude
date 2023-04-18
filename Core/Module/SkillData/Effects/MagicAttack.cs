@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Module.CharacterData;
-using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
+using Helpers;
 
 namespace Core.Module.SkillData.Effects;
 
@@ -12,7 +11,7 @@ public class MagicAttack : Effect
     private readonly double _magicDamage;
     public MagicAttack(IReadOnlyList<string> param, SkillDataModel skillDataModel)
     {
-        _magicDamage = Convert.ToDouble(param[1]);
+        _magicDamage = Utility.ToFloat(param[1]);
         SkillDataModel = skillDataModel;
     }
     public override async Task Process(Character currentInstance, Character targetInstance)

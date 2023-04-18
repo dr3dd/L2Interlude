@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Core.Module.CharacterData;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
+using Helpers;
 
 namespace Core.Module.SkillData.Effects;
 
@@ -14,7 +15,7 @@ public class PMaxHp : Effect
 
     public PMaxHp(IReadOnlyList<string> param, SkillDataModel skillDataModel)
     {
-        _maxHp = Convert.ToDouble(param[1]);
+        _maxHp = Utility.ToDouble(param[1]);
         _abnormalTime = skillDataModel.AbnormalTime;
         SkillDataModel = skillDataModel;
         IsModPer = (param[2] == "per");

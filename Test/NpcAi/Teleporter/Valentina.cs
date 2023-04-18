@@ -34,7 +34,7 @@ public class Valentina : IClassFixture<NpcInstanceFixture>
     }
 
     [Fact]
-    public async Task CheckAiTest()
+    public void CheckAiTest()
     {
         _npcInstance.NpcAi().Created();
         //await Process.GetCurrentProcess().WaitForExitAsync();

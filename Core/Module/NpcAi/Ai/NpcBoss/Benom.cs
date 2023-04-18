@@ -14,7 +14,7 @@ public class Benom : DefaultNpc
         throw new System.NotImplementedException();
     }
 
-    public override void TimerFiredEx(int timerId)
+    public override Task TimerFiredEx(int timerId)
     {
         throw new System.NotImplementedException();
     }

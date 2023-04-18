@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Net;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Core.Module.CharacterData;
 using Core.Module.NpcData;
@@ -143,7 +144,7 @@ namespace Core.Controller
             {
                 var options = new JsonSerializerOptions
                 {
-                    IgnoreNullValues = true
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
                 };
                 var json = JsonSerializer.Serialize(npcServerRequest, options);
                 var writer = new StreamWriter(_stream);

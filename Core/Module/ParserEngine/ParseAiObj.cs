@@ -22,10 +22,6 @@ public class ParseAiObj : IParse
                 var className = ToPascalCase(words[2]);
                 var parentClassName = ToPascalCase(words[4]);
 
-                if (words[2] == "messenger_jacquard")
-                {
-                    var d = 1;
-                }
                 var prepareClass = new Dictionary<string, string>
                 {
                     ["class_name"] = className,
