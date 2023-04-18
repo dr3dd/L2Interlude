@@ -11,9 +11,9 @@ public class Warrior : WarriorParameter
     public virtual float Attack_BoostValue { get; set; } = 300.000000f;
     public virtual float UseSkill_BoostValue { get; set; } = 100000.000000f;
         
-    public override void NoDesire()
+    public override async Task NoDesire()
     {
-        MySelf.AddMoveAroundDesire(5, 5);
+        await MySelf.AddMoveAroundDesire(5, 5);
     }
 
     public override void Created()
@@ -33,15 +33,15 @@ public class Warrior : WarriorParameter
         throw new NotImplementedException();
     }
 
-    public override void TimerFiredEx(int timerId)
+    public override async Task TimerFiredEx(int timerId)
     {
         if (MoveAroundSocial > 0 && Rnd.Next(100) < 40)
         {
-            MySelf.AddEffectActionDesire(MySelf.Sm, 3, ((MoveAroundSocial * 1000) / 30), 50);
+            await MySelf.AddEffectActionDesire(MySelf.Sm, 3, ((MoveAroundSocial * 1000) / 30), 50);
         }
         else if (MoveAroundSocial1 > 0 && Rnd.Next(100) < 40)
         {
-            MySelf.AddEffectActionDesire(MySelf.Sm, 2, ((MoveAroundSocial1 * 1000) / 30), 50);
+            await MySelf.AddEffectActionDesire(MySelf.Sm, 2, ((MoveAroundSocial1 * 1000) / 30), 50);
         }
         MySelf.AddTimerEx(1001, 10000);
     }

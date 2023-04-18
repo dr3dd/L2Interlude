@@ -28,7 +28,6 @@ namespace GameService
 
             await Task.Factory.StartNew(serviceProvider.GetRequiredService<LoginServiceController>().StartAsync);
             await Task.Factory.StartNew(serviceProvider.GetRequiredService<GameService>().StartAsync);
-            await Task.Factory.StartNew(serviceProvider.GetRequiredService<NpcServiceController>().StartAsync);
             Process.GetCurrentProcess().WaitForExit();
         }
 
@@ -43,7 +42,6 @@ namespace GameService
             services.AddSingleton<LoginServiceController>();
             services.AddSingleton<GameServicePacketHandler>();
             services.AddSingleton<GameServiceController>();
-            services.AddSingleton<NpcServiceController>();
             services.AddSingleton<ClientManager>();
             services.AddSingleton<GameService>();
         }

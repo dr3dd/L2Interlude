@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Module.CharacterData;
 using Core.NetworkPacket.ServerPacket;
+using Helpers;
 
 namespace Core.Module.SkillData.Effects;
 
@@ -15,7 +16,7 @@ public class PPhysicalAttack : Effect
     public PPhysicalAttack(IReadOnlyList<string> param, SkillDataModel skillDataModel)
     {
         var reverse = param.Reverse().ToArray();
-        _attackDamage = Convert.ToDouble(reverse[1]);
+        _attackDamage = Utility.ToDouble(reverse[1]);
         IsModPer = (reverse[0] == "per");
             
         _abnormalTime = skillDataModel.AbnormalTime;

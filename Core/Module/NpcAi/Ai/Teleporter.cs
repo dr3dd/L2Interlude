@@ -7,8 +7,8 @@ namespace Core.Module.NpcAi.Ai;
 public class Teleporter : AnnounceRaidBossPosition
 {
     public virtual string ShopName => "";
-    public virtual string FnHi { get; set; } = "thi.htm";
-    public virtual string FnYouAreChaotic { get; set; } = "tcm.htm";
+    public override string FnHi { get; set; } = "thi.htm";
+    public override string FnYouAreChaotic { get; set; } = "tcm.htm";
     public virtual string FnNobless { get; set; } = "";
     public virtual string FnNoNobless { get; set; } = "";
     public virtual string FnNoNoblessItem { get; set; } = "";

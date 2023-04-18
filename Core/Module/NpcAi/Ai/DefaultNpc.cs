@@ -52,12 +52,14 @@ public class DefaultNpc
         return Task.FromResult(1);
     }
 
-    public virtual void TimerFiredEx(int timerId)
+    public virtual Task TimerFiredEx(int timerId)
     {
+        return Task.FromResult(1);
     }
 
-    public virtual void NoDesire()
+    public virtual Task NoDesire()
     {
+        return Task.FromResult(1);
     }
 
     public virtual void Attacked(Talker talker, int damage)

@@ -62,15 +62,15 @@ public class Citizen : DefaultNpc
         }
     }
 
-    public override void TimerFiredEx(int timerId)
+    public override async Task TimerFiredEx(int timerId)
     {
         if (MoveAroundSocial > 0 && Rnd.Next(100) < 40)
         {
-            MySelf.AddEffectActionDesire(MySelf.Sm, 3, ((MoveAroundSocial * 1000) / 30), 50);
+            await MySelf.AddEffectActionDesire(MySelf.Sm, 3, ((MoveAroundSocial * 1000) / 30), 50);
         }
         else if (MoveAroundSocial1 > 0 && Rnd.Next(100) < 40)
         {
-            MySelf.AddEffectActionDesire(MySelf.Sm, 2, ((MoveAroundSocial1 * 1000) / 30), 50);
+            await MySelf.AddEffectActionDesire(MySelf.Sm, 2, ((MoveAroundSocial1 * 1000) / 30), 50);
         }
         MySelf.AddTimerEx(1671, 10000);
     }

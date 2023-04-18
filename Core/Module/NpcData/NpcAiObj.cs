@@ -32,11 +32,6 @@ public class NpcAiObj : BaseParse
             {
                 var npcName = key.ToString();
                 _dataCollection.Add(npcName, npcName);
-                if (npcName == "messenger_jacquard")
-                {
-                    var d = 1;
-                }
-                
                 var npcValue = value as IDictionary<string, string>;
                 var templateName = npcName;
                 var className = npcValue?["class_name"];

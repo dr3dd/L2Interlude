@@ -162,10 +162,6 @@ namespace Core.Module.ParserEngine
                             tmpItem = null;
                             anywhere = true;
 
-                            if (_makerName == "gludio32_qm1725_00")
-                            {
-                                var d = 1;
-                            }
                             var listPos = _territoryCollection[_makerName];
                             
                             /*

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Module.CharacterData;
 using Core.NetworkPacket.ServerPacket;
+using Helpers;
 
 namespace Core.Module.SkillData.Effects;
 
@@ -16,7 +16,7 @@ public class PPhysicalDefence : Effect
     {
         SkillDataModel = skillDataModel;
         var reverse = param.Reverse().ToArray();
-        _defence = Convert.ToDouble(reverse[1]);
+        _defence = Utility.ToDouble(reverse[1]);
         _abnormalTime = skillDataModel.AbnormalTime;
         IsModPer = (reverse[0] == "per");
     }

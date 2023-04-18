@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Module.CharacterData;
-using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
+using Helpers;
 
 namespace Core.Module.SkillData.Effects
 {
@@ -14,7 +13,7 @@ namespace Core.Module.SkillData.Effects
         public PMagicalDefence(IReadOnlyList<string> param, SkillDataModel skillDataModel)
         {
             SkillDataModel = skillDataModel;
-            _defence = Convert.ToDouble(param[2]);
+            _defence = Utility.ToDouble(param[2]);
             _abnormalTime = skillDataModel.AbnormalTime;
             IsModPer = (param[3] == "per");
         }
