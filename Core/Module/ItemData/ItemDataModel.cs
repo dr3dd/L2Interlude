@@ -20,6 +20,8 @@ namespace Core.Module.ItemData
         public int Critical { get; }
         public int ReuseDelay { get; }
         public CrystalType CrystalType { get; }
+        public int MaximumCount { get; }
+        public int DefaultPrice { get; }
 
         public ItemDataModel(KeyValuePair<object, object> keyValuePair)
         {
@@ -39,6 +41,8 @@ namespace Core.Module.ItemData
             Critical = itemBegin.Critical;
             ReuseDelay = itemBegin.ReuseDelay;
             CrystalType = GetCrystalType(itemBegin.CrystalType);
+            MaximumCount = itemBegin.MaximumCount;
+            DefaultPrice = itemBegin.DefaultPrice;
         }
 
         private ItemType GetItemType(string itemType)
