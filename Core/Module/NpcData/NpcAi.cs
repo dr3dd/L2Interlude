@@ -10,6 +10,7 @@ using Core.Module.DoorData;
 using Core.Module.NpcAi;
 using Core.Module.NpcAi.Ai;
 using Core.Module.NpcAi.Handlers;
+using Core.Module.NpcAi.Models;
 using Core.Module.Player;
 using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
@@ -26,16 +27,19 @@ namespace Core.Module.NpcData
         private readonly DefaultNpc _defaultNpc;
         private readonly ConcurrentDictionary<int, Task> _tasks;
         private readonly NpcAiTeleport _aiTeleport;
+        private readonly NpcAiSell _npcAiSell;
         private int _additionalTime;
         private readonly CancellationTokenSource _cts;
         public NpcAiSm Sm { get; } //PTS object AI require
 
         public DefaultNpc GetDefaultNpc() => _defaultNpc;
+        public NpcInstance NpcInstance() => _npcInstance;
         
         public NpcAi(NpcInstance npcInstance)
         {
             _npcInstance = npcInstance;
             _aiTeleport = new NpcAiTeleport(this);
+            _npcAiSell = new NpcAiSell(this);
             _worldInit = npcInstance.ServiceProvider.GetRequiredService<WorldInit>();
             _tasks = new ConcurrentDictionary<int, Task>();
             _cts = new CancellationTokenSource();
@@ -229,6 +233,11 @@ namespace Core.Module.NpcData
                 await newbieGuide.MenuSelected(talker, askId, replyId);
                 return;
             } 
+            if (_defaultNpc is Merchant merchant)
+            {
+                await merchant.MenuSelected(talker, askId, replyId);
+                return;
+            }
             await _defaultNpc.MenuSelected(talker, askId, replyId, String.Empty);
         }
 
@@ -251,6 +260,21 @@ namespace Core.Module.NpcData
         }
 
         public async Task ShowEnchantSkillMessage(Talker talker, int skillNameId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task ShowMultiSell(int i, Talker talker)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task Sell(Talker talker, IEnumerable<BuySellList> sellList, string shopName, string fnBuy, string empty, string p5)
+        {
+            await _npcAiSell.ShowSellDialog(talker.PlayerInstance, sellList);
+        }
+
+        public async Task SellPreview(Talker talker, IList<BuySellList> sellList0, string shopName, string fnBuy, string empty, string p5)
         {
             throw new NotImplementedException();
         }

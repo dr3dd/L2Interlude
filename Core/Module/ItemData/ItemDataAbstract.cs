@@ -17,6 +17,8 @@
         public int Critical { get; }
         public int ReuseDelay { get; }
         public CrystalType CrystalType { get; }
+        public int MaximumCount { get; }
+        public int DefaultPrice { get; }
 
         public ItemDataAbstract(int itemId, WeaponType weaponType)
         {
@@ -40,6 +42,8 @@
             Critical = itemDataModel.Critical;
             ReuseDelay = itemDataModel.ReuseDelay;
             CrystalType = itemDataModel.CrystalType;
+            MaximumCount = itemDataModel.MaximumCount;
+            DefaultPrice = itemDataModel.DefaultPrice;
         }
     }
 }
