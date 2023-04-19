@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using Core.NetworkPacket.ClientPacket;
 using Core.NetworkPacket.ClientPacket.CharacterPacket;
 using L2Logger;
+using Microsoft.Extensions.DependencyInjection;
 using Network;
 
 namespace Core.Controller.Handlers
@@ -50,9 +51,10 @@ namespace Core.Controller.Handlers
             _clientPacketsD0.TryAdd(0x23, typeof(RequestCursedWeaponLocation));
         }
         
-        public void HandlePacket(Packet packet, GameServiceController controller)
+        public void HandlePacket(Packet packet)
         {
             byte opCode = packet.FirstOpcode();
+            var controller = _serviceProvider.GetRequiredService<GameServiceController>();
             
             LoggerManager.Info($"Received packet with Opcode:{opCode:X2}");
 

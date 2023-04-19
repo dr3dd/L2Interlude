@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using Core.Controller.Handlers;
 using L2Logger;
+using Microsoft.Extensions.DependencyInjection;
 using Network;
 using Security;
 
@@ -24,7 +25,7 @@ namespace Core.Controller
         public GameServiceHelper GameServiceHelper { get; }
 
         private readonly BufferBlock<PacketStream> _bufferBlock;
-
+/*
         public GameServiceController(GameServicePacketHandler gameServicePacketHandler)
         {
             _gameServicePacketHandler = gameServicePacketHandler;
@@ -41,6 +42,22 @@ namespace Core.Controller
             _stream = tcpClient.GetStream();
             _crypt = new GameCrypt();
             _bufferBlock = bufferBlock;
+            Task.Factory.StartNew(Read);
+        }
+*/
+
+        private readonly IPacketFactory _packetFactory;
+        public GameServiceController(TcpClient tcpClient, IServiceProvider serviceProvider)
+        {
+            GameServiceHelper = new GameServiceHelper(this);
+            Address = tcpClient.Client.RemoteEndPoint;
+            _gameServicePacketHandler = serviceProvider.GetRequiredService<GameServicePacketHandler>();
+            _clientManager = serviceProvider.GetRequiredService<ClientManager>();
+            _client = tcpClient;
+            _stream = tcpClient.GetStream();
+            _crypt = new GameCrypt();
+            _bufferBlock = serviceProvider.GetRequiredService<BufferBlock<PacketStream>>();
+            _packetFactory = serviceProvider.GetRequiredService<IPacketFactory>();
             Task.Factory.StartNew(Read);
         }
 
@@ -81,9 +98,15 @@ namespace Core.Controller
                     
                     _crypt.Decrypt(buffer);
 
+                    var packet = _packetFactory.Create(buffer, 1);
+                    await Task.Factory
+                        .StartNew(() => _gameServicePacketHandler.HandlePacket(packet))
+                        .ContinueWith(HandleException);
+                    /*
                     await Task.Factory
                         .StartNew(() => _gameServicePacketHandler.HandlePacket(new Packet(buffer, 1), this))
                         .ContinueWith(HandleException);
+                        */
                 }
             }
             catch (Exception e)
