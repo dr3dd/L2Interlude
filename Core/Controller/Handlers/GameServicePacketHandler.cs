@@ -28,6 +28,7 @@ namespace Core.Controller.Handlers
             _clientPackets.TryAdd(0x0A, typeof(AttackRequest));
             _clientPackets.TryAdd(0x11, typeof(RequestUnEquipItem));
             _clientPackets.TryAdd(0x14, typeof(UseItem));
+            _clientPackets.TryAdd(0x1F, typeof(RequestBuyItem));
             _clientPackets.TryAdd(0x2F, typeof(RequestMagicSkillUse));
             _clientPackets.TryAdd(0x3F, typeof(RequestSkillList));
             _clientPackets.TryAdd(0x0E, typeof(NewCharacter));
