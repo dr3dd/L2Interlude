@@ -12,5 +12,7 @@ namespace DataBase.Interfaces
 
         Task<List<UserItemEntity>> GetInventoryItemsByOwnerId(int ownerId);
         Task<List<UserItemEntity>> GetInventoryItemsByOwnerIdAndLocId(int ownerId, string baseLocation, string equipLocation);
+        Task<UserItemEntity> GetInventoryItemsByItemId(int charId, int itemId);
+        Task UpdateItemAmount(int charId, int itemId, int amount);
     }
 }

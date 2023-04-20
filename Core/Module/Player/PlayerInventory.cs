@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Module.ItemData;
 using Core.Module.WorldData;
+using DataBase.Entities;
 using DataBase.Interfaces;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
@@ -300,6 +301,35 @@ namespace Core.Module.Player
         public void AddItemToInventoryCollection(ItemInstance itemInstance)
         {
             _items.Add(itemInstance.UserItemId, itemInstance);
+        }
+
+        public async Task AddUpdateItemToInventory(int myItemItemId, int myItemQty)
+        {
+            var item = _itemDataInit.GetItemById(myItemItemId);
+            var characterId = _playerInstance.PlayerCharacterInfo().CharacterId;
+            if (item.ItemType is ItemType.EtcItem or ItemType.Asset or ItemType.QuestItem)
+            {
+                var inventoryItem = await _itemRepository.GetInventoryItemsByItemId(myItemItemId, characterId);
+                if (inventoryItem != null)
+                {
+                    inventoryItem.Amount += myItemQty;
+                    await _itemRepository.UpdateItemAmount(characterId, myItemItemId, myItemQty);
+                    return;
+                }
+            }
+            await AddItemToInventory(item, myItemQty);
+        }
+
+        public async Task AddItemToInventory(ItemDataAbstract item, int qty)
+        {
+            await _itemRepository.AddAsync(new UserItemEntity
+            {
+                ItemId = item.ItemId,
+                ItemType = (int) item.ItemType,
+                Amount = qty,
+                CharacterId = _playerInstance.PlayerCharacterInfo().CharacterId,
+                Enchant = 0
+            });
         }
     }
 }
