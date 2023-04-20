@@ -25,26 +25,6 @@ namespace Core.Controller
         public GameServiceHelper GameServiceHelper { get; }
 
         private readonly BufferBlock<PacketStream> _bufferBlock;
-/*
-        public GameServiceController(GameServicePacketHandler gameServicePacketHandler)
-        {
-            _gameServicePacketHandler = gameServicePacketHandler;
-        }
-        
-        public GameServiceController(ClientManager clientManager, TcpClient tcpClient,
-            GameServicePacketHandler gameServicePacketHandler, BufferBlock<PacketStream> bufferBlock)
-        {
-            GameServiceHelper = new GameServiceHelper(this);
-            Address = tcpClient.Client.RemoteEndPoint;
-            _gameServicePacketHandler = gameServicePacketHandler;
-            _clientManager = clientManager;
-            _client = tcpClient;
-            _stream = tcpClient.GetStream();
-            _crypt = new GameCrypt();
-            _bufferBlock = bufferBlock;
-            Task.Factory.StartNew(Read);
-        }
-*/
 
         private readonly IPacketFactory _packetFactory;
         public GameServiceController(IServiceProvider serviceProvider)
@@ -104,7 +84,7 @@ namespace Core.Controller
 
                     var packet = _packetFactory.Create(buffer, 1);
                     await Task.Factory
-                        .StartNew(() => _gameServicePacketHandler.HandlePacket(packet))
+                        .StartNew(() => _gameServicePacketHandler.HandlePacket(packet, this))
                         .ContinueWith(HandleException);
                     /*
                     await Task.Factory

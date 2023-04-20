@@ -51,10 +51,9 @@ namespace Core.Controller.Handlers
             _clientPacketsD0.TryAdd(0x23, typeof(RequestCursedWeaponLocation));
         }
         
-        public void HandlePacket(Packet packet)
+        public void HandlePacket(Packet packet, GameServiceController controller)
         {
             byte opCode = packet.FirstOpcode();
-            var controller = _serviceProvider.GetRequiredService<IGameServiceFactory>().GameServiceController();
             
             LoggerManager.Info($"Received packet with Opcode:{opCode:X2}");
 
