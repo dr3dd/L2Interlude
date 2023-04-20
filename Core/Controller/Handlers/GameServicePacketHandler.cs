@@ -54,7 +54,7 @@ namespace Core.Controller.Handlers
         public void HandlePacket(Packet packet)
         {
             byte opCode = packet.FirstOpcode();
-            var controller = _serviceProvider.GetRequiredService<GameServiceController>();
+            var controller = _serviceProvider.GetRequiredService<IGameServiceFactory>().GameServiceController();
             
             LoggerManager.Info($"Received packet with Opcode:{opCode:X2}");
 

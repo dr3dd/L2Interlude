@@ -6,5 +6,6 @@ namespace Core;
 
 public interface IGameServiceFactory
 {
-    GameServiceController Create(TcpClient tcpClient, IServiceProvider serviceProvider);
+    void Create(TcpClient tcpClient, IServiceProvider serviceProvider);
+    GameServiceController GameServiceController();
 }

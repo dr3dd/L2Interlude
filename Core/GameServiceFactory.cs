@@ -6,10 +6,15 @@ namespace Core;
 
 public class GameServiceFactory : IGameServiceFactory
 {
-    public GameServiceController Create(TcpClient tcpClient, IServiceProvider serviceProvider)
+    private GameServiceController _controller;
+    public void Create(TcpClient tcpClient, IServiceProvider serviceProvider)
     {
-        var controller = new GameServiceController(serviceProvider);
-        controller.SetTcpClient(tcpClient);
-        return controller;
+        _controller = new GameServiceController(serviceProvider);
+        _controller.SetTcpClient(tcpClient);
+    }
+
+    public GameServiceController GameServiceController()
+    {
+        return _controller;
     }
 }

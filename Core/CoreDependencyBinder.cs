@@ -19,7 +19,6 @@ namespace Core
     {
         public static void Bind(IServiceCollection services)
         {
-            services.AddSingleton<GameServiceController>();
             services.AddSingleton<IGameServiceFactory, GameServiceFactory>();
             services.AddSingleton<IPacketFactory, PacketFactory>();
             services.AddSingleton<ObjectIdInit>();

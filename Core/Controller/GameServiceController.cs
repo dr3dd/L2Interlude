@@ -53,7 +53,7 @@ namespace Core.Controller
             _gameServicePacketHandler = serviceProvider.GetRequiredService<GameServicePacketHandler>();
             _clientManager = serviceProvider.GetRequiredService<ClientManager>();
             _crypt = new GameCrypt();
-            _bufferBlock = serviceProvider.GetRequiredService<BufferBlock<PacketStream>>();
+            _bufferBlock = serviceProvider.GetRequiredService<NetworkWriter>().GetBufferBlock();
             _packetFactory = serviceProvider.GetRequiredService<IPacketFactory>();
             Task.Factory.StartNew(Read);
         }
