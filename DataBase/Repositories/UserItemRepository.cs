@@ -7,6 +7,7 @@ using DataBase.Entities;
 using DataBase.Interfaces;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
+using MySql.Data.MySqlClient;
 
 namespace DataBase.Repositories
 {
@@ -106,6 +107,21 @@ namespace DataBase.Repositories
             }
         }
 
+        public async Task UpdateItemAmount(int charId, int itemId, int amount)
+        {
+            try
+            {
+                using var connection = _connectionFactory.GetDbConnection();
+                var sql = "UPDATE user_item SET amount=@Amount WHERE char_id = @CharId AND item_id = @ItemId;";
+                await connection.ExecuteAsync(sql, new {CharId = charId, ItemId = itemId});
+            }
+            catch (Exception ex)
+            {
+                LoggerManager.Error(ex.Message);
+                throw;                
+            }
+        }
+
         public async Task<List<UserItemEntity>> GetInventoryItemsByOwnerId(int charId)
         {
             try
@@ -118,10 +134,40 @@ namespace DataBase.Repositories
                     return items.ToList();
                 }
             }
+            catch (MySqlException ex)
+            {
+                LoggerManager.Error($"SQL exception occurred: {ex.Message}");
+                throw new Exception("An error occurred while updating inventory item in database.", ex);
+            }
             catch (Exception ex)
             {
                 LoggerManager.Error(ex.Message);
-                throw;
+                throw new Exception("An error occurred while updating inventory item in database.", ex);
+            }
+        }
+        
+        public async Task<UserItemEntity> GetInventoryItemsByItemId(int charId, int itemId)
+        {
+            try
+            {
+                using (var connection = _connectionFactory.GetDbConnection())
+                {
+                    connection.Open();
+                    var sql = "SELECT * FROM user_item WHERE char_id = @CharId AND item_id = @ItemId";
+                    var item = await connection.QueryFirstAsync<UserItemEntity>(sql,
+                        new {CharId = charId, ItemId = itemId});
+                    return item;
+                }
+            }
+            catch (MySqlException ex)
+            {
+                LoggerManager.Error($"SQL exception occurred: {ex.Message}");
+                throw new Exception("An error occurred while fetching inventory item from database.", ex);
+            }
+            catch (Exception ex)
+            {
+                LoggerManager.Error(ex.Message);
+                throw new Exception("An error occurred while fetching inventory item from database.", ex);
             }
         }
         

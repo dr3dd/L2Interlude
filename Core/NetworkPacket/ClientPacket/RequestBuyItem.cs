@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Controller;
+using Core.Module.Player;
+using Core.NetworkPacket.ServerPacket;
 using Network;
 
 namespace Core.NetworkPacket.ClientPacket;
@@ -8,27 +11,46 @@ namespace Core.NetworkPacket.ClientPacket;
 public class RequestBuyItem : PacketBase
 {
     private int _merchantId;
-    private int _count;
-    private int[] _items; // count*2
+    private int _buyItemsCount;
+    private readonly IList<MyItem> _myItems;
+    private readonly PlayerInstance _playerInstance;
+
+    private class MyItem
+    {
+        public int ItemId { get; }
+        public int Qty { get; }
+
+        public MyItem(int itemId, int qty)
+        {
+            ItemId = itemId;
+            Qty = qty;
+        }
+    }
     
     public RequestBuyItem(IServiceProvider serviceProvider, Packet packet, GameServiceController controller) : base(serviceProvider)
     {
+        _playerInstance = controller.GameServiceHelper.CurrentPlayer;
         _merchantId = packet.ReadInt();
-        _count = packet.ReadInt();
-        
-        _items = new int[_count * 2];
-        for (var i = 0; i < _count; i++)
+        _buyItemsCount = packet.ReadInt();
+        _myItems = new List<MyItem>();
+        for (var i = 0; i < _buyItemsCount; i++)
         {
             var itemId = packet.ReadInt();
-            _items[(i * 2) + 0] = itemId;
-            
             var count = packet.ReadInt();
-            _items[(i * 2) + 1] = count;
+            _myItems.Add(new MyItem(itemId, count));
         }
     }
 
-    public override Task Execute()
+    public override async Task Execute()
     {
-        throw new NotImplementedException();
+        foreach (var myItem in _myItems)
+        {
+            await _playerInstance.PlayerInventory().AddUpdateItemToInventory(myItem.ItemId, myItem.Qty);
+        }
+
+        var su = new StatusUpdate(_playerInstance.ObjectId);
+        //su.AddAttribute(StatusUpdate.CurLoad, _playerInstance.GetCurrentLoad());
+        await _playerInstance.SendPacketAsync(su);
+        await _playerInstance.SendPacketAsync(new ItemList(_playerInstance));
     }
 }
