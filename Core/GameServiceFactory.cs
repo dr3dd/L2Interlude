@@ -8,6 +8,8 @@ public class GameServiceFactory : IGameServiceFactory
 {
     public GameServiceController Create(TcpClient tcpClient, IServiceProvider serviceProvider)
     {
-        return new GameServiceController(tcpClient, serviceProvider);
+        var controller = new GameServiceController(serviceProvider);
+        controller.SetTcpClient(tcpClient);
+        return controller;
     }
 }

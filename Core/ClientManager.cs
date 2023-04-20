@@ -12,7 +12,6 @@ namespace Core;
 
 public class ClientManager
 {
-    private readonly GameServicePacketHandler _gameServicePacketHandler;
     private readonly ConcurrentDictionary<string, GameServiceController> _loggedClients;
     private readonly BufferBlock<PacketStream> _bufferBlock;
     private readonly IGameServiceFactory _gameServiceFactory;
@@ -20,8 +19,7 @@ public class ClientManager
 
     public ClientManager(IServiceProvider serviceProvider)
     {
-        _gameServicePacketHandler = serviceProvider.GetRequiredService<GameServicePacketHandler>();
-        _bufferBlock = serviceProvider.GetRequiredService<NetworkWriter>().GetBufferBlock();
+        _bufferBlock = serviceProvider.GetService<NetworkWriter>()?.GetBufferBlock();
         _loggedClients = new ConcurrentDictionary<string, GameServiceController>();
         _gameServiceFactory = serviceProvider.GetRequiredService<IGameServiceFactory>();
         _serviceProvider = serviceProvider;

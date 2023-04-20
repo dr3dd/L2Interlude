@@ -14,10 +14,10 @@ namespace Core.Controller
     public class GameServiceController
     {
         private readonly GameServicePacketHandler _gameServicePacketHandler;
-        private readonly NetworkStream _stream;
-        private readonly TcpClient _client;
+        private NetworkStream _stream;
+        private TcpClient _client;
         private readonly GameCrypt _crypt;
-        public EndPoint Address { get; }
+        public EndPoint Address { get; set; }
         private readonly ClientManager _clientManager;
         public SessionKey SessionKey { get; set; }
         public bool IsDisconnected { get; set; }
@@ -47,18 +47,22 @@ namespace Core.Controller
 */
 
         private readonly IPacketFactory _packetFactory;
-        public GameServiceController(TcpClient tcpClient, IServiceProvider serviceProvider)
+        public GameServiceController(IServiceProvider serviceProvider)
         {
             GameServiceHelper = new GameServiceHelper(this);
-            Address = tcpClient.Client.RemoteEndPoint;
             _gameServicePacketHandler = serviceProvider.GetRequiredService<GameServicePacketHandler>();
             _clientManager = serviceProvider.GetRequiredService<ClientManager>();
-            _client = tcpClient;
-            _stream = tcpClient.GetStream();
             _crypt = new GameCrypt();
             _bufferBlock = serviceProvider.GetRequiredService<BufferBlock<PacketStream>>();
             _packetFactory = serviceProvider.GetRequiredService<IPacketFactory>();
             Task.Factory.StartNew(Read);
+        }
+
+        public void SetTcpClient(TcpClient tcpClient)
+        {
+            Address = tcpClient.Client.RemoteEndPoint;
+            _client = tcpClient;
+            _stream = tcpClient.GetStream();
         }
 
         private async Task Read()
