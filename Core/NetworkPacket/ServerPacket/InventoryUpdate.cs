@@ -17,6 +17,23 @@ namespace Core.NetworkPacket.ServerPacket
         
         public void AddItem(ItemInstance item)
         {
+            item.Change = ItemInstance.Added;
+            _items.Add(item);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        public void AddRemovedItem(ItemInstance item)
+        {
+            item.Change = ItemInstance.Removed;
+            _items.Add(item);
+        }
+        
+        public void AddModifiedItem(ItemInstance item)
+        {
+            item.Change = ItemInstance.Modified;
             _items.Add(item);
         }
         

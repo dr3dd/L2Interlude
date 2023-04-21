@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Core.Module.ItemData;
+using Core.NetworkPacket.ServerPacket;
 using DataBase.Entities;
 using DataBase.Interfaces;
 
@@ -74,5 +76,37 @@ public class AddOrUpdate
             Amount = quantity
         };
         _playerInventory.AddItemToInventoryCollection(itemInstance);
+    }
+
+    public async Task DestroyItemInInventory(int objectId, int quantity)
+    {
+        var characterId = _playerInventory.PlayerCharacterInfo().CharacterId;
+        var itemInstance = _playerInventory.GetInventoryItemByObjectId(objectId);
+        if (quantity >= itemInstance.Amount)
+        {
+            await _itemRepository.DeleteAsync(itemInstance.UserItemId);
+            _playerInventory.DeleteItemInInventoryCollection(itemInstance);
+            itemInstance.Amount = 0;
+            await SendInventoryUpdate(itemInstance);
+            return;
+        }
+
+        itemInstance.Amount -= quantity;
+        await _itemRepository.UpdateItemAmount(characterId, itemInstance.ItemId, itemInstance.Amount);
+        await SendInventoryUpdate(itemInstance);
+    }
+
+    private async Task SendInventoryUpdate(ItemInstance itemInstance)
+    {
+        var inventoryUpdate = new InventoryUpdate(_playerInstance);
+        if (itemInstance.Amount == 0)
+        {
+            inventoryUpdate.AddRemovedItem(itemInstance);
+        }
+        else
+        {
+            inventoryUpdate.AddModifiedItem(itemInstance);
+        }
+        await _playerInstance.SendPacketAsync(inventoryUpdate);
     }
 }
