@@ -27,6 +27,7 @@ namespace Core.Module.Player
         public PlayerInstance PlayerInstance()  => _playerInstance;
         public IUserItemRepository UserItemRepository() => _itemRepository;
         public ObjectIdInit ObjectIdInit() => _objectIdInit;
+        public PlayerCharacterInfo PlayerCharacterInfo() => _characterInfo;
 
         public PlayerInventory(PlayerInstance playerInstance)
         {
