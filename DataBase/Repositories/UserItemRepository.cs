@@ -109,7 +109,7 @@ namespace DataBase.Repositories
             {
                 using var connection = _connectionFactory.GetDbConnection();
                 var sql = "UPDATE user_item SET amount=@Amount WHERE char_id = @CharId AND item_id = @ItemId;";
-                await connection.ExecuteAsync(sql, new {CharId = charId, ItemId = itemId});
+                await connection.ExecuteAsync(sql, new {CharId = charId, ItemId = itemId, Amount = amount});
             }
             catch (Exception ex)
             {
