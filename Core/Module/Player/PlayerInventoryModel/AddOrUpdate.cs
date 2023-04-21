@@ -39,7 +39,7 @@ public class AddOrUpdate
     private async Task UpdateItemInInventory(int itemId, int quantity)
     {
         var characterId = _playerInventory.PlayerCharacterInfo().CharacterId;
-        var inventoryItem = await _itemRepository.GetInventoryItemsByItemId(itemId, characterId);
+        var inventoryItem = await _itemRepository.GetInventoryItemsByItemId(characterId, itemId);
         if (inventoryItem == null)
         {
             await AddItemToInventory(_itemDataInit.GetItemById(itemId), quantity);
