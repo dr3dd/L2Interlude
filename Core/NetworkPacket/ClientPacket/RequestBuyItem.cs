@@ -14,6 +14,7 @@ public class RequestBuyItem : PacketBase
     private int _buyItemsCount;
     private readonly IList<MyItem> _myItems;
     private readonly PlayerInstance _playerInstance;
+    private readonly PlayerInventory _playerInventory;
 
     private class MyItem
     {
@@ -30,6 +31,7 @@ public class RequestBuyItem : PacketBase
     public RequestBuyItem(IServiceProvider serviceProvider, Packet packet, GameServiceController controller) : base(serviceProvider)
     {
         _playerInstance = controller.GameServiceHelper.CurrentPlayer;
+        _playerInventory = _playerInstance.PlayerInventory();
         _merchantId = packet.ReadInt();
         _buyItemsCount = packet.ReadInt();
         _myItems = new List<MyItem>();
@@ -45,7 +47,7 @@ public class RequestBuyItem : PacketBase
     {
         foreach (var myItem in _myItems)
         {
-            await _playerInstance.PlayerInventory().AddUpdateItemToInventory(myItem.ItemId, myItem.Qty);
+            await _playerInventory.AddOrUpdate().AddOrUpdateItemToInventory(myItem.ItemId, myItem.Qty);
         }
 
         var su = new StatusUpdate(_playerInstance.ObjectId);
