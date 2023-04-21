@@ -314,7 +314,7 @@ namespace Core.Module.Player
 
         public void DeleteItemInInventoryCollection(ItemInstance itemInstance)
         {
-            _items.Values.Remove(itemInstance);
+            _items.Remove(itemInstance.UserItemId);
         }
 
         /// <summary>

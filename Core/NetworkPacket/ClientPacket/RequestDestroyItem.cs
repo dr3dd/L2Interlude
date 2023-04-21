@@ -24,8 +24,6 @@ public class RequestDestroyItem : PacketBase
 
     public override async Task Execute()
     {
-        var itemInstance = _playerInventory.GetInventoryItemByObjectId(_objectId);
-
         await _playerInventory.AddOrUpdate().DestroyItemInInventory(_objectId, _count);
         var su = new StatusUpdate(_playerInstance.ObjectId);
         //su.AddAttribute(StatusUpdate.CurLoad, _playerInstance.GetCurrentLoad());
