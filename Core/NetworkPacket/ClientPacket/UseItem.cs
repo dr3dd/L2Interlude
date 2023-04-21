@@ -9,12 +9,12 @@ namespace Core.NetworkPacket.ClientPacket
 {
     internal sealed class UseItem : PacketBase
     {
-        private readonly int _userItemId;
+        private readonly int _objectId;
         private readonly PlayerInstance _playerInstance;
         
         public UseItem(IServiceProvider serviceProvider, Packet packet, GameServiceController controller) : base(serviceProvider)
         {
-            _userItemId = packet.ReadInt();
+            _objectId = packet.ReadInt();
             _playerInstance = controller.GameServiceHelper.CurrentPlayer;
         }
 
@@ -26,7 +26,7 @@ namespace Core.NetworkPacket.ClientPacket
 
         private ItemInstance GetItemByUserItemId()
         {
-            return _playerInstance.PlayerInventory().GetItemInstance(_userItemId);
+            return _playerInstance.PlayerInventory().GetInventoryItemByObjectId(_objectId);
         }
     }
 }

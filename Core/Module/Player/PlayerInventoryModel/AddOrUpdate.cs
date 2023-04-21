@@ -78,10 +78,10 @@ public class AddOrUpdate
         _playerInventory.AddItemToInventoryCollection(itemInstance);
     }
 
-    public async Task DestroyItemInInventory(int userItemId, int quantity)
+    public async Task DestroyItemInInventory(int objectId, int quantity)
     {
         var characterId = _playerInventory.PlayerCharacterInfo().CharacterId;
-        var itemInstance = _playerInventory.GetItemInstance(userItemId);
+        var itemInstance = _playerInventory.GetInventoryItemByObjectId(objectId);
         if (quantity >= itemInstance.Amount)
         {
             await _itemRepository.DeleteAsync(itemInstance.UserItemId);
