@@ -311,5 +311,20 @@ namespace Core.Module.Player
         {
             _items.Add(itemInstance.UserItemId, itemInstance);
         }
+
+        public void DeleteItemInInventoryCollection(ItemInstance itemInstance)
+        {
+            _items.Values.Remove(itemInstance);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="objectId"></param>
+        /// <returns></returns>
+        public ItemInstance GetInventoryItemByObjectId(int objectId)
+        {
+            return _items.Values.SingleOrDefault(obj => obj.ObjectId == objectId);
+        }
     }
 }

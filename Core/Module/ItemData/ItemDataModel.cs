@@ -22,6 +22,7 @@ namespace Core.Module.ItemData
         public CrystalType CrystalType { get; }
         public int MaximumCount { get; }
         public int DefaultPrice { get; }
+        public bool IsDestruct { get; }
 
         public ItemDataModel(KeyValuePair<object, object> keyValuePair)
         {
@@ -43,6 +44,7 @@ namespace Core.Module.ItemData
             CrystalType = GetCrystalType(itemBegin.CrystalType);
             MaximumCount = itemBegin.MaximumCount;
             DefaultPrice = itemBegin.DefaultPrice;
+            IsDestruct = itemBegin.IsDestruct;
         }
 
         private ItemType GetItemType(string itemType)

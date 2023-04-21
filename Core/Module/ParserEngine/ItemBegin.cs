@@ -22,6 +22,7 @@
         public string ItemSkill { get; set; }
         public string MaterialType { get; set; }
         public bool IsTrade { get; set; }
+        public bool IsDestruct { get; set; }
         public int MagicalDamage { get; set; }
         public int PhysicalDamage { get; set; }
         public int PhysicalDefense { get; set; }

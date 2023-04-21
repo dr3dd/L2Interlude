@@ -55,18 +55,18 @@ namespace DataBase.Repositories
             throw new System.NotImplementedException();
         }
 
-        public async Task<int> DeleteAsync(int objectId)
+        public async Task<int> DeleteAsync(int userItemId)
         {
             try
             {
                 using var connection = _connectionFactory.GetDbConnection();
-                string sql = "DELETE FROM items WHERE object_id=@ObjectId";
-                return await connection.ExecuteAsync(sql, new {ObjectId = objectId});
+                var sql = "DELETE FROM user_item WHERE user_item_id=@UserItemId";
+                return await connection.ExecuteAsync(sql, new {UserItemId = userItemId});
             } 
             catch (Exception ex)
             {
                 LoggerManager.Error(ex.Message);
-                throw;                
+                throw new Exception("An error occurred while deleting inventory item in database.", ex);
             }
         }
 

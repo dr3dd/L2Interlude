@@ -145,6 +145,11 @@ namespace Core.Module.ParserEngine
                         var isTrade = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
                         itemData.IsTrade = Convert.ToByte(isTrade) == 1;
                     }
+                    if (item.StartsWith("is_destruct"))
+                    {
+                        var isDestruct = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
+                        itemData.IsDestruct = Convert.ToByte(isDestruct) == 1;
+                    }
                     if (item.StartsWith("hit_modify"))
                     {
                         var hitModify = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
