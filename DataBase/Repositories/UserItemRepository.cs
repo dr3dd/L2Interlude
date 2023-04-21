@@ -74,13 +74,11 @@ namespace DataBase.Repositories
         {
             try
             {
-                using (var connection = _connectionFactory.GetDbConnection())
-                {
-                    connection.Open();
-                    string sql = "INSERT INTO user_item (char_id, item_id, item_type, amount, enchant) values (@CharacterId, @ItemId, @ItemType, @Amount, @Enchant);";
-                    await connection.ExecuteAsync(sql, userItemEntity);
-                    return userItemEntity;
-                }
+                using var connection = _connectionFactory.GetDbConnection();
+                connection.Open();
+                var sql = "INSERT INTO user_item (char_id, item_id, item_type, amount, enchant) values (@CharacterId, @ItemId, @ItemType, @Amount, @Enchant);";
+                await connection.ExecuteAsync(sql, userItemEntity);
+                return userItemEntity;
             }
             catch (Exception ex)
             {
@@ -93,12 +91,10 @@ namespace DataBase.Repositories
         {
             try
             {
-                using (var connection = _connectionFactory.GetDbConnection())
-                {
-                    string sql = "UPDATE items SET owner_id=@OwnerId,count=@Count,loc=@Loc,loc_data=@LocData WHERE object_id=@ObjectId;";
-                    await connection.ExecuteAsync(sql, userItemEntity);
-                    return userItemEntity;
-                }
+                using var connection = _connectionFactory.GetDbConnection();
+                var sql = "UPDATE items SET owner_id=@OwnerId,count=@Count,loc=@Loc,loc_data=@LocData WHERE object_id=@ObjectId;";
+                await connection.ExecuteAsync(sql, userItemEntity);
+                return userItemEntity;
             }
             catch (Exception ex)
             {
@@ -118,7 +114,7 @@ namespace DataBase.Repositories
             catch (Exception ex)
             {
                 LoggerManager.Error(ex.Message);
-                throw;                
+                throw new Exception("An error occurred while updating inventory item in database.", ex);
             }
         }
 
@@ -126,13 +122,11 @@ namespace DataBase.Repositories
         {
             try
             {
-                using (var connection = _connectionFactory.GetDbConnection())
-                {
-                    connection.Open();
-                    string sql = "SELECT * FROM user_item WHERE char_id = @CharId";
-                    IEnumerable<UserItemEntity> items = await connection.QueryAsync<UserItemEntity>(sql, new {CharId = charId});
-                    return items.ToList();
-                }
+                using var connection = _connectionFactory.GetDbConnection();
+                connection.Open();
+                var sql = "SELECT * FROM user_item WHERE char_id = @CharId";
+                IEnumerable<UserItemEntity> items = await connection.QueryAsync<UserItemEntity>(sql, new {CharId = charId});
+                return items.ToList();
             }
             catch (MySqlException ex)
             {
@@ -150,14 +144,12 @@ namespace DataBase.Repositories
         {
             try
             {
-                using (var connection = _connectionFactory.GetDbConnection())
-                {
-                    connection.Open();
-                    var sql = "SELECT * FROM user_item WHERE char_id = @CharId AND item_id = @ItemId";
-                    var item = await connection.QueryFirstAsync<UserItemEntity>(sql,
-                        new {CharId = charId, ItemId = itemId});
-                    return item;
-                }
+                using var connection = _connectionFactory.GetDbConnection();
+                connection.Open();
+                var sql = "SELECT * FROM user_item WHERE char_id = @CharId AND item_id = @ItemId";
+                var item = await connection.QueryFirstOrDefaultAsync<UserItemEntity>(sql,
+                    new {CharId = charId, ItemId = itemId});
+                return item;
             }
             catch (MySqlException ex)
             {
@@ -175,18 +167,16 @@ namespace DataBase.Repositories
         {
             try
             {
-                using (var connection = _connectionFactory.GetDbConnection())
-                {
-                    connection.Open();
-                    string sql = "SELECT * FROM user_item WHERE char_id = @CharacterId";
-                    IEnumerable<UserItemEntity> items = await connection.QueryAsync<UserItemEntity>(sql, new {CharacterId = charId});
-                    return items.ToList();
-                }
+                using var connection = _connectionFactory.GetDbConnection();
+                connection.Open();
+                var sql = "SELECT * FROM user_item WHERE char_id = @CharacterId";
+                IEnumerable<UserItemEntity> items = await connection.QueryAsync<UserItemEntity>(sql, new {CharacterId = charId});
+                return items.ToList();
             }
             catch (Exception ex)
             {
                 LoggerManager.Error(ex.Message);
-                throw;
+                throw new Exception("An error occurred while fetching inventory item from database.", ex);
             }
         }
     }
