@@ -104,6 +104,10 @@ namespace Core.Module.ItemData
             {
                 return true;
             }
+            if (characterInfo.StGloves == UserItemId)
+            {
+                return true;
+            }
             return false;
         }
         public bool IsEquippable()
