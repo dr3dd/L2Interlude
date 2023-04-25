@@ -146,14 +146,24 @@ namespace Core.Module.Player
                 case SlotBitType.UnderWear:
                     break;
                 case SlotBitType.RightEarning:
+                    _characterInfo.StRightEar = 0;
+                    _bodyParts[SlotBitType.RightEarning] = 0;
                     break;
                 case SlotBitType.LeftEarning:
+                    _characterInfo.StLeftEar = 0;
+                    _bodyParts[SlotBitType.LeftEarning] = 0;
                     break;
                 case SlotBitType.Necklace:
+                    _characterInfo.StNeck = 0;
+                    _bodyParts[SlotBitType.Necklace] = 0;
                     break;
                 case SlotBitType.RightFinger:
+                    _characterInfo.StRightFinger = 0;
+                    _bodyParts[SlotBitType.RightFinger] = 0;
                     break;
                 case SlotBitType.LeftFinger:
+                    _characterInfo.StLeftFinger = 0;
+                    _bodyParts[SlotBitType.LeftFinger] = 0;
                     break;
                 case SlotBitType.Head:
                     _characterInfo.StHead = 0;
@@ -257,12 +267,24 @@ namespace Core.Module.Player
                 case SlotBitType.HairAll:
                     break;
                 case SlotBitType.LeftEarning | SlotBitType.RightEarning:
-                    _characterInfo.StLeftEar = itemInstance.UserItemId;
-                    _bodyParts[SlotBitType.LeftEarning] = itemInstance.UserItemId;
+                    if (_characterInfo.StLeftEar == 0)
+                    {
+                        _characterInfo.StLeftEar = itemInstance.UserItemId;
+                        _bodyParts[SlotBitType.LeftEarning] = itemInstance.UserItemId;
+                        break;
+                    }
+                    _characterInfo.StRightEar = itemInstance.UserItemId;
+                    _bodyParts[SlotBitType.RightEarning] = itemInstance.UserItemId;
                     break;
                 case SlotBitType.LeftFinger | SlotBitType.RightFinger:
-                    _characterInfo.StLeftFinger = itemInstance.UserItemId;
-                    _bodyParts[SlotBitType.LeftFinger] = itemInstance.UserItemId;
+                    if (_characterInfo.StLeftFinger == 0)
+                    {
+                        _characterInfo.StLeftFinger = itemInstance.UserItemId;
+                        _bodyParts[SlotBitType.LeftFinger] = itemInstance.UserItemId;
+                        break;
+                    }
+                    _characterInfo.StRightFinger = itemInstance.UserItemId;
+                    _bodyParts[SlotBitType.RightFinger] = itemInstance.UserItemId;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(slot), slot, null);
