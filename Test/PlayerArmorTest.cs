@@ -156,16 +156,24 @@ public class PlayerArmorTest : IClassFixture<PlayerInstanceFixture>
     public void AddCoralEarningTest()
     {
         var item = _itemDataInit.GetItemByName("coral_earing");
-        var itemInstance = new ItemInstance(7, _playerInstance.ServiceProvider)
+        var itemInstanceLeftEarning = new ItemInstance(7, _playerInstance.ServiceProvider)
         {
             ItemId = item.ItemId,
             ItemData = item,
-            UserItemId = item.ItemId
+            UserItemId = 1
         };
-        _playerInstance.PlayerInventory().EquipItemInBodySlot(itemInstance);
-        _playerInstance.PlayerInventory().AddItemToInventoryCollection(itemInstance);
+        var itemInstanceRightEarning = new ItemInstance(8, _playerInstance.ServiceProvider)
+        {
+            ItemId = item.ItemId,
+            ItemData = item,
+            UserItemId = 2
+        };
+        _playerInstance.PlayerInventory().EquipItemInBodySlot(itemInstanceLeftEarning);
+        _playerInstance.PlayerInventory().AddItemToInventoryCollection(itemInstanceLeftEarning);
+        _playerInstance.PlayerInventory().EquipItemInBodySlot(itemInstanceRightEarning);
+        _playerInstance.PlayerInventory().AddItemToInventoryCollection(itemInstanceRightEarning);
         var mDef = _playerInstance.CharacterCombat().GetMagicalDefence();
-        Assert.Equal(61, mDef);
+        Assert.Equal(74, mDef);
     }
     
     /// <summary>
@@ -175,15 +183,23 @@ public class PlayerArmorTest : IClassFixture<PlayerInstanceFixture>
     public void AddBlueCoralRingTest()
     {
         var item = _itemDataInit.GetItemByName("blue_coral_ring");
-        var itemInstance = new ItemInstance(8, _playerInstance.ServiceProvider)
+        var itemInstanceRightRing = new ItemInstance(9, _playerInstance.ServiceProvider)
         {
             ItemId = item.ItemId,
             ItemData = item,
-            UserItemId = item.ItemId
+            UserItemId = 1
         };
-        _playerInstance.PlayerInventory().EquipItemInBodySlot(itemInstance);
-        _playerInstance.PlayerInventory().AddItemToInventoryCollection(itemInstance);
+        var itemInstanceLeftRing = new ItemInstance(10, _playerInstance.ServiceProvider)
+        {
+            ItemId = item.ItemId,
+            ItemData = item,
+            UserItemId = 2
+        };
+        _playerInstance.PlayerInventory().EquipItemInBodySlot(itemInstanceRightRing);
+        _playerInstance.PlayerInventory().AddItemToInventoryCollection(itemInstanceRightRing);
+        _playerInstance.PlayerInventory().EquipItemInBodySlot(itemInstanceLeftRing);
+        _playerInstance.PlayerInventory().AddItemToInventoryCollection(itemInstanceLeftRing);
         var mDef = _playerInstance.CharacterCombat().GetMagicalDefence();
-        Assert.Equal(57, mDef);
+        Assert.Equal(67, mDef);
     }
 }
