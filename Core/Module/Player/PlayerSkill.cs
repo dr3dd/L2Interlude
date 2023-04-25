@@ -74,10 +74,17 @@ namespace Core.Module.Player
             var playerSkill = await GetPlayerSkills();
             foreach (var skill in playerSkill.Where(s => s.Value.OperateType == OperateType.P))
             {
-                if (skill.Value.Effects is null)
-                    continue;
-                var effect = skill.Value.Effects.SingleOrDefault().Value;
-                _playerInstance.CharacterEffect().AddEffect(effect, 0, 0);
+                try
+                {
+                    if (skill.Value.Effects is null)
+                        continue;
+                    var effect = skill.Value.Effects.SingleOrDefault().Value;
+                    _playerInstance.CharacterEffect().AddEffect(effect, 0, 0);
+                }
+                catch (Exception ex)
+                {
+                    LoggerManager.Error($@"RestorePassiveSkills SkillId: {skill.Key} {ex.Message}");
+                }
             }
         }
         
