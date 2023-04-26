@@ -39,6 +39,9 @@ public class RequestActionUse : PacketBase
                 _characterMovement.SetGroundHigh();
                 break;
         }
-        await _playerInstance.SendToKnownPlayers(new ChangeMoveType(_playerInstance));
+
+        var changeType = new ChangeMoveType(_playerInstance);
+        await _playerInstance.SendPacketAsync(changeType);
+        await _playerInstance.SendToKnownPlayers(changeType);
     }
 }
