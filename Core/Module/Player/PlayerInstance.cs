@@ -152,7 +152,7 @@ namespace Core.Module.Player
             {
                 if (!CalculateRange.CheckIfInRange(2000, doorInstance.GetX(), doorInstance.GetY(),
                         doorInstance.GetZ(), 70,
-                        GetX(), GetY(), GetZ(), CharacterCombat().GetCollisionRadius(), true))
+                        GetX(), GetY(), GetZ(), CharacterCombat().GetCollisionRadius(), false))
                 {
                     continue;
                 }
