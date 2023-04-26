@@ -25,8 +25,13 @@ public class RequestDestroyItem : PacketBase
     public override async Task Execute()
     {
         await _playerInventory.AddOrUpdate().DestroyItemInInventory(_objectId, _count);
+        await SendStatusUpdate();
+    }
+
+    private async Task SendStatusUpdate()
+    {
         var su = new StatusUpdate(_playerInstance.ObjectId);
-        //su.AddAttribute(StatusUpdate.CurLoad, _playerInstance.GetCurrentLoad());
+        su.AddAttribute(StatusUpdate.CurLoad, _playerInstance.CharacterBaseStatus().GetCurrentLoad());
         await _playerInstance.SendPacketAsync(su);
     }
 }
