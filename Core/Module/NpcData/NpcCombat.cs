@@ -58,7 +58,7 @@ namespace Core.Module.NpcData
 
         public double GetMovementSpeedMultiplier()
         {
-            var baseSpeed = GetWalkSpeed();
+            var baseSpeed = GetLowSpeed();
             return GetCharacterSpeed() / baseSpeed;
         }
 
@@ -111,17 +111,18 @@ namespace Core.Module.NpcData
             return _stat.CollisionHeight[0];
         }
 
-        public float GetCharacterSpeed()
+        public double GetCharacterSpeed()
         {
-            return _npcInstance.CharacterMovement().IsRunning() ? GetRunSpeed() : GetWalkSpeed();
+            var movementStatus = _npcInstance.CharacterMovement().CharacterMovementStatus();
+            return movementStatus.IsGroundHigh() ? GetHighSpeed() : GetLowSpeed();
         }
         
-        public float GetRunSpeed()
+        public double GetHighSpeed()
         {
             return _stat.GroundHigh[0];
         }
 
-        public float GetWalkSpeed()
+        public double GetLowSpeed()
         {
             return _stat.GroundLow[0];
         }

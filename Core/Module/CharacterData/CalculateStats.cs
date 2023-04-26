@@ -24,7 +24,7 @@ namespace Core.Module.CharacterData
                     : effectDefence.GetMagicalDefence()));
             return result;
         }
-        public static float CalculateSpeed(IEnumerable<EffectDuration> effects, float result)
+        public static double CalculateSpeed(IEnumerable<EffectDuration> effects, double result)
         {
             result = effects.Where(e => e.Effect is PSpeed).Select(effect => (PSpeed)effect.Effect).Aggregate(result,
                 (current, effectSpeed) => current + (effectSpeed.GetEffectSpeed() < 0

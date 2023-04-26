@@ -19,6 +19,7 @@
         public CrystalType CrystalType { get; }
         public int MaximumCount { get; }
         public int DefaultPrice { get; }
+        public int Weight { get; set; }
 
         public ItemDataAbstract(int itemId, WeaponType weaponType)
         {
@@ -44,6 +45,7 @@
             CrystalType = itemDataModel.CrystalType;
             MaximumCount = itemDataModel.MaximumCount;
             DefaultPrice = itemDataModel.DefaultPrice;
+            Weight = itemDataModel.Weight;
         }
     }
 }

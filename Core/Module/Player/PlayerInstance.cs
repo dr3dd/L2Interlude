@@ -88,7 +88,7 @@ namespace Core.Module.Player
         }
 
         public override ICharacterCombat CharacterCombat() => _playerCombat;
-        public override ICharacterBaseStatus CharacterBaseStatus() => _playerBaseStatus;
+        public override IPlayerBaseStatus CharacterBaseStatus() => _playerBaseStatus;
         public override ICharacterKnownList CharacterKnownList() => _playerKnownList;
 
         private static PlayerLoader PlayerLoader(IServiceProvider serviceProvider)
@@ -214,7 +214,7 @@ namespace Core.Module.Player
         public override void SpawnMe(int x, int y, int z)
         {
             base.SpawnMe(x, y, z);
-            CharacterMovement().SetRunning();
+            CharacterMovement().CharacterMovementStatus().SetGroundHigh();
             StorePlayerObject();
         }
         private void StorePlayerObject()

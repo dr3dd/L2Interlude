@@ -14,12 +14,14 @@ namespace Core.Module.Player
         private readonly PcParameterInit _statBonusInit;
         private readonly byte _level;
         private readonly PlayerInstance _playerInstance;
+        private readonly CharacterMovement _characterMovement;
         public PlayerCombat(PlayerInstance playerInstance)
         {
             _playerInstance = playerInstance;
             _templateHandler = playerInstance.TemplateHandler();
             _statBonusInit = playerInstance.ServiceProvider.GetRequiredService<PcParameterInit>();
             _level = playerInstance.PlayerStatus().Level;
+            _characterMovement = _playerInstance.CharacterMovement();
         }
 
         public ItemInstance GetWeapon()
@@ -310,16 +312,16 @@ namespace Core.Module.Player
             return _templateHandler.GetCollisionHeight();
         }
 
-        public float GetCharacterSpeed()
+        public double GetCharacterSpeed()
         {
-            return _playerInstance.CharacterMovement().IsRunning() ? GetRunSpeed() : GetWalkSpeed();
+            return _characterMovement.CharacterMovementStatus().IsGroundHigh() ? GetHighSpeed() : GetLowSpeed();
         }
 
-        public float GetRunSpeed()
+        public double GetHighSpeed()
         {
             var baseGroundHighSpeed= _templateHandler.GetBaseGroundHighSpeed();
             var dexStat = _templateHandler.GetDex();
-            float dexBonus = (_statBonusInit.GetDexBonus(dexStat) + 100) / 100f;
+            var dexBonus = (_statBonusInit.GetDexBonus(dexStat) + 100) / 100d;
             var result = baseGroundHighSpeed * dexBonus;
 
             var effects = GetPlayerEffects();
@@ -327,18 +329,30 @@ namespace Core.Module.Player
             return result;
         }
 
-        public float GetWalkSpeed()
+        public double GetLowSpeed()
         {
-            return GetRunSpeed() * 70 / 100;
+            return GetGroundLowSpeed();
         }
 
-        public int GetGroundLowSpeed()
+        public double GetGroundLowSpeed()
         {
-            var baseGroundHighSpeed = _templateHandler.GetBaseGroundLowSpeed();
+            var baseGroundLowSpeed = _templateHandler.GetBaseGroundLowSpeed();
             var dexStat = _templateHandler.GetDex();
-            float dexBonus = (_statBonusInit.GetDexBonus(dexStat) + 100) / 100f;
-            var result = baseGroundHighSpeed * dexBonus;
-            return (int) result;
+            var dexBonus = (_statBonusInit.GetDexBonus(dexStat) + 100) / 100d;
+            var result = baseGroundLowSpeed * dexBonus;
+            return result;
+        }
+
+        public float GetUnderWaterHighSpeed()
+        {
+            var baseGroundLowSpeed = _templateHandler.GetBaseUnderWaterHighSpeed();
+            return baseGroundLowSpeed;
+        }
+        
+        public float GetUnderWaterLowSpeed()
+        {
+            var baseGroundLowSpeed = _templateHandler.GetBaseUnderWaterLowSpeed();
+            return baseGroundLowSpeed;
         }
 
         public double GetMovementSpeedMultiplier()

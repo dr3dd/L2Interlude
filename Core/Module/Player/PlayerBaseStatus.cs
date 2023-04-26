@@ -6,16 +6,18 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player;
 
-public class PlayerBaseStatus : ICharacterBaseStatus
+public class PlayerBaseStatus : IPlayerBaseStatus
 {
     private readonly PlayerInstance _playerInstance;
     private readonly PcParameterInit _statBonusInit;
+    private readonly CharacterMovement _characterMovement;
     public float CurrentCp { get; set; }
     public byte Level { get; set; } = 1;
     public PlayerBaseStatus(PlayerInstance playerInstance)
     {
         _playerInstance = playerInstance;
         _statBonusInit = playerInstance.ServiceProvider.GetRequiredService<PcParameterInit>();
+        _characterMovement = _playerInstance.CharacterMovement();
     }
 
     /// <summary>
@@ -66,13 +68,67 @@ public class PlayerBaseStatus : ICharacterBaseStatus
         var baseHpRegen = _playerInstance.TemplateHandler().GetBaseHpRegen(Level);
         var conStat = _playerInstance.TemplateHandler().GetCon();
         var modCon = (_statBonusInit.GetConBonus(conStat) + 100) / 100f;
-        var result = baseHpRegen * modCon;
-        return result;
+        
+        var regenBonus = GetRegenBonus();
+        var result = baseHpRegen * modCon * regenBonus;
+        return (float) Math.Round(result, 2);
+    }
+
+    /// <summary>
+    /// HP/MP recovery speed condition bonus
+    /// regen_move_mode_bonus_begin
+    /// sit = 50%	//The case which is sitting
+    /// stand = 10%	//From the case which is
+    /// low = 0%	//Low speed the case which moves
+    /// high = -30%	//High speed the case which moves
+    /// regen_move_mode_bonus_end
+    /// </summary>
+    /// <returns></returns>
+    private double GetRegenBonus()
+    {
+        var regenBonus = 1.0;
+        if (_characterMovement.CharacterMovementStatus().IsSit())
+        {
+            regenBonus = 1.5; //50%
+        }
+        if (_characterMovement.CharacterMovementStatus().IsStand())
+        {
+            regenBonus = 1.1; //10%
+        }
+        if (_characterMovement.CharacterMovementStatus().IsGroundLow())
+        {
+            regenBonus = 1.0; //0%
+        }
+        if (_characterMovement.CharacterMovementStatus().IsGroundHigh())
+        {
+            regenBonus = 0.7; //-30%
+        }
+        return regenBonus;
     }
 
     public float GetMpRegenRate()
     {
         throw new NotImplementedException();
+    }
+
+    public int GetMaxLoad()
+    {
+        var conStat = _playerInstance.TemplateHandler().GetCon();
+        if (conStat < 1)
+        {
+            return 31000;
+        }
+        if (conStat > 59)
+        {
+            return 176000;
+        }
+        var modCon = (_statBonusInit.GetConBonus(conStat) + 100) / 100f * 69000;
+        return (int) modCon;
+    }
+
+    public int GetCurrentLoad()
+    {
+        return _playerInstance.PlayerInventory().GetTotalWeight();
     }
 
     private IEnumerable<EffectDuration> GetPlayerEffects()

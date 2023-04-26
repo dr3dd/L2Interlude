@@ -6,15 +6,15 @@ namespace Core.NetworkPacket.ServerPacket
     public class NpcInfo : Network.ServerPacket
     {
         private readonly NpcInstance _npcInstance;
-        private readonly int _runSpd;
-        private readonly int _walkSpd;
+        private readonly int _highSpeed;
+        private readonly int _lowSpeed;
         private readonly double _moveMultiplier;
         public NpcInfo(NpcInstance npcInstance)
         {
             _npcInstance = npcInstance;
             _moveMultiplier = _npcInstance.CharacterCombat().GetMovementSpeedMultiplier();
-            _runSpd = Convert.ToInt32(Math.Round(_npcInstance.CharacterCombat().GetRunSpeed() / _moveMultiplier));
-            _walkSpd = Convert.ToInt32(Math.Round(_npcInstance.CharacterCombat().GetWalkSpeed() / _moveMultiplier));
+            _highSpeed = (int) Math.Round(_npcInstance.CharacterCombat().GetHighSpeed() / _moveMultiplier);
+            _lowSpeed = (int) Math.Round(_npcInstance.CharacterCombat().GetLowSpeed() / _moveMultiplier);
         }
         public override void Write()
         {
@@ -33,8 +33,8 @@ namespace Core.NetworkPacket.ServerPacket
 
             WriteInt(mAtkSpd);
             WriteInt(pAtkSpd);
-            WriteInt(_runSpd);
-            WriteInt(_walkSpd);
+            WriteInt(_highSpeed);
+            WriteInt(_lowSpeed);
             WriteInt(0); // swimspeed
             WriteInt(0); // swimspeed
             WriteInt(0);

@@ -209,5 +209,15 @@ namespace Core.Module.CharacterData.Template
         {
             return BaseGroundLowSpeed;
         }
+        
+        public int GetBaseUnderWaterLowSpeed()
+        {
+            return BaseUnderWaterLowSpeed;
+        }
+
+        public int GetBaseUnderWaterHighSpeed()
+        {
+            return BaseUnderWaterHighSpeed;
+        }
     }
 }
