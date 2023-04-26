@@ -30,7 +30,7 @@ public class PlayerEffectTest : IClassFixture<PlayerInstanceFixture>
         {
             await value.Process(_playerInstance, _playerInstance);
         }
-        _playerInstance.CharacterMovement().SetRunning();
+        _playerInstance.CharacterMovement().CharacterMovementStatus().SetGroundHigh();
         var speed = _playerInstance.CharacterCombat().GetCharacterSpeed();
         Assert.Equal(146.5, speed);
     }
@@ -44,7 +44,7 @@ public class PlayerEffectTest : IClassFixture<PlayerInstanceFixture>
         {
             await value.Process(_playerInstance, _playerInstance);
         }
-        _playerInstance.CharacterMovement().SetRunning();
+        _playerInstance.CharacterMovement().CharacterMovementStatus().SetGroundHigh();
         var speed = _playerInstance.CharacterCombat().GetCharacterSpeed();
         Assert.Equal(146.5, speed);
     }
@@ -58,7 +58,7 @@ public class PlayerEffectTest : IClassFixture<PlayerInstanceFixture>
         {
             await value.Process(_playerInstance, _playerInstance);
         }
-        _playerInstance.CharacterMovement().SetRunning();
+        _playerInstance.CharacterMovement().CharacterMovementStatus().SetGroundHigh();
         var speed = _playerInstance.CharacterCombat().GetCharacterSpeed();
         Assert.Equal(159.5, speed);
     }
@@ -79,7 +79,7 @@ public class PlayerEffectTest : IClassFixture<PlayerInstanceFixture>
         {
             await value.Process(_playerInstance, _playerInstance);
         }
-        _playerInstance.CharacterMovement().SetRunning();
+        _playerInstance.CharacterMovement().CharacterMovementStatus().SetGroundHigh();
         var speed = _playerInstance.CharacterCombat().GetCharacterSpeed();
         Assert.Equal(179.5, speed);
     }

@@ -23,6 +23,7 @@ namespace Core.Module.ItemData
         public int MaximumCount { get; }
         public int DefaultPrice { get; }
         public bool IsDestruct { get; }
+        public int Weight { get; set; }
 
         public ItemDataModel(KeyValuePair<object, object> keyValuePair)
         {
@@ -45,6 +46,7 @@ namespace Core.Module.ItemData
             MaximumCount = itemBegin.MaximumCount;
             DefaultPrice = itemBegin.DefaultPrice;
             IsDestruct = itemBegin.IsDestruct;
+            Weight = itemBegin.Weight;
         }
 
         private ItemType GetItemType(string itemType)

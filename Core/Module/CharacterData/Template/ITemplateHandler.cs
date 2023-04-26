@@ -35,6 +35,8 @@ namespace Core.Module.CharacterData.Template
         int GetBaseAttackRange();
         int GetBaseGroundHighSpeed();
         int GetBaseGroundLowSpeed();
+        int GetBaseUnderWaterLowSpeed();
+        int GetBaseUnderWaterHighSpeed();
         IEnumerable<string> GetInitialEquipment();
         Location GetInitialStartPoint();
         float GetCollisionRadius();

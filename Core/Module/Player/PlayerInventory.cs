@@ -348,5 +348,16 @@ namespace Core.Module.Player
         {
             return _items.Values.SingleOrDefault(obj => obj.ObjectId == objectId);
         }
+
+        public int GetTotalWeight()
+        {
+            var weight = 0;
+            foreach (var item in _items)
+            {
+                weight += item.Value.ItemData.Weight * item.Value.Amount;
+            }
+
+            return weight;
+        }
     }
 }

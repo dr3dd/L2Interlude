@@ -8,9 +8,9 @@
         int GetMagicalDefence();
         float GetCollisionRadius();
         float GetCollisionHeight();
-        float GetCharacterSpeed();
-        float GetRunSpeed();
-        float GetWalkSpeed();
+        double GetCharacterSpeed();
+        double GetHighSpeed();
+        double GetLowSpeed();
         int GetEvasion();
         int GetAccuracy();
         int GetCriticalRate();

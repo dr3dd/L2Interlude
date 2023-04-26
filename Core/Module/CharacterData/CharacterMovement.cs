@@ -16,23 +16,26 @@ namespace Core.Module.CharacterData
     {
         private readonly GameTimeController _timeController;
         private MoveData _move;
-        private bool _isRunning;
         private readonly Character _character;
         private bool _cursorKeyMovement = false;
         public bool IsMoving => _move != null;
-        private WorldInit _worldInit;
+        private readonly WorldInit _worldInit;
+        private readonly CharacterMovementStatus _characterMovementStatus;
+        public CharacterMovementStatus CharacterMovementStatus() => _characterMovementStatus;
+        public Character Character() => _character;
 
         public CharacterMovement(Character character)
         {
             _character = character;
             _timeController = character.ServiceProvider.GetRequiredService<GameTimeController>();
             _worldInit = _character.ServiceProvider.GetRequiredService<WorldInit>();
+            _characterMovementStatus = new CharacterMovementStatus(this);
         }
         
         public void MoveToLocation(int x, int y, int z, int offset)
         {
             // Get the Move Speed of the Creature
-            float speed = _character.CharacterCombat().GetCharacterSpeed();
+            var speed = _character.CharacterCombat().GetCharacterSpeed();
             
             // Get current position of the Creature
             int curX = _character.GetX();
@@ -179,9 +182,9 @@ namespace Core.Module.CharacterData
             dy = m.YDestination - m.YAccurate;
             dz = m.ZDestination - zPrev;
 
-            float speed = _character.CharacterCombat().GetCharacterSpeed();
+            var speed = _character.CharacterCombat().GetCharacterSpeed();
 
-            float distPassed = (speed * (gameTicks - m.MoveTimestamp)) / _timeController.TicksPerSecond;
+            var distPassed = (speed * (gameTicks - m.MoveTimestamp)) / _timeController.TicksPerSecond;
             if ((((dx * dx) + (dy * dy)) < 10000) && ((dz * dz) > 2500)) // close enough, allows error between client and server geodata if it cannot be avoided
             {
                 distFraction = distPassed / Math.Sqrt((dx * dx) + (dy * dy));
@@ -327,7 +330,7 @@ namespace Core.Module.CharacterData
         {
             // Delete movement data of the Creature
             _move = null;
-            
+            _characterMovementStatus.SetStand();
             _character.WorldObjectPosition().SetXYZ(pos.GetX(), pos.GetY(), pos.GetZ());
             _character.Heading = pos.GetHeading();
 			
@@ -338,28 +341,7 @@ namespace Core.Module.CharacterData
             var stopMovePacket = new StopMove(_character);
             await _character.SendToKnownPlayers(stopMovePacket);
         }
-        
-        public bool IsRunning()
-        {
-            return _isRunning;
-        }
-        
-        public void SetRunning()
-        {
-            if (!_isRunning)
-            {
-                _isRunning = true;
-            }
-        }
 
-        public void SetWalking()
-        {
-            if (_isRunning)
-            {
-                _isRunning = false;
-            }
-        }
-        
         /// <summary>
         /// TODO Geo Engine
         /// </summary>

@@ -41,6 +41,7 @@ namespace Core.Controller.Handlers
             _clientPackets.TryAdd(0x21, typeof(RequestBypass));
             _clientPackets.TryAdd(0x30, typeof(Appearing));
             _clientPackets.TryAdd(0x37, typeof(RequestTargetCancel));
+            _clientPackets.TryAdd(0x45, typeof(RequestActionUse));
             _clientPackets.TryAdd(0x46, typeof(RequestRestart));
             _clientPackets.TryAdd(0x48, typeof(ValidatePosition));
             _clientPackets.TryAdd(0x59, typeof(RequestDestroyItem));
