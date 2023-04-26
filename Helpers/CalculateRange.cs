@@ -50,6 +50,20 @@ namespace Helpers
             return Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2);
         }
         
+        /// <summary>
+        /// includeZAxis = true only if GeoData works
+        /// </summary>
+        /// <param name="range"></param>
+        /// <param name="origX"></param>
+        /// <param name="origY"></param>
+        /// <param name="origZ"></param>
+        /// <param name="origCollisionRadius"></param>
+        /// <param name="targetX"></param>
+        /// <param name="targetY"></param>
+        /// <param name="targetZ"></param>
+        /// <param name="targetCollisionRadius"></param>
+        /// <param name="includeZAxis"></param>
+        /// <returns></returns>
         public static bool CheckIfInRange(int range, int origX, int origY, int origZ, float origCollisionRadius, int targetX,
             int targetY, int targetZ, float targetCollisionRadius, bool includeZAxis)
         {

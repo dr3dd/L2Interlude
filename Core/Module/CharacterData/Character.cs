@@ -85,7 +85,7 @@ public abstract class Character : WorldObject
         {
             if (!CalculateRange.CheckIfInRange(2000, targetInstance.GetX(), targetInstance.GetY(),
                     targetInstance.GetZ(), 20,
-                    GetX(), GetY(), GetZ(), 20, true))
+                    GetX(), GetY(), GetZ(), 20, false))
             {
                 continue;
             }
@@ -109,7 +109,7 @@ public abstract class Character : WorldObject
         {
             if (!CalculateRange.CheckIfInRange(2000, worldObject.GetX(), worldObject.GetY(),
                     worldObject.GetZ(), 20,
-                    GetX(), GetY(), GetZ(), 20, true))
+                    GetX(), GetY(), GetZ(), 20, false))
             {
                 switch (worldObject)
                 {

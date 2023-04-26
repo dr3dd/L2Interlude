@@ -175,6 +175,8 @@ public class PlayerInventory
                 _bodyParts[SlotBitType.RightHand] = 0;
                 break;
             case SlotBitType.LeftHand:
+                _characterInfo.StLeftHand = 0;
+                _bodyParts[SlotBitType.LeftHand] = 0;
                 break;
             case SlotBitType.Gloves:
                 _characterInfo.StGloves = 0;
@@ -242,6 +244,8 @@ public class PlayerInventory
                 _bodyParts[SlotBitType.RightHand] = itemInstance.UserItemId;
                 break;
             case SlotBitType.LeftHand:
+                _characterInfo.StLeftHand = itemInstance.UserItemId;
+                _bodyParts[SlotBitType.LeftHand] = itemInstance.UserItemId;
                 break;
             case SlotBitType.Gloves:
                 _characterInfo.StGloves = itemInstance.UserItemId;

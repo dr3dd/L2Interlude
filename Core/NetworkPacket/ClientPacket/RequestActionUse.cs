@@ -41,6 +41,7 @@ public class RequestActionUse : PacketBase
         }
 
         var changeType = new ChangeMoveType(_playerInstance);
+        await _playerInstance.SendUserInfoAsync();
         await _playerInstance.SendPacketAsync(changeType);
         await _playerInstance.SendToKnownPlayers(changeType);
     }

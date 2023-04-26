@@ -31,7 +31,7 @@ namespace Core.Module.SkillData.Helper
         {
             return CalculateRange.CheckIfInRange(effectiveRange, currentInstance.GetX(), currentInstance.GetY(),
                 currentInstance.GetZ(), 33, targetInstance.GetX(), targetInstance.GetY(), targetInstance.GetZ(), 33,
-                true);
+                false);
         }
 
         private static bool CanSeeTarget(Character currentInstance, Character targetInstance)

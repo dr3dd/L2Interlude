@@ -43,7 +43,7 @@ namespace Core.Module.CharacterData
             var castRange = skill.CastRange;
             if (!CalculateRange.CheckIfInRange(castRange, _character.GetX(), _character.GetY(),
                     _character.GetZ(), _character.CharacterCombat().GetCollisionRadius(), target.GetX(), target.GetY(),
-                    target.GetZ(), target.CharacterCombat().GetCollisionRadius(), true)
+                    target.GetZ(), target.CharacterCombat().GetCollisionRadius(), false)
             )
             {
                 await _character.SendPacketAsync(new SystemMessage(SystemMessageId.TargetTooFar));
