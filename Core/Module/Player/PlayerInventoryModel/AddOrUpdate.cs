@@ -36,6 +36,7 @@ public class AddOrUpdate
                 await AddItemToInventory(item, quantity);
                 break;
         }
+        RefreshWeight();
     }
 
     private async Task UpdateItemInInventory(int itemId, int quantity)
@@ -80,20 +81,25 @@ public class AddOrUpdate
 
     public async Task DestroyItemInInventory(int objectId, int quantity)
     {
-        var characterId = _playerInventory.PlayerCharacterInfo().CharacterId;
         var itemInstance = _playerInventory.GetInventoryItemByObjectId(objectId);
+        await RemoveUpdateItemInDb(itemInstance, quantity);
+        RefreshWeight();
+        await SendInventoryUpdate(itemInstance);
+    }
+
+    private async Task RemoveUpdateItemInDb(ItemInstance itemInstance, int quantity)
+    {
+        var characterId = _playerInventory.PlayerCharacterInfo().CharacterId;
+        
         if (quantity >= itemInstance.Amount)
         {
             await _itemRepository.DeleteAsync(itemInstance.UserItemId);
             _playerInventory.DeleteItemInInventoryCollection(itemInstance);
             itemInstance.Amount = 0;
-            await SendInventoryUpdate(itemInstance);
             return;
         }
-
         itemInstance.Amount -= quantity;
         await _itemRepository.UpdateItemAmount(characterId, itemInstance.ItemId, itemInstance.Amount);
-        await SendInventoryUpdate(itemInstance);
     }
 
     private async Task SendInventoryUpdate(ItemInstance itemInstance)
@@ -108,5 +114,10 @@ public class AddOrUpdate
             inventoryUpdate.AddModifiedItem(itemInstance);
         }
         await _playerInstance.SendPacketAsync(inventoryUpdate);
+    }
+
+    private void RefreshWeight()
+    {
+        _playerInventory.RefreshWeight();
     }
 }

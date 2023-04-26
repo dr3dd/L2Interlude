@@ -49,9 +49,13 @@ public class RequestBuyItem : PacketBase
         {
             await _playerInventory.AddOrUpdate().AddOrUpdateItemToInventory(myItem.ItemId, myItem.Qty);
         }
+        await SendStatusUpdate();
+    }
 
+    private async Task SendStatusUpdate()
+    {
         var su = new StatusUpdate(_playerInstance.ObjectId);
-        //su.AddAttribute(StatusUpdate.CurLoad, _playerInstance.GetCurrentLoad());
+        su.AddAttribute(StatusUpdate.CurLoad, _playerInstance.CharacterBaseStatus().GetCurrentLoad());
         await _playerInstance.SendPacketAsync(su);
         await _playerInstance.SendPacketAsync(new ItemList(_playerInstance));
     }
