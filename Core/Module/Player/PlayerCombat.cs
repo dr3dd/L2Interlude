@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Module.AreaData;
 using Core.Module.CharacterData;
 using Core.Module.CharacterData.Template;
 using Core.Module.ItemData;
@@ -320,9 +321,14 @@ namespace Core.Module.Player
         public double GetHighSpeed()
         {
             var baseGroundHighSpeed= _templateHandler.GetBaseGroundHighSpeed();
+            var baseUnderWaterHighSpeed= _templateHandler.GetBaseUnderWaterHighSpeed();
+            var baseHighSpeed = _playerInstance.PlayerZone().IsInsideZone(AreaId.Water)
+                ? baseUnderWaterHighSpeed
+                : baseGroundHighSpeed;
+            
             var dexStat = _templateHandler.GetDex();
             var dexBonus = (_statBonusInit.GetDexBonus(dexStat) + 100) / 100d;
-            var result = baseGroundHighSpeed * dexBonus;
+            var result = baseHighSpeed * dexBonus;
 
             var effects = GetPlayerEffects();
             result = CalculateStats.CalculateSpeed(effects, result);
@@ -358,7 +364,7 @@ namespace Core.Module.Player
         public double GetMovementSpeedMultiplier()
         {
             var baseGroundHighSpeed= _templateHandler.GetBaseGroundHighSpeed();
-            return GetCharacterSpeed() / baseGroundHighSpeed;
+            return GetHighSpeed() / baseGroundHighSpeed;
         }
 
         public float GetAttackSpeedMultiplier()
