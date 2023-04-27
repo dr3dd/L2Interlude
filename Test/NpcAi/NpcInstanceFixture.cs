@@ -3,6 +3,7 @@ using Config;
 using Core;
 using Core.Module.CharacterData.Template;
 using Core.Module.NpcData;
+using Core.Module.SkillData;
 using Core.Module.WorldData;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,6 +22,8 @@ public class NpcInstanceFixture
         _serviceProvider = serviceCollection.BuildServiceProvider();
         _serviceProvider.GetRequiredService<ObjectIdInit>();
         _serviceProvider.GetRequiredService<PcParameterInit>().Run();
+        _serviceProvider.GetRequiredService<SkillPchInit>().Run();
+        _serviceProvider.GetRequiredService<SkillDataInit>().Run();
         _serviceProvider.GetRequiredService<NpcDataInit>().Run();
     }
 

@@ -16,7 +16,7 @@ namespace Core.Controller
 
         public int GameTicks { get; private set; }
         private long GameStartTime { get; set; }
-        public bool IsNight { get; set; } = false;
+        public bool IsNight { get; set; }
         private readonly List<Character> _movingObjects;
 
         public GameTimeController()
@@ -89,48 +89,40 @@ namespace Core.Controller
         
         private async Task MoveObjects()
         {
+            List<Character> ended = new List<Character>();
             try
             {
-                Character[] characters = _movingObjects.ToArray();
-                // Create an ArrayList to contain all Creature that are arrived to destination
-                List<Character> ended = null;
-
-                foreach (var l2Character in characters)
+                // Create an ArrayList to contain all Characters that are arrived to destination
+                foreach (var character in _movingObjects.ToArray())
                 {
-                    if (l2Character is null)
+                    if (character is null)
                         continue;
-                    // Update the position of the Creature and return True if the movement is finished
-                    var end = await l2Character.CharacterMovement().UpdatePosition(GameTicks);
-                    // If movement is finished, the Creature is removed from movingObjects and added to the ArrayList ended
+                    // Update the position of the Character and return True if the movement is finished
+                    var end = await character.CharacterMovement().UpdatePosition(GameTicks);
+                    // If movement is finished, the Character is removed from movingObjects and added to the ArrayList ended
                     if (end)
                     {
-                        _movingObjects.Remove(l2Character);
-                        if (ended == null)
-                        {
-                            ended = new List<Character>();
-                        }
-                        ended.Add(l2Character);
+                        ended.Add(character);
                     }
-                    await l2Character.UpdateKnownObjects();
-                    if (l2Character is PlayerInstance playerInstance)
+                    await character.UpdateKnownObjects();
+                    if (character is PlayerInstance playerInstance)
                     {
                         await playerInstance.FindCloseNpc();
                         await playerInstance.FindCloseDoor();
                     }
-                    await l2Character.RemoveKnownObjects();
+                    await character.RemoveKnownObjects();
                 }
 
-                if (ended != null)
+                _movingObjects.RemoveAll(c => ended.Contains(c));
+                foreach (var character in ended)
                 {
-                    foreach (Character character in ended)
-                    {
-                        character.CharacterNotifyEvent().NotifyEvent(CtrlEvent.EvtArrived);
-                    }
+                    character.CharacterNotifyEvent().NotifyEvent(CtrlEvent.EvtArrived);
                 }
             }
             catch (Exception ex)
             {
                 LoggerManager.Info(GetType().Name + ": " + ex.Message);
+                throw;
             }
         }
         
