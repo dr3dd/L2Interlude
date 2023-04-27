@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Module.CharacterData;
 using Core.Module.Player;
 
@@ -119,12 +120,18 @@ namespace Core.Module.NpcData
         
         public double GetHighSpeed()
         {
-            return _stat.GroundHigh[0];
+            double result = _stat.GroundHigh.First();
+            var effects = GetNpcEffects();
+            result = CalculateStats.CalculateSpeed(effects, result);
+            return result;
         }
 
         public double GetLowSpeed()
         {
-            return _stat.GroundLow[0];
+            double result = _stat.GroundLow.First();
+            var effects = GetNpcEffects();
+            result = CalculateStats.CalculateSpeed(effects, result);
+            return result;
         }
 
         public int GetEvasion()
