@@ -27,7 +27,7 @@ namespace Core.Controller
 
         public void Run()
         {
-            GameStartTime = DateTimeHelper.CurrentUnixTimeMillis() - 3600000; // offset so that the server starts a day begin
+            GameStartTime = DateTimeHelper.GetCurrentUnixTimeMillis() - 3600000; // offset so that the server starts a day begin
             GameTicks = 3600000 / MillisInTick;
 
             Task.Run(async () =>
@@ -74,7 +74,7 @@ namespace Core.Controller
                 await task;
 
                 int oldTicks = GameTicks; // save old ticks value to avoid moving objects 2x in same tick
-                long runtime = DateTimeHelper.CurrentUnixTimeMillis() - GameStartTime; // from server boot to now
+                long runtime = DateTimeHelper.GetCurrentUnixTimeMillis() - GameStartTime; // from server boot to now
         
                 GameTicks = (int) (runtime / MillisInTick); // new ticks value (ticks now)
                 

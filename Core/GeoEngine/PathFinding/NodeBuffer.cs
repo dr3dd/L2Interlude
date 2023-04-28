@@ -41,7 +41,7 @@ namespace Core.GeoEngine.PathFinding
         public ICollection<Location> FindPath(int gox, int goy, int goz, int gtx, int gty, int gtz)
         {
             // Set start timestamp.
-            _timeStamp = DateTimeHelper.CurrentUnixTimeMillis();
+            _timeStamp = DateTimeHelper.GetCurrentUnixTimeMillis();
 		
             // Set target coordinates.
             _gtx = gtx;
@@ -92,7 +92,7 @@ namespace Core.GeoEngine.PathFinding
 		
             _current = null;
 		
-            _lastElapsedTime = DateTimeHelper.CurrentUnixTimeMillis() - _timeStamp;
+            _lastElapsedTime = DateTimeHelper.GetCurrentUnixTimeMillis() - _timeStamp;
             Monitor.Exit(_lock);
         }
         

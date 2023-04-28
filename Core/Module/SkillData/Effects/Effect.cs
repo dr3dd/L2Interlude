@@ -62,7 +62,7 @@ namespace Core.Module.SkillData.Effects
         private async Task StartNewEffect(int duration, Character targetInstance)
         {
             await StopEffectTask(targetInstance);
-            PeriodStartTime = DateTimeHelper.CurrentUnixTimeMillis();
+            PeriodStartTime = DateTimeHelper.GetCurrentUnixTimeMillis();
             Duration = duration;
             _cts = new CancellationTokenSource();
             _currentTask = TaskManagerScheduler.ScheduleAtFixed(async () => { await StopEffectTask(targetInstance); }, duration,
