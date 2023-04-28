@@ -44,7 +44,7 @@ namespace Core.NetworkPacket.ServerPacket
         
         private int GetDelay(int duration, long periodStartTime)
         {
-            return (int) (duration - (DateTimeHelper.CurrentUnixTimeMillis() - periodStartTime));
+            return (int) (duration - (DateTimeHelper.GetCurrentUnixTimeMillis() - periodStartTime));
         }
         
         public override void Write()

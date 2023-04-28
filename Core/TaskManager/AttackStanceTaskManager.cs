@@ -23,7 +23,7 @@ namespace Core.TaskManager
 
         private async Task Run()
         {
-            long current = DateTimeHelper.CurrentUnixTimeMillis();
+            long current = DateTimeHelper.GetCurrentUnixTimeMillis();
             try
             {
                 foreach (KeyValuePair<Character, long> entry in _attackStanceTasks)
@@ -45,7 +45,7 @@ namespace Core.TaskManager
 
         public void AddAttackStanceTask(Character actor)
         {
-            _attackStanceTasks.TryAdd(actor, DateTimeHelper.CurrentUnixTimeMillis());
+            _attackStanceTasks.TryAdd(actor, DateTimeHelper.GetCurrentUnixTimeMillis());
         }
         
         public void RemoveAttackStanceTask(Character actor)
