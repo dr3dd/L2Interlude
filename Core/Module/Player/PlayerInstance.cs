@@ -11,6 +11,7 @@ using Core.NetworkPacket.ServerPacket;
 using Core.NetworkPacket.ServerPacket.CharacterPacket;
 using DataBase.Interfaces;
 using Helpers;
+using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 using Network;
 
@@ -131,7 +132,7 @@ namespace Core.Module.Player
             {
                 if (!CalculateRange.CheckIfInRange(2000, npcInstance.GetX(), npcInstance.GetY(),
                         npcInstance.GetZ(), npcInstance.CharacterCombat().GetCollisionRadius(),
-                        GetX(), GetY(), GetZ(), CharacterCombat().GetCollisionRadius(), true))
+                        GetX(), GetY(), GetZ(), CharacterCombat().GetCollisionRadius(), false))
                 {
                     continue;
                 }
@@ -139,10 +140,11 @@ namespace Core.Module.Player
                 {
                     continue;
                 }
+                await SendPacketAsync(new NpcInfo(npcInstance));
+                //LoggerManager.Info($"Show NPC {npcInstance.ObjectId}");
                 npcInstance.NpcAi().Created();
                 CharacterKnownList().AddToKnownList(npcInstance.ObjectId, npcInstance);
                 npcInstance.CharacterKnownList().AddToKnownList(ObjectId, this);
-                await SendPacketAsync(new NpcInfo(npcInstance));
             }
         }
 

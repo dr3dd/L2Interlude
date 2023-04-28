@@ -208,7 +208,7 @@ namespace Core.Module.CharacterData
                 _character.SetXYZ((int) m.XAccurate, (int) m.YAccurate, zPrev + (int) ((dz * distFraction) + 0.5));
             }
             
-            LoggerManager.Info($"curX: {_character.GetX()} curY: {_character.GetY()} curZ: {_character.GetZ()} gameTicks: {gameTicks} speed: {speed}");
+            //LoggerManager.Info($"curX: {_character.GetX()} curY: {_character.GetY()} curZ: {_character.GetZ()} gameTicks: {gameTicks} speed: {speed}");
             
             // Set the timer of last position update to now
             m.MoveTimestamp = gameTicks;
