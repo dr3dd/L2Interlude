@@ -7,6 +7,7 @@ using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
 using Core.NetworkPacket.ServerPacket.CharacterPacket;
 using Helpers;
+using L2Logger;
 using Network;
 
 namespace Core.Module.CharacterData;
@@ -100,6 +101,10 @@ public abstract class Character : WorldObject
                 await targetInstance.SendPacketAsync(new CharInfo(playerInstance));
             }
             targetInstance.CharacterKnownList().AddToKnownList(ObjectId, this);
+            if (this is NpcInstance npcInstance)
+            {
+                await targetInstance.SendPacketAsync(new NpcInfo(npcInstance));
+            }
         }
     }
 
@@ -121,22 +126,16 @@ public abstract class Character : WorldObject
                     {
                         if (this is PlayerInstance playerInstance)
                         {
-                            npcInstance.CharacterKnownList().RemoveKnownObject(this);
+                            npcInstance.CharacterKnownList().RemoveKnownObject(playerInstance);
                             if (npcInstance.CharacterKnownList().GetKnownObjects().IsEmpty)
                             {
                                 npcInstance.NpcAi().NoDesire();
                             }
+                            playerInstance.CharacterKnownList().RemoveKnownObject(npcInstance);
+                            await playerInstance.SendPacketAsync(new DeleteObject(objectId));
+                            LoggerManager.Info($"Delete NPC {objectId}");
                         }
                         break;
-                    }
-                }
-
-                if (CharacterKnownList().GetKnownObjects() != null)
-                {
-                    CharacterKnownList().RemoveKnownObject(worldObject);
-                    if (this is PlayerInstance playerInstance)
-                    {
-                        await playerInstance.SendPacketAsync(new DeleteObject(objectId));
                     }
                 }
             }
