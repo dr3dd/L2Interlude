@@ -39,6 +39,3 @@ PTS scripts files included and working with the server.
 <li>Working with Player Skills</li>
 <li>Working with Npc Skills</li>
 </ul>
-
-# FAQ
-If you have any ideas please write me s0uldr3dd@gmail.com
