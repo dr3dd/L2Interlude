@@ -1,635 +1,404 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.IO.MemoryMappedFiles;
-using System.Linq;
 using Config;
-using Core.GeoEngine.PathFinding;
+using Core.GeoEngine.Regions;
 using Core.Module.CharacterData;
+using Core.Module.DoorData;
 using Core.Module.WorldData;
 using Helpers;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Core.GeoEngine
+namespace Core.GeoEngine;
+
+public class GeoEngineInit
 {
-    public class GeoEngineInit
+    private readonly string _basePath;
+    private readonly WorldInit _worldInit;
+    private static int ELEVATED_SEE_OVER_DISTANCE = 2;
+    private static int MAX_SEE_OVER_HEIGHT = 48;
+    private static int SPAWN_Z_DELTA_LIMIT = 100;
+
+    private const int TILE_X_MIN = 16;
+    private const int TILE_X_MAX = 26;
+    private const int TILE_Y_MIN = 10;
+    private const int TILE_Y_MAX = 25;
+        
+    private GeoData _geodata;
+
+    private IServiceProvider _provider; 
+    public GeoEngineInit(IServiceProvider provider)
     {
-        private readonly string _basePath;
-        protected byte[] _buffer;
-        private readonly ABlock[,] _blocks;
-        // Pre-allocated buffers.
-        private BufferHolder[] _buffers;
-        private readonly WorldInit _worldInit;
-        public GeoEngineInit(IServiceProvider provider)
-        {
-            _basePath = provider.GetRequiredService<GameConfig>().ServerConfig.StaticData;
-            LoggerManager.Info("GeoEngine: Initializing...");
-            // Initialize block container.
-            _blocks = new ABlock[GeoStructure.GeoBlocksX, GeoStructure.GeoBlocksY];
-            _worldInit = provider.GetRequiredService<WorldInit>();
-            // Initialize multilayer temporarily buffer.
-            BlockMultilayer.Initialize();
-        }
-
-        public void Run()
-        {
-            int loaded = 0;
-            try
-            {
-                for (int regionX = 16; regionX <= 26; regionX++)
-                {
-                    for (int regionY = 10; regionY <= 25; regionY++)
-                    {
-                        var geoFilePath = _basePath + $"/GeoData/{regionX}_{regionY}_conv.dat";
-                        if (!File.Exists(geoFilePath))
-                        {
-                            continue;
-                        }
-                        if (LoadGeoBlocks(regionX, regionY, geoFilePath))
-                        {
-                            loaded++;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggerManager.Error(ex.Message);
-            }
-            LoggerManager.Info("GeoEngine: Loaded " + loaded + " GeoData files.");
-            BlockMultilayer.Release();
-            
-            String[] array = "500x10;1000x10;3000x5;5000x3;10000x3".Split(";");
-            _buffers = new BufferHolder[array.Length];
-		
-            int count = 0;
-            for (int i = 0; i < array.Length; i++)
-            {
-	            String buf = array[i];
-	            String[] args = buf.Split("x");
-			
-	            try
-	            {
-		            int size = int.Parse(args[1]);
-		            count += size;
-		            _buffers[i] = new BufferHolder(int.Parse(args[0]), size);
-	            }
-	            catch (Exception)
-	            {
-		            //LOGGER.warning("Could not load buffer setting:" + buf + ". " + e);
-	            }
-            }
-        }
-
-        private bool LoadGeoBlocks(int regionX, int regionY, string geoFileName)
-        {
-            try
-            {
-                using (MemoryStream stream = new MemoryStream(File.ReadAllBytes(geoFileName)))
-                {
-                    
-                }
-                
-                MemoryMappedFile mmf = MemoryMappedFile.CreateFromFile(geoFileName);
-                using (MemoryMappedViewStream stream = mmf.CreateViewStream())
-                {
-                    // perform stream operations
-                    BinaryReader reader = new BinaryReader(stream);
-                    for (int i = 0; i < 18; i++)
-                    {
-                        reader.ReadByte();
-                        //LoggerManager.Info("Byte: " + reader.ReadByte());
-                    }
-
-                    // Get block indexes.
-                    int blockX = (regionX - World.TileXMin) * GeoStructure.RegionBlocksX;
-                    int blockY = (regionY - World.TileYMin) * GeoStructure.RegionBlocksY;
-
-                    for (int ix = 0; ix < GeoStructure.RegionBlocksX; ix++)
-                    {
-                        for (int iy = 0; iy < GeoStructure.RegionBlocksY; iy++)
-                        {
-                            var type = reader.ReadInt16();
-                            switch (type)
-                            {
-                                case 64:
-                                    _blocks[blockX + ix, blockY + iy] = new BlockComplex(reader);
-                                    break;
-                                case 0:
-                                    _blocks[blockX + ix, blockY + iy] = new BlockFlat(reader);
-                                    break;
-                                default:
-                                    _blocks[blockX + ix, blockY + iy] = new BlockMultilayer(reader);
-                                    break;
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                LoggerManager.Error("Error loading " + geoFileName + " region file. " + ex);
-                return false;
-            }
-        }
-        
-        /// <summary>
-        /// Returns block of geodata on given coordinates.
-        /// </summary>
-        /// <param name="geoX"></param>
-        /// <param name="geoY"></param>
-        /// <returns></returns>
-        public ABlock GetBlock(int geoX, int geoY)
-        {
-            int x = geoX / GeoStructure.BlockCellsX;
-            if ((x < 0) || (x >= GeoStructure.GeoBlocksX))
-            {
-                return null;
-            }
-            int y = geoY / GeoStructure.BlockCellsY;
-            if ((y < 0) || (y >= GeoStructure.GeoBlocksY))
-            {
-                return null;
-            }
-            return _blocks[x,y];
-        }
-        
-        /// <summary>
-        /// Check if geo coordinates has geo.
-        /// </summary>
-        /// <param name="geoX"></param>
-        /// <param name="geoY"></param>
-        /// <returns></returns>
-        public bool HasGeoPos(int geoX, int geoY)
-        {
-            ABlock block = GetBlock(geoX, geoY);
-            return (block != null) && block.HasGeoPos();
-        }
-        
-        /// <summary>
-        /// Returns the height of cell, which is closest to given coordinates.
-        /// </summary>
-        /// <param name="geoX"></param>
-        /// <param name="geoY"></param>
-        /// <param name="worldZ"></param>
-        /// <returns>Cell geodata Z coordinate, closest to given coordinates.</returns>
-        public short GetHeightNearest(int geoX, int geoY, int worldZ)
-        {
-            ABlock block = GetBlock(geoX, geoY);
-            if (block == null)
-            {
-                return (short) worldZ;
-            }
-            return block.GetHeightNearest(geoX, geoY, worldZ);
-        }
-        
-        
-        public sbyte GetNsweNearest(int geoX, int geoY, int worldZ)
-        {
-            ABlock block = GetBlock(geoX, geoY);
-            if (block == null)
-            {
-                return GeoStructure.CellFlagAll;
-            }
-            return block.GetNsweNearest(geoX, geoY, worldZ);
-        }
-        
-        public bool HasGeo(int worldX, int worldY) => HasGeoPos(GetGeoX(worldX), GetGeoY(worldY));
-        
-        public short GetHeight(Location loc) => GetHeightNearest(GetGeoX(loc.GetX()), GetGeoY(loc.GetY()), loc.GetZ());
-        public short GetHeight(int worldX, int worldY, int worldZ) => GetHeightNearest(GetGeoX(worldX), GetGeoY(worldY), worldZ);
-        
-        
-        public int GetGeoX(int worldX)
-        {
-            return (worldX - _worldInit.MapMinX) >> 4;
-        }
-        
-        public int GetGeoY(int worldY)
-        {
-            return (worldY - _worldInit.MapMinY) >> 4;
-        }
-        
-        public int GetWorldX(int geoX)
-        {
-            return (geoX << 4) + _worldInit.MapMinX + 8;
-        }
-        
-        public int GetWorldY(int geoY)
-        {
-            return (geoY << 4) + _worldInit.MapMinY + 8;
-        }
-
-        public ICollection<Location> FindPath(int ox, int oy, int oz, int tx, int ty, int tz)
-        {
-	        // Get origin and check existing geo coords.
-	        int gox = GetGeoX(ox);
-	        int goy = GetGeoY(oy);
-	        if (!HasGeoPos(gox, goy))
-	        {
-		        return new List<Location>();
-	        }
-		
-	        int goz = GetHeightNearest(gox, goy, oz);
-		
-	        // Get target and check existing geo coords.
-	        int gtx = GetGeoX(tx);
-	        int gty = GetGeoY(ty);
-	        if (!HasGeoPos(gtx, gty))
-	        {
-		        return new List<Location>();
-	        }
-
-	        var oBlock = GetBlock(gox, goy);
-	        var tBlock = GetBlock(gtx, gty);
-		
-	        int gtz = GetHeightNearest(gtx, gty, tz);
-		
-	        // Prepare buffer for pathfinding calculations.
-	        NodeBuffer buffer = GetBuffer(300 + (10 * (Math.Abs(gox - gtx) + Math.Abs(goy - gty) + Math.Abs(goz - gtz))));
-	        if (buffer == null)
-	        {
-		        return new List<Location>();
-	        }
-		
-	        // Find path.
-	        ICollection<Location> path = null;
-	        try
-	        {
-		        path = buffer.FindPath(gox, goy, goz, gtx, gty, gtz);
-		        if (!path.Any())
-		        {
-			        return new List<Location>();
-		        }
-	        }
-	        catch (Exception exception)
-	        {
-		        return new List<Location>();
-	        }
-	        finally
-	        {
-		        buffer.Free();
-	        }
-		
-	        // Check path.
-	        if (path.Count < 3)
-	        {
-		        return path;
-	        }
-	        return path;
-        }
-        
-        private class BufferHolder
-        {
-	        public int _size;
-	        public List<NodeBuffer> _buffer;
-		
-	        public BufferHolder(int size, int count)
-	        {
-		        _size = size;
-		        _buffer = new List<NodeBuffer>(count);
-			
-		        for (int i = 0; i < count; i++)
-		        {
-			        _buffer.Add(new NodeBuffer(size));
-		        }
-	        }
-        }
-        
-        private NodeBuffer GetBuffer(int size)
-        {
-	        NodeBuffer current = null;
-	        foreach (BufferHolder holder in _buffers)
-	        {
-		        // Find proper size of buffer.
-		        if (holder._size < size)
-		        {
-			        continue;
-		        }
-			
-		        // Find unlocked NodeBuffer.
-		        foreach (NodeBuffer buffer in holder._buffer)
-		        {
-			        if (!buffer.IsLocked())
-			        {
-				        continue;
-			        }
-				
-			        return buffer;
-		        }
-			
-		        // NodeBuffer not found, allocate temporary buffer.
-		        current = new NodeBuffer(holder._size);
-		        current.IsLocked();
-	        }
-		
-	        return current;
-        }
-
-        public bool CanMoveToTarget(int originX, int originY, int originZ, int targetX, int targetY, int targetZ)
-        {
-            // Get geodata coordinates.
-            int gox = GetGeoX(originX);
-            int goy = GetGeoY(originY);
-            ABlock block = GetBlock(gox, goy);
-            if ((block == null) || !block.HasGeoPos())
-            {
-                return true; // No Geodata found.
-            }
-            int goz = GetHeightNearest(gox, goy, originZ);
-            int gtx = GetGeoX(targetX);
-            int gty = GetGeoY(targetY);
-		
-            // Check movement within same cell.
-            if ((gox == gtx) && (goy == gty))
-            {
-                return goz == GetHeight(targetX, targetY, targetZ);
-            }
-            // Get nswe flag.
-            int nswe = GetNsweNearest(gox, goy, goz);
-		
-            // Get delta coordinates, slope of line and direction data.
-            int dx = targetX - originX;
-            int dy = targetY - originY;
-            double m = (double) dy / dx;
-
-            MoveDirection mdt = MoveDirection.GetDirection(gtx - gox, gty - goy);
-            // Get cell grid coordinates.
-            int gridX = (originX & 0xFFFFFF0);
-            int gridY = (originY & 0xFFFFFF0);
-		
-            // Run loop.
-            sbyte dir;
-            int nx = gox;
-            int ny = goy;
-
-            
-            while ((gox != gtx) || (goy != gty))
-            {
-
-                // Calculate intersection with cell's X border.
-                int checkX = gridX + mdt.OffsetX;
-                int checkY = (int) (originY + (m * (checkX - originX)));
-
-                if ((mdt.StepX != 0) && (GetGeoY(checkY) == goy))
-                {
-                    // Set next cell is in X direction.
-                    gridX += mdt.StepX;
-                    nx += mdt.SignumX;
-                    dir = mdt.DirectionX;
-                }
-                else
-                {
-                    // Calculate intersection with cell's Y border.
-                    checkY = gridY + mdt.OffsetY;
-                    checkX = (int) (originX + ((checkY - originY) / m));
-
-                    // Set next cell in Y direction.
-                    gridY += mdt.StepY;
-                    ny += mdt.SignumY;
-                    dir = mdt.DirectionY;
-                }
-
-                // Check point heading into obstacle, if so return current point.
-                if ((nswe & dir) == 0)
-                {
-                    return false;
-                }
-
-                block = GetBlock(nx, ny);
-                if ((block == null) || !block.HasGeoPos())
-                {
-                    return true; // No Geodata found.
-                }
-
-                // Check next point for extensive Z difference, if so return current point.
-                int i = block.GetIndexBelow(nx, ny, goz + GeoStructure.CellIgnoreHeight);
-                if (i < 0)
-                {
-                    return false;
-                }
-
-                // Update current point's coordinates and nswe.
-                gox = nx;
-                goy = ny;
-                goz = block.GetHeight(i);
-                nswe = block.GetNswe(i);
-            }
-            return goz == GetHeight(targetX, targetY, targetZ);
-        }
-
-        public Location GetValidLocation(int ox, int oy, int oz, int tx, int ty, int tz)
-        {
-            // Get geodata coordinates.
-			int gox = GetGeoX(ox);
-			int goy = GetGeoY(oy);
-			ABlock block = GetBlock(gox, goy);
-			if ((block == null) || !block.HasGeoPos())
-			{
-				return new Location(tx, ty, tz); // No Geodata found.
-			}
-			int gtx = GetGeoX(tx);
-			int gty = GetGeoY(ty);
-			int gtz = GetHeightNearest(gtx, gty, tz);
-			int goz = GetHeightNearest(gox, goy, oz);
-			int nswe = GetNsweNearest(gox, goy, goz);
-			
-			// Get delta coordinates, slope of line and direction data.
-			int dx = tx - ox;
-			int dy = ty - oy;
-			double m = (double) dy / dx;
-			MoveDirection mdt = MoveDirection.GetDirection(gtx - gox, gty - goy);
-			
-			// Get cell grid coordinates.
-			int gridX = ox;
-			int gridY = oy;
-			
-			// Run loop.
-			sbyte dir;
-			int nx = gox;
-			int ny = goy;
-			while ((gox != gtx) || (goy != gty))
-			{
-				// Calculate intersection with cell's X border.
-				int checkX = gridX + mdt.OffsetX;
-				int checkY = (int) (oy + (m * (checkX - ox)));
-				
-				if ((mdt.StepX != 0) && (GetGeoY(checkY) == goy))
-				{
-					// Set next cell is in X direction.
-					gridX += mdt.StepX;
-					nx += mdt.SignumX;
-					dir = mdt.DirectionX;
-				}
-				else
-				{
-					// Calculate intersection with cell's Y border.
-					checkY = gridY + mdt.OffsetY;
-					checkX = (int) (ox + ((checkY - oy) / m));
-					checkX = Utility.Limit(checkX, gridX, gridX + 15);
-					
-					// Set next cell in Y direction.
-					gridY += mdt.StepY;
-					ny += mdt.SignumY;
-					dir = mdt.DirectionY;
-				}
-				
-				// Check target cell is out of geodata grid (world coordinates).
-				if ((nx < 0) || (nx >= GeoStructure.GeoCellsX) || (ny < 0) || (ny >= GeoStructure.GeoCellsY))
-				{
-					return new Location(checkX, checkY, goz);
-				}
-				
-				// Check point heading into obstacle, if so return current (border) point.
-				if ((nswe & dir) == 0)
-				{
-					return new Location(checkX, checkY, goz);
-				}
-				
-				block = GetBlock(nx, ny);
-				if ((block == null) || !block.HasGeoPos())
-				{
-					return new Location(tx, ty, tz); // No Geodata found.
-				}
-				
-				// Check next point for extensive Z difference, if so return current (border) point.
-				int i = block.GetIndexBelow(nx, ny, goz + GeoStructure.CellIgnoreHeight);
-				if (i < 0)
-				{
-					return new Location(checkX, checkY, goz);
-				}
-				
-				// Update current point's coordinates and nswe.
-				gox = nx;
-				goy = ny;
-				goz = block.GetHeight(i);
-				nswe = block.GetNswe(i);
-			}
-			
-			// Compare Z coordinates:
-			// If same, path is okay, return target point and fix its Z geodata coordinate.
-			// If not same, path is does not exist, return origin point.
-			return goz == gtz ? new Location(tx, ty, gtz) : new Location(ox, oy, oz);
-        }
-        
-        public bool CanSee(int ox, int oy, int oz, float oheight, int tx, int ty, int tz, float theight)
-        {
-			// Get origin geodata coordinates.
-			int gox = GetGeoX(ox);
-			int goy = GetGeoY(oy);
-			ABlock block = GetBlock(gox, goy);
-			if ((block == null) || !block.HasGeoPos())
-			{
-				return true; // No Geodata found.
-			}
-			
-			// Get target geodata coordinates.
-			int gtx = GetGeoX(tx);
-			int gty = GetGeoY(ty);
-			
-			// Check being on same cell and layer (index).
-			// Note: Get index must use origin height increased by cell height, the method returns index to height exclusive self.
-			int index = block.GetIndexNearest(gox, goy, oz + GeoStructure.CellHeight); // getIndexBelow
-			if (index < 0)
-			{
-				return false;
-			}
-			
-			if ((gox == gtx) && (goy == gty))
-			{
-				return index == block.GetIndexNearest(gtx, gty, tz + GeoStructure.CellHeight); // getIndexBelow
-			}
-			
-			// Get ground and nswe flag.
-			int groundZ = block.GetHeight(index);
-			int nswe = block.GetNswe(index);
-			
-			// Get delta coordinates, slope of line (XY, XZ) and direction data.
-			int dx = tx - ox;
-			int dy = ty - oy;
-			double dz = (tz + theight) - (oz + oheight);
-			double m = (double) dy / dx;
-			double mz = dz / Math.Sqrt((dx * dx) + (dy * dy));
-			MoveDirection mdt = MoveDirection.GetDirection(gtx - gox, gty - goy);
-			
-			// Get cell grid coordinates.
-			int gridX = (int)(ox & 0xFFFFFFF0);
-			int gridY = (int)(oy & 0xFFFFFFF0);
-			
-			// Run loop.
-			sbyte dir;
-			while ((gox != gtx) || (goy != gty))
-			{
-				// Calculate intersection with cell's X border.
-				int checkX = gridX + mdt.OffsetX;
-				int checkY = (int) (oy + (m * (checkX - ox)));
-				
-				if ((mdt.StepX != 0) && (GetGeoY(checkY) == goy))
-				{
-					// Set next cell in X direction.
-					gridX += mdt.StepX;
-					gox += mdt.SignumX;
-					dir = mdt.DirectionX;
-				}
-				else
-				{
-					// Calculate intersection with cell's Y border.
-					checkY = gridY + mdt.OffsetY;
-					checkX = (int) (ox + ((checkY - oy) / m));
-					checkX = Utility.Limit(checkX, gridX, gridX + 15);
-					
-					// Set next cell in Y direction.
-					gridY += mdt.StepY;
-					goy += mdt.SignumY;
-					dir = mdt.DirectionY;
-				}
-				
-				// Get block of the next cell.
-				block = GetBlock(gox, goy);
-				if ((block == null) || !block.HasGeoPos())
-				{
-					return true; // No Geodata found.
-				}
-				
-				// Get line of sight height (including Z slope).
-				double losz = oz + oheight + 32; //add to config MAX_OBSTACLE_HEIGHT
-				losz += mz * Math.Sqrt(((checkX - ox) * (checkX - ox)) + ((checkY - oy) * (checkY - oy)));
-				
-				// Check line of sight going though wall (vertical check).
-				
-				// Get index of particular layer, based on last iterated cell conditions.
-				bool canMove = (nswe & dir) != 0;
-				if (canMove)
-				{
-					// No wall present, get next cell below current cell.
-					index = block.GetIndexBelow(gox, goy, groundZ + GeoStructure.CellIgnoreHeight);
-				}
-				else
-				{
-					// Wall present, get next cell above current cell.
-					index = block.GetIndexAbove(gox, goy, groundZ - (2 * GeoStructure.CellHeight));
-				}
-				// Next cell's does not exist (no geodata with valid condition), return fail.
-				if (index < 0)
-				{
-					return false;
-				}
-				// Get next cell's layer height.
-				int z = block.GetHeight(index);
-				// Perform sine of sight check (next cell is above line of sight line), return fail.
-				if (z > losz)
-				{
-					return false;
-				}
-				// Next cell is accessible, update z and NSWE.
-				groundZ = z;
-				nswe = block.GetNswe(index);
-			}
-			// Iteration is completed, no obstacle is found.
-			return true;
-		}
+        _basePath = provider.GetRequiredService<GameConfig>().ServerConfig.StaticData;
+        LoggerManager.Info("GeoEngine: Initializing...");
+        // Initialize block container.
+        _worldInit = provider.GetRequiredService<WorldInit>();
+        _geodata = new GeoData();
+        _provider = provider;
     }
+
+    public void Run()
+    {
+        int loaded = 0;
+        try
+        {
+            for (int regionX = TILE_X_MIN; regionX <= TILE_X_MAX; regionX++)
+            {
+                for (int regionY = TILE_Y_MIN; regionY <= TILE_Y_MAX; regionY++)
+                {
+                    var geoFilePath = _basePath + $"/GeoData/{regionX}_{regionY}_conv.dat";
+                    if (!File.Exists(geoFilePath))
+                    {
+                        continue;
+                    }
+                    _geodata.LoadRegion(geoFilePath, regionX, regionY);
+                    loaded++;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggerManager.Error(ex.Message);
+        }
+        LoggerManager.Info("GeoEngine: Loaded " + loaded + " GeoData files.");
+    }
+
+    /// <summary>
+    /// Check if geo coordinates has geo.
+    /// </summary>
+    /// <param name="geoX"></param>
+    /// <param name="geoY"></param>
+    /// <returns></returns>
+    public bool HasGeoPos(int geoX, int geoY)
+    {
+        return _geodata.HasGeoPos(geoX, geoY);
+    }
+        
+    public bool CheckNearestNswe(int geoX, int geoY, int worldZ, int nswe)
+    {
+        return _geodata.CheckNearestNswe(geoX, geoY, worldZ, nswe);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="geoX"></param>
+    /// <param name="geoY"></param>
+    /// <param name="worldZ"></param>
+    /// <param name="nswe"></param>
+    /// <returns></returns>
+    public bool CheckNearestNsweAntiCornerCut(int geoX, int geoY, int worldZ, int nswe)
+    {
+        bool can = true;
+        if ((nswe & Cell.NSWE_NORTH_EAST) == Cell.NSWE_NORTH_EAST)
+        {
+            // can = canEnterNeighbors(prevX, prevY - 1, prevGeoZ, Direction.EAST) && canEnterNeighbors(prevX + 1, prevY, prevGeoZ, Direction.NORTH);
+            can = CheckNearestNswe(geoX, geoY - 1, worldZ, Cell.NSWE_EAST) && CheckNearestNswe(geoX + 1, geoY, worldZ, Cell.NSWE_NORTH);
+        }
+		
+        if (can && ((nswe & Cell.NSWE_NORTH_WEST) == Cell.NSWE_NORTH_WEST))
+        {
+            // can = canEnterNeighbors(prevX, prevY - 1, prevGeoZ, Direction.WEST) && canEnterNeighbors(prevX - 1, prevY, prevGeoZ, Direction.NORTH);
+            can = CheckNearestNswe(geoX, geoY - 1, worldZ, Cell.NSWE_WEST) && CheckNearestNswe(geoX, geoY - 1, worldZ, Cell.NSWE_NORTH);
+        }
+		
+        if (can && ((nswe & Cell.NSWE_SOUTH_EAST) == Cell.NSWE_SOUTH_EAST))
+        {
+            // can = canEnterNeighbors(prevX, prevY + 1, prevGeoZ, Direction.EAST) && canEnterNeighbors(prevX + 1, prevY, prevGeoZ, Direction.SOUTH);
+            can = CheckNearestNswe(geoX, geoY + 1, worldZ, Cell.NSWE_EAST) && CheckNearestNswe(geoX + 1, geoY, worldZ, Cell.NSWE_SOUTH);
+        }
+		
+        if (can && ((nswe & Cell.NSWE_SOUTH_WEST) == Cell.NSWE_SOUTH_WEST))
+        {
+            // can = canEnterNeighbors(prevX, prevY + 1, prevGeoZ, Direction.WEST) && canEnterNeighbors(prevX - 1, prevY, prevGeoZ, Direction.SOUTH);
+            can = CheckNearestNswe(geoX, geoY + 1, worldZ, Cell.NSWE_WEST) && CheckNearestNswe(geoX - 1, geoY, worldZ, Cell.NSWE_SOUTH);
+        }
+		
+        return can && CheckNearestNswe(geoX, geoY, worldZ, nswe);
+    }
+    
+    public void CetNearestNswe(int geoX, int geoY, int worldZ, byte nswe)
+    {
+        _geodata.SetNearestNswe(geoX, geoY, worldZ, nswe);
+    }
+    
+    public void UnsetNearestNswe(int geoX, int geoY, int worldZ, byte nswe)
+    {
+        _geodata.UnsetNearestNswe(geoX, geoY, worldZ, nswe);
+    }
+    
+    public int GetNearestZ(int geoX, int geoY, int worldZ)
+    {
+        return _geodata.GetNearestZ(geoX, geoY, worldZ);
+    }
+    
+    public int GetNextLowerZ(int geoX, int geoY, int worldZ)
+    {
+        return _geodata.GetNextLowerZ(geoX, geoY, worldZ);
+    }
+    
+    public int GetNextHigherZ(int geoX, int geoY, int worldZ)
+    {
+        return _geodata.GetNextHigherZ(geoX, geoY, worldZ);
+    }
+    
+    public int GetGeoX(int worldX)
+    {
+        return _geodata.GetGeoX(worldX);
+    }
+    
+    public int GetGeoY(int worldY)
+    {
+        return _geodata.GetGeoY(worldY);
+    }
+
+    public int GetWorldX(int geoX)
+    {
+        return _geodata.GetWorldX(geoX);
+    }
+    
+    public int GetWorldY(int geoY)
+    {
+        return _geodata.GetWorldY(geoY);
+    }
+    
+    public RegionAbstract GetRegion(int geoX, int geoY)
+    {
+        return _geodata.GetRegion(geoX, geoY);
+    }
+    
+    public void SetRegion(int regionX, int regionY, Region region)
+    {
+        _geodata.SetRegion(regionX, regionY, region);
+    }
+    
+    public int GetHeight(int x, int y, int z)
+    {
+        return GetNearestZ(GetGeoX(x), GetGeoY(y), z);
+    }
+    
+    public int GetSpawnHeight(int x, int y, int z)
+    {
+        var geoX = GetGeoX(x);
+        var geoY = GetGeoY(y);
+		
+        if (!HasGeoPos(geoX, geoY))
+        {
+            return z;
+        }
+		
+        var nextLowerZ = GetNextLowerZ(geoX, geoY, z + 20);
+        return Math.Abs(nextLowerZ - z) <= SPAWN_Z_DELTA_LIMIT ? nextLowerZ : z;
+    }
+    
+    public int GetSpawnHeight(Location location)
+    {
+        return GetSpawnHeight(location.GetX(), location.GetY(), location.GetZ());
+    }
+
+    public Location GetValidLocation(Location origin, Location destination)
+    {
+        return GetValidLocation(origin.GetX(), origin.GetY(), origin.GetZ(), destination.GetX(), destination.GetY(), destination.GetZ(), 0);
+    }
+    
+    public Location GetValidLocation(int x, int y, int z, int tx, int ty, int tz, int instanceId)
+    {
+        var geoX = GetGeoX(x);
+        var geoY = GetGeoY(y);
+        var nearestFromZ = GetNearestZ(geoX, geoY, z);
+        var tGeoX = GetGeoX(tx);
+        var tGeoY = GetGeoY(ty);
+        var nearestToZ = GetNearestZ(tGeoX, tGeoY, tz);
+
+        // Door checks.
+        /*
+        if (DoorData.getInstance().checkIfDoorsBetween(x, y, nearestFromZ, tx, ty, nearestToZ, instanceId, false))
+        {
+            return new Location(x, y, getHeight(x, y, nearestFromZ));
+        }
+        */
+		
+        // Fence checks.
+        /*
+        if (FenceData.getInstance().checkIfFenceBetween(x, y, nearestFromZ, tx, ty, nearestToZ, instanceId))
+        {
+            return new Location(x, y, getHeight(x, y, nearestFromZ));
+        }
+        */
+		
+        LinePointIterator pointIter = new LinePointIterator(geoX, geoY, tGeoX, tGeoY);
+        // first point is guaranteed to be available
+        pointIter.Next();
+        int prevX = pointIter.X();
+        int prevY = pointIter.Y();
+        int prevZ = nearestFromZ;
+		
+        while (pointIter.Next())
+        {
+            int curX = pointIter.X();
+            int curY = pointIter.Y();
+            int curZ = GetNearestZ(curX, curY, prevZ);
+            if (HasGeoPos(prevX, prevY) && !CheckNearestNsweAntiCornerCut(prevX, prevY, prevZ, GeoUtils.ComputeNswe(prevX, prevY, curX, curY)))
+            {
+                // Can't move, return previous location.
+                return new Location(GetWorldX(prevX), GetWorldY(prevY), prevZ);
+            }
+            prevX = curX;
+            prevY = curY;
+            prevZ = curZ;
+        }
+        return HasGeoPos(prevX, prevY) && (prevZ != nearestToZ) ? new Location(x, y, nearestFromZ) : new Location(tx, ty, nearestToZ);
+    }
+    
+    private int GetLosGeoZ(int prevX, int prevY, int prevGeoZ, int curX, int curY, int nswe)
+    {
+        if ((((nswe & Cell.NSWE_NORTH) != 0) && ((nswe & Cell.NSWE_SOUTH) != 0)) || (((nswe & Cell.NSWE_WEST) != 0) && ((nswe & Cell.NSWE_EAST) != 0)))
+        {
+            throw new Exception("Multiple directions!");
+        }
+        return CheckNearestNsweAntiCornerCut(prevX, prevY, prevGeoZ, nswe) ? GetNearestZ(curX, curY, prevGeoZ) : GetNextHigherZ(curX, curY, prevGeoZ);
+    }
+    
+    public int TraceTerrainZ(int x, int y, int z1, int tx, int ty)
+    {
+        int geoX = GetGeoX(x);
+        int geoY = GetGeoY(y);
+        int nearestFromZ = GetNearestZ(geoX, geoY, z1);
+        int tGeoX = GetGeoX(tx);
+        int tGeoY = GetGeoY(ty);
+		
+        LinePointIterator pointIter = new LinePointIterator(geoX, geoY, tGeoX, tGeoY);
+        // First point is guaranteed to be available.
+        pointIter.Next();
+        int prevZ = nearestFromZ;
+		
+        while (pointIter.Next())
+        {
+            prevZ = GetNearestZ(pointIter.X(), pointIter.Y(), prevZ);
+        }
+		
+        return prevZ;
+    }
+    
+    public bool HasGeo(int x, int y)
+    {
+        return HasGeoPos(GetGeoX(x), GetGeoY(y));
+    }
+    
+    public bool CanSeeTarget(int x, int y, int z, int tx, int ty, int tz)
+	{
+		int geoX = GetGeoX(x);
+		int geoY = GetGeoY(y);
+		int tGeoX = GetGeoX(tx);
+		int tGeoY = GetGeoY(ty);
+		
+		int nearestFromZ = GetNearestZ(geoX, geoY, z);
+		int nearestToZ = GetNearestZ(tGeoX, tGeoY, tz);
+		
+		// Fastpath.
+		if ((geoX == tGeoX) && (geoY == tGeoY))
+		{
+			return !HasGeoPos(tGeoX, tGeoY) || (nearestFromZ == nearestToZ);
+		}
+		
+		int fromX = tx;
+		int fromY = ty;
+		int toX = tx;
+		int toY = ty;
+		if (nearestToZ > nearestFromZ)
+		{
+			int tmp = toX;
+			toX = fromX;
+			fromX = tmp;
+			
+			tmp = toY;
+			toY = fromY;
+			fromY = tmp;
+			
+			tmp = nearestToZ;
+			nearestToZ = nearestFromZ;
+			nearestFromZ = tmp;
+			
+			tmp = tGeoX;
+			tGeoX = geoX;
+			geoX = tmp;
+			
+			tmp = tGeoY;
+			tGeoY = geoY;
+			geoY = tmp;
+		}
+		
+		LinePointIterator3D pointIter = new LinePointIterator3D(geoX, geoY, nearestFromZ, tGeoX, tGeoY, nearestToZ);
+		// First point is guaranteed to be available, skip it, we can always see our own position.
+		pointIter.next();
+		int prevX = pointIter.x();
+		int prevY = pointIter.y();
+		int prevZ = pointIter.z();
+		int prevGeoZ = prevZ;
+		int ptIndex = 0;
+		while (pointIter.next())
+		{
+			int curX = pointIter.x();
+			int curY = pointIter.y();
+			
+			if ((curX == prevX) && (curY == prevY))
+			{
+				continue;
+			}
+			
+			int beeCurZ = pointIter.z();
+			int curGeoZ = prevGeoZ;
+			
+			// Check if the position has geodata.
+			if (HasGeoPos(curX, curY))
+			{
+				int nswe = GeoUtils.ComputeNswe(prevX, prevY, curX, curY);
+				curGeoZ = GetLosGeoZ(prevX, prevY, prevGeoZ, curX, curY, nswe);
+				int maxHeight = ptIndex < ELEVATED_SEE_OVER_DISTANCE ? nearestFromZ + MAX_SEE_OVER_HEIGHT : beeCurZ + MAX_SEE_OVER_HEIGHT;
+				bool canSeeThrough = false;
+				if (curGeoZ <= maxHeight)
+				{
+					if ((nswe & Cell.NSWE_NORTH_EAST) == Cell.NSWE_NORTH_EAST)
+					{
+						int northGeoZ = GetLosGeoZ(prevX, prevY, prevGeoZ, prevX, prevY - 1, Cell.NSWE_EAST);
+						int eastGeoZ = GetLosGeoZ(prevX, prevY, prevGeoZ, prevX + 1, prevY, Cell.NSWE_NORTH);
+						canSeeThrough = (northGeoZ <= maxHeight) && (eastGeoZ <= maxHeight) && (northGeoZ <= GetNearestZ(prevX, prevY - 1, beeCurZ)) && (eastGeoZ <= GetNearestZ(prevX + 1, prevY, beeCurZ));
+					}
+					else if ((nswe & Cell.NSWE_NORTH_WEST) == Cell.NSWE_NORTH_WEST)
+					{
+						int northGeoZ = GetLosGeoZ(prevX, prevY, prevGeoZ, prevX, prevY - 1, Cell.NSWE_WEST);
+						int westGeoZ = GetLosGeoZ(prevX, prevY, prevGeoZ, prevX - 1, prevY, Cell.NSWE_NORTH);
+						canSeeThrough = (northGeoZ <= maxHeight) && (westGeoZ <= maxHeight) && (northGeoZ <= GetNearestZ(prevX, prevY - 1, beeCurZ)) && (westGeoZ <= GetNearestZ(prevX - 1, prevY, beeCurZ));
+					}
+					else if ((nswe & Cell.NSWE_SOUTH_EAST) == Cell.NSWE_SOUTH_EAST)
+					{
+						int southGeoZ = GetLosGeoZ(prevX, prevY, prevGeoZ, prevX, prevY + 1, Cell.NSWE_EAST);
+						int eastGeoZ = GetLosGeoZ(prevX, prevY, prevGeoZ, prevX + 1, prevY, Cell.NSWE_SOUTH);
+						canSeeThrough = (southGeoZ <= maxHeight) && (eastGeoZ <= maxHeight) && (southGeoZ <= GetNearestZ(prevX, prevY + 1, beeCurZ)) && (eastGeoZ <= GetNearestZ(prevX + 1, prevY, beeCurZ));
+					}
+					else if ((nswe & Cell.NSWE_SOUTH_WEST) == Cell.NSWE_SOUTH_WEST)
+					{
+						int southGeoZ = GetLosGeoZ(prevX, prevY, prevGeoZ, prevX, prevY + 1, Cell.NSWE_WEST);
+						int westGeoZ = GetLosGeoZ(prevX, prevY, prevGeoZ, prevX - 1, prevY, Cell.NSWE_SOUTH);
+						canSeeThrough = (southGeoZ <= maxHeight) && (westGeoZ <= maxHeight) && (southGeoZ <= GetNearestZ(prevX, prevY + 1, beeCurZ)) && (westGeoZ <= GetNearestZ(prevX - 1, prevY, beeCurZ));
+					}
+					else
+					{
+						canSeeThrough = true;
+					}
+				}
+				
+				if (!canSeeThrough)
+				{
+					return false;
+				}
+			}
+			
+			prevX = curX;
+			prevY = curY;
+			prevGeoZ = curGeoZ;
+			++ptIndex;
+		}
+		return true;
+	}
 }
