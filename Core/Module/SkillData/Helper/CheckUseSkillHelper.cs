@@ -36,9 +36,9 @@ namespace Core.Module.SkillData.Helper
 
         private static bool CanSeeTarget(Character currentInstance, Character targetInstance)
         {
-            return currentInstance.ServiceProvider.GetRequiredService<GeoEngineInit>().CanSee(currentInstance.GetX(),
-                currentInstance.GetY(), currentInstance.GetZ(), 33,
-                targetInstance.GetX(), targetInstance.GetY(), targetInstance.GetZ(), 33
+            return currentInstance.ServiceProvider.GetRequiredService<GeoEngineInit>().CanSeeTarget(currentInstance.GetX(),
+                currentInstance.GetY(), currentInstance.GetZ(),
+                targetInstance.GetX(), targetInstance.GetY(), targetInstance.GetZ()
             );
         }
     }

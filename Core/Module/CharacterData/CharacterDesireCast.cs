@@ -50,9 +50,8 @@ namespace Core.Module.CharacterData
                 return;
             }
             
-            if (!_geoEngine.CanSee(_character.GetX(), _character.GetY(), _character.GetZ(),
-                    _character.CharacterCombat().GetCollisionHeight(),
-                    target.GetX(), target.GetY(), target.GetZ(), target.CharacterCombat().GetCollisionHeight()
+            if (!_geoEngine.CanSeeTarget(_character.GetX(), _character.GetY(), _character.GetZ(),
+                    target.GetX(), target.GetY(), target.GetZ()
                 )
                ) {
                 await _character.SendPacketAsync(new SystemMessage(SystemMessageId.CantSeeTarget));

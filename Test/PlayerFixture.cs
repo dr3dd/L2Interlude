@@ -31,7 +31,7 @@ public class PlayerInstanceFixture
         _serviceProvider.GetRequiredService<ObjectIdInit>();
         _serviceProvider.GetRequiredService<WorldInit>().Run();
         _serviceProvider.GetRequiredService<AreaDataInit>().Run();
-        _serviceProvider.GetRequiredService<GeoEngineInit>();
+        _serviceProvider.GetRequiredService<GeoEngineInit>().Run();
         _serviceProvider.GetRequiredService<GameTimeController>();
         _serviceProvider.GetRequiredService<PcParameterInit>().Run();
         _serviceProvider.GetRequiredService<ItemPchInit>().Run();
