@@ -57,4 +57,19 @@ public class PlayerMovementTest : IClassFixture<PlayerInstanceFixture>
         var canSee = _geoEngine.CanSeeTarget(chaX, chaY, chaZ, tarX, tarY, tarZ);
         Assert.False(canSee);
     }
+
+    [Fact]
+    public void CanFindPathTest()
+    {
+        var chaX = -71153;
+        var chaY = 258305;
+        var chaZ = -3104;
+
+        var tarX = -71953;
+        var tarY = 258905;
+        var tarZ = -3154;
+
+        var dd = _geoEngine.CellPathFinding().FindPath(chaX, chaY, chaZ, tarX, tarY, tarZ, 1, true);
+        var d = 1;
+    }
 }
