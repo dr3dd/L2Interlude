@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Config;
+using Core.GeoEngine.Pathfinding.CellNodes;
 using Core.GeoEngine.Regions;
 using Core.Module.CharacterData;
 using Core.Module.DoorData;
@@ -25,8 +26,10 @@ public class GeoEngineInit
     private const int TILE_Y_MAX = 25;
         
     private GeoData _geodata;
+    private CellPathFinding _pathFinding;
 
     private IServiceProvider _provider; 
+    
     public GeoEngineInit(IServiceProvider provider)
     {
         _basePath = provider.GetRequiredService<GameConfig>().ServerConfig.StaticData;
@@ -35,7 +38,12 @@ public class GeoEngineInit
         _worldInit = provider.GetRequiredService<WorldInit>();
         _geodata = new GeoData();
         _provider = provider;
+        _pathFinding = new CellPathFinding(this);
     }
+
+    public WorldInit GetWorldInit() => _worldInit;
+
+    public CellPathFinding CellPathFinding() => _pathFinding;
 
     public void Run()
     {
@@ -117,7 +125,7 @@ public class GeoEngineInit
         return can && CheckNearestNswe(geoX, geoY, worldZ, nswe);
     }
     
-    public void CetNearestNswe(int geoX, int geoY, int worldZ, byte nswe)
+    public void SetNearestNswe(int geoX, int geoY, int worldZ, byte nswe)
     {
         _geodata.SetNearestNswe(geoX, geoY, worldZ, nswe);
     }
@@ -400,5 +408,51 @@ public class GeoEngineInit
 			++ptIndex;
 		}
 		return true;
+	}
+
+	public bool CanMoveToTarget(int fromX, int fromY, int fromZ, int toX, int toY, int toZ, int instanceId)
+	{
+		int geoX = GetGeoX(fromX);
+		int geoY = GetGeoY(fromY);
+		int nearestFromZ = GetNearestZ(geoX, geoY, fromZ);
+		int tGeoX = GetGeoX(toX);
+		int tGeoY = GetGeoY(toY);
+		int nearestToZ = GetNearestZ(tGeoX, tGeoY, toZ);
+		
+		// Door checks.
+		/*
+		if (DoorData.getInstance().checkIfDoorsBetween(fromX, fromY, nearestFromZ, toX, toY, nearestToZ, instanceId, false))
+		{
+			return false;
+		}
+		
+		// Fence checks.
+		if (FenceData.getInstance().checkIfFenceBetween(fromX, fromY, nearestFromZ, toX, toY, nearestToZ, instanceId))
+		{
+			return false;
+		}
+		*/
+		
+		LinePointIterator pointIter = new LinePointIterator(geoX, geoY, tGeoX, tGeoY);
+		// First point is guaranteed to be available.
+		pointIter.Next();
+		int prevX = pointIter.X();
+		int prevY = pointIter.Y();
+		int prevZ = nearestFromZ;
+		
+		while (pointIter.Next())
+		{
+			int curX = pointIter.X();
+			int curY = pointIter.Y();
+			int curZ = GetNearestZ(curX, curY, prevZ);
+			if (HasGeoPos(prevX, prevY) && !CheckNearestNsweAntiCornerCut(prevX, prevY, prevZ, GeoUtils.ComputeNswe(prevX, prevY, curX, curY)))
+			{
+				return false;
+			}
+			prevX = curX;
+			prevY = curY;
+			prevZ = curZ;
+		}
+		return !HasGeoPos(prevX, prevY) || (prevZ == nearestToZ);
 	}
 }
