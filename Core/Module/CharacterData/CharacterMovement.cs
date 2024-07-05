@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Core.Controller;
 using Core.GeoEngine;
 using Core.GeoEngine.Pathfinding;
+using Core.Module.AreaData;
 using Core.Module.NpcData;
 using Core.Module.Player;
 using Core.Module.WorldData;
@@ -39,27 +40,45 @@ namespace Core.Module.CharacterData
             _geoEngineInit = _character.ServiceProvider.GetRequiredService<GeoEngineInit>();
         }
         
-        public void MoveToLocation(int x, int y, int z, int offset)
+        public async Task MoveToLocation(int x, int y, int z, int offset)
         {
             // Get the Move Speed of the Creature
             var speed = _character.CharacterCombat().GetCharacterSpeed();
+            if ((speed <= 0))
+            {
+                await _character.SendActionFailedPacketAsync();
+                return;
+            }
             
             // Get current position of the Creature
-            int curX = _character.GetX();
-            int curY = _character.GetY();
-            int curZ = _character.GetZ();
+            var curX = _character.GetX();
+            var curY = _character.GetY();
+            var curZ = _character.GetZ();
 
             //LoggerManager.Info($"curSpeed: {speed} curX: {curX} curY: {curY} curZ: {curZ} distX: {x} distY: {y} distZ: {z}");
             
             double dx = (x - curX);
             double dy = (y - curY);
             double dz = (z - curZ);
-            double distance = Utility.Hypot(dx,dy);
+            var distance = Utility.Hypot(dx,dy);
             
             double cos;
             double sin;
 
             bool verticalMovementOnly = false;
+            
+            var isInWater = _character.CharacterZone().IsInsideZone(AreaId.Water);
+            if (isInWater && (distance > 700))
+            {
+                var divider = 700 / distance;
+                x = curX + (int) (divider * dx);
+                y = curY + (int) (divider * dy);
+                z = curZ + (int) (divider * dz);
+                dx = (x - curX);
+                dy = (y - curY);
+                dz = (z - curZ);
+                distance = Utility.Hypot(dx, dy);
+            }
             
             // Check if a movement offset is defined or no distance to go through
             if ((offset > 0) || (distance < 1))
@@ -99,15 +118,15 @@ namespace Core.Module.CharacterData
             // Create and Init a MoveData object
             // GEODATA MOVEMENT CHECKS AND PATHFINDING
             // Initialize not on geodata path
-            MoveData m = new MoveData {OnGeodataPathIndex = -1, DisregardingGeodata = false};
+            var m = new MoveData {OnGeodataPathIndex = -1, DisregardingGeodata = false};
             
-            double originalDistance = distance;
-            int originalX = x;
-            int originalY = y;
-            int originalZ = z;
+            var originalDistance = distance;
+            var originalX = x;
+            var originalY = y;
+            var originalZ = z;
             
-            int gtx = (originalX - _worldInit.MapMinX) >> 4;
-            int gty = (originalY - _worldInit.MapMinY) >> 4;
+            var gtx = (originalX - _worldInit.MapMinX) >> 4;
+            var gty = (originalY - _worldInit.MapMinY) >> 4;
             if (IsOnGeoDataPath())
             {
                 try
@@ -124,6 +143,20 @@ namespace Core.Module.CharacterData
                     LoggerManager.Error( "IsOnGeoDataPath" + ex.Message);
                 }
             }
+
+                // location different if destination wasn't reached (or just z coord is different)
+                var destiny = _geoEngineInit.GetValidLocation(curX, curY, curZ, x, y, z, _character.ObjectId);
+                x = destiny.GetX();
+                y = destiny.GetY();
+                if (_character is NpcInstance)
+                {
+                    z = destiny.GetZ();
+                }
+                dx = x - curX;
+                dy = y - curY;
+                dz = z - curZ;
+                distance = verticalMovementOnly ? Math.Pow(dz, 2) : Utility.Hypot(dx, dy);
+
             
             // Pathfinding checks.
             if (((originalDistance - distance) > 30))
@@ -131,7 +164,7 @@ namespace Core.Module.CharacterData
                 m.GeoPath =  _geoEngineInit.CellPathFinding().FindPath(curX, curY, curZ, originalX, originalY, originalZ, _character.ObjectId, true);
                 var found = (m.GeoPath != null) && (m.GeoPath.Count > 1);
 
-                if (!found && _character is NpcInstance)
+                if (!found)
                 {
                     var xMin = Math.Min(curX, originalX);
                     var xMax = Math.Max(curX, originalX);
@@ -195,7 +228,7 @@ namespace Core.Module.CharacterData
                 {
                     if (_character is PlayerInstance playerInstance)
                     {
-                        playerInstance.SendActionFailedPacketAsync();
+                        await playerInstance.SendActionFailedPacketAsync();
                         return;
                     }
 
@@ -212,7 +245,7 @@ namespace Core.Module.CharacterData
             if ((distance < 1) && _character is NpcInstance npc)
             {
                 npc.NpcDesire().AddDesire(Desire.IdleDesire, npc);
-                npc.SendActionFailedPacketAsync();
+                await npc.SendActionFailedPacketAsync();
                 return;
             }
 
@@ -233,7 +266,6 @@ namespace Core.Module.CharacterData
             
             _timeController.RegisterMovingObject(_character);
             
-            
             // Create a task to notify the AI that Creature arrives at a check point of the movement
             if ((ticksToMove * _timeController.MillisInTick) > 3000)
             {
@@ -246,10 +278,10 @@ namespace Core.Module.CharacterData
         
         public async Task<bool> UpdatePosition(int gameTicks)
         {
-            MoveData m = _move;
+            var m = _move;
             if (m == null)
             {
-                return true;
+                return await Task.FromResult(true);
             }
             
             // Check if the position has already be calculated
@@ -262,7 +294,7 @@ namespace Core.Module.CharacterData
             // Check if the position has already be calculated
             if (m.MoveTimestamp == gameTicks)
             {
-                return false;
+                return await Task.FromResult(false);
             }
             
             int xPrev = _character.GetX();
@@ -295,7 +327,12 @@ namespace Core.Module.CharacterData
                     if (!_geoEngineInit.CanMoveToTarget(xPrev, yPrev, zPrev, x, y, zPrev, _character.ObjectId))
                     {
                         _move.OnGeodataPathIndex = -1;
-                        return false;
+                        if ( _character.CharacterDesire().IsFollowing())
+                        {
+                            _character.CharacterDesire().StopFollow();
+                        }
+                        _character.CharacterDesire().AddDesire(Desire.IdleDesire, _character);
+                        return await Task.FromResult(false);
                     }
                 }
                 else
@@ -317,8 +354,9 @@ namespace Core.Module.CharacterData
             {
                 delta = Math.Sqrt(delta + (dz * dz));
             }
+            var collision = _character.CharacterCombat().GetCollisionRadius();
             
-            delta = Math.Max(0.00001, delta - 33);
+            delta = Math.Max(0.00001, delta - collision);
             var distFraction = double.MaxValue;
             if (delta > 1)
             {
@@ -346,11 +384,12 @@ namespace Core.Module.CharacterData
             _character.CharacterZone().RevalidateZone();
             if (((gameTicks - m.LastBroadcastTime) >= 3) && IsOnGeoDataPath(m))
             {
+                m.LastBroadcastTime = gameTicks;
                 await _character.SendToKnownPlayers(new CharMoveToLocation(_character));
             }
             //await _character.SendToKnownPlayers(new CharMoveToLocation(_character));
 		
-            return await Task.FromResult(distFraction > 1);
+            return await Task.FromResult(distFraction > 1.79);
         }
         
         public async Task<bool> MoveToNextRoutePoint()

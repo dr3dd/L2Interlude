@@ -6,6 +6,7 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5212926a_002Dfa4b_002D44d8_002Db7c6_002D23ec0a743e0f/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="CanFindPathTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::9BA1548D-81C5-4793-B2D7-E070D0DAAB47::net6.0::Test.PlayerMovementTest.CanFindPathTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::9BA1548D-81C5-4793-B2D7-E070D0DAAB47::net6.0::Test.PlayerMovementTest.MoveToLocationTest&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=6fc46fad_002D2a51_002D4bd3_002Db7ed_002Dc906369efd8c/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AddSongOfWindTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;

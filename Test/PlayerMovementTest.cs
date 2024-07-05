@@ -21,6 +21,7 @@ public class PlayerMovementTest : IClassFixture<PlayerInstanceFixture>
     public void MoveToLocationTest()
     {
         _playerInstance.Location = new Location(-71453, 258305, -3104);
+        _playerInstance.WorldObjectPosition().SetWorldPosition(-71453, 258305, -3104);
         _playerInstance.CharacterMovement().MoveToLocation(-71953, 258905, -3154, 0);
             
         Assert.Equal(-71953, _playerInstance.CharacterMovement().GetXDestination());
