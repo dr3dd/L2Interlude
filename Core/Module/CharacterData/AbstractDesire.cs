@@ -100,7 +100,7 @@ namespace Core.Module.CharacterData
             // Set AI movement data
             _clientMoving = true;
             _clientMovingToPawnOffset = 0;
-            _character.CharacterMovement().MoveToLocation(x, y, z, 0);
+            await _character.CharacterMovement().MoveToLocation(x, y, z, 0);
             await _character.SendPacketAsync(new CharMoveToLocation(_character));
             await _character.SendToKnownPlayers(new CharMoveToLocation(_character));
         }
@@ -152,7 +152,7 @@ namespace Core.Module.CharacterData
             _moveToPawnTimeout = Initializer.TimeController().GetGameTicks();
             _moveToPawnTimeout += /* 1000 */ 200 / Initializer.TimeController().MillisInTick;
             // Calculate movement data for a move to location action and add the actor to movingObjects of GameTimeController
-            _character.CharacterMovement().MoveToLocation(pawn.GetX(), pawn.GetY(), pawn.GetZ(), offset);
+            await _character.CharacterMovement().MoveToLocation(pawn.GetX(), pawn.GetY(), pawn.GetZ(), offset);
             if (!_character.CharacterMovement().IsMoving)
             {
                 return;
@@ -229,6 +229,11 @@ namespace Core.Module.CharacterData
         {
             CharacterFollowTaskManager.Instance.Remove(_character);
             FollowTarget = null;
+        }
+        
+        public bool IsFollowing()
+        {
+            return (FollowTarget != null) && ((_desire == Desire.FollowDesire) || CharacterFollowTaskManager.Instance.IsFollowing(_character));
         }
         
         public async Task StartFollowAsync(Character target, int range)

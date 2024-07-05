@@ -104,6 +104,11 @@ namespace Core.TaskManager
             }
         }
         
+        public bool IsFollowing(Character character)
+        {
+            return _normalFollowCharacters.ContainsKey(character) || _attackFollowCharacters.ContainsKey(character);
+        }
+        
         public async Task AddNormalFollow(Character character, int range)
         {
             await Follow(character, range);
