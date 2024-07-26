@@ -80,7 +80,7 @@ namespace Core.Controller
                 
                 if (oldTicks != GameTicks)
                 {
-                    await MoveObjects();
+                    //await MoveObjects();
                 }
         
                 //LoggerManager.Info("TICK:" + GameTicks);
@@ -98,7 +98,7 @@ namespace Core.Controller
                     if (character is null)
                         continue;
                     // Update the position of the Character and return True if the movement is finished
-                    var end = await character.CharacterMovement().UpdatePosition(GameTicks);
+                    var end = await character.CharacterMovement().UpdatePosition();
                     // If movement is finished, the Character is removed from movingObjects and added to the ArrayList ended
                     if (end)
                     {

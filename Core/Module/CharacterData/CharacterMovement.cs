@@ -264,7 +264,7 @@ namespace Core.Module.CharacterData
             // Set the Creature _move object to MoveData object
             _move = m;
             
-            _timeController.RegisterMovingObject(_character);
+            await MovementTaskManager.Instance.RegisterMovingObject(_character);
             
             // Create a task to notify the AI that Creature arrives at a check point of the movement
             if ((ticksToMove * _timeController.MillisInTick) > 3000)
@@ -276,7 +276,7 @@ namespace Core.Module.CharacterData
             }
         }
         
-        public async Task<bool> UpdatePosition(int gameTicks)
+        public async Task<bool> UpdatePosition()
         {
             var m = _move;
             if (m == null)
@@ -292,6 +292,7 @@ namespace Core.Module.CharacterData
                 m.YAccurate = _character.GetY();
             }
             // Check if the position has already be calculated
+            var gameTicks = _timeController.GetGameTicks();
             if (m.MoveTimestamp == gameTicks)
             {
                 return await Task.FromResult(false);
@@ -392,9 +393,19 @@ namespace Core.Module.CharacterData
             return await Task.FromResult(distFraction > 1.79);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public async Task<bool> MoveToNextRoutePoint()
         {
-            if (!IsOnGeoDataPath())
+            var move = _move;
+            if (move == null)
+            {
+                await Task.FromResult(false);
+            }
+            
+            if (!IsOnGeoDataPath(move))
             {
                 // Cancel the move action
                 _move = null;
@@ -409,50 +420,50 @@ namespace Core.Module.CharacterData
                 _move = null;
                 await Task.FromResult(false);
             }
-            MoveData md = _move;
-            if (md == null)
-            {
-                await Task.FromResult(false);
-            }
+            
+            // Get current position of the Creature
+            var curX = _character.GetX();
+            var curY = _character.GetY();
             
             // Create and Init a MoveData object
-            MoveData m = new MoveData();
-		
-            // Update MoveData object
-            m.OnGeodataPathIndex = md.OnGeodataPathIndex + 1; // next segment
-            m.GeoPath = md.GeoPath;
-            m.GeoPathGtx = md.GeoPathGtx;
-            m.GeoPathGty = md.GeoPathGty;
-            m.GeoPathAccurateTx = md.GeoPathAccurateTx;
-            m.GeoPathAccurateTy = md.GeoPathAccurateTy;
-            
-            if (md.OnGeodataPathIndex == (md.GeoPath.Count - 2))
+            var newMove = new MoveData
             {
-                m.XDestination = md.GeoPathAccurateTx;
-                m.YDestination = md.GeoPathAccurateTy;
-                m.ZDestination = md.GeoPath.ElementAt(m.OnGeodataPathIndex).GetZ();
+                // Update MoveData object
+                OnGeodataPathIndex = move.OnGeodataPathIndex + 1, // next segment
+                GeoPath = move.GeoPath,
+                GeoPathGtx = move.GeoPathGtx,
+                GeoPathGty = move.GeoPathGty,
+                GeoPathAccurateTx = move.GeoPathAccurateTx,
+                GeoPathAccurateTy = move.GeoPathAccurateTy
+            };
+
+            if (move.OnGeodataPathIndex == (move.GeoPath.Count - 2))
+            {
+                newMove.XDestination = move.GeoPathAccurateTx;
+                newMove.YDestination = move.GeoPathAccurateTy;
+                newMove.ZDestination = move.GeoPath.ElementAt(newMove.OnGeodataPathIndex).GetZ();
             }
             else
             {
-                m.XDestination = md.GeoPath.ElementAt(m.OnGeodataPathIndex).GetX();
-                m.YDestination = md.GeoPath.ElementAt(m.OnGeodataPathIndex).GetY();
-                m.ZDestination = md.GeoPath.ElementAt(m.OnGeodataPathIndex).GetZ();
+                newMove.XDestination = move.GeoPath.ElementAt(newMove.OnGeodataPathIndex).GetX();
+                newMove.YDestination = move.GeoPath.ElementAt(newMove.OnGeodataPathIndex).GetY();
+                newMove.ZDestination = move.GeoPath.ElementAt(newMove.OnGeodataPathIndex).GetZ();
             }
-            var distance = Utility.Hypot(m.XDestination - _character.GetX(), m.YDestination - _character.GetY());
+            var distance = Utility.Hypot(newMove.XDestination - _character.GetX(), newMove.YDestination - _character.GetY());
             // Calculate and set the heading of the Creature
             if (distance != 0)
             {
-                _character.Heading = CalculateRange.CalculateHeadingFrom(_character.GetX(), _character.GetY(), m.XDestination, m.YDestination);
+                _character.Heading = CalculateRange.CalculateHeadingFrom(_character.GetX(), _character.GetY(), newMove.XDestination, newMove.YDestination);
             }
             
             // Calculate the number of ticks between the current position and the destination
             // One tick added for rounding reasons
-            int ticksToMove = 1 + (int) ((_timeController.TicksPerSecond * distance) / speed);
-            m.Heading = 0; // initial value for coordinate sync
-            m.MoveStartTime = _timeController.GetGameTicks();
+            var ticksToMove = 1 + (int) ((_timeController.TicksPerSecond * distance) / speed);
+            newMove.Heading = 0; // initial value for coordinate sync
+            newMove.MoveStartTime = _timeController.GetGameTicks();
             // Set the Creature _move object to MoveData object
-            _move = m;
-            _timeController.RegisterMovingObject(_character);
+            _move = newMove;
+            await MovementTaskManager.Instance.RegisterMovingObject(_character);
             
             // Create a task to notify the AI that Creature arrives at a check point of the movement
             if ((ticksToMove * _timeController.TicksPerSecond) > 3000)
