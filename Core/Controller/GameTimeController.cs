@@ -80,7 +80,7 @@ namespace Core.Controller
                 
                 if (oldTicks != GameTicks)
                 {
-                    //await MoveObjects();
+                    await MoveObjects();
                 }
         
                 //LoggerManager.Info("TICK:" + GameTicks);
