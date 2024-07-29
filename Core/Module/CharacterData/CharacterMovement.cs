@@ -264,7 +264,7 @@ namespace Core.Module.CharacterData
             // Set the Creature _move object to MoveData object
             _move = m;
             
-            await MovementTaskManager.Instance.RegisterMovingObject(_character);
+            _timeController.RegisterMovingObject(_character);
             
             // Create a task to notify the AI that Creature arrives at a check point of the movement
             if ((ticksToMove * _timeController.MillisInTick) > 3000)
@@ -402,14 +402,14 @@ namespace Core.Module.CharacterData
             var move = _move;
             if (move == null)
             {
-                await Task.FromResult(false);
+                return await Task.FromResult(false);
             }
             
             if (!IsOnGeoDataPath(move))
             {
                 // Cancel the move action
                 _move = null;
-                return false;
+                return await Task.FromResult(false);
             }
             
             // Get the Move Speed of the Creature
@@ -418,12 +418,8 @@ namespace Core.Module.CharacterData
             {
                 // Cancel the move action
                 _move = null;
-                await Task.FromResult(false);
+                return await Task.FromResult(false);
             }
-            
-            // Get current position of the Creature
-            var curX = _character.GetX();
-            var curY = _character.GetY();
             
             // Create and Init a MoveData object
             var newMove = new MoveData
@@ -458,15 +454,15 @@ namespace Core.Module.CharacterData
             
             // Calculate the number of ticks between the current position and the destination
             // One tick added for rounding reasons
-            var ticksToMove = 1 + (int) ((_timeController.TicksPerSecond * distance) / speed);
+            var ticksToMove = (int) ((_timeController.TicksPerSecond * distance) / speed);
             newMove.Heading = 0; // initial value for coordinate sync
             newMove.MoveStartTime = _timeController.GetGameTicks();
             // Set the Creature _move object to MoveData object
             _move = newMove;
-            await MovementTaskManager.Instance.RegisterMovingObject(_character);
+            _timeController.RegisterMovingObject(_character);
             
             // Create a task to notify the AI that Creature arrives at a check point of the movement
-            if ((ticksToMove * _timeController.TicksPerSecond) > 3000)
+            if ((ticksToMove * _timeController.MillisInTick) > 3000)
             {
                 TaskManagerScheduler.Schedule(() =>
                 {
@@ -477,7 +473,9 @@ namespace Core.Module.CharacterData
             // the CtrlEvent.EVT_ARRIVED will be sent when the character will actually arrive to destination by GameTimeController
 		
             // Send a Server->Client packet CharMoveToLocation to the actor and all PlayerInstance in its _knownPlayers
-            await _character.SendToKnownPlayers(new CharMoveToLocation(_character));
+            var packet = new CharMoveToLocation(_character);
+            await _character.SendPacketAsync(packet);
+            await _character.SendToKnownPlayers(packet);
             return await Task.FromResult(true);
         }
         

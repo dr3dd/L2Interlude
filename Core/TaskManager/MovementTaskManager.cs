@@ -48,21 +48,28 @@ public class MovementTaskManager
             }
 
             var charactersToRemove = new List<Character>();
-            foreach (var character in _characters)
+            foreach (var character in _characters.ToArray())
             {
                 try
                 {
                     if (character == null)
                         continue;
 
-                    if (await character.CharacterMovement().UpdatePosition())
+                    var end = await character.CharacterMovement().UpdatePosition();
+                    if (end)
                     {
                         charactersToRemove.Add(character);
-                        character.CharacterNotifyEvent().NotifyEvent(CtrlEvent.EvtArrived);
                     }
-
                     await character.UpdateKnownObjects();
+                    if (character is PlayerInstance playerInstance)
+                    {
+                        await playerInstance.FindCloseNpc();
+                        await playerInstance.FindCloseDoor();
+                    }
                     await character.RemoveKnownObjects();
+
+                    //await character.UpdateKnownObjects();
+                    //await character.RemoveKnownObjects();
                 }
                 catch (Exception e)
                 {
@@ -70,9 +77,10 @@ public class MovementTaskManager
                     LoggerManager.Error("MovementTaskManager: Problem updating position of " + character + e.StackTrace);
                 }
             }
+            _characters.RemoveAll(c => charactersToRemove.Contains(c));
             foreach (var character in charactersToRemove)
             {
-                AllCharacters.TryRemove(character.ObjectId, out _);
+                character.CharacterNotifyEvent().NotifyEvent(CtrlEvent.EvtArrived);
             }
         }
     }

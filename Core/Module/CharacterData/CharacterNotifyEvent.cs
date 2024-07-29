@@ -57,7 +57,10 @@ namespace Core.Module.CharacterData
 
         public override async Task OnEvtArrivedRevalidate()
         {
-            await OnEvtThinkAsync();
+            if (_character.CharacterMovement().IsMoving)
+            {
+                await OnEvtThinkAsync();
+            }
         }
 
         public override async Task OnEvtReadyToAct()
