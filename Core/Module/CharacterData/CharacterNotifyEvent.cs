@@ -93,9 +93,19 @@ namespace Core.Module.CharacterData
             }
         }
 
-        public override Task OnEvtArrivedBlockedAsync(Location arg0)
+        public override async Task OnEvtArrivedBlockedAsync(Location location)
         {
-            throw new NotImplementedException();
+            // If the Intention was AI_INTENTION_MOVE_TO, set the Intention to AI_INTENTION_ACTIVE
+            if ((_character.CharacterDesire().GetDesire() == Desire.MoveToDesire) || (_character.CharacterDesire().GetDesire() == Desire.CastDesire))
+            {
+                _character.CharacterDesire().AddDesire(Desire.ActiveDesire, location);
+            }
+		
+            // Stop the actor movement server side AND client side by sending Server->Client packet StopMove/StopRotation (broadcast)
+            await _character.CharacterDesire().ClientStopMovingAsync(location);
+		
+            // Launch actions corresponding to the Event Think
+            await OnEvtThinkAsync();
         }
 
         public override Task OnEvtDeadAsync()

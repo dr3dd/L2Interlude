@@ -52,6 +52,14 @@ public abstract class Character : WorldObject
         _characterTargetAction = new CharacterTargetAction(this);
     }
 
+    /// <summary>
+    /// IsPlayable
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPlayer() => this is PlayerInstance;
+
+    public bool IsAttackable() => this is NpcInstance;
+
     public override async Task RequestActionAsync(PlayerInstance playerInstance)
     {
         // Set the target of the PlayerInstance player
