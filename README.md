@@ -5,7 +5,7 @@ PTS scripts files included and working with the server.
 # Technical Specification
 <ul>
 <li>DB MariaDB</li>
-<li>Net Core Framework 3.1</li>
+<li>.Net 6 Framework</li>
 <li>ORM Dapper</li>
 <li>DataBase Migrations</li>
 </ul>
@@ -27,15 +27,15 @@ PTS scripts files included and working with the server.
 <li>A bit GeoData for Skills</li>
 <li>Chat with Npcs</li>
 <li>Npc Known List</li>
-<li>Npc Service which is connecting to GameService through socket 3333 port by default</li>
+<li>NpcAi (All classes loaded but without AI logic)</li>
+<li>Moving Npc</li>
 <li>Social Actions for citizen Npc</li>
 <li>Few Town Teleport</li>
-<li>Dummy Npc Files in NpcService project</li>
 </ul>
 
 # What is in progress
 <ul>
-<li>Improving NpcService and add few NpcAi</li>
+<li>Working with algoritm Path Finding for GeoData</li>
 <li>Working with Player Skills</li>
 <li>Working with Npc Skills</li>
 </ul>
