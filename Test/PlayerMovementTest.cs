@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Core.GeoEngine;
 using Core.Module.CharacterData;
 using Core.Module.Player;
@@ -18,15 +19,15 @@ public class PlayerMovementTest : IClassFixture<PlayerInstanceFixture>
     }
 
     [Fact]
-    public void MoveToLocationTest()
+    public async Task MoveToLocationTest()
     {
         _playerInstance.Location = new Location(-71453, 258305, -3104);
         _playerInstance.WorldObjectPosition().SetWorldPosition(-71453, 258305, -3104);
-        _playerInstance.CharacterMovement().MoveToLocation(-71953, 258905, -3154, 0);
-            
-        Assert.Equal(-71953, _playerInstance.CharacterMovement().GetXDestination());
-        Assert.Equal(258905, _playerInstance.CharacterMovement().GetYDestination());
-        Assert.Equal(-3154, _playerInstance.CharacterMovement().GetZDestination());
+        await _playerInstance.CharacterMovement().MoveToLocation(-71953, 258905, -3154, 0);
+
+        Assert.Equal(-71736, _playerInstance.CharacterMovement().GetXDestination());
+        Assert.Equal(258696, _playerInstance.CharacterMovement().GetYDestination());
+        Assert.Equal(-3096, _playerInstance.CharacterMovement().GetZDestination());
     }
 
     [Fact]
@@ -70,7 +71,7 @@ public class PlayerMovementTest : IClassFixture<PlayerInstanceFixture>
         var tarY = 258905;
         var tarZ = -3154;
 
-        var dd = _geoEngine.CellPathFinding().FindPath(chaX, chaY, chaZ, tarX, tarY, tarZ, 1, true);
-        var d = 1;
+        var path = _geoEngine.CellPathFinding().FindPath(chaX, chaY, chaZ, tarX, tarY, tarZ, 1, true);
+        Assert.True(path.Count == 6);
     }
 }
