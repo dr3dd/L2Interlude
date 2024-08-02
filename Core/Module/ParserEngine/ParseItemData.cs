@@ -190,6 +190,11 @@ namespace Core.Module.ParserEngine
                         var attackSpeed = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
                         itemData.AttackSpeed = Convert.ToInt32(attackSpeed);
                     }
+                    if (item.StartsWith("attack_range"))
+                    {
+                        var attackRange = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);
+                        itemData.AttackRange = Convert.ToInt32(attackRange);
+                    }
                     if (item.StartsWith("reuse_delay"))
                     {
                         var reuseDelay = item.Substring(item.IndexOf("=", StringComparison.Ordinal)+1);

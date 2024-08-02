@@ -2,115 +2,129 @@
 using System.Threading.Tasks;
 using L2Logger;
 
-namespace Core.Module.CharacterData
+namespace Core.Module.CharacterData;
+
+public class CharacterNotifyEvent : CharacterNotifyEventAbstract
 {
-    public class CharacterNotifyEvent : CharacterNotifyEventAbstract
+    /** The flag used to indicate that a thinking action is in progress */
+    private bool _thinking; // to prevent recursive thinking
+
+    public CharacterNotifyEvent(Character character) : base(character)
     {
-        /** The flag used to indicate that a thinking action is in progress */
-        private bool _thinking; // to prevent recursive thinking
-
-        public CharacterNotifyEvent(Character character) : base(character)
-        {
             
-        }
+    }
 
-        public override async Task OnEvtThinkAsync()
+    public override async Task OnEvtThinkAsync()
+    {
+        // Check if the actor can't use skills and if a thinking action isn't already in progress
+        if (_thinking)
         {
-            // Check if the actor can't use skills and if a thinking action isn't already in progress
-            if (_thinking)
-            {
-                await Task.CompletedTask;
-                return;
-            }
+            await Task.CompletedTask;
+            return;
+        }
 		
-            // Start thinking action
-            _thinking = true;
+        // Start thinking action
+        _thinking = true;
 		
-            try
+        try
+        {
+            // Manage AI thinks of a Attackable
+            if (_character.CharacterDesire().GetDesire() == Desire.ActiveDesire)
             {
-                // Manage AI thinks of a Attackable
-                if (_character.CharacterDesire().GetDesire() == Desire.ActiveDesire)
-                {
-                    //await ThinkActive();
-                }
-                else if (_character.CharacterDesire().GetDesire() == Desire.AttackDesire)
-                {
-                    await ThinkAttackAsync();
-                }
+                //await ThinkActive();
             }
-            finally
+            else if (_character.CharacterDesire().GetDesire() == Desire.AttackDesire)
             {
-                // Stop thinking action
-                _thinking = false;
+                await ThinkAttackAsync();
             }
         }
-
-        public virtual async Task ThinkAttackAsync()
+        finally
         {
-            throw new NotImplementedException();
+            // Stop thinking action
+            _thinking = false;
         }
+    }
 
-        public override async Task OnEvtAttackedAsync(Character arg0)
-        {
-            await ClientStartAutoAttackAsync();
-        }
+    public virtual async Task ThinkAttackAsync()
+    {
+        throw new NotImplementedException();
+    }
 
-        public override async Task OnEvtArrivedRevalidate()
-        {
-            if (_character.CharacterMovement().IsMoving)
-            {
-                await OnEvtThinkAsync();
-            }
-        }
+    public override async Task OnEvtAttackedAsync(Character arg0)
+    {
+        await ClientStartAutoAttackAsync();
+    }
 
-        public override async Task OnEvtReadyToAct()
+    public override async Task OnEvtArrivedRevalidate()
+    {
+        if (_character.CharacterMovement().IsMoving)
         {
             await OnEvtThinkAsync();
         }
+    }
 
-        public override async Task OnEvtArrivedAsync()
-        {
-            try
-            {
-                _character.CharacterZone().RevalidateZone();
-                // If the Intention was AI_INTENTION_MOVE_TO, set the Intention to AI_INTENTION_ACTIVE
-                if (await _character.CharacterMovement().MoveToNextRoutePoint())
-                {
-                    return;
-                }
-                await _character.CharacterDesire().ClientStoppedMovingAsync();
-                if (_character.CharacterDesire().GetDesire() == Desire.MoveToDesire)
-                {
-                    _character.CharacterDesire().AddDesire(Desire.ActiveDesire, null);
-                }
-		
-                // Launch actions corresponding to the Event Think
-                await OnEvtThinkAsync();
-            }
-            catch (Exception ex)
-            {
-                LoggerManager.Error(GetType().Name + ": OnEvtArrivedAsync:  " + ex.Message);
-            }
-        }
+    public override async Task OnEvtReadyToAct()
+    {
+        await OnEvtThinkAsync();
+    }
 
-        public override async Task OnEvtArrivedBlockedAsync(Location location)
+    public override async Task OnEvtArrivedAsync()
+    {
+        try
         {
+            _character.CharacterZone().RevalidateZone();
             // If the Intention was AI_INTENTION_MOVE_TO, set the Intention to AI_INTENTION_ACTIVE
-            if ((_character.CharacterDesire().GetDesire() == Desire.MoveToDesire) || (_character.CharacterDesire().GetDesire() == Desire.CastDesire))
+            if (await _character.CharacterMovement().MoveToNextRoutePoint())
             {
-                _character.CharacterDesire().AddDesire(Desire.ActiveDesire, location);
+                return;
             }
-		
-            // Stop the actor movement server side AND client side by sending Server->Client packet StopMove/StopRotation (broadcast)
-            await _character.CharacterDesire().ClientStopMovingAsync(location);
+            await _character.CharacterDesire().ClientStoppedMovingAsync();
+            if (_character.CharacterDesire().GetDesire() == Desire.MoveToDesire)
+            {
+                _character.CharacterDesire().AddDesire(Desire.ActiveDesire, null);
+            }
 		
             // Launch actions corresponding to the Event Think
             await OnEvtThinkAsync();
         }
-
-        public override Task OnEvtDeadAsync()
+        catch (Exception ex)
         {
-            throw new NotImplementedException();
+            LoggerManager.Error(GetType().Name + ": OnEvtArrivedAsync:  " + ex.Message);
         }
+    }
+
+    public override async Task OnEvtArrivedBlockedAsync(Location location)
+    {
+        // If the Intention was AI_INTENTION_MOVE_TO, set the Intention to AI_INTENTION_ACTIVE
+        if ((_character.CharacterDesire().GetDesire() == Desire.MoveToDesire) || (_character.CharacterDesire().GetDesire() == Desire.CastDesire))
+        {
+            _character.CharacterDesire().AddDesire(Desire.ActiveDesire, location);
+        }
+		
+        // Stop the actor movement server side AND client side by sending Server->Client packet StopMove/StopRotation (broadcast)
+        await _character.CharacterDesire().ClientStopMovingAsync(location);
+		
+        // Launch actions corresponding to the Event Think
+        await OnEvtThinkAsync();
+    }
+
+    public override Task OnEvtDeadAsync()
+    {
+        throw new NotImplementedException();
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    protected bool CheckTargetLostOrDead(Character target)
+    {
+        if ((target == null) || target.CharacterStatus().IsDead)
+        {
+            _character.CharacterDesire().AddDesire(Desire.ActiveDesire, null);
+            return true;
+        }
+        return false;
     }
 }

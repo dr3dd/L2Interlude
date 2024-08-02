@@ -1,122 +1,163 @@
 ﻿using System.Threading.Tasks;
-using Core.Module.Player;
 using Core.Module.SkillData;
 using Core.Module.WorldData;
 using L2Logger;
 
-namespace Core.Module.CharacterData
+namespace Core.Module.CharacterData;
+
+public class CharacterDesire : AbstractDesire
 {
-    public class CharacterDesire : AbstractDesire
+    private readonly CharacterDesireCast _characterDesireCast;
+    public CharacterDesireCast DesireCast() => _characterDesireCast;
+    public CharacterDesire(Character character) : base(character)
     {
-        private readonly CharacterDesireCast _characterDesireCast;
-        public CharacterDesireCast DesireCast() => _characterDesireCast;
-        public CharacterDesire(Character character) : base(character)
+        _characterDesireCast = new CharacterDesireCast(character);
+    }
+
+    protected override async Task MoveToDesireAsync(Location destination)
+    {
+        if (IsRestingOrCasting())
         {
-            _characterDesireCast = new CharacterDesireCast(character);
+            // Cancel action client side by sending Server->Client packet ActionFailed to the PlayerInstance actor
+            await ClientActionFailedAsync();
+            return;
         }
-        
-        protected override async Task MoveToDesireAsync(Location destination)
+        ChangeDesire(Desire.MoveToDesire);
+        await StopAutoAttackAndAbortAsync();
+        await MoveToAsync(destination.GetX(), destination.GetY(), destination.GetZ()).ContinueWith(HandleException);
+    }
+
+    /// <summary>
+    /// IsRestingOrCasting
+    /// </summary>
+    /// <returns></returns>
+    private bool IsRestingOrCasting()
+    {
+        return GetDesire() == Desire.RestDesire || _characterDesireCast.IsCastingNow();
+    }
+    
+    /// <summary>
+    /// Stop the actor auto-attack client side by sending Server->Client packet AutoAttackStop (broadcast)
+    /// Abort the attack of the Creature and send Server->Client ActionFailed packet
+    /// </summary>
+    private async Task StopAutoAttackAndAbortAsync()
+    {
+        await ClientStopAutoAttackAsync();
+        await AbortAttackAsync();
+    }
+
+    /// <summary>
+    /// AbortAttackAsync
+    /// </summary>
+    private async Task AbortAttackAsync()
+    {
+        await _character.PhysicalAttack().AbortAttackAsync();
+    }
+
+    /// <summary>
+    /// CastDesireAsync
+    /// </summary>
+    /// <param name="skill"></param>
+    protected override async Task CastDesireAsync(SkillDataModel skill)
+    {
+        ChangeDesire(Desire.CastDesire);
+        await _characterDesireCast.DoCastAsync(skill);
+    }
+
+    protected override Task IntentionInteractAsync(WorldObject worldObject)
+    {
+        throw new System.NotImplementedException();
+    }
+
+
+    public void HandleException(Task obj)
+    {
+        if (obj.IsFaulted)
         {
-            if (GetDesire() == Desire.RestDesire)
-            {
-                // Cancel action client side by sending Server->Client packet ActionFailed to the PlayerInstance actor
-                await ClientActionFailedAsync();
-                return;
-            }
-            ChangeDesire(Desire.MoveToDesire);
-            // Stop the actor auto-attack client side by sending Server->Client packet AutoAttackStop (broadcast)
-            await ClientStopAutoAttackAsync();
-            await MoveToAsync(destination.GetX(), destination.GetY(), destination.GetZ()).ContinueWith(HandleException);
+            LoggerManager.Error(GetType().Name + ": " + obj.Exception);
         }
+    }
 
-        protected override async Task CastDesireAsync(SkillDataModel skill)
+    /// <summary>
+    /// DesireAttackAsync
+    /// </summary>
+    /// <param name="target"></param>
+    protected override async Task DesireAttackAsync(Character target)
+    {
+        if (target == null || IsRestingOrCasting())
         {
-            ChangeDesire(Desire.CastDesire);
-            await _characterDesireCast.DoCastAsync(skill);
+            await ClientActionFailedAsync();
+            return;
         }
-
-        protected override Task IntentionInteractAsync(WorldObject worldObject)
+        // Check if the Intention is already AI_INTENTION_ATTACK
+        if (IsAlreadyAttacking())
         {
-            throw new System.NotImplementedException();
+            UpdateAttackTarget(target);
+            return;
         }
+        InitiateAttack(target);
+    }
+    
+    private bool IsAlreadyAttacking()
+    {
+        return GetDesire() == Desire.AttackDesire;
+    }
+    
+    /// <summary>
+    /// Set the AI attack target (change target)
+    /// </summary>
+    /// <param name="target"></param>
+    private void UpdateAttackTarget(Character target)
+    {
+        AttackTarget = target;
+        StopFollow();
+        _character.CharacterNotifyEvent().NotifyEvent(CtrlEvent.EvtThink);
+    }
+    
+    private void InitiateAttack(Character target)
+    {
+        ChangeDesire(Desire.AttackDesire);
+        AttackTarget = target;
+        StopFollow();
+        _character.CharacterNotifyEvent().NotifyEvent(CtrlEvent.EvtThink);
+    }
+    
+    private bool IsActive()
+    {
+        return _character.CharacterDesire().GetDesire() == Desire.ActiveDesire;
+    }
+    
+    /// <summary>
+    /// Set the AI Intention to AI_INTENTION_ACTIVE
+    /// </summary>
+    private void ChangeToActiveDesire()
+    {
+        _character.CharacterDesire().ChangeDesire(Desire.ActiveDesire);
+    }
+    
+    private void ResetTargets()
+    {
+        AttackTarget = null;
+    }
+    
+    private async Task StopMovingAndAutoAttackAsync()
+    {
+        await _character.CharacterDesire().ClientStopMovingAsync(null);
+        await ClientStopAutoAttackAsync();
+    }
 
-
-        public void HandleException(Task obj)
+    protected override async Task DesireActiveAsync()
+    {
+        //LoggerManager.Info("CharacterAi: OnIntentionActive");
+        // Check if the Intention is not already Active
+        if (!IsActive())
         {
-            if (obj.IsFaulted)
-            {
-                LoggerManager.Error(GetType().Name + ": " + obj.Exception);
-            }
-        }
-
-        protected override async Task DesireAttackAsync(Character target)
-        {
-            if (target == null)
-            {
-                await ClientActionFailedAsync();
-                return;
-            }
-            if (GetDesire() == Desire.RestDesire)
-            {
-                // Cancel action client side by sending Server->Client packet ActionFailed to the PlayerInstance actor
-                await ClientActionFailedAsync();
-                return;
-            }
-            // Check if the Intention is already AI_INTENTION_ATTACK
-            if (GetDesire() == Desire.AttackDesire)
-            {
-                // Check if the AI already targets the Creature
-                    // Set the AI attack target (change target)
-                    AttackTarget = target;
-				
-                    StopFollow();
-				
-                    // Launch the Think Event
-                    _character.CharacterNotifyEvent().NotifyEvent(CtrlEvent.EvtThink, null);
-
-            }
-            else
-            {
-                // Set the Intention of this AbstractAI to AI_INTENTION_ATTACK
-                ChangeDesire(Desire.AttackDesire);
-			
-                // Set the AI attack target
-                AttackTarget = target;
-			
-                StopFollow();
-
-                await CharacterMessage.SendMessageAsync(_character, "DEBUG: Hello dr3dd");
-                if (_character is PlayerInstance instance)
-                {
-                    //await instance.PlayerMessage().SendMessageAsync("DEBUG: Hello dr3dd");
-                }
-			
-                // Launch the Think Event
-                _character.CharacterNotifyEvent().NotifyEvent(CtrlEvent.EvtThink);
-            }
-        }
-
-        protected override async Task DesireActiveAsync()
-        {
-            //LoggerManager.Info("CharacterAi: OnIntentionActive");
-            // Check if the Intention is not already Active
-            if (_character.CharacterDesire().GetDesire() != Desire.ActiveDesire)
-            {
-                // Set the AI Intention to AI_INTENTION_ACTIVE
-                _character.CharacterDesire().ChangeDesire(Desire.ActiveDesire);
-			
-                // Init cast and attack target
-                AttackTarget = null;
-			
-                // Stop the actor movement server side AND client side by sending Server->Client packet StopMove/StopRotation (broadcast)
-                await _character.CharacterDesire().ClientStopMovingAsync(null);
-			
-                // Stop the actor auto-attack client side by sending Server->Client packet AutoAttackStop (broadcast)
-                await ClientStopAutoAttackAsync();
-			
-                // Launch the Think Event
-                await _character.CharacterNotifyEvent().OnEvtThinkAsync();
-            }
+            ChangeToActiveDesire();
+            ResetTargets();
+            await StopMovingAndAutoAttackAsync();
+            await _character.CharacterNotifyEvent().OnEvtThinkAsync();
+            // Launch the Think Event
+            await _character.CharacterNotifyEvent().OnEvtThinkAsync();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Core.NetworkPacket.ServerPacket
         private readonly int _z;
         private List<Hit> _hits;
         
-        public Attack(Character attacker, bool ss, int grade)
+        public Attack(Character attacker, Character target, bool ss, int grade)
         {
             _attackerObjId = attacker.ObjectId;
             Soulshot = ss;

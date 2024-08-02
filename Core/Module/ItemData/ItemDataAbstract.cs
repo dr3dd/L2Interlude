@@ -13,6 +13,7 @@
         public int PhysicalDefense { get; }
         public int MagicalDefense { get; }
         public int AttackSpeed { get; }
+        public int AttackRange { get; }
         public float HitModify { get; } //increase or decrease accuracy
         public int Critical { get; }
         public int ReuseDelay { get; }
@@ -39,6 +40,7 @@
             PhysicalDefense = itemDataModel.PhysicalDefense;
             MagicalDefense = itemDataModel.MagicallDefense;
             AttackSpeed = itemDataModel.AttackSpeed;
+            AttackRange = itemDataModel.AttackRange;
             HitModify = itemDataModel.HitModify;
             Critical = itemDataModel.Critical;
             ReuseDelay = itemDataModel.ReuseDelay;

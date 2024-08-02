@@ -16,6 +16,7 @@ namespace Core.Module.ItemData
         public int PhysicalDefense { get; }
         public int MagicallDefense { get; }
         public int AttackSpeed { get; }
+        public int AttackRange { get; }
         public float HitModify { get; } //increase or decrease accuracy
         public int Critical { get; }
         public int ReuseDelay { get; }
@@ -39,6 +40,7 @@ namespace Core.Module.ItemData
             PhysicalDefense = itemBegin.PhysicalDefense;
             MagicallDefense = itemBegin.MagicalDefense;
             AttackSpeed = itemBegin.AttackSpeed;
+            AttackRange = itemBegin.AttackRange;
             HitModify = itemBegin.HitModify;
             Critical = itemBegin.Critical;
             ReuseDelay = itemBegin.ReuseDelay;

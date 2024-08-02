@@ -83,5 +83,17 @@ namespace Core.Module.WorldData
         {
             return ServiceProvider.GetRequiredService<WorldInit>().GetRegion(WorldObjectPosition().GetWorldPosition());
         }
+        
+        /// <summary>
+        /// Calculates the 3D distance between this WorldObject and given x, y, z.
+        /// </summary>
+        /// <param name="x">x the X coordinate</param>
+        /// <param name="y">y the Y coordinate</param>
+        /// <param name="z">z the Z coordinate</param>
+        /// <returns>distance between object and given x, y, z.</returns>
+        public double CalculateDistance3D(int x, int y, int z)
+        {
+            return Math.Sqrt(Math.Pow(x - GetX(), 2) + Math.Pow(y - GetY(), 2) + Math.Pow(z - GetZ(), 2));
+        }
     }
 }

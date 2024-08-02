@@ -393,5 +393,12 @@ namespace Core.Module.Player
         {
             return _templateHandler.GetBaseAttackRange();
         }
+
+        public int GetPhysicalAttackRange()
+        {
+            var weapon = _playerInstance.GetActiveWeaponItem();
+            int attackRange = weapon?.AttackRange ?? GetBaseAttackRange();
+            return attackRange;
+        }
     }
 }

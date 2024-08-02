@@ -5,6 +5,7 @@ public class CharacterStatus
     private readonly Character _character;
     private readonly CharacterHpMpRegeneration _characterHpRegeneration;
     private readonly CharacterDieProcess _characterDieProcess;
+    public bool IsDead { get; set; } = false;
 
     public CharacterStatus(Character character)
     {
