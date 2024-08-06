@@ -25,7 +25,8 @@ namespace DataBase
                     DeployChanges.To
                         .MySqlDatabase(connectionString)
                         .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
-                        .LogToConsole()
+                        .LogToAutodetectedLog()
+                        .LogScriptOutput()
                         .Build();
                 var result = upgrader.PerformUpgrade();
                 if (!result.Successful)

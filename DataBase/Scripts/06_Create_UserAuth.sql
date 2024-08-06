@@ -3,8 +3,8 @@
      `account_name` VARCHAR(14) NOT NULL,
      `password` VARCHAR(50) NOT NULL,
      `email` VARCHAR(50) NOT NULL,
-     `last_login` DATETIME NOT NULL DEFAULT curdate(),
-     `last_logout` DATETIME NOT NULL DEFAULT curdate(),
+     `last_login` DATETIME NOT NULL DEFAULT (curdate()),
+     `last_logout` DATETIME NOT NULL DEFAULT (curdate()),
      `last_world` TINYINT(4) NOT NULL DEFAULT '0',
      PRIMARY KEY (`account_id`)
 )
