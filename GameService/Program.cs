@@ -16,7 +16,7 @@ namespace GameService
     {
         private static async Task Main()
         {
-            ClassLoggerConfigurator.ConfigureClassLogger($"{Assembly.GetExecutingAssembly().Location}.log");
+            ClassLoggerConfigurator.ConfigureClassLogger($"./log/{Assembly.GetExecutingAssembly().ManifestModule.Name}.log");
             
             LoggerManager.Info("Starting GameService...");
             

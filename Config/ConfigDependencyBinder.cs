@@ -16,11 +16,13 @@ namespace Config
             var gameServiceConfig = config.GetSection(ServerConfig.GameServiceSection).Get<ServerConfig>();
             var dataBaseConfig = config.GetSection(DataBaseConfig.DataBaseSection).Get<DataBaseConfig>();
             var loginServiceConfig = config.GetSection(LoginServerConfig.LoginServiceConfig).Get<LoginServerConfig>();
+            var debugConfig = config.GetSection(DebugConfig.DebugSection).Get<DebugConfig>();
             var gameConfig = new GameConfig
             {
                 ServerConfig = gameServiceConfig,
                 DataBaseConfig = dataBaseConfig,
-                LoginServerConfig = loginServiceConfig
+                LoginServerConfig = loginServiceConfig,
+                DebugConfig = debugConfig
             };
 
             provider.AddSingleton(gameConfig);

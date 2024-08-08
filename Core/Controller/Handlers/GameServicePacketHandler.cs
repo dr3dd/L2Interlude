@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using Config;
 using Core.NetworkPacket.ClientPacket;
 using Core.NetworkPacket.ClientPacket.CharacterPacket;
 using L2Logger;
+using Microsoft.Extensions.DependencyInjection;
 using Network;
 
 namespace Core.Controller.Handlers
@@ -55,39 +57,82 @@ namespace Core.Controller.Handlers
         
         public void HandlePacket(Packet packet, GameServiceController controller)
         {
-            byte opCode = packet.FirstOpcode();
-            
-            LoggerManager.Info($"Received packet with Opcode:{opCode:X2}");
-
-            PacketBase packetBase = null;
-            if (opCode != 0xD0 && _clientPackets.ContainsKey(opCode))
+            var config = _serviceProvider.GetService<GameConfig>();
+            try
             {
-                LoggerManager.Info($"Received packet of type: {_clientPackets[opCode].Name}");
-                packetBase = (PacketBase)Activator.CreateInstance(_clientPackets[opCode], _serviceProvider, packet, controller);
-            }
-            else if (opCode == 0xD0)
-            {
-                short opCode2 = packet.ReadShort();
-                LoggerManager.Info($"Received packet with Opcode 0xD0 of type: {opCode2:X2}");
+                byte opCode = packet.FirstOpcode();
 
-                if (_clientPacketsD0.ContainsKey(opCode2))
+                if (config.DebugConfig.ShowHeaderPacket) // показывать заголовок
                 {
-                    packetBase = (PacketBase)Activator.CreateInstance(_clientPacketsD0[opCode2], _serviceProvider, packet, controller);
+                    LoggerManager.Debug($"GameServicePacketHandler: CLIENT>>GS header: [{opCode.ToString("x2")}] size: [{packet.GetBuffer().Length}]");
                 }
-            }
 
-            if (controller.IsDisconnected)
+                PacketBase packetBase = null;
+                if (opCode != 0xD0 && _clientPackets.ContainsKey(opCode))
+                {
+                    packetBase = (PacketBase)Activator.CreateInstance(_clientPackets[opCode], _serviceProvider, packet, controller);
+                }
+                else if (opCode == 0xD0)
+                {
+                    short opCode2 = packet.ReadShort();
+                    if (config.DebugConfig.ShowHeaderPacket) // показывать заголовок
+                    {
+                        LoggerManager.Debug($"GameServicePacketHandler: CLIENT>>GS header: SecondOpcode [{opCode2.ToString("x2")}]");
+                    }
+
+                    if (_clientPacketsD0.ContainsKey(opCode2))
+                    {
+                        packetBase = (PacketBase)Activator.CreateInstance(_clientPacketsD0[opCode2], _serviceProvider, packet, controller);
+                    }
+                    else
+                    {
+                        LoggerManager.Warn($"GameServicePacketHandler: Not found packet FirstOpcode={opCode.ToString("x2")} SecondOpcode={opCode2.ToString("x2")}");
+                        printPacketBody(packet);
+                        return;
+                    }
+                }
+                else
+                {
+                    LoggerManager.Warn($"GameServicePacketHandler: Not found packet FirstOpcode={opCode.ToString("x2")}");
+                    printPacketBody(packet);
+                    return;
+                }
+
+                if (controller.IsDisconnected)
+                {
+                    return;
+                }
+
+                if (packetBase != null && config.DebugConfig.ShowNamePacket)
+                {
+                    LoggerManager.Debug($"GameServicePacketHandler: CLIENT>>GS name: {packetBase.GetType().Name}");
+                }
+
+                if (config.DebugConfig.ShowPacket) // показывать заголовок и содержимое
+                {
+                    printPacketBody(packet);
+                }
+
+                if (packetBase == null)
+                {
+                    return;
+                }
+
+                packetBase.Execute();
+            }
+            catch (Exception ex)
             {
-                return;
+                LoggerManager.Error("GameServicePacketHandler: " + ex.StackTrace);
             }
-
-            if (packetBase == null)
-            {
-                throw new ArgumentNullException(nameof(packetBase), $"Packet with opcode: {opCode:X2} doesn't exist in the dictionary.");
-            }
-
-            packetBase.Execute();
         }
-        
+
+        private void printPacketBody(Packet packet)
+        {
+            string str = "";
+            foreach (byte b in packet.GetBuffer())
+                str += b.ToString("x2") + " ";
+            LoggerManager.Debug($"GameServicePacketHandler: CLIENT>>GS body: [ {str} ]");
+        }
+
     }
 }

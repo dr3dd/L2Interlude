@@ -13,7 +13,7 @@ namespace LoginService
     {
         static async Task Main()
         {
-            ClassLoggerConfigurator.ConfigureClassLogger($"{Assembly.GetExecutingAssembly().Location}.log");
+            ClassLoggerConfigurator.ConfigureClassLogger($"./log/{Assembly.GetExecutingAssembly().ManifestModule.Name}.log");
             
             IServiceCollection services = new ServiceCollection();
             ConfigureServices(services);

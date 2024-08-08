@@ -36,7 +36,7 @@ public class DoorDataInit : BaseParse
                 
                 var doorInstance = new DoorInstance(_objectIdInit.NextObjectId(), doorTemplateInit, _serviceProvider);
                 _doorDataCollection.Add(key.ToString(), doorInstance);
-                if (doorTemplateInit.GetStat().Pos == Arrays.EmptyInts) continue;
+                if (doorTemplateInit.GetStat().Pos == null || doorTemplateInit.GetStat().Pos == Arrays.EmptyInts) continue;
                 
                 var x = doorTemplateInit.GetStat().Pos[0];
                 var y = doorTemplateInit.GetStat().Pos[1];

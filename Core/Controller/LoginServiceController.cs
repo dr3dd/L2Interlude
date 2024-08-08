@@ -44,7 +44,7 @@ namespace Core.Controller
             
             IsConnected = true;
             
-            await SendPacketAsync(new LoginAuth());
+            await SendPacketAsync(new LoginAuth(_gameConfig));
             await SendPacketAsync(new LoginServPing(this));
             
             await Task.Factory.StartNew(ReadAsync);
