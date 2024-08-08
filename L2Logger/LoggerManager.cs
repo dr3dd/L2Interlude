@@ -14,6 +14,11 @@ namespace L2Logger
             LogManager.GetCurrentClassLogger().Info(text);
         }
 
+        public static void Debug(string text)
+        {
+            LogManager.GetCurrentClassLogger().Debug(text);
+        }
+
         public static void Error(string text)
         {
             LogManager.GetCurrentClassLogger().Error(text);

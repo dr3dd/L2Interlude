@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using Config;
 using Core.NetworkPacket.ClientPacket.LoginServicePacket;
 using L2Logger;
+using Microsoft.Extensions.DependencyInjection;
 using Network;
 
 namespace Core.Controller.Handlers
@@ -24,21 +26,49 @@ namespace Core.Controller.Handlers
 
         public void HandlePacket(Packet packet, LoginServiceController loginServiceController)
         {
-            byte opCode = packet.FirstOpcode();
-            LoggerManager.Info($"Received packet with Opcode:{opCode:X2}");
-            
-            PacketBase packetBase = null;
-            
-            if (_loginServerPackets.ContainsKey(opCode))
+            var config = _serviceProvider.GetService<GameConfig>();
+            try
             {
-                packetBase = (PacketBase)Activator.CreateInstance(_loginServerPackets[opCode], _serviceProvider, packet, loginServiceController);
-            }
+                byte opCode = packet.FirstOpcode();
+                LoggerManager.Info($"Received packet with Opcode:{opCode:X2}");
 
-            if (packetBase == null)
-            {
-                throw new ArgumentNullException(nameof(packetBase), $"Packet with opcode: {opCode:X2} doesn't exist in the dictionary.");
+                if (config.DebugConfig.ShowHeaderPacket){ // показывать заголовок
+                    LoggerManager.Debug($"LoginServicePacketHandler: AUTH>>GAME header: [{opCode.ToString("x2")}] size: [{packet.GetBuffer().Length}]");
+                }
+                PacketBase packetBase = null;
+
+                if (!_loginServerPackets.ContainsKey(opCode))
+                {
+                    LoggerManager.Warn($"LoginServicePacketHandler: Not found packet FirstOpcode={opCode.ToString("x2")}");
+                    printPacketBody(packet);
+                    return;
+                }
+
+                packetBase = (PacketBase)Activator.CreateInstance(_loginServerPackets[opCode], _serviceProvider, packet, loginServiceController);
+
+                if (config.DebugConfig.ShowNamePacket)
+                {
+                    LoggerManager.Debug($"LoginServicePacketHandler: AUTH>>GAME name: {packetBase.GetType().Name}");
+                }
+                if (config.DebugConfig.ShowPacket) // показывать заголовок и содержимое
+                {
+                    printPacketBody(packet);
+                }
+
+                packetBase?.Execute();
             }
-            packetBase.Execute();
+            catch (Exception ex)
+            {
+                LoggerManager.Error("LoginServicePacketHandler: " + ex.StackTrace);
+            }
+        }
+
+        private void printPacketBody(Packet packet)
+        {
+            string str = "";
+            foreach (byte b in packet.GetBuffer())
+                str += b.ToString("x2") + " ";
+            LoggerManager.Debug($"LoginServicePacketHandler: AUTH>>GAME body: [ {str} ]");
         }
     }
 }
