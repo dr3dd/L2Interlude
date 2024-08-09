@@ -49,6 +49,8 @@ namespace Core.Controller.Handlers
             _clientPackets.TryAdd(0x48, typeof(ValidatePosition));
             _clientPackets.TryAdd(0x59, typeof(RequestDestroyItem));
             _clientPackets.TryAdd(0xCD, typeof(RequestShowMiniMap));
+            _clientPackets.TryAdd(0x33, typeof(RequestShortCutReg));
+            _clientPackets.TryAdd(0x35, typeof(RequestShortCutDel));
             
             _clientPacketsD0.TryAdd(0x08, typeof(RequestManorList));
             _clientPacketsD0.TryAdd(0x22, typeof(RequestCursedWeaponList));

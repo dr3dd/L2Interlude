@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Module.CharacterData.Template;
 using Core.Module.ItemData;
+using Core.Module.Player.ShortCuts;
 using Core.Module.SkillData;
 using DataBase.Entities;
 using DataBase.Interfaces;
@@ -47,8 +49,10 @@ namespace Core.Module.Player
                 var entity = PrepareEntity();
                 var characterId = await _characterRepository.CreateCharacterAsync(entity);
                 entity.CharacterId = characterId;
+                _playerInstance.PlayerCharacterInfo().CharacterId = characterId;
                 await AddInitialEquipment(entity);
                 AddInitialSkill(characterId);
+                await AddInitialSkillShortCut();
             }
             catch (Exception ex)
             {
@@ -141,6 +145,22 @@ namespace Core.Module.Player
                     ToEndTime = 0
                 });
             });
+        }
+
+        private async Task AddInitialSkillShortCut()
+        {
+            await _playerInstance.PlayerShortCut().RegisterShortCut(new ShortCut(0, 0, ShortCutType.ACTION, 2, -1)); //Action Attack
+            await _playerInstance.PlayerShortCut().RegisterShortCut(new ShortCut(3, 0, ShortCutType.ACTION, 5, -1)); //Action Take
+            await _playerInstance.PlayerShortCut().RegisterShortCut(new ShortCut(10, 0, ShortCutType.ACTION, 0, -1)); //Action Sit
+
+            List<ItemInstance> playerItems = _playerInstance.PlayerInventory().GetInventoryItems();
+            foreach (var item in playerItems)
+            {
+                if (item.ItemId == 5588) // Tutorial Book
+                {
+                    await _playerInstance.PlayerShortCut().RegisterShortCut(new ShortCut(11, 0, ShortCutType.ITEM, item.ObjectId, -1));
+                }
+            }
         }
 
         public async Task UpdateCharacter()

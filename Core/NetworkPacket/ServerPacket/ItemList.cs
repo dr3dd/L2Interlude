@@ -8,16 +8,18 @@ namespace Core.NetworkPacket.ServerPacket
     {
         private readonly List<ItemInstance> _items;
         private readonly PlayerCharacterInfo _characterInfo;
-        public ItemList(PlayerInstance player)
+        private readonly bool _showWindow;
+        public ItemList(PlayerInstance player, bool showWindow = true)
         {
             _items = player.PlayerInventory().GetInventoryItems();
             _characterInfo = player.PlayerCharacterInfo();
+            _showWindow = showWindow;
         }
         
         public override void Write()
         {
             WriteByte(0x1b);
-            WriteShort(0x01); //?? show window
+            WriteShort(_showWindow); //?? show window
             WriteShort(_items.Count);
             _items.ForEach(item =>
             {

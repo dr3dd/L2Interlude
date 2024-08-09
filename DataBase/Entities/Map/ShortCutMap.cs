@@ -6,7 +6,7 @@ namespace DataBase.Entities.Map
     {
         public ShortCutMap()
         {
-            Map(i => i.CharacterObjectId).ToColumn("char_obj_id");
+            Map(i => i.CharacterObjectId).ToColumn("char_id");
             Map(i => i.Slot).ToColumn("slot");
             Map(i => i.Page).ToColumn("page");
             Map(i => i.Type).ToColumn("type");

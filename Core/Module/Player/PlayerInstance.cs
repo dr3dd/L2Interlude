@@ -35,7 +35,8 @@ namespace Core.Module.Player
         private readonly PlayerZone _playerZone;
         private readonly PlayerKnownList _playerKnownList;
         private readonly PlayerAction _playerAction;
-            
+        private readonly PlayerShortCut _shortCut;
+
         public Location Location { get; set; }
         public NpcInstance LastTalkedNpc { get; set; }
         public GameServiceController Controller { get; set; }
@@ -61,6 +62,7 @@ namespace Core.Module.Player
             _playerZone = new PlayerZone(this);
             _playerKnownList = new PlayerKnownList(this);
             _notifyEvent = new PlayerNotifyEvent(this);
+            _shortCut = new PlayerShortCut(this);
 
             Level = PlayerStatus().Level;
             _worldInit = provider.GetRequiredService<WorldInit>();
@@ -81,6 +83,7 @@ namespace Core.Module.Player
         public PlayerSkillMagic PlayerSkillMagic() => _playerSkillMagic;
         public PlayerZone PlayerZone() => _playerZone;
         public PlayerAction PlayerAction() => _playerAction;
+        public PlayerShortCut PlayerShortCut() => _shortCut;
         public override Weapon GetActiveWeaponItem()
         {
             var itemInstance = _playerCombat.GetWeapon();
