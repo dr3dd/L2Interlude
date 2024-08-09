@@ -30,9 +30,8 @@ namespace Core.Controller.Handlers
             try
             {
                 byte opCode = packet.FirstOpcode();
-                LoggerManager.Info($"Received packet with Opcode:{opCode:X2}");
 
-                if (config.DebugConfig.ShowHeaderPacket){ // показывать заголовок
+                if (config.DebugConfig.ShowHeaderPacket){ // show packet header  
                     LoggerManager.Debug($"LoginServicePacketHandler: AUTH>>GAME header: [{opCode.ToString("x2")}] size: [{packet.GetBuffer().Length}]");
                 }
                 PacketBase packetBase = null;
@@ -50,7 +49,7 @@ namespace Core.Controller.Handlers
                 {
                     LoggerManager.Debug($"LoginServicePacketHandler: AUTH>>GAME name: {packetBase.GetType().Name}");
                 }
-                if (config.DebugConfig.ShowPacket) // показывать заголовок и содержимое
+                if (config.DebugConfig.ShowPacket) // show packet header & body 
                 {
                     printPacketBody(packet);
                 }

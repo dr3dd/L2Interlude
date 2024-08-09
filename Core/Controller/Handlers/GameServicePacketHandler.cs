@@ -62,7 +62,7 @@ namespace Core.Controller.Handlers
             {
                 byte opCode = packet.FirstOpcode();
 
-                if (config.DebugConfig.ShowHeaderPacket) // показывать заголовок
+                if (config.DebugConfig.ShowHeaderPacket) // show packet header 
                 {
                     LoggerManager.Debug($"GameServicePacketHandler: CLIENT>>GS header: [{opCode.ToString("x2")}] size: [{packet.GetBuffer().Length}]");
                 }
@@ -75,7 +75,7 @@ namespace Core.Controller.Handlers
                 else if (opCode == 0xD0)
                 {
                     short opCode2 = packet.ReadShort();
-                    if (config.DebugConfig.ShowHeaderPacket) // показывать заголовок
+                    if (config.DebugConfig.ShowHeaderPacket) // show packet header 
                     {
                         LoggerManager.Debug($"GameServicePacketHandler: CLIENT>>GS header: SecondOpcode [{opCode2.ToString("x2")}]");
                     }
@@ -108,7 +108,7 @@ namespace Core.Controller.Handlers
                     LoggerManager.Debug($"GameServicePacketHandler: CLIENT>>GS name: {packetBase.GetType().Name}");
                 }
 
-                if (config.DebugConfig.ShowPacket) // показывать заголовок и содержимое
+                if (config.DebugConfig.ShowPacket) // show packet header & body 
                 {
                     printPacketBody(packet);
                 }
