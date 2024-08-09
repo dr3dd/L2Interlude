@@ -8,14 +8,17 @@ namespace Config
     {
         public const string DebugSection = "DebugSection";
         /// <summary>
+        /// Show packet header
         /// Показывать заголовок пакета
         /// </summary>
         public bool ShowHeaderPacket { get; set; } = false;
         /// <summary>
+        /// Show packet name
         /// Показывать название пакета
         /// </summary>
         public bool ShowNamePacket { get; set; } = false;
         /// <summary>
+        /// Show packet body
         /// Показывать тело пакета
         /// </summary>
         public bool ShowPacket { get; set; } = false;
