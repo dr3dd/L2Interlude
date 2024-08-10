@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Config;
 using Core.Controller;
+using Core.Controller.Handlers;
 using Core.GeoEngine;
 using Core.Module.AreaData;
 using Core.Module.CategoryData;
@@ -62,6 +63,11 @@ namespace Core
         internal static WorldInit WorldInit()
         {
             return ServiceProvider.GetService<WorldInit>();
+        }
+        
+        internal static ChatHandler ChatHandler()
+        {
+            return ServiceProvider.GetService<ChatHandler>();
         }
 
         public static SkillPchInit SkillPchInit()
@@ -124,6 +130,7 @@ namespace Core
             //ServiceProvider.GetService<SkillHandlerInit>();
             //ServiceProvider.GetService<SkillSpellBookInit>();
             LoggerManager.Info("----World----");
+            ServiceProvider.GetRequiredService<ChatHandler>();
             LoggerManager.Info("----Npc----");
             //ServiceProvider.GetService<NpcTableInit>();
             //ServiceProvider.GetService<NpcWalkerRouteDataInit>();

@@ -1,4 +1,5 @@
 ﻿using Core.Controller;
+using Core.Controller.Handlers;
 using Core.GeoEngine;
 using Core.Module.AreaData;
 using Core.Module.CategoryData;
@@ -43,6 +44,7 @@ namespace Core
             services.AddSingleton<SkillDataInit>();
             services.AddSingleton<SkillAcquireInit>();
             services.AddSingleton<EffectInit>();
+            services.AddSingleton<ChatHandler>();
         }
     }
 }
