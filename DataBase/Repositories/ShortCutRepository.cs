@@ -31,7 +31,7 @@ namespace DataBase.Repositories
                 using (var connection = _connectionFactory.GetDbConnection())
                 {
                     connection.Open();
-                    var sql = "SELECT * FROM character_shortcuts";
+                    var sql = "SELECT * FROM user_shortcut";
                     var result = await connection.QueryAsync<ShortCutEntity>(sql);
                     return result.ToList();
                 }
@@ -51,7 +51,7 @@ namespace DataBase.Repositories
                 {
                     connection.Open();
                     var sql =
-                        "REPLACE INTO character_shortcuts (char_obj_id,slot,page,type,shortcut_id,level,class_index) VALUES (@CharacterObjectId, @Slot, @Page, @Type, @ShortcutId, @Level, @ClassIndex)";
+                        "REPLACE INTO user_shortcut (char_id,slot,page,type,shortcut_id,level,class_index) VALUES (@CharacterObjectId, @Slot, @Page, @Type, @ShortcutId, @Level, @ClassIndex)";
                     var result = await connection.ExecuteAsync(sql, entity);
                     return result;
                 }
@@ -80,7 +80,7 @@ namespace DataBase.Repositories
                 using (var connection = _connectionFactory.GetDbConnection())
                 {
                     connection.Open();
-                    var sql = "SELECT * FROM character_shortcuts WHERE char_obj_id=@CharacterObjectId AND class_index=@ClassIndex";
+                    var sql = "SELECT * FROM user_shortcut WHERE char_id=@CharacterObjectId AND class_index=@ClassIndex";
                     var result = await connection.QueryAsync<ShortCutEntity>(sql,
                         new {CharacterObjectId = ownerId, ClassIndex = classIndex});
                     return result.ToList();
@@ -101,7 +101,7 @@ namespace DataBase.Repositories
                 {
                     connection.Open();
                     var sql =
-                        "DELETE FROM character_shortcuts WHERE char_obj_id=@CharacterObjectId AND slot=@Slot AND page=@Page AND class_index=@ClassIndex";
+                        "DELETE FROM user_shortcut WHERE char_id=@CharacterObjectId AND slot=@Slot AND page=@Page AND class_index=@ClassIndex";
                     var result = await connection.ExecuteAsync(sql, entity);
                     return result;
                 }

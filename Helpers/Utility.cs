@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
 
 namespace Helpers
 {
@@ -35,6 +38,11 @@ namespace Helpers
         public static int Limit(int numToTest, int min, int max)
         {
             return (numToTest > max) ? max : ((numToTest < min) ? min : numToTest);
+        }
+
+        public static IEnumerable<Type> GetTypesInNamespace(Assembly assembly, string nameSpace)
+        {
+            return assembly.GetTypes().Where(t => string.Equals(t.Namespace, nameSpace, StringComparison.Ordinal)).ToArray();
         }
     }
 }

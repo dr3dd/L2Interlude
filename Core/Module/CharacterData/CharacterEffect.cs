@@ -24,8 +24,11 @@ public class CharacterEffect
 
     public void AddEffect(Effect effect, int duration, long periodStartTime)
     {
-        EffectDuration effectDuration = new EffectDuration(effect, duration, periodStartTime);
-        _currentEffects.TryAdd(effect.SkillDataModel.SkillName, effectDuration);
+        if (effect.SkillDataModel != null)
+        {
+            EffectDuration effectDuration = new EffectDuration(effect, duration, periodStartTime);
+            _currentEffects.TryAdd(effect.SkillDataModel.SkillName, effectDuration);
+        }
     }
 
     public void RemoveEffect(Effect effect)

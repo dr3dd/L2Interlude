@@ -67,7 +67,12 @@ namespace Network
         {
             WriteBytesArray(BitConverter.GetBytes((short)value));
         }
-        
+
+        public void WriteShort(bool value)
+        {
+            WriteShort(value ? 1 : 0);
+        }
+
         protected void WriteShortAsync(int value = 0)
         {
             WriteBytesArrayAsync(BitConverter.GetBytes((short)value));
