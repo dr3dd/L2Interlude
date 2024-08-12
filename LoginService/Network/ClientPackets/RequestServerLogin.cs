@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DataBase.Interfaces;
 using LoginService.Model;
 using LoginService.Network.ServerPackets;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,7 @@ namespace LoginService.Network.ClientPackets
     {
         private readonly LoginClient _client;
         private readonly int _loginOkID1;
+        private readonly IAccountRepository _accountRepository;
         private readonly int _loginOkID2;
         private readonly byte _serverId;
 
@@ -18,6 +20,7 @@ namespace LoginService.Network.ClientPackets
             :base(serviceProvider)
         {
             _client = client;
+            _accountRepository = serviceProvider.GetService<IUnitOfWork>()?.Accounts;
             _loginOkID1 = packet.ReadInt();
             _loginOkID2 = packet.ReadInt();
             _serverId = packet.ReadByte();
@@ -26,6 +29,9 @@ namespace LoginService.Network.ClientPackets
         public override async Task Execute()
         {
             Server server = ServiceProvider.GetRequiredService<GameServerListener>().Get(_serverId);
+            _client.ActiveUserAuthEntity.LastWorld = _serverId;
+            _client.ActiveUserAuthEntity.LastLogin = DateTime.Now;
+            await _accountRepository.UpdateLastUseAsync(_client.ActiveUserAuthEntity);
             await server.GameServerClient.SendPlayerAsync(_client);
             await _client.SendPacketAsync(new PlayOk(_client));
         }

@@ -43,10 +43,8 @@ namespace LoginService
 
             try
             {
-                IPAddress ip = Dns.GetHostEntry(config.LoginServerConfig.ServerHost).AddressList.First(addr =>
-                    addr.AddressFamily == AddressFamily.InterNetwork);
-                
-                _tcpListener = new TcpListener(ip, config.LoginServerConfig.GameServerPort);
+                string serverHost = config.LoginServerConfig.ServerHost;
+                _tcpListener = new TcpListener(serverHost.Equals("*") ? IPAddress.Any : IPAddress.Parse(serverHost), config.LoginServerConfig.GameServerPort);
                 _tcpListener.Start();
                 LoggerManager.Info($"Auth server listening gameservers at {config.LoginServerConfig.ServerHost}:{config.LoginServerConfig.GameServerPort}");
             }

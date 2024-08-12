@@ -7,5 +7,6 @@ namespace DataBase.Interfaces
     {
         Task<UserAuthEntity> GetAccountByLoginAsync(string login);
         Task<UserAuthEntity> CreateAccountAsync(string login, string password);
+        Task<int> UpdateLastUseAsync(UserAuthEntity userAuthEntity);
     }
 }
