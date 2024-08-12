@@ -94,6 +94,25 @@ namespace DataBase.Repositories
             }
         }
 
+        public async Task<int> UpdateLastUseAsync(UserAuthEntity entity)
+        {
+            try
+            {
+                using (var connection = _connectionFactory.GetDbConnection())
+                {
+                    connection.Open();
+                    var sql = "UPDATE user_auth SET last_world = @LastWorld, last_login = @LastLogin WHERE account_id = @AccountId";
+                    var result = await connection.ExecuteAsync(sql, entity);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggerManager.Error($"{ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
         public async Task<int> DeleteAsync(int id)
         {
             try

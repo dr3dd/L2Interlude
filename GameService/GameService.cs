@@ -28,7 +28,8 @@ namespace GameService
             BlowFishKeygen.GenerateKeys();
             _serviceProvider.GetService<Initializer>()?.Load();
 
-            _tcpListener = new TcpListener(IPAddress.Any, _gameConfig.ServerConfig.ServerPort);
+            string serverHost = _gameConfig.ServerConfig.ServerHost;
+            _tcpListener = new TcpListener(serverHost.Equals("*") ? IPAddress.Any : IPAddress.Parse(serverHost), _gameConfig.ServerConfig.ServerPort);
 
             try
             {
@@ -39,7 +40,7 @@ namespace GameService
                 LoggerManager.Error($"Socket Error: '{ex.SocketErrorCode}'. Message: '{ex.Message}' (Error Code: '{ex.NativeErrorCode}')");
             }
 
-            LoggerManager.Info($"Listening Gameservers on port 7777");
+            LoggerManager.Info($"Listening Gameservers on {serverHost}: {_gameConfig.ServerConfig.ServerPort}");
 
             await StartListener();
         }
