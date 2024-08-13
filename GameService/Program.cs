@@ -33,8 +33,8 @@ namespace GameService
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            ConfigDependencyBinder.Bind(services);
-            DataBaseDependencyBinder.Bind(services);
+            GameConfigDependencyBinder.Bind(services);
+            GameDataBaseDependencyBinder.Bind(services);
             CoreDependencyBinder.Bind(services);
             
             services.AddSingleton<Initializer>();

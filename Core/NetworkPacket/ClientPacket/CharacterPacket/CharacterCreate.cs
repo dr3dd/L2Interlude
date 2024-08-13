@@ -14,7 +14,7 @@ namespace Core.NetworkPacket.ClientPacket.CharacterPacket
     {
         private readonly GameServiceController _controller;
         private readonly TemplateInit _templateInit;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWorkGame _unitOfWork;
 
         private readonly string _characterName;
         private readonly string _accountName;
@@ -29,7 +29,7 @@ namespace Core.NetworkPacket.ClientPacket.CharacterPacket
         {
             _controller = controller;
             _templateInit = serviceProvider.GetRequiredService<TemplateInit>();
-            _unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
+            _unitOfWork = serviceProvider.GetRequiredService<IUnitOfWorkGame>();
             _accountName = _controller.AccountName;
             _characterName = packet.ReadString();
             _race = (byte)packet.ReadInt();

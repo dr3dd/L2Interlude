@@ -12,13 +12,13 @@ namespace Core.Module.Player
         private readonly ICharacterRepository _characterRepository;
         private readonly TemplateInit _templateInit;
         private readonly IServiceProvider _serviceProvider;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWorkGame _unitOfWork;
         public PlayerLoader(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            _characterRepository = serviceProvider.GetRequiredService<IUnitOfWork>().Characters;
+            _characterRepository = serviceProvider.GetRequiredService<IUnitOfWorkGame>().Characters;
             _templateInit = serviceProvider.GetRequiredService<TemplateInit>();
-            _unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
+            _unitOfWork = serviceProvider.GetRequiredService<IUnitOfWorkGame>();
         }
         
         public async Task<PlayerInstance> Load(int charId)

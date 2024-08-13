@@ -27,8 +27,8 @@ namespace LoginService
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            ConfigDependencyBinder.Bind(services);
-            DataBaseDependencyBinder.Bind(services);
+            LoginConfigDependencyBinder.Bind(services);
+            LoginDataBaseDependencyBinder.Bind(services);
             services.AddSingleton<LoginPacketHandler>();
             services.AddSingleton<LoginController>();
             services.AddSingleton<GameServerPacketHandler>();

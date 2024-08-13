@@ -12,6 +12,7 @@ namespace DataBase
         public static void DbMigration(this IServiceProvider serviceProvider)
         {
             var config = serviceProvider.GetRequiredService<GameConfig>();
+            LoggerManager.Info("DbMigrationGame: initialise...");
             try
             {
                 var connectionString = $"Server={config.DataBaseConfig.DataBaseHost};" +
@@ -20,7 +21,12 @@ namespace DataBase
                                        $"Uid={config.DataBaseConfig.DataBaseUser};" +
                                        $"Pwd={config.DataBaseConfig.DataBasePassword}"
                     ;
-                EnsureDatabase.For.MySqlDatabase(connectionString);
+
+                if (config.DataBaseConfig.DataBaseAutoCreate)
+                {
+                    EnsureDatabase.For.MySqlDatabase(connectionString);
+                }
+
                 var upgrader =
                     DeployChanges.To
                         .MySqlDatabase(connectionString)
@@ -28,6 +34,7 @@ namespace DataBase
                         .LogToAutodetectedLog()
                         .LogScriptOutput()
                         .Build();
+
                 var result = upgrader.PerformUpgrade();
                 if (!result.Successful)
                 {

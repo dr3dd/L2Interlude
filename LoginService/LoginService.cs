@@ -20,15 +20,15 @@ namespace LoginService
 
         public async Task StartAsync()
         {
-            var config = ServiceProvider.GetService<GameConfig>();
+            var config = ServiceProvider.GetService<LoginConfig>();
             GameServerListener gameServerListener = ServiceProvider.GetService<GameServerListener>();
             await ServiceProvider.GetRequiredService<LoginController>().Initialise();
             ServiceProvider.GetService<GameServerListener>();
 
             try
             {
-                string serverHost = config.LoginServerConfig.ServerHost;
-                _tcpListener = new TcpListener(serverHost.Equals("*") ? IPAddress.Any : IPAddress.Parse(serverHost), config.LoginServerConfig.ServerPort);
+                string serverHost = config.ServerConfig.ServerHost;
+                _tcpListener = new TcpListener(serverHost.Equals("*") ? IPAddress.Any : IPAddress.Parse(serverHost), config.ServerConfig.ServerPort);
                 _tcpListener.Start();
                 LoggerManager.Info("Waiting for a connections...");
 

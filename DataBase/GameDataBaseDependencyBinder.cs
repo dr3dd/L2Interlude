@@ -6,13 +6,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DataBase
 {
-    public static class DataBaseDependencyBinder
+    public static class GameDataBaseDependencyBinder
     {
         public static void Bind(IServiceCollection services)
         {
             FluentMapper.Initialize(config =>
             {
-                config.AddMap(new UserAuthMap());
                 config.AddMap(new CharacterMap());
                 config.AddMap(new SpawnListMap());
                 config.AddMap(new RaidBossSpawnListMap());
@@ -23,8 +22,7 @@ namespace DataBase
                 config.AddMap(new ShortCutMap());
             });
             
-            services.AddSingleton<ConnectionFactory>();
-            services.AddTransient<IAccountRepository, AccountRepository>();
+            services.AddSingleton<GameConnectionFactory>();
             services.AddTransient<ICharacterRepository, CharacterRepository>();
             services.AddTransient<ISpawnListRepository, SpawnListRepository>();
             services.AddTransient<IRaidBossSpawnListRepository, RaidBossSpawnListRepository>();
@@ -33,7 +31,7 @@ namespace DataBase
             services.AddTransient<ISkillTreeRepository, SkillTreeRepository>();
             services.AddTransient<ICharacterSkillRepository, CharacterSkillRepository>();
             services.AddTransient<IShortCutRepository, ShortCutRepository>();
-            services.AddSingleton<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IUnitOfWorkGame, GameUnitOfWork>();
         }
     }
 }

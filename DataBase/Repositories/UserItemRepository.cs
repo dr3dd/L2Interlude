@@ -13,11 +13,11 @@ namespace DataBase.Repositories
 {
     public class UserItemRepository : IUserItemRepository
     {
-        private readonly ConnectionFactory _connectionFactory;
+        private readonly GameConnectionFactory _connectionFactory;
         private readonly IServiceProvider _serviceProvider;
         public UserItemRepository(IServiceProvider serviceProvider)
         {
-            _connectionFactory = serviceProvider.GetService<ConnectionFactory>();
+            _connectionFactory = serviceProvider.GetService<GameConnectionFactory>();
             _serviceProvider = serviceProvider;
         }
 

@@ -28,7 +28,7 @@ namespace Core.Module.Player
             _playerInstance = playerInstance;
             _characterInfo = _playerInstance.PlayerCharacterInfo();
             _shortCuts = new List<ShortCut>();
-            _shortCutRepository = Initializer.ServiceProvider.GetRequiredService<IUnitOfWork>().ShortCut;
+            _shortCutRepository = Initializer.ServiceProvider.GetRequiredService<IUnitOfWorkGame>().ShortCut;
         }
 
         public IList<ShortCut> GetAllShortCuts()

@@ -19,10 +19,10 @@ namespace LoginService.Network.ClientPackets
         private readonly byte[] _raw;
         public RequestAuthLogin(IServiceProvider serviceProvider, Packet packet, LoginClient client) : base (serviceProvider)
         {
-            _accountRepository = ServiceProvider.GetService<IUnitOfWork>()?.Accounts;
+            _accountRepository = ServiceProvider.GetService<IUnitOfWorkLogin>()?.Accounts;
             _client = client;
             _raw = packet.ReadByteArray(128);
-            _config = ServiceProvider.GetRequiredService<GameConfig>().LoginServerConfig;
+            _config = ServiceProvider.GetRequiredService<LoginConfig>().ServerConfig;
         }
 
         public override async Task Execute()

@@ -24,7 +24,7 @@ public class PlayerInstanceFixture
     public PlayerInstanceFixture()
     {
         IServiceCollection serviceCollection = new ServiceCollection();
-        ConfigDependencyBinder.Bind(serviceCollection);
+        GameConfigDependencyBinder.Bind(serviceCollection);
         CoreDependencyBinder.Bind(serviceCollection);
 
         _serviceProvider = serviceCollection.BuildServiceProvider();
@@ -51,7 +51,7 @@ public class PlayerInstanceFixture
     /// <returns></returns>
     public PlayerInstance GetPlayerInstance()
     {
-        var mock = new Mock<IUnitOfWork>();
+        var mock = new Mock<IUnitOfWorkGame>();
         var templateInit = new TemplateInit(_serviceProvider);
         var playerAppearance = new PlayerAppearance("Test1", "Test1", 0, 0, 0, 0);
         _playerInstance = new PlayerInstance(templateInit.GetTemplateByClassId(0), playerAppearance, _serviceProvider, mock.Object);
