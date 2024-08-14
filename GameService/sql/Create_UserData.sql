@@ -1,4 +1,10 @@
-﻿CREATE TABLE `user_data` (
+﻿SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+-- ----------------------------
+-- Table structure for user_data
+-- ----------------------------
+DROP TABLE IF EXISTS `user_data`;
+CREATE TABLE `user_data` (
      `char_name` VARCHAR(50) NOT NULL,
      `char_id` INT(11) NOT NULL AUTO_INCREMENT,
      `account_name` VARCHAR(50) NOT NULL,
@@ -55,3 +61,5 @@
 COLLATE='utf8mb4_general_ci'
 ENGINE=InnoDB
 ;
+
+SET FOREIGN_KEY_CHECKS = 1;

@@ -1,4 +1,10 @@
-﻿CREATE TABLE `user_item` (
+﻿SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+-- ----------------------------
+-- Table structure for user_item
+-- ----------------------------
+DROP TABLE IF EXISTS `user_item`;
+CREATE TABLE `user_item` (
      `user_item_id` INT(11) NOT NULL AUTO_INCREMENT,
      `char_id` INT(11) NOT NULL,
      `item_id` INT(11) NOT NULL,
@@ -15,3 +21,5 @@
 COLLATE='utf8mb4_general_ci'
 ENGINE=InnoDB
 ;
+
+SET FOREIGN_KEY_CHECKS = 1;

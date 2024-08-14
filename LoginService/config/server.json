@@ -1,0 +1,15 @@
+{
+  "LoginServiceConfig": {
+    "ServerHost": "*",
+    "ServerPort": "2106",
+    "GameServerPort": "9014",
+    "AutoCreateAccount": true
+  },
+  "DataBaseSection": {
+    "DataBaseHost": "127.0.0.1",
+    "DataBasePort": "3306",
+    "DataBaseUser": "root",
+    "DataBasePassword": "1",
+    "DataBaseName": "l2interlude_new"
+  }
+}

@@ -1,8 +1,7 @@
 ﻿namespace DataBase.Interfaces
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWorkGame
     {
-        IAccountRepository Accounts { get; }
         ICharacterRepository Characters { get; }
         ISpawnListRepository SpawnList { get; }
         IRaidBossSpawnListRepository RaidBossSpawnList { get; }

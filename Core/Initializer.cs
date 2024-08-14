@@ -35,9 +35,9 @@ namespace Core
             return ServiceProvider.GetService<GameConfig>();
         }
 
-        public static IUnitOfWork UnitOfWork()
+        public static IUnitOfWorkGame UnitOfWork()
         {
-            return ServiceProvider.GetService<IUnitOfWork>();
+            return ServiceProvider.GetService<IUnitOfWorkGame>();
         }
 
         public static TemplateInit TemplateInit()

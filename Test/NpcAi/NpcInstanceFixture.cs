@@ -16,7 +16,7 @@ public class NpcInstanceFixture
     public NpcInstanceFixture()
     {
         IServiceCollection serviceCollection = new ServiceCollection();
-        ConfigDependencyBinder.Bind(serviceCollection);
+        GameConfigDependencyBinder.Bind(serviceCollection);
         CoreDependencyBinder.Bind(serviceCollection);
         
         _serviceProvider = serviceCollection.BuildServiceProvider();

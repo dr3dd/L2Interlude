@@ -13,11 +13,11 @@ namespace DataBase.Repositories
 {
     public class SpawnListRepository : ISpawnListRepository
     {
-        private readonly ConnectionFactory _connectionFactory;
+        private readonly GameConnectionFactory _connectionFactory;
 
         public SpawnListRepository(IServiceProvider serviceProvider)
         {
-            _connectionFactory = serviceProvider.GetService<ConnectionFactory>();
+            _connectionFactory = serviceProvider.GetService<GameConnectionFactory>();
         }
         
         public Task<SpawnListEntity> GetByIdAsync(int id)

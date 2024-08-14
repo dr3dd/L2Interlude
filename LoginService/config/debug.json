@@ -1,0 +1,7 @@
+{
+  "DebugSection": {
+    "ShowHeaderPacket": true,
+    "ShowNamePacket": true,
+    "ShowPacket": true
+  }
+}

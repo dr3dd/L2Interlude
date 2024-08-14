@@ -18,31 +18,4 @@
       <ProjectReference Include="..\Security\Security.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Remove="Scripts\01_Create_UserData.sql" />
-      <None Remove="Scripts\03_Create_UserShortCut.sql" />
-      <EmbeddedResource Include="Scripts\01_Create_UserData.sql">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <None Remove="Scripts\02_Create_UserItem.sql" />
-      <EmbeddedResource Include="Scripts\02_Create_UserItem.sql">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <None Remove="Scripts\04_Create_UserSkill.sql" />
-      <EmbeddedResource Include="Scripts\03_Create_UserShortCut.sql">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <EmbeddedResource Include="Scripts\04_Create_UserSkill.sql">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <None Remove="Scripts\05_Create_Server.sql" />
-      <EmbeddedResource Include="Scripts\05_Create_Server.sql">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <None Remove="Scripts\06_Create_UserAuth.sql" />
-      <EmbeddedResource Include="Scripts\06_Create_UserAuth.sql">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </EmbeddedResource>
-    </ItemGroup>
-
 </Project>

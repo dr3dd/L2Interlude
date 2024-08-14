@@ -1,6 +1,6 @@
 ﻿namespace Config
 {
-    public class ServerConfig
+    public class GameServerConfig
     {
         public const string GameServiceSection = "GameServiceSection";
 

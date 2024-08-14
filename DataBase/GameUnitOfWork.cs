@@ -3,9 +3,8 @@ using DataBase.Interfaces;
 
 namespace DataBase
 {
-    public class UnitOfWork : IUnitOfWork
+    public class GameUnitOfWork : IUnitOfWorkGame
     {
-        public IAccountRepository Accounts { get; }
         public ICharacterRepository Characters { get; }
         public ISpawnListRepository SpawnList { get; }
         public IRaidBossSpawnListRepository RaidBossSpawnList { get; }
@@ -16,8 +15,7 @@ namespace DataBase
         public ICharacterSkillRepository CharacterSkill { get; }
         public IShortCutRepository ShortCut { get; }
 
-        public UnitOfWork(
-            IAccountRepository accountRepository, 
+        public GameUnitOfWork( 
             ICharacterRepository characterRepository,
             ISpawnListRepository spawnListRepository,
             IUserItemRepository userItemRepository,
@@ -28,7 +26,6 @@ namespace DataBase
             IRaidBossSpawnListRepository raidBossSpawnListRepository
             )
         {
-            Accounts = accountRepository;
             Characters = characterRepository;
             SpawnList = spawnListRepository;
             UserItems = userItemRepository;
