@@ -24,7 +24,7 @@ namespace GameService
             ConfigureServices(services);
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
-            serviceProvider.DbMigration();
+            serviceProvider.DbMigrationGame();
 
             await Task.Factory.StartNew(serviceProvider.GetRequiredService<LoginServiceController>().StartAsync);
             await Task.Factory.StartNew(serviceProvider.GetRequiredService<GameService>().StartAsync);

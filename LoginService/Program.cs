@@ -21,6 +21,8 @@ namespace LoginService
             LoggerManager.Info("Starting Login Service...");
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
+            serviceProvider.DbMigrationLogin();
+
             await Task.Factory.StartNew(serviceProvider.GetRequiredService<LoginService>().StartAsync);
             Process.GetCurrentProcess().WaitForExit();
         }

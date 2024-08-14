@@ -3,7 +3,6 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for user_shortcut
 -- ----------------------------
-DROP TABLE IF EXISTS `user_shortcut_data`;
 DROP TABLE IF EXISTS `user_shortcut`;
 CREATE TABLE `user_shortcut`  (
   `char_id` int NOT NULL,
