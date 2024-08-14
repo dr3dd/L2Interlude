@@ -20,7 +20,7 @@ namespace LoginService.Network.ClientPackets
             :base(serviceProvider)
         {
             _client = client;
-            _accountRepository = serviceProvider.GetService<IUnitOfWork>()?.Accounts;
+            _accountRepository = serviceProvider.GetService<IUnitOfWorkLogin>()?.Accounts;
             _loginOkID1 = packet.ReadInt();
             _loginOkID2 = packet.ReadInt();
             _serverId = packet.ReadByte();

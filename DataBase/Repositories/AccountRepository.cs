@@ -13,10 +13,10 @@ namespace DataBase.Repositories
 {
     public class AccountRepository : IAccountRepository
     {
-        private readonly ConnectionFactory _connectionFactory;
+        private readonly LoginConnectionFactory _connectionFactory;
         public AccountRepository(IServiceProvider serviceProvider)
         {
-            _connectionFactory = serviceProvider.GetService<ConnectionFactory>();
+            _connectionFactory = serviceProvider.GetService<LoginConnectionFactory>();
         }
         
         public async Task<UserAuthEntity> GetByIdAsync(int id)

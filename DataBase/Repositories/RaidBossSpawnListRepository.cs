@@ -12,11 +12,11 @@ namespace DataBase.Repositories
 {
     public class RaidBossSpawnListRepository : IRaidBossSpawnListRepository
     {
-        private readonly ConnectionFactory _connectionFactory;
+        private readonly GameConnectionFactory _connectionFactory;
 
         public RaidBossSpawnListRepository(IServiceProvider serviceProvider)
         {
-            _connectionFactory = serviceProvider.GetService<ConnectionFactory>();
+            _connectionFactory = serviceProvider.GetService<GameConnectionFactory>();
         }
         
         public Task<RaidBossSpawnListEntity> GetByIdAsync(int id)

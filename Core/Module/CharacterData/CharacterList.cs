@@ -14,8 +14,8 @@ namespace Core.Module.CharacterData
         private readonly List<CharacterListModel> _listModels;
         public CharacterList()
         {
-            _characterRepository = Initializer.ServiceProvider.GetRequiredService<IUnitOfWork>().Characters;
-            _userItemRepository = Initializer.ServiceProvider.GetRequiredService<IUnitOfWork>().UserItems;
+            _characterRepository = Initializer.ServiceProvider.GetRequiredService<IUnitOfWorkGame>().Characters;
+            _userItemRepository = Initializer.ServiceProvider.GetRequiredService<IUnitOfWorkGame>().UserItems;
             _userItem = new Dictionary<int, int>();
             _listModels = new List<CharacterListModel>();
         }

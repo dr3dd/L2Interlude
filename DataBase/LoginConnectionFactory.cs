@@ -1,25 +1,30 @@
-﻿using System;
-using System.Data;
-using Config;
+﻿using Config;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 using MySql.Data.MySqlClient;
+using System;
+using System.Data;
+
+
+//CLR: 4.0.30319.42000
+//USER: GL
+//DATE: 14.08.2024 0:08:19
 
 namespace DataBase
 {
-    public class ConnectionFactory
+    public class LoginConnectionFactory
     {
         private readonly IServiceProvider _serviceProvider;
         private MySqlConnection _connection;
 
-        public ConnectionFactory(IServiceProvider serviceProvider)
+        public LoginConnectionFactory(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
-        
+
         public IDbConnection GetDbConnection()
         {
-            var config = _serviceProvider.GetService<GameConfig>();
+            var config = _serviceProvider.GetService<LoginConfig>();
             try
             {
                 var connectionString = $"Server={config.DataBaseConfig.DataBaseHost};" +

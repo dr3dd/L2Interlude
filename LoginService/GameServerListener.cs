@@ -39,14 +39,14 @@ namespace LoginService
 
         public async Task StartAsync()
         {
-            var config = _serviceProvider.GetService<GameConfig>();
+            var config = _serviceProvider.GetService<LoginConfig>();
 
             try
             {
-                string serverHost = config.LoginServerConfig.ServerHost;
-                _tcpListener = new TcpListener(serverHost.Equals("*") ? IPAddress.Any : IPAddress.Parse(serverHost), config.LoginServerConfig.GameServerPort);
+                string serverHost = config.ServerConfig.ServerHost;
+                _tcpListener = new TcpListener(serverHost.Equals("*") ? IPAddress.Any : IPAddress.Parse(serverHost), config.ServerConfig.GameServerPort);
                 _tcpListener.Start();
-                LoggerManager.Info($"Auth server listening gameservers at {config.LoginServerConfig.ServerHost}:{config.LoginServerConfig.GameServerPort}");
+                LoggerManager.Info($"Auth server listening gameservers at {config.ServerConfig.ServerHost}:{config.ServerConfig.GameServerPort}");
             }
             catch (FormatException ex)
             {

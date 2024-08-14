@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -11,6 +11,18 @@
       <ProjectReference Include="..\Core\Core.csproj" />
       <ProjectReference Include="..\DataBase\DataBase.csproj" />
       <ProjectReference Include="..\L2Logger\L2Logger.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="config\**">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="sql\**">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

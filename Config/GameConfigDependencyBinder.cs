@@ -4,24 +4,23 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Config
 {
-    public static class ConfigDependencyBinder
+    public static class GameConfigDependencyBinder
     {
         public static void Bind(IServiceCollection provider)
         {
-            var builder = new ConfigurationBuilder()
+            var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
-            
-            var config = builder.Build();
-            var gameServiceConfig = config.GetSection(ServerConfig.GameServiceSection).Get<ServerConfig>();
+                .AddJsonFile(@"config/server.json", false, true)
+                .AddJsonFile(@"config/debug.json", false, true)
+                .Build();
+
+            var gameServiceConfig = config.GetSection(GameServerConfig.GameServiceSection).Get<GameServerConfig>();
             var dataBaseConfig = config.GetSection(DataBaseConfig.DataBaseSection).Get<DataBaseConfig>();
-            var loginServiceConfig = config.GetSection(LoginServerConfig.LoginServiceConfig).Get<LoginServerConfig>();
             var debugConfig = config.GetSection(DebugConfig.DebugSection).Get<DebugConfig>();
             var gameConfig = new GameConfig
             {
                 ServerConfig = gameServiceConfig,
                 DataBaseConfig = dataBaseConfig,
-                LoginServerConfig = loginServiceConfig,
                 DebugConfig = debugConfig
             };
 

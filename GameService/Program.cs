@@ -24,7 +24,7 @@ namespace GameService
             ConfigureServices(services);
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
-            serviceProvider.DbMigration();
+            serviceProvider.DbMigrationGame();
 
             await Task.Factory.StartNew(serviceProvider.GetRequiredService<LoginServiceController>().StartAsync);
             await Task.Factory.StartNew(serviceProvider.GetRequiredService<GameService>().StartAsync);
@@ -33,8 +33,8 @@ namespace GameService
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            ConfigDependencyBinder.Bind(services);
-            DataBaseDependencyBinder.Bind(services);
+            GameConfigDependencyBinder.Bind(services);
+            GameDataBaseDependencyBinder.Bind(services);
             CoreDependencyBinder.Bind(services);
             
             services.AddSingleton<Initializer>();

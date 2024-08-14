@@ -21,14 +21,16 @@ namespace LoginService
             LoggerManager.Info("Starting Login Service...");
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
+            serviceProvider.DbMigrationLogin();
+
             await Task.Factory.StartNew(serviceProvider.GetRequiredService<LoginService>().StartAsync);
             Process.GetCurrentProcess().WaitForExit();
         }
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            ConfigDependencyBinder.Bind(services);
-            DataBaseDependencyBinder.Bind(services);
+            LoginConfigDependencyBinder.Bind(services);
+            LoginDataBaseDependencyBinder.Bind(services);
             services.AddSingleton<LoginPacketHandler>();
             services.AddSingleton<LoginController>();
             services.AddSingleton<GameServerPacketHandler>();

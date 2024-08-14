@@ -12,11 +12,11 @@ namespace DataBase.Repositories
 {
     public class ShortCutRepository : IShortCutRepository
     {
-        private readonly ConnectionFactory _connectionFactory;
+        private readonly GameConnectionFactory _connectionFactory;
 
         public ShortCutRepository(IServiceProvider serviceProvider)
         {
-            _connectionFactory = serviceProvider.GetService<ConnectionFactory>();
+            _connectionFactory = serviceProvider.GetService<GameConnectionFactory>();
         }
         
         public Task<ShortCutEntity> GetByIdAsync(int id)

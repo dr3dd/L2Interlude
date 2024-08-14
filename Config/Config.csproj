@@ -11,10 +11,4 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Update="appsettings.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
 </Project>

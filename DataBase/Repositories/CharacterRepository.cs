@@ -13,10 +13,10 @@ namespace DataBase.Repositories
 {
     public class CharacterRepository : ICharacterRepository
     {
-        private readonly ConnectionFactory _connectionFactory;
+        private readonly GameConnectionFactory _connectionFactory;
         public CharacterRepository(IServiceProvider serviceProvider)
         {
-            _connectionFactory = serviceProvider.GetService<ConnectionFactory>();
+            _connectionFactory = serviceProvider.GetService<GameConnectionFactory>();
         }
         
         public Task<CharacterEntity> GetByIdAsync(int id)

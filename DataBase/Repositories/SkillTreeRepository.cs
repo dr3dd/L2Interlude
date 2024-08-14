@@ -13,12 +13,12 @@ namespace DataBase.Repositories
     public class SkillTreeRepository : ISkillTreeRepository
     {
         
-        private readonly ConnectionFactory _connectionFactory;
+        private readonly GameConnectionFactory _connectionFactory;
         private readonly IServiceProvider _serviceProvider;
         
         public SkillTreeRepository(IServiceProvider serviceProvider)
         {
-            _connectionFactory = serviceProvider.GetService<ConnectionFactory>();
+            _connectionFactory = serviceProvider.GetService<GameConnectionFactory>();
             _serviceProvider = serviceProvider;
         }
         

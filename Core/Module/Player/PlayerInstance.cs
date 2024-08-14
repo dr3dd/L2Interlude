@@ -40,9 +40,9 @@ namespace Core.Module.Player
         public Location Location { get; set; }
         public NpcInstance LastTalkedNpc { get; set; }
         public GameServiceController Controller { get; set; }
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWorkGame _unitOfWork;
         private readonly WorldInit _worldInit;
-        public PlayerInstance(ITemplateHandler template, PlayerAppearance playerAppearance, IServiceProvider provider, IUnitOfWork unitOfWork) : base(provider)
+        public PlayerInstance(ITemplateHandler template, PlayerAppearance playerAppearance, IServiceProvider provider, IUnitOfWorkGame unitOfWork) : base(provider)
         {
             CharacterName = playerAppearance.CharacterName;
             _templateHandler = template;
@@ -68,7 +68,7 @@ namespace Core.Module.Player
             _worldInit = provider.GetRequiredService<WorldInit>();
         }
 
-        public IUnitOfWork GetUnitOfWork() => _unitOfWork;
+        public IUnitOfWorkGame GetUnitOfWork() => _unitOfWork;
 
         public ITemplateHandler TemplateHandler() => _templateHandler;
         public PlayerAppearance PlayerAppearance() => _playerAppearance;
