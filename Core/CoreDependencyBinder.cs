@@ -45,6 +45,7 @@ namespace Core
             services.AddSingleton<SkillAcquireInit>();
             services.AddSingleton<EffectInit>();
             services.AddSingleton<ChatHandler>();
+            services.AddSingleton<AdminCommandHandler>();
         }
     }
 }
