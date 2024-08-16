@@ -26,7 +26,7 @@ namespace Core.Controller.Handlers.AdminCommands
             }
             */
 
-            LoggerManager.Debug($"{GetType().Name}: login {admin.CharacterName} alias {alias}");
+            LoggerManager.Debug($"{GetType().Name}: char {admin.CharacterName} alias {alias}");
 
             Use(admin, alias);
         }

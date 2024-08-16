@@ -45,7 +45,7 @@ namespace Core.Controller.Handlers
 
             if (!commands.ContainsKey(cmd))
             {
-                admin.SendPacketAsync(new SystemMessage($"Command {cmd} not exists."));
+                admin.SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString($"Command {cmd} not exists."));
                 //admin.SendActionFailedPacketAsync();
                 LoggerManager.Warn($"AdminCommandHandler: Command {cmd} not exists.");
                 return;

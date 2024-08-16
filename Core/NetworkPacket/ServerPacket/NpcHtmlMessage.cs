@@ -1,5 +1,6 @@
 ﻿using Core.Module.Player;
 using L2Logger;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Core.NetworkPacket.ServerPacket
 {
@@ -25,6 +26,7 @@ namespace Core.NetworkPacket.ServerPacket
         {
             var html = Initializer.HtmlCacheInit().GetHtmlText(fileName);
             _npcObjId = objId;
+            SetHtml(html);
         }
 
         private void SetHtml(string text)

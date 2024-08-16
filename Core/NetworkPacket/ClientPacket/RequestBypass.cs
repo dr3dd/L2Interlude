@@ -3,22 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Controller;
+using Core.Controller.Handlers;
 using Core.Module.NpcData;
 using Core.Module.Player;
 using Core.Module.WorldData;
 using Microsoft.Extensions.DependencyInjection;
+using MySqlX.XDevAPI;
 using Network;
 
 namespace Core.NetworkPacket.ClientPacket
 {
     public class RequestBypass : PacketBase
     {
+        private readonly IServiceProvider _serviceProvider;
         private readonly PlayerInstance _playerInstance;
         private readonly string _command;
         private readonly WorldInit _worldInit;
         
         public RequestBypass(IServiceProvider serviceProvider, Packet packet, GameServiceController controller) : base(serviceProvider)
         {
+            _serviceProvider = serviceProvider;
             _playerInstance = controller.GameServiceHelper.CurrentPlayer;
             _worldInit = serviceProvider.GetRequiredService<WorldInit>();
             _command = packet.ReadString();
@@ -51,6 +55,13 @@ namespace Core.NetworkPacket.ClientPacket
                     break;
                 }
             }
+
+            if (_command.StartsWith("admin_"))
+            {
+                var adminCommandHandler = _serviceProvider.GetRequiredService<AdminCommandHandler>();
+                adminCommandHandler.Request(_playerInstance, _command);
+            }
+            
         }
 
         private async Task TeleportRequest(IEnumerable<string> split)
