@@ -123,7 +123,16 @@ namespace Core.Module.Player
             await Controller.SendPacketAsync(new UserInfo(this));
             //Broadcast.toKnownPlayers(this, new CharInfo(this)); TODO
         }
-        
+
+        public async Task ShowHtm(string fileName, PlayerInstance o)
+        {
+            if (fileName.EndsWithIgnoreCase(".htm"))
+            {
+                SendPacketAsync(new NpcHtmlMessage(this, fileName, o.ObjectId));
+
+            }
+        }
+
         public PlayerMoveToLocation PlayerLocation()
         {
             return _toLocation;

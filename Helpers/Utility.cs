@@ -44,5 +44,9 @@ namespace Helpers
         {
             return assembly.GetTypes().Where(t => string.Equals(t.Namespace, nameSpace, StringComparison.Ordinal)).ToArray();
         }
+        public static bool EndsWithIgnoreCase(this string str, string stringToCompare)
+        {
+            return str.EndsWith(stringToCompare, StringComparison.InvariantCultureIgnoreCase);
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿using L2Logger;
+﻿using Core.Module.Player;
+using L2Logger;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Core.NetworkPacket.ServerPacket
 {
@@ -18,6 +20,13 @@ namespace Core.NetworkPacket.ServerPacket
         public NpcHtmlMessage(int npcObjId)
         {
             _npcObjId = npcObjId;
+        }
+
+        public NpcHtmlMessage(PlayerInstance player, string fileName, int objId)
+        {
+            var html = Initializer.HtmlCacheInit().GetHtmlText(fileName);
+            _npcObjId = objId;
+            SetHtml(html);
         }
 
         private void SetHtml(string text)
