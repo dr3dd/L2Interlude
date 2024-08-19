@@ -69,6 +69,10 @@ namespace Core
         {
             return ServiceProvider.GetService<ChatHandler>();
         }
+        internal static AdminCommandHandler AdminCommandHandler()
+        {
+            return ServiceProvider.GetService<AdminCommandHandler>();
+        }
 
         public static SkillPchInit SkillPchInit()
         {
@@ -131,6 +135,7 @@ namespace Core
             //ServiceProvider.GetService<SkillSpellBookInit>();
             LoggerManager.Info("----World----");
             ServiceProvider.GetRequiredService<ChatHandler>();
+            ServiceProvider.GetRequiredService<AdminCommandHandler>();
             LoggerManager.Info("----Npc----");
             //ServiceProvider.GetService<NpcTableInit>();
             //ServiceProvider.GetService<NpcWalkerRouteDataInit>();

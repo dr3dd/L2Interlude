@@ -1,0 +1,49 @@
+﻿<html>
+    <title>NCore [Teleport]</title>
+    <center>
+        <table width=270 border=0 bgcolor="444444">
+            <tr>
+                <td><button value="Main" action="bypass -h admin_admin" width=65 height=21 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+                <td><button value="Char" action="bypass -h admin_admin char/main.htm" width=65 height=21 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+                <td><button value="Game" action="bypass -h admin_admin game/main.htm" width=65 height=21 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+                <td><button value="GM" action="bypass -h admin_admin gm/main.htm" width=65 height=21 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+            </tr>
+        </table>
+    </center>
+    <br>
+    <br>
+    <center>
+        <table width=270>
+            <tr>
+                <td><button value="Towns" action="bypass -h admin_admin teleport/town.htm" width=65 height=21 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+                <td><button value="Town Area's" action="bypass -h admin_admin teleport/townarea.htm" width=65 height=21 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+                <td><button value="Castle" action="bypass -h admin_admin teleport/castle.htm" width=65 height=21 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+                <td><button value="Fortress" action="bypass -h admin_admin teleport/fort.htm" width=65 height=21 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+            </tr>
+        </table>
+        <br>
+
+        Move to the given coordinates
+        <br1>
+        <table width=256>
+            <tr>
+                <td align=center width=85><font color="LEVEL">X</font></td>
+                <td align=center width=85><font color="LEVEL">Y</font></td>
+                <td align=center width=85><font color="LEVEL">Z</font></td>
+            </tr>
+        </table>
+        <table width=256>
+            <tr>
+                <td align=center><edit var="char_cord_x" width=75></td>
+                <td align=center><edit var="char_cord_y" width=75></td>
+                <td align=center><edit var="char_cord_z" width=75></td>
+            </tr>
+        </table>
+        <br>
+        <table width=256>
+            <tr>
+                <td align=center><button value="Go" action="bypass -h admin_teleport $char_cord_x $char_cord_y $char_cord_z" width=31 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+            </tr>
+        </table>
+    </center>
+</html>

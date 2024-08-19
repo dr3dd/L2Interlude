@@ -203,7 +203,7 @@ public class UserInfo : Network.ServerPacket
 		WriteInt(_playerAppearance.HairStyle);
 		WriteInt(_playerAppearance.HairColor);
 		WriteInt(_playerAppearance.Face);
-		WriteInt(0); // _playerInstance.isGM() builder level
+		WriteInt(1); // _playerInstance.isGM() builder level
 
 		WriteString(""); //_playerInstance.Stat.Title
 

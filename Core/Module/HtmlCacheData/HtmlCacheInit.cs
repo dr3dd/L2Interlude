@@ -40,7 +40,12 @@ namespace Core.Module.HtmlCacheData
         public string GetHtmlText(string fnHi)
         {
             var path = _basePath + "/" + fnHi;
-            return LoadFile(new FileInfo(path));
+            FileInfo fileInfo = new FileInfo(path);
+            if (fileInfo.Exists)
+            {
+                return LoadFile(new FileInfo(path));
+            }
+            return $"<html>NOT FOUND: {fnHi}</html>";
         }
     }
 }
