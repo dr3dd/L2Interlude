@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Core.Manager;
 using Core.Module.ItemData;
 using Core.Module.NpcData;
 using Core.Module.Player;
@@ -26,6 +27,7 @@ public abstract class Character : WorldObject
     public int Heading { get; set; }
     public string CharacterName { get; protected set; }
     public byte Level { get; set; }
+    public bool IsGM { get { return Initializer.AdminAccessManager().IsGM(CharacterName); } set { IsGM = value; } }
     public CharacterStatus CharacterStatus() => _characterStatus;
     public CharacterEffect CharacterEffect() => _characterEffect;
     public CharacterMovement CharacterMovement() => _characterMovement;

@@ -1,0 +1,19 @@
+{
+  "AccessSection": {
+    //list administrators and access templates
+    "GMList": {
+      "Maiali": "full",
+      "Laary": "moderator"
+    },
+    //access templates
+    "Templates": {
+      "full": {
+        "AllowAllCommands": true
+      },
+      "moderator": {
+        "AllowCommands": [ "admin_admin" ],
+        "DenyCommands": [ "admin_teleport" ]
+      }
+    }
+  }
+}

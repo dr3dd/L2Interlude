@@ -18,13 +18,11 @@ namespace Core.Controller.Handlers.AdminCommands
     {
         internal void UseCommand(PlayerInstance admin, string alias)
         {
-            /* TODO
-            if (!CheckCommand(admin, alias))
+            if (!Initializer.AdminAccessManager().CheckCommand(admin, alias))
             {
-                admin.SendPacketAsync(new SystemMessage("Access denied"));
+                admin.SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString("Access denied"));
                 return;
             }
-            */
 
             LoggerManager.Debug($"{GetType().Name}: char {admin.CharacterName} alias {alias}");
 

@@ -1,6 +1,7 @@
 ﻿using Core.Controller;
 using Core.Controller.Handlers;
 using Core.GeoEngine;
+using Core.Manager;
 using Core.Module.AreaData;
 using Core.Module.CategoryData;
 using Core.Module.CharacterData.Template;
@@ -46,6 +47,7 @@ namespace Core
             services.AddSingleton<EffectInit>();
             services.AddSingleton<ChatHandler>();
             services.AddSingleton<AdminCommandHandler>();
+            services.AddSingleton<AdminAccessManager>();
         }
     }
 }
