@@ -2,6 +2,7 @@
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
 using Helpers;
+using System.Threading.Tasks;
 
 
 //CLR: 4.0.30319.42000
@@ -26,6 +27,7 @@ namespace Core.Controller.Handlers.AdminCommands
                     int z = admin.GetZ() + 300; //TODO get height
                     //admin.TeleportToLocation(x, y, z);
                     admin.SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString($"Teleport need implementation."));
+                    admin.TeleportToLocation(x, y, z);
                 }
                 else if (len.Equals(4))
                 {
@@ -34,6 +36,7 @@ namespace Core.Controller.Handlers.AdminCommands
                     int z = int.Parse(args[3]);
                     //admin.TeleportToLocation(x, y, z);
                     admin.SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString($"Teleport need implementation."));
+                    admin.TeleportToLocation(x, y, z);
                 }
             }
             else

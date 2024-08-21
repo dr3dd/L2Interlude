@@ -128,7 +128,7 @@ namespace Core.Module.Player
         {
             if (fileName.EndsWithIgnoreCase(".htm"))
             {
-                SendPacketAsync(new NpcHtmlMessage(this, fileName, o.ObjectId));
+                await SendPacketAsync(new NpcHtmlMessage(this, fileName, o.ObjectId));
 
             }
         }
@@ -245,6 +245,21 @@ namespace Core.Module.Player
         public override Task DoDieProcess()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task TeleportToLocation(int x, int y, int z)
+        {
+            await CharacterMovement().StopMoveAsync(new Location(GetX(), GetY(), GetZ(), Heading));
+            PlayerAction().SetTeleporting(true);
+            await CharacterTargetAction().RemoveTargetAsync();
+            CharacterKnownList().RemoveMeFromKnownObjects();
+            CharacterKnownList().RemoveAllKnownObjects();
+            WorldObjectPosition().GetWorldRegion().RemoveFromZones(this);
+
+            var teleportToLocation = new TeleportToLocation(this, x, y, z);
+            await SendPacketAsync(teleportToLocation);
+            await SendToKnownPlayers(teleportToLocation);
+            WorldObjectPosition().SetXYZ(x, y, z);
         }
     }
 }
