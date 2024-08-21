@@ -4,6 +4,7 @@ using Config;
 using Core.Controller;
 using Core.Controller.Handlers;
 using Core.GeoEngine;
+using Core.Manager;
 using Core.Module.AreaData;
 using Core.Module.CategoryData;
 using Core.Module.CharacterData.Template;
@@ -68,6 +69,10 @@ namespace Core
         internal static ChatHandler ChatHandler()
         {
             return ServiceProvider.GetService<ChatHandler>();
+        }
+        internal static AdminAccessManager AdminAccessManager()
+        {
+            return ServiceProvider.GetService<AdminAccessManager>();
         }
         internal static AdminCommandHandler AdminCommandHandler()
         {
@@ -135,6 +140,7 @@ namespace Core
             //ServiceProvider.GetService<SkillSpellBookInit>();
             LoggerManager.Info("----World----");
             ServiceProvider.GetRequiredService<ChatHandler>();
+            ServiceProvider.GetRequiredService<AdminAccessManager>();
             ServiceProvider.GetRequiredService<AdminCommandHandler>();
             LoggerManager.Info("----Npc----");
             //ServiceProvider.GetService<NpcTableInit>();
