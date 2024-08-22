@@ -553,7 +553,7 @@ public class CharacterMovement
     {
         // Delete movement data of the Creature
         _move = null;
-        _characterMovementStatus.SetStand();
+        //_characterMovementStatus.SetStand();
         _character.WorldObjectPosition().SetXYZ(pos.GetX(), pos.GetY(), pos.GetZ());
         _character.Heading = pos.GetHeading();
 
