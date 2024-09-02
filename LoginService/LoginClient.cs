@@ -146,11 +146,7 @@ namespace LoginService
 
         public byte[] GetDecryptedLoginData(byte[] raw)
         {
-            AsymmetricKeyParameter key = _rsaPair.PrivateKey;
-            RsaEngine rsa = new RsaEngine();
-            rsa.Init(false, key);
-
-            byte[] decrypt = rsa.ProcessBlock(raw, 0, 128);
+            byte[] decrypt = Rsa.Decrypt(raw);
 
             if (decrypt.Length < 128)
             {

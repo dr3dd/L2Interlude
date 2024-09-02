@@ -40,6 +40,7 @@ namespace LoginService
             LoggerManager.Info("Loading Keys...");
             await Task.Run(GenerateScrambledKeys);
             await Task.Run(GenerateBlowFishKeys);
+            InitializeRSA();
         }
 
         private void GenerateBlowFishKeys()
@@ -62,10 +63,15 @@ namespace LoginService
 
             for (int i = 0; i < ScrambleCount; i++)
             {
-                _keyPairs[i] = new ScrambledKeyPair(ScrambledKeyPair.GenKeyPair());
+                _keyPairs[i] = new ScrambledKeyPair();
             }
 
             LoggerManager.Info($"Cached {_keyPairs.Length} KeyPairs for RSA communication.");
+        }
+        private void InitializeRSA()
+        {
+            Rsa.Initialize(GetScrambledKeyPair());
+            LoggerManager.Info($"Initialized RSA Engine.");
         }
 
         public byte[] GetBlowfishKey()

@@ -13,13 +13,13 @@ namespace Security
         public byte[] ScrambledModulus;
         public AsymmetricKeyParameter PrivateKey;
 
-        public ScrambledKeyPair(AsymmetricCipherKeyPair pPair)
+        public ScrambledKeyPair()
         {
-            _pair = pPair;
-            AsymmetricKeyParameter publicKey = pPair.Public;
+            _pair = GenKeyPair();
+            AsymmetricKeyParameter publicKey = _pair.Public;
             if (publicKey is RsaKeyParameters rsaKeyParameters)
                 ScrambledModulus = ScrambleModulus(rsaKeyParameters.Modulus);
-            PrivateKey = pPair.Private;
+            PrivateKey = _pair.Private;
         }
 
         public static AsymmetricCipherKeyPair GenKeyPair()

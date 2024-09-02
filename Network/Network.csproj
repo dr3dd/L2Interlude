@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -10,7 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.Threading.Tasks.Dataflow" Version="5.0.0" />
+      <PackageReference Include="System.Threading.Tasks.Dataflow" Version="8.0.1" />
     </ItemGroup>
 
 </Project>

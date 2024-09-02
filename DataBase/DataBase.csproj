@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
       <PackageReference Include="Dapper.FluentMap" Version="2.0.0" />
-      <PackageReference Include="dbup-mysql" Version="5.0.10" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
-      <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+      <PackageReference Include="dbup-mysql" Version="5.0.44" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
