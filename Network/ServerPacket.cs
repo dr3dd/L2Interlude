@@ -83,6 +83,11 @@ namespace Network
             _stream.WriteByte(value);
         }
 
+        protected void WriteByte(bool value = false)
+        {
+            _stream.WriteByte((byte)(value.Equals(true) ? 1 : 0));
+        }
+
         protected void WriteByte(int value)
         {
             _stream.WriteByte((byte)value);

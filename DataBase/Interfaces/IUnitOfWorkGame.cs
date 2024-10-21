@@ -10,5 +10,6 @@
         ISkillTreeRepository SkillTree { get; }
         ICharacterSkillRepository CharacterSkill { get; }
         IShortCutRepository ShortCut { get; }
+        IMacrosRepository Macros { get; }
     }
 }
