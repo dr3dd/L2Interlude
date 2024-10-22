@@ -30,6 +30,7 @@ namespace Core.NetworkPacket.ClientPacket
                 await _playerInstance.SendPacketAsync(new UserInfo(_playerInstance));
                 await _playerInstance.SendPacketAsync(new ClientSetTime()); // SetClientTime
                 await _playerInstance.SendPacketAsync(new ItemList(_playerInstance, false));
+                await _playerInstance.PlayerMacros().SendAllMacros();
                 await _playerInstance.SendPacketAsync(new ShortCutInit(_playerInstance));
                 await _playerInstance.SendPacketAsync(new SystemMessage(SystemMessageId.WelcomeToLineage));
             }

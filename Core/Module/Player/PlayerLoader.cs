@@ -27,6 +27,7 @@ namespace Core.Module.Player
             await playerInstance.PlayerInventory().RestoreInventory();
             await playerInstance.PlayerSkill().RestorePassiveSkills();
             await playerInstance.PlayerShortCut().RestoreShortCuts();
+            await playerInstance.PlayerMacros().RestoreMacroses();
             return playerInstance;
         }
         

@@ -14,6 +14,7 @@ namespace DataBase
         public ISkillTreeRepository SkillTree { get; }
         public ICharacterSkillRepository CharacterSkill { get; }
         public IShortCutRepository ShortCut { get; }
+        public IMacrosRepository Macros { get; }
 
         public GameUnitOfWork( 
             ICharacterRepository characterRepository,
@@ -23,6 +24,7 @@ namespace DataBase
             ISkillTreeRepository skillTreeRepository,
             ICharacterSkillRepository characterSkillRepository,
             IShortCutRepository shortCutRepository,
+            IMacrosRepository macrosRepository,
             IRaidBossSpawnListRepository raidBossSpawnListRepository
             )
         {
@@ -33,6 +35,7 @@ namespace DataBase
             SkillTree = skillTreeRepository;
             CharacterSkill = characterSkillRepository;
             ShortCut = shortCutRepository;
+            Macros = macrosRepository;
             RaidBossSpawnList = raidBossSpawnListRepository;
         }
     }

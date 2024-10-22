@@ -16,7 +16,10 @@ namespace Core.NetworkPacket.ClientPacket
 
         public override async Task Execute()
         {
-            await _playerInstance.DeleteMeAsync();
+            if (_playerInstance != null)
+            {
+                await _playerInstance.DeleteMeAsync();
+            }
         }
     }
 }

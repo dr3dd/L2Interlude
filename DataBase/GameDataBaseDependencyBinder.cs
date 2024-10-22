@@ -20,6 +20,7 @@ namespace DataBase
                 config.AddMap(new SkillTreeMap());
                 config.AddMap(new CharacterSkillMap());
                 config.AddMap(new ShortCutMap());
+                config.AddMap(new UserMacrosMap());
             });
             
             services.AddSingleton<GameConnectionFactory>();
@@ -31,6 +32,7 @@ namespace DataBase
             services.AddTransient<ISkillTreeRepository, SkillTreeRepository>();
             services.AddTransient<ICharacterSkillRepository, CharacterSkillRepository>();
             services.AddTransient<IShortCutRepository, ShortCutRepository>();
+            services.AddTransient<IMacrosRepository, MacrosRepository>();
             services.AddSingleton<IUnitOfWorkGame, GameUnitOfWork>();
         }
     }
