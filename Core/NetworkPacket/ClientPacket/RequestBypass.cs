@@ -75,9 +75,10 @@ namespace Core.NetworkPacket.ClientPacket
         {
             var parseNpc = split[1].Split("?");
             var npcObjectId = Convert.ToInt32(parseNpc.First());
-            var teleportId = Convert.ToInt32(parseNpc.Last().Split("=")[1]);
+            var teleportHashId = Convert.ToInt32(parseNpc.Last().Split("=")[1].Split(",")[0]);
+            var teleportId = Convert.ToInt32(parseNpc.Last().Split("=")[1].Split(",")[1]);
             var npcInstance = GetNpcInstance(npcObjectId);
-            await npcInstance.NpcTeleport().TeleportToLocation(teleportId, _playerInstance);
+            await npcInstance.NpcTeleport().TeleportToLocation(teleportHashId, teleportId, _playerInstance);
         }
 
         private async Task MenuSelect(string spl)

@@ -19,6 +19,10 @@ public class NpcAiDefault
         if (defaultNpc is Teleporter teleporter)
         {
             teleporter.FnHi = fnHi;
+            teleporter.FnNobless = fnNobless;
+            teleporter.FnNoNobless = fnNoNobless;
+            teleporter.FnNoNoblessItem = fnNoNoblessItem;
+            teleporter.FnYouAreChaotic = fnYouAreChaotic;
         }
         if (defaultNpc is Guard guard)
         {

@@ -1,4 +1,7 @@
-﻿namespace Helpers
+﻿using System.Collections.Generic;
+using System;
+
+namespace Helpers
 {
     public class TeleportList
     {
@@ -22,6 +25,11 @@
             GetZ = z;
             Price = price;
             Type = type;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, GetX, GetY, GetZ, Price, Type);
         }
     }
 }
