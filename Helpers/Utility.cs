@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -47,6 +48,17 @@ namespace Helpers
         public static bool EndsWithIgnoreCase(this string str, string stringToCompare)
         {
             return str.EndsWith(stringToCompare, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public static int GetHashCodeByValue (this IEnumerable<TeleportList> list)
+        {
+            HashCode hash = new();
+            foreach (var item in list)
+            {
+                hash.Add(item?.GetHashCode() ?? 0);
+            }
+
+            return hash.ToHashCode();
         }
     }
 }

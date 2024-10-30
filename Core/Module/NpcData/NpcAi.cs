@@ -53,7 +53,8 @@ namespace Core.Module.NpcData
             Sm = new NpcAiSm
             {
                 Level = _npcInstance.Level,
-                Race = GetNpcRaceId(_npcInstance.GetStat().Race)
+                Race = GetNpcRaceId(_npcInstance.GetStat().Race),
+                Name = _npcInstance.GetStat().Name
             };
         }
 
@@ -167,14 +168,14 @@ namespace Core.Module.NpcData
             }
         }
 
-        public void InstantTeleport(Talker talker, int posX01, int posY01, int posZ01)
+        public async Task InstantTeleport(Talker talker, int posX01, int posY01, int posZ01)
         {
-            throw new NotImplementedException();
+            await _npcInstance.NpcTeleport().TeleportToLocation(talker.PlayerInstance, posX01, posY01, posZ01);
         }
 
-        public int OwnItemCount(Talker talker, int friendShip1)
+        public int OwnItemCount(Talker talker, int itemId)
         {
-            throw new NotImplementedException();
+            return talker.PlayerInstance.PlayerInventory().GetItemInstance(itemId).Amount;
         }
 
         public string MakeFString(int i, string empty, string s, string empty1, string s1, string empty2)
