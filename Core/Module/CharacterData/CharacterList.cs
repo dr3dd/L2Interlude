@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DataBase.Entities;
 using DataBase.Interfaces;
@@ -23,16 +24,25 @@ namespace Core.Module.CharacterData
         public async Task<List<CharacterListModel>> GetCharacterList(string accountName)
         {
             var list = await _characterRepository.GetCharactersByAccountNameAsync(accountName);
-            list.ForEach(PrepareCharacterList);
-            return _listModels;
+
+            // Process all characters in parallel
+            var tasks = list.Select(PrepareCharacterListAsync);
+            var characterListModels = await Task.WhenAll(tasks);
+
+            return characterListModels.ToList();
         }
 
-        private async void PrepareCharacterList(CharacterEntity entity)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        private async Task<CharacterListModel> PrepareCharacterListAsync(CharacterEntity entity)
         {
             var items = await _userItemRepository.GetInventoryItemsByOwnerId(entity.CharacterId);
             items.ForEach(item => { _userItem.Add(item.UserItemId, item.ItemId); });
 
-            var characterList = new CharacterListModel
+            return new CharacterListModel
             {
                 CharacterId = entity.CharacterId,
                 CharacterName = entity.CharacterName,
@@ -72,12 +82,16 @@ namespace Core.Module.CharacterData
                 StFace = entity.StFace,
                 StHairAll = entity.StHairAll,
             };
-            _listModels.Add(characterList);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userItemId"></param>
+        /// <returns></returns>
         public int GetItem(int userItemId)
         {
-            return _userItem.ContainsKey(userItemId) ? _userItem[userItemId] : 0;
+            return _userItem.TryGetValue(userItemId, out var itemId) ? itemId : 0;
         }
     }
 }

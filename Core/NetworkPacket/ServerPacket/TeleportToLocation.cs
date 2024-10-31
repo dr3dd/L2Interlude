@@ -1,4 +1,5 @@
-﻿using Core.Module.CharacterData;
+﻿using System.Threading.Tasks;
+using Core.Module.CharacterData;
 
 namespace Core.NetworkPacket.ServerPacket
 {
@@ -18,15 +19,15 @@ namespace Core.NetworkPacket.ServerPacket
             _z = z;
             _heading = character.WorldObjectPosition().Heading;
         }
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x28);
-            WriteInt(_targetObjId);
-            WriteInt(_x);
-            WriteInt(_y);
-            WriteInt(_z);
-            WriteInt(0x00); // isValidation ??
-            WriteInt(_heading); // nYaw
+            await WriteByteAsync(0x28);
+            await WriteIntAsync(_targetObjId);
+            await WriteIntAsync(_x);
+            await WriteIntAsync(_y);
+            await WriteIntAsync(_z);
+            await WriteIntAsync(0x00); // isValidation ??
+            await WriteIntAsync(_heading); // nYaw
         }
     }
 }

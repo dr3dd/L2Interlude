@@ -1,4 +1,5 @@
-﻿using Network;
+﻿using System.Threading.Tasks;
+using Network;
 
 namespace LoginService.Network.GameServerPackets
 {
@@ -6,10 +7,10 @@ namespace LoginService.Network.GameServerPackets
     {
         private const byte Opcode = 0xA6;
 
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(Opcode);
-            WriteString("Gameserver Authenticated");
+            await WriteByteAsync(Opcode);
+            await WriteStringAsync("Gameserver Authenticated");
         }
     }
 }

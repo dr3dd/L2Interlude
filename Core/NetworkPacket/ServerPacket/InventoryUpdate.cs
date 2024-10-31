@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Module.ItemData;
 using Core.Module.Player;
 
@@ -37,26 +38,26 @@ namespace Core.NetworkPacket.ServerPacket
             _items.Add(item);
         }
         
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x27);
-            WriteShort(_items.Count);
+            await WriteByteAsync(0x27);
+            await WriteShortAsync(_items.Count);
 
             foreach (var item in _items)
             {
-                WriteShort(item.Change);
-                WriteShort(0); //(int) item.Item.Type1
-                WriteInt(item.ObjectId);
-                WriteInt(item.ItemId);
-                WriteInt(item.Amount);
-                WriteShort((int)item.GetItemType());
-                WriteShort(0); //item.CustomType1
-                WriteShort(item.IsEquipped(_characterInfo) ? 0x01 : 0x00);
-                WriteInt((int) item.GetSlotBitType());
-                WriteShort(0); //item.Enchant
-                WriteShort(0); //item.CustomType2
-                WriteInt(0); //item.AugmentationBonus
-                WriteInt(0); //item.Mana
+                await WriteShortAsync(item.Change);
+                await WriteShortAsync(0); //(int) item.Item.Type1
+                await WriteIntAsync(item.ObjectId);
+                await WriteIntAsync(item.ItemId);
+                await WriteIntAsync(item.Amount);
+                await WriteShortAsync((int)item.GetItemType());
+                await WriteShortAsync(0); //item.CustomType1
+                await WriteShortAsync(item.IsEquipped(_characterInfo) ? 0x01 : 0x00);
+                await WriteIntAsync((int) item.GetSlotBitType());
+                await WriteShortAsync(0); //item.Enchant
+                await WriteShortAsync(0); //item.CustomType2
+                await WriteIntAsync(0); //item.AugmentationBonus
+                await WriteIntAsync(0); //item.Mana
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using Network;
+﻿using System.Threading.Tasks;
+using Network;
 
 namespace LoginService.Network.GameServerPackets
 {
@@ -11,10 +12,10 @@ namespace LoginService.Network.GameServerPackets
             _key = randomKey;
         }
 
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(Opcode);
-            WriteInt(_key);
+            await WriteByteAsync(Opcode);
+            await WriteIntAsync(_key);
         }
     }
 }

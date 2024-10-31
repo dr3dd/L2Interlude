@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Core.NetworkPacket.ServerPacket
 {
@@ -42,19 +43,19 @@ namespace Core.NetworkPacket.ServerPacket
             _skills.Add(new Skill(id, nextLevel, maxLevel, spCost, requirements));
         }
         
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x8a);
-            WriteInt(1); // c4 : C5 : 0: usuall 1: fishing 2: clans
-            WriteInt(_skills.Count);
+            await WriteByteAsync(0x8a);
+            await WriteIntAsync(1); // c4 : C5 : 0: usuall 1: fishing 2: clans
+            await WriteIntAsync(_skills.Count);
 
             _skills.ForEach(skill =>
             {
-                WriteInt(skill.Id);
-                WriteInt(skill.NextLevel);
-                WriteInt(skill.MaxLevel);
-                WriteInt(skill.SpCost);
-                WriteInt(skill.Requirements);
+                WriteIntAsync(skill.Id);
+                WriteIntAsync(skill.NextLevel);
+                WriteIntAsync(skill.MaxLevel);
+                WriteIntAsync(skill.SpCost);
+                WriteIntAsync(skill.Requirements);
             });
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace Core.NetworkPacket.ServerPacket
+﻿using System.Threading.Tasks;
+
+namespace Core.NetworkPacket.ServerPacket
 {
     internal sealed class SetupGauge : Network.ServerPacket
     {
@@ -15,12 +17,12 @@
             _time = time;
         }
         
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x6d);
-            WriteInt(_dat1);
-            WriteInt(_time);
-            WriteInt(_time); // c2
+            await WriteByteAsync(0x6d);
+            await WriteIntAsync(_dat1);
+            await WriteIntAsync(_time);
+            await WriteIntAsync(_time); // c2
         }
     }
 }

@@ -1,10 +1,12 @@
-﻿namespace Core.NetworkPacket.ServerPacket.CharacterPacket
+﻿using System.Threading.Tasks;
+
+namespace Core.NetworkPacket.ServerPacket.CharacterPacket
 {
     public class CharTemplates : Network.ServerPacket
     {
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x17);
+            await WriteByteAsync(0x17);
         }
     }
 }

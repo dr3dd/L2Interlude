@@ -1,4 +1,5 @@
-﻿using Core.Module.DoorData;
+﻿using System.Threading.Tasks;
+using Core.Module.DoorData;
 using Core.Module.Player;
 
 namespace Core.NetworkPacket.ServerPacket;
@@ -15,15 +16,15 @@ public class DoorStatusUpdate : Network.ServerPacket
         _openClose = openClose;
     }
 
-    public override void Write()
+    public override async Task WriteAsync()
     {
-        WriteByte(0x4D);
-        WriteInt(_doorInstance.ObjectId);
-        WriteInt(_openClose);
-        WriteInt(0);
-        WriteInt(0);
-        WriteInt(_doorInstance.DoorStat().EditorId); //door id, editor_id
-        WriteInt(_doorInstance.DoorStat().Hp); //MaxHp
-        WriteInt(_doorInstance.DoorStat().Hp); //CurrentHp
+        await WriteByteAsync(0x4D);
+        await WriteIntAsync(_doorInstance.ObjectId);
+        await WriteIntAsync(_openClose);
+        await WriteIntAsync(0);
+        await WriteIntAsync(0);
+        await WriteIntAsync(_doorInstance.DoorStat().EditorId); //door id, editor_id
+        await WriteIntAsync(_doorInstance.DoorStat().Hp); //MaxHp
+        await WriteIntAsync(_doorInstance.DoorStat().Hp); //CurrentHp
     }
 }

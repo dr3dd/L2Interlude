@@ -1,4 +1,5 @@
-﻿using Core.Module.Player.ShortCuts;
+﻿using System.Threading.Tasks;
+using Core.Module.Player.ShortCuts;
 
 //CLR: 4.0.30319.42000
 //USER: GL
@@ -14,12 +15,12 @@ namespace Core.NetworkPacket.ServerPacket
             _shortcut = shortcut;
         }
 
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x44);
+            await WriteByteAsync(0x44);
 
-            WriteInt((int)_shortcut.Type);
-            WriteInt(_shortcut.Slot + (_shortcut.Page * 12)); // C4 Client
+            await WriteIntAsync((int)_shortcut.Type);
+            await WriteIntAsync(_shortcut.Slot + (_shortcut.Page * 12)); // C4 Client
             switch (_shortcut.Type)
             {
                 case ShortCutType.NONE:
@@ -28,12 +29,12 @@ namespace Core.NetworkPacket.ServerPacket
                 case ShortCutType.MACRO:
                 case ShortCutType.RECIPE:
                 case ShortCutType.BOOKMARK:
-                    WriteInt(_shortcut.Id);
+                    await WriteIntAsync(_shortcut.Id);
                     break;
                 case ShortCutType.SKILL:
-                    WriteInt(_shortcut.Id);
-                    WriteInt(_shortcut.Level);
-                    WriteByte(0x00); // C5
+                    await WriteIntAsync(_shortcut.Id);
+                    await WriteIntAsync(_shortcut.Level);
+                    await WriteByteAsync(0x00); // C5
                     break;
             }
         }

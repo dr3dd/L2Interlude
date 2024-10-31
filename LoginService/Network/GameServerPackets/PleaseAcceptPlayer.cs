@@ -1,4 +1,5 @@
-﻿using Network;
+﻿using System.Threading.Tasks;
+using Network;
 using Security;
 
 namespace LoginService.Network.GameServerPackets
@@ -13,14 +14,14 @@ namespace LoginService.Network.GameServerPackets
             _accountId = accountId;
             _key = key;
         }
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(Opcode);
-            WriteInt(_accountId);
-            WriteInt(_key.LoginOkId1);
-            WriteInt(_key.LoginOkId2);
-            WriteInt(_key.PlayOkId1);
-            WriteInt(_key.PlayOkId2);
+            await WriteByteAsync(Opcode);
+            await WriteIntAsync(_accountId);
+            await WriteIntAsync(_key.LoginOkId1);
+            await WriteIntAsync(_key.LoginOkId2);
+            await WriteIntAsync(_key.PlayOkId1);
+            await WriteIntAsync(_key.PlayOkId2);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Core.Module.CharacterData;
+﻿using System.Threading.Tasks;
+using Core.Module.CharacterData;
 
 namespace Core.NetworkPacket.ServerPacket;
 
@@ -15,11 +16,11 @@ public class ChangeMoveType : Network.ServerPacket
         _isHighSpeed = character.CharacterMovement().CharacterMovementStatus().IsGroundHigh();
     }
     
-    public override void Write()
+    public override async Task WriteAsync()
     {
-        WriteByte(0x2E);
-        WriteInt(_objectId);
-        WriteInt(_isHighSpeed ? HighSpeed : LowSpeed);
-        WriteInt(0); //C2
+        await WriteByteAsync(0x2E);
+        await WriteIntAsync(_objectId);
+        await WriteIntAsync(_isHighSpeed ? HighSpeed : LowSpeed);
+        await WriteIntAsync(0); //C2
     }
 }

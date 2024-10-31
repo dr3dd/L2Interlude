@@ -49,6 +49,8 @@ namespace LoginService
             State = LoginClientState.Connected;
         }
 
+        public LoginController GetLoginController() => _loginController;
+
         public async Task Process()
         {
             _rsaPair = _loginController.GetScrambledKeyPair();
@@ -117,7 +119,7 @@ namespace LoginService
 
         public async Task SendPacketAsync(ServerPacket loginServerPacket)
         {
-            loginServerPacket.Write();
+            await loginServerPacket.WriteAsync();
             byte[] data = loginServerPacket.ToByteArray();
 
             data = _loginCrypt.Encrypt(data, 0, data.Length);

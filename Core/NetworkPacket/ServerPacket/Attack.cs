@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Core.Module.CharacterData;
 
 namespace Core.NetworkPacket.ServerPacket
@@ -58,23 +59,23 @@ namespace Core.NetworkPacket.ServerPacket
             return _hits.Count > 0;
         }
         
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x05);
+            await WriteByteAsync(0x05);
 		
-            WriteInt(_attackerObjId);
-            WriteInt(_hits[0].TargetId);
-            WriteInt(_hits[0].Damage);
-            WriteByte(_hits[0].Flags);
-            WriteInt(_x);
-            WriteInt(_y);
-            WriteInt(_z);
-            WriteShort((short)_hits.Count - 1);
+            await WriteIntAsync(_attackerObjId);
+            await WriteIntAsync(_hits[0].TargetId);
+            await WriteIntAsync(_hits[0].Damage);
+            await WriteByteAsync(_hits[0].Flags);
+            await WriteIntAsync(_x);
+            await WriteIntAsync(_y);
+            await WriteIntAsync(_z);
+            await WriteShortAsync((short)_hits.Count - 1);
             for (int i = 1; i < _hits.Count; i++)
             {
-                WriteInt(_hits[i].TargetId);
-                WriteInt(_hits[i].Damage);
-                WriteByte(_hits[i].Flags);
+                await WriteIntAsync(_hits[i].TargetId);
+                await WriteIntAsync(_hits[i].Damage);
+                await WriteByteAsync(_hits[i].Flags);
             }
         }
     }

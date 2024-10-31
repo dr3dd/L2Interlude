@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Core.Module.CharacterData.Template;
 using Core.Module.Player;
 
@@ -47,18 +48,18 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
             _playerAppearance = _playerInstance.PlayerAppearance();
             _playerInventory = _playerInstance.PlayerInventory();
         }
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x03);
-            WriteInt(_x);
-            WriteInt(_y);
-            WriteInt(_z);
-            WriteInt(0); //getBoat
-            WriteInt(_playerInstance.ObjectId);
-            WriteString(_playerAppearance.CharacterName);
-            WriteInt(_template.GetRaceId());
-            WriteInt(_playerAppearance.Gender);
-            WriteInt(_template.GetClassId());
+            await WriteByteAsync(0x03);
+            await WriteIntAsync(_x);
+            await WriteIntAsync(_y);
+            await WriteIntAsync(_z);
+            await WriteIntAsync(0); //getBoat
+            await WriteIntAsync(_playerInstance.ObjectId);
+            await WriteStringAsync(_playerAppearance.CharacterName);
+            await WriteIntAsync(_template.GetRaceId());
+            await WriteIntAsync(_playerAppearance.Gender);
+            await WriteIntAsync(_template.GetClassId());
             
             var head = _playerInventory.GetItemInstance(_characterInfo.StHead);
             var rightHand = _playerInventory.GetItemInstance(_characterInfo.StRightHand);
@@ -73,126 +74,126 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
             var hair = _playerInventory.GetItemInstance(_characterInfo.StHair);
             var hairAll = _playerInventory.GetItemInstance(_characterInfo.StHairAll);
 
-            WriteInt(hairAll.ItemId); //Hair All
-            WriteInt(head.ItemId); //Head
-            WriteInt(rightHand.ItemId); //Right hand
-            WriteInt(leftHand.ItemId); //Left hand
-            WriteInt(gloves.ItemId); //Gloves
-            WriteInt(chest.ItemId); //Chest
-            WriteInt(legs.ItemId); //Legs
-            WriteInt(feet.ItemId); //Feet
-            WriteInt(back.ItemId); //Back
-            WriteInt(bothHand.ItemId); //Left Right Hand
-            WriteInt(hair.ItemId); //Hair
-            WriteInt(face.ItemId); //Face
+            await WriteIntAsync(hairAll.ItemId); //Hair All
+            await WriteIntAsync(head.ItemId); //Head
+            await WriteIntAsync(rightHand.ItemId); //Right hand
+            await WriteIntAsync(leftHand.ItemId); //Left hand
+            await WriteIntAsync(gloves.ItemId); //Gloves
+            await WriteIntAsync(chest.ItemId); //Chest
+            await WriteIntAsync(legs.ItemId); //Legs
+            await WriteIntAsync(feet.ItemId); //Feet
+            await WriteIntAsync(back.ItemId); //Back
+            await WriteIntAsync(bothHand.ItemId); //Left Right Hand
+            await WriteIntAsync(hair.ItemId); //Hair
+            await WriteIntAsync(face.ItemId); //Face
             
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteInt(0);
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteInt(0);
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteShort(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteIntAsync(0);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteIntAsync(0);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
             
-            WriteInt(0); // getPvpFlag 0-non-pvp 1-pvp = violett name
-            WriteInt(0); //getKarma
+            await WriteIntAsync(0); // getPvpFlag 0-non-pvp 1-pvp = violett name
+            await WriteIntAsync(0); //getKarma
             
-            WriteInt(_mAtkSpd);
-            WriteInt(_pAtkSpd);
+            await WriteIntAsync(_mAtkSpd);
+            await WriteIntAsync(_pAtkSpd);
             
-            WriteInt(0); // getPvpFlag 0-non-pvp 1-pvp = violett name
-            WriteInt(0); //getKarma
+            await WriteIntAsync(0); // getPvpFlag 0-non-pvp 1-pvp = violett name
+            await WriteIntAsync(0); //getKarma
             
-            WriteInt(_runSpd); // base run speed
-            WriteInt(_walkSpd); // base walk speed
-            WriteInt(_runSpd); // swim run speed (calculated by getter)
-            WriteInt(_walkSpd); // swim walk speed (calculated by getter)
-            WriteInt(_flyRunSpd);
-            WriteInt(_flyWalkSpd);
-            WriteInt(_flyRunSpd);
-            WriteInt(_flyWalkSpd);
-            WriteDouble(_moveMultiplier); // run speed multiplier
+            await WriteIntAsync(_runSpd); // base run speed
+            await WriteIntAsync(_walkSpd); // base walk speed
+            await WriteIntAsync(_runSpd); // swim run speed (calculated by getter)
+            await WriteIntAsync(_walkSpd); // swim walk speed (calculated by getter)
+            await WriteIntAsync(_flyRunSpd);
+            await WriteIntAsync(_flyWalkSpd);
+            await WriteIntAsync(_flyRunSpd);
+            await WriteIntAsync(_flyWalkSpd);
+            await WriteDoubleAsync(_moveMultiplier); // run speed multiplier
             
             //this is very mandatory option. To avoid player paralyzed when trying to physical attack
-            WriteDouble(_attackSpeedMultiplier); // attack speed multiplier
+            await WriteDoubleAsync(_attackSpeedMultiplier); // attack speed multiplier
             
-            WriteDouble(7); //getCollisionRadius
-            WriteDouble(24); //getCollisionHeight
+            await WriteDoubleAsync(7); //getCollisionRadius
+            await WriteDoubleAsync(24); //getCollisionHeight
 			
-            WriteInt(_playerInstance.PlayerAppearance().HairStyle);
-            WriteInt(_playerInstance.PlayerAppearance().HairColor);
-            WriteInt(_playerInstance.PlayerAppearance().Face);
+            await WriteIntAsync(_playerInstance.PlayerAppearance().HairStyle);
+            await WriteIntAsync(_playerInstance.PlayerAppearance().HairColor);
+            await WriteIntAsync(_playerInstance.PlayerAppearance().Face);
 			
-            WriteString(""); //_playerInstance.Stat.Title
+            await WriteStringAsync(""); //_playerInstance.Stat.Title
 	
-            WriteInt(0);//_player.ClanId
-            WriteInt(0);//_player.ClanCrestId
-            WriteInt(0);//_player.AllianceId
-            WriteInt(0);//_player.AllianceCrestId
+            await WriteIntAsync(0);//_player.ClanId
+            await WriteIntAsync(0);//_player.ClanCrestId
+            await WriteIntAsync(0);//_player.AllianceId
+            await WriteIntAsync(0);//_player.AllianceCrestId
 			// In UserInfo leader rights and siege flags, but here found nothing??
 			// Therefore RelationChanged packet with that info is required
-			WriteInt(0);
+			await WriteIntAsync(0);
 			
-			WriteByte(1); // standing = 1 sitting = 0
-			WriteByte(1); // running = 1 walking = 0
-			WriteByte(0); //isInCombat
-			WriteByte(0); //IsAlikeDead
+			await WriteByteAsync(1); // standing = 1 sitting = 0
+			await WriteByteAsync(1); // running = 1 walking = 0
+			await WriteByteAsync(0); //isInCombat
+			await WriteByteAsync(0); //IsAlikeDead
 			
-			WriteByte(0x00); // if the charinfo is written means receiver can see the char
+			await WriteByteAsync(0x00); // if the charinfo is written means receiver can see the char
 
-			WriteByte(0); // 1 on strider 2 on wyvern 0 no mount
-			WriteByte(0); // 1 - sellshop
+			await WriteByteAsync(0); // 1 on strider 2 on wyvern 0 no mount
+			await WriteByteAsync(0); // 1 - sellshop
 			
-			WriteShort(0);
+			await WriteShortAsync(0);
 
-			WriteByte(0);
+			await WriteByteAsync(0);
 			
-			WriteInt(0); //_player.getAbnormalEffect()
+			await WriteIntAsync(0); //_player.getAbnormalEffect()
 			
-			WriteByte(0); //getRecomLeft
-			WriteShort(0); //getRecomHave  Blue value for name (0 = white, 255 = pure blue)
-			WriteInt(_template.GetClassId());
+			await WriteByteAsync(0); //getRecomLeft
+			await WriteShortAsync(0); //getRecomHave  Blue value for name (0 = white, 255 = pure blue)
+			await WriteIntAsync(_template.GetClassId());
 			
-			WriteInt(_playerInstance.PlayerStatus().GetMaxCp()); //_playerInstance.Stat.GetMaxCp()
-			WriteInt(_playerInstance.PlayerStatus().CurrentCp); //_playerInstance.Status.GetCurrentCp()
-			WriteByte(0);
+			await WriteIntAsync(_playerInstance.PlayerStatus().GetMaxCp()); //_playerInstance.Stat.GetMaxCp()
+			await WriteIntAsync(_playerInstance.PlayerStatus().CurrentCp); //_playerInstance.Status.GetCurrentCp()
+			await WriteByteAsync(0);
 			
-			WriteByte(0x00); // team circle around feet 1= Blue, 2 = red
+			await WriteByteAsync(0x00); // team circle around feet 1= Blue, 2 = red
 			
-			WriteInt(0);
-			WriteByte(0); // isNoble Symbol on char menu ctrl+I
-			WriteByte(0); // isHero  Hero Aura
+			await WriteIntAsync(0);
+			await WriteByteAsync(0); // isNoble Symbol on char menu ctrl+I
+			await WriteByteAsync(0); // isHero  Hero Aura
 			
-			WriteByte(0); // 0x01: Fishing Mode (Cant be undone by setting back to 0)
-			WriteInt(0);
-			WriteInt(0);
-			WriteInt(0);
+			await WriteByteAsync(0); // 0x01: Fishing Mode (Cant be undone by setting back to 0)
+			await WriteIntAsync(0);
+			await WriteIntAsync(0);
+			await WriteIntAsync(0);
 			
-			WriteInt(0xFFFFFF); //_playerInstance.PlayerAppearance().NameColor /** The hexadecimal Color of players name (white is 0xFFFFFF) */
+			await WriteIntAsync(0xFFFFFF); //_playerInstance.PlayerAppearance().NameColor /** The hexadecimal Color of players name (white is 0xFFFFFF) */
 			
-			WriteInt(_heading);
+			await WriteIntAsync(_heading);
 			
-			WriteInt(0); //getPledgeClass
-			WriteInt(0); //_player.getPledgeType())
+			await WriteIntAsync(0); //getPledgeClass
+			await WriteIntAsync(0); //_player.getPledgeType())
 			
-			WriteInt(0); //_playerInstance.PlayerAppearance().TitleColor
+			await WriteIntAsync(0); //_playerInstance.PlayerAppearance().TitleColor
 			
-			WriteInt(0x00); //isCursedWeaponEquiped
+			await WriteIntAsync(0x00); //isCursedWeaponEquiped
         }
     }
 }

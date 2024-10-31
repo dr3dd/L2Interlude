@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Module.Player;
 
 namespace Core.NetworkPacket.ServerPacket
@@ -90,23 +91,23 @@ namespace Core.NetworkPacket.ServerPacket
             _data.Add(new object[] { 13, val });
         }
 
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x64);
-            WriteInt(MessageId);
-            WriteInt(_data.Count);
+            await WriteByteAsync(0x64);
+            await WriteIntAsync(MessageId);
+            await WriteIntAsync(_data.Count);
 
             foreach (object[] d in _data)
             {
                 int type = (int)d[0];
 
-                WriteInt(type);
+                await WriteIntAsync(type);
 
                 switch (type)
                 {
                     case 0: //text
                     case 12:
-                        WriteString((string)d[1]);
+                        await WriteStringAsync((string)d[1]);
                         break;
                     case 1: //number
                     case 2: //npcid
@@ -115,19 +116,19 @@ namespace Core.NetworkPacket.ServerPacket
                     case 9:
                     case 10:
                     case 13:
-                        WriteInt((int)d[1]);
+                        await WriteIntAsync((int)d[1]);
                         break;
                     case 4: //skillname
-                        WriteInt((int)d[1]);
-                        WriteInt((int)d[2]);
+                        await WriteIntAsync((int)d[1]);
+                        await WriteIntAsync((int)d[2]);
                         break;
                     case 6:
-                        WriteLong((long)d[1]);
+                        await WriteLongAsync((long)d[1]);
                         break;
                     case 7: //zone
-                        WriteInt((int)d[1]);
-                        WriteInt((int)d[2]);
-                        WriteInt((int)d[3]);
+                        await WriteIntAsync((int)d[1]);
+                        await WriteIntAsync((int)d[2]);
+                        await WriteIntAsync((int)d[3]);
                         break;
                 }
             }

@@ -1,4 +1,6 @@
-﻿namespace Core.NetworkPacket.ServerPacket
+﻿using System.Threading.Tasks;
+
+namespace Core.NetworkPacket.ServerPacket
 {
     internal sealed class RestartResponse : Network.ServerPacket
     {
@@ -10,11 +12,11 @@
             _result = result;
             _message = "ok merong~ khaha"; // Message like L2OFF
         }
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x5f);
-            WriteInt(_result ? 1 : 0);
-            WriteString(_message);
+            await WriteByteAsync(0x5f);
+            await WriteIntAsync(_result ? 1 : 0);
+            await WriteStringAsync(_message);
         }
     }
 }

@@ -1,10 +1,12 @@
-﻿namespace Core.NetworkPacket.ServerPacket
+﻿using System.Threading.Tasks;
+
+namespace Core.NetworkPacket.ServerPacket
 {
     public class ActionFailed : Network.ServerPacket
     {
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x25);
+            await WriteByteAsync(0x25);
         }
     }
 }

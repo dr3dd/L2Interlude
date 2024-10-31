@@ -1,4 +1,5 @@
-﻿using Network;
+﻿using System.Threading.Tasks;
+using Network;
 
 namespace LoginService.Network.ServerPackets
 {
@@ -12,11 +13,11 @@ namespace LoginService.Network.ServerPackets
             _client = client;
         }
 
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(Opcode);
-            WriteInt(_client.SessionKey.PlayOkId1);
-            WriteInt(_client.SessionKey.PlayOkId2);
+            await WriteByteAsync(Opcode);
+            await WriteIntAsync(_client.SessionKey.PlayOkId1);
+            await WriteIntAsync(_client.SessionKey.PlayOkId2);
         }
     }
 }

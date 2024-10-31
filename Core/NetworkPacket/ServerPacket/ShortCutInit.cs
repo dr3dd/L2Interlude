@@ -1,10 +1,6 @@
-﻿using Core.Module.CharacterData;
-using Core.Module.Player;
+﻿using Core.Module.Player;
 using Core.Module.Player.ShortCuts;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 
@@ -22,14 +18,14 @@ namespace Core.NetworkPacket.ServerPacket
             _shortCuts = player.PlayerShortCut().GetAllShortCuts();
         }
 
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x45);
-            WriteInt(_shortCuts.Count);
+            await WriteByteAsync(0x45);
+            await WriteIntAsync(_shortCuts.Count);
             foreach (var shortCut in _shortCuts)
             {
-                WriteInt((int)shortCut.Type);
-                WriteInt(shortCut.Slot + (shortCut.Page * 12));
+                await WriteIntAsync((int)shortCut.Type);
+                await WriteIntAsync(shortCut.Slot + (shortCut.Page * 12));
                 switch (shortCut.Type)
                 {
                     case ShortCutType.NONE:
@@ -37,23 +33,23 @@ namespace Core.NetworkPacket.ServerPacket
                     case ShortCutType.MACRO:
                     case ShortCutType.RECIPE:
                     case ShortCutType.BOOKMARK:
-                        WriteInt(shortCut.Id);
-                        WriteInt(0x01); // C6
+                        await WriteIntAsync(shortCut.Id);
+                        await WriteIntAsync(0x01); // C6
                         break;
                     case ShortCutType.ITEM:
-                        WriteInt(shortCut.Id);
-                        WriteInt(0x01);
-                        WriteInt(-1);
-                        WriteInt(0x00);
-                        WriteInt(0x00);
-                        WriteShort(0x00);
-                        WriteShort(0x00);
+                        await WriteIntAsync(shortCut.Id);
+                        await WriteIntAsync(0x01);
+                        await WriteIntAsync(-1);
+                        await WriteIntAsync(0x00);
+                        await WriteIntAsync(0x00);
+                        await WriteShortAsync(0x00);
+                        await WriteShortAsync(0x00);
                         break;
                     case ShortCutType.SKILL:
-                        WriteInt(shortCut.Id);
-                        WriteInt(shortCut.Level);
-                        WriteByte(0x00); // C5
-                        WriteInt(0x01); // C6
+                        await WriteIntAsync(shortCut.Id);
+                        await WriteIntAsync(shortCut.Level);
+                        await WriteByteAsync(0x00); // C5
+                        await WriteIntAsync(0x01); // C6
                         break;
                 }
             }

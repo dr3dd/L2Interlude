@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Core.NetworkPacket.ServerPacket
 {
@@ -10,18 +11,18 @@ namespace Core.NetworkPacket.ServerPacket
         {
             _list = list;
         }
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0xFE);
-            WriteShort(0x1B);
-            WriteInt(_list.Count);
+            await WriteByteAsync(0xFE);
+            await WriteShortAsync(0x1B);
+            await WriteIntAsync(_list.Count);
 
             int id = 1;
             foreach (string manor in _list)
             {
-                WriteInt(id);
+                await WriteIntAsync(id);
                 id++;
-                WriteString(manor);
+                await WriteStringAsync(manor);
             }
         }
     }

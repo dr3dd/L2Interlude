@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using LoginService.Enum;
 using Network;
 
@@ -13,10 +14,10 @@ namespace LoginService.Network.ServerPackets
             _reason = reason;
         }
 
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(Opcode); // init packet id
-            WriteByte((byte) _reason);
+            await WriteByteAsync(Opcode); // init packet id
+            await WriteByteAsync((byte) _reason);
         }
     }
 }

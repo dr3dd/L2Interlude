@@ -1,4 +1,5 @@
-﻿using Core.Module.CharacterData;
+﻿using System.Threading.Tasks;
+using Core.Module.CharacterData;
 using Core.Module.Player;
 
 namespace Core.NetworkPacket.ServerPacket
@@ -28,14 +29,14 @@ namespace Core.NetworkPacket.ServerPacket
             _heading = heading;
         }
         
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x47);
-            WriteInt(_objectId);
-            WriteInt(_x);
-            WriteInt(_y);
-            WriteInt(_z);
-            WriteInt(_heading);
+            await WriteByteAsync(0x47);
+            await WriteIntAsync(_objectId);
+            await WriteIntAsync(_x);
+            await WriteIntAsync(_y);
+            await WriteIntAsync(_z);
+            await WriteIntAsync(_heading);
         }
     }
 }

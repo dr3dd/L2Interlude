@@ -1,4 +1,6 @@
-﻿namespace Core.NetworkPacket.ServerPacket
+﻿using System.Threading.Tasks;
+
+namespace Core.NetworkPacket.ServerPacket
 {
     internal sealed class SocialAction : Network.ServerPacket
     {
@@ -10,11 +12,11 @@
             _objectId = objectId;
             _actionId = actionId;
         }
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x2d);
-            WriteInt(_objectId);
-            WriteInt(_actionId);
+            await WriteByteAsync(0x2d);
+            await WriteIntAsync(_objectId);
+            await WriteIntAsync(_actionId);
         }
     }
 }

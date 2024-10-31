@@ -16,9 +16,9 @@ namespace Network
 
         private void InitWriter()
         {
-            var jobs = new ActionBlock<PacketStream>(request =>
+            var jobs = new ActionBlock<PacketStream>(async request =>
             {
-                request.Packet.Write();
+                await request.Packet.WriteAsync();
                 byte[] data = request.Packet.ToByteArray();
                 request.Crypt.Encrypt(data);
                 List<byte> bytes = new List<byte>();
@@ -26,8 +26,8 @@ namespace Network
                 bytes.AddRange(data);
                 try
                 {
-                    request.Stream.WriteAsync(bytes.ToArray());
-                    request.Stream.FlushAsync();
+                    await request.Stream.WriteAsync(bytes.ToArray());
+                    await request.Stream.FlushAsync();
                 }
                 catch
                 {

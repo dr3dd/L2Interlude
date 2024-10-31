@@ -1,4 +1,6 @@
-﻿namespace Core.NetworkPacket.ServerPacket
+﻿using System.Threading.Tasks;
+
+namespace Core.NetworkPacket.ServerPacket
 {
     internal sealed class ShowMiniMap : Network.ServerPacket
     {
@@ -7,11 +9,11 @@
         {
             _mapId = mapId;
         }
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x9d);
-            WriteInt(_mapId);
-            WriteInt(0); //SevenSigns.getInstance().getCurrentPeriod()
+            await WriteByteAsync(0x9d);
+            await WriteIntAsync(_mapId);
+            await WriteIntAsync(0); //SevenSigns.getInstance().getCurrentPeriod()
         }
     }
 }

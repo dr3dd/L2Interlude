@@ -132,7 +132,6 @@ namespace Core.Module.Player
             if (fileName.EndsWithIgnoreCase(".htm"))
             {
                 await SendPacketAsync(new NpcHtmlMessage(this, fileName, o.ObjectId));
-
             }
         }
 

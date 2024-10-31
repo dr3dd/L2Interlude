@@ -1,13 +1,15 @@
-﻿namespace Core.NetworkPacket.ServerPacket
+﻿using System.Threading.Tasks;
+
+namespace Core.NetworkPacket.ServerPacket
 {
     /// <summary>
     /// TODO not implemented
     /// </summary>
     internal sealed class SkillCoolTime : Network.ServerPacket
     {
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0xc1);
+            await WriteByteAsync(0xc1);
         }
     }
 }

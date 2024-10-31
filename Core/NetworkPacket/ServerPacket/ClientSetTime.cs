@@ -1,4 +1,5 @@
-﻿using Core.Controller;
+﻿using System.Threading.Tasks;
+using Core.Controller;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.NetworkPacket.ServerPacket
@@ -10,11 +11,11 @@ namespace Core.NetworkPacket.ServerPacket
         {
             _gameTimeController = Initializer.ServiceProvider.GetService<GameTimeController>();
         }
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0xEC);
-            WriteInt(_gameTimeController.GetGameTime()); // time in client minutes
-            WriteInt(6); // constant to match the server time( this determines the speed of the client clock)
+            await WriteByteAsync(0xEC);
+            await WriteIntAsync(_gameTimeController.GetGameTime()); // time in client minutes
+            await WriteIntAsync(6); // constant to match the server time( this determines the speed of the client clock)
         }
     }
 }
