@@ -7,11 +7,6 @@ namespace Core.Module.NpcAi.Ai;
 
 public class AnnounceRaidBossPosition : Citizen
 {
-    public override Task Talked(Talker talker)
-    {
-        throw new NotImplementedException();
-    }
-
     public virtual IList<TeleportList> Position => new List<TeleportList>
     {
         {new("Talking Island Village", -84169, 244693, -3729, 100000, 0 )}

@@ -16,7 +16,7 @@ namespace Core.Controller.Handlers.AdminCommands
     [Command(CommandName = "admin_admin")]
     class AdminAdmin : AbstractAdminCommand
     {
-        protected internal override void Use(PlayerInstance admin, string alias)
+        protected internal override async Task Use(PlayerInstance admin, string alias)
         {
             string[] args = alias.Split(' ');
 
@@ -24,13 +24,13 @@ namespace Core.Controller.Handlers.AdminCommands
             {
                 if (args[1].EndsWithIgnoreCase(".htm"))
                 {
-                    admin.ShowHtm($"admin/{args[1]}", admin);
+                    await admin.ShowHtm($"admin/{args[1]}", admin);
                 }
             }
             else
             {
 
-                admin.ShowHtm("admin/admin.htm", admin);
+                await admin.ShowHtm("admin/admin.htm", admin);
             }
         }
     }

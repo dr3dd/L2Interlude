@@ -85,7 +85,7 @@ public sealed class NpcInstance : Character
             NpcAi().Attacked(playerInstance);
             return;
         }
-        NpcAi().Talked(playerInstance);
+        await NpcAi().Talked(playerInstance);
     }
 
     public async Task ShowPage(PlayerInstance player, string fnHi)
@@ -93,6 +93,11 @@ public sealed class NpcInstance : Character
         await NpcChatWindow.ShowPage(player, fnHi, this);
     }
 
+    public async Task TalkSelected(PlayerInstance playerInstance)
+    {
+        await NpcAi().TalkSelected(playerInstance);
+    }
+    
     public async Task MenuSelect(int askId, int replyId, PlayerInstance playerInstance)
     {
         await NpcAi().MenuSelect(askId, replyId, playerInstance);

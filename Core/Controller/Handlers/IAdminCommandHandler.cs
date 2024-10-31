@@ -1,4 +1,5 @@
 ﻿using Core.Module.Player;
+using System.Threading.Tasks;
 
 //CLR: 4.0.30319.42000
 //USER: GL
@@ -8,7 +9,7 @@ namespace Core.Controller.Handlers
 {
     public interface IAdminCommandHandler
     {
-        void Request(PlayerInstance admin, string alias);
+        Task Request(PlayerInstance admin, string alias);
 
         void Register(object processor);
     }

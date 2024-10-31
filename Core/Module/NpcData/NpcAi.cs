@@ -95,10 +95,10 @@ namespace Core.Module.NpcData
             //_defaultNpc.Attacked(attacker, damage);
         }
 
-        public void Talked(PlayerInstance playerInstance)
+        public async Task Talked(PlayerInstance playerInstance)
         {
             var talker = new Talker(playerInstance);
-            _defaultNpc.Talked(talker);
+            await _defaultNpc.Talked(talker);
         }
         
         public void AddTimerEx(int timerId, int delay)
@@ -213,7 +213,7 @@ namespace Core.Module.NpcData
 
         public bool IsNewbie(Talker talker)
         {
-            throw new NotImplementedException();
+            return talker.Level < 25;
         }
 
         public void AddUseSkillDesire(Talker talker, int p1, int p2, int p3, int p4)
@@ -226,6 +226,12 @@ namespace Core.Module.NpcData
             throw new NotImplementedException();
         }
 
+        public async Task TalkSelected(PlayerInstance playerInstance)
+        {
+            var talker = new Talker(playerInstance);
+            await _defaultNpc.TalkSelected(talker);
+        }
+        
         public async Task MenuSelect(int askId, int replyId, PlayerInstance playerInstance)
         {
             var talker = new Talker(playerInstance);
@@ -276,6 +282,16 @@ namespace Core.Module.NpcData
         }
 
         public async Task SellPreview(Talker talker, IList<BuySellList> sellList0, string shopName, string fnBuy, string empty, string p5)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task ShowRadar(Talker talker, int v1, int v2, int v3, int v4)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task DeleteAllRadar(Talker talker, int v)
         {
             throw new NotImplementedException();
         }
