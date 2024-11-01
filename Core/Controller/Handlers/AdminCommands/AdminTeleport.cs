@@ -14,7 +14,7 @@ namespace Core.Controller.Handlers.AdminCommands
     [Command(CommandName = "admin_teleport")]
     class AdminTeleport : AbstractAdminCommand
     {
-        protected internal override void Use(PlayerInstance admin, string alias)
+        protected internal override async Task Use(PlayerInstance admin, string alias)
         {
             string[] args = alias.Split(' ');
             if (args.Length > 1)
@@ -26,8 +26,8 @@ namespace Core.Controller.Handlers.AdminCommands
                     int y = int.Parse(args[2]);
                     int z = admin.GetZ() + 300; //TODO get height
                     //admin.TeleportToLocation(x, y, z);
-                    admin.SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString($"Teleport need implementation."));
-                    admin.TeleportToLocation(x, y, z);
+                    await admin.SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString($"Teleport need implementation."));
+                    await admin.TeleportToLocation(x, y, z);
                 }
                 else if (len.Equals(4))
                 {
@@ -35,16 +35,16 @@ namespace Core.Controller.Handlers.AdminCommands
                     int y = int.Parse(args[2]);
                     int z = int.Parse(args[3]);
                     //admin.TeleportToLocation(x, y, z);
-                    admin.SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString($"Teleport need implementation."));
-                    admin.TeleportToLocation(x, y, z);
+                    await admin.SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString($"Teleport need implementation."));
+                    await admin.TeleportToLocation(x, y, z);
                 }
             }
             else
             {
-                admin.ShowHtm("admin/teleport/main.htm", admin);
+                await admin.ShowHtm("admin/teleport/main.htm", admin);
             }
 
-            LastAction(admin, args);
+            await LastAction(admin, args);
         }
     }
 }

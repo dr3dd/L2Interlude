@@ -94,7 +94,7 @@ public class NewbieGuide : Citizen
 		}
 		if (ask == -7 && reply == 2)
 		{
-			if(MySelf.IsNewbie(talker) && MySelf.IsInCategory(7, talker.Occupation))
+			if(MySelf.IsNewbie(talker) && MySelf.IsInCategory(7, talker.Occupation) == false)
 			{
 				if(talker.Level < 8)
 				{

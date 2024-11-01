@@ -47,9 +47,9 @@ public class DefaultNpc
     {
     }
 
-    public virtual Task Talked(Talker talker)
+    public virtual async Task Talked(Talker talker)
     {
-        return Task.FromResult(1);
+        await MySelf.ShowPage(talker, "noquest.htm");
     }
 
     public virtual Task TimerFiredEx(int timerId)

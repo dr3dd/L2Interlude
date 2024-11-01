@@ -7,7 +7,7 @@ using L2Logger;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-
+using System.Threading.Tasks;
 
 //CLR: 4.0.30319.42000
 //USER: GL
@@ -25,7 +25,7 @@ namespace Core.Controller.Handlers
             IEnumerable<Type> typelist = Utility.GetTypesInNamespace(Assembly.GetExecutingAssembly(), "Core.Controller.Handlers.AdminCommands");
             foreach (Type t in typelist)
             {
-                if (!t.Name.StartsWith("Abstract"))
+                if (!t.Name.StartsWith("Abstract") && t.BaseType.Name.Equals("AbstractAdminCommand"))
                 {
                     Register(Activator.CreateInstance(t));
                 }
@@ -34,7 +34,7 @@ namespace Core.Controller.Handlers
             LoggerManager.Info($"AdminCommandHandler: Loaded {commands.Count} commands.");
         }
 
-        public void Request(PlayerInstance admin, string alias) 
+        public async Task Request(PlayerInstance admin, string alias) 
         {
             if (!alias.StartsWith("admin_"))
                 alias = "admin_" + alias;
@@ -45,7 +45,7 @@ namespace Core.Controller.Handlers
 
             if (!commands.ContainsKey(cmd))
             {
-                admin.SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString($"Command {cmd} not exists."));
+                await admin.SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString($"Command {cmd} not exists."));
                 //admin.SendActionFailedPacketAsync();
                 LoggerManager.Warn($"AdminCommandHandler: Command {cmd} not exists.");
                 return;
@@ -54,7 +54,7 @@ namespace Core.Controller.Handlers
             AbstractAdminCommand processor = commands[cmd];
             try
             {
-                processor.UseCommand(admin, alias);
+                await processor.UseCommand(admin, alias);
             }
             catch (Exception ex)
             {
