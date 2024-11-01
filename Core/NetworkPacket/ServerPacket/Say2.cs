@@ -1,6 +1,7 @@
 ﻿using Core.Controller.Handlers;
 using Core.Module.CharacterData;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 
 //CLR: 4.0.30319.42000
@@ -29,29 +30,29 @@ namespace Core.NetworkPacket.ServerPacket
             stringMsgId = -1;
         }
 
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x4A);
-            WriteInt(_sender == null ? 0 : _sender.ObjectId);
-            WriteInt(type);
+            await WriteByteAsync(0x4A);
+            await WriteIntAsync(_sender == null ? 0 : _sender.ObjectId);
+            await WriteIntAsync(type);
             if (name != null)
             {
-                WriteString(name);
+                await WriteStringAsync(name);
             }
             else
             {
-                WriteInt(objectId);
+                await WriteIntAsync(objectId);
             }
-            WriteInt(stringMsgId); // NPCString ID
+            await WriteIntAsync(stringMsgId); // NPCString ID
             if (text != null)
             {
-                WriteString(text);
+                await WriteStringAsync(text);
             }
             else if (parameters.Count > 0)
             {
                 foreach (string s in parameters)
                 {
-                    WriteString(s);
+                    await WriteStringAsync(s);
                 }
             }
         }

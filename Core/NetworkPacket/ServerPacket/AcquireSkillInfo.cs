@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Core.NetworkPacket.ServerPacket
 {
@@ -40,21 +41,21 @@ namespace Core.NetworkPacket.ServerPacket
             _reqs.Add(new Req(type, id, count, unk));
         }
         
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x8b);
-            WriteInt(_id);
-            WriteInt(_level);
-            WriteInt(_spCost);
-            WriteInt(_mode); // c4
+            await WriteByteAsync(0x8b);
+            await WriteIntAsync(_id);
+            await WriteIntAsync(_level);
+            await WriteIntAsync(_spCost);
+            await WriteIntAsync(_mode); // c4
 		
-            WriteInt(_reqs.Count);
+            await WriteIntAsync(_reqs.Count);
             _reqs.ForEach(t =>
             {
-                WriteInt(t.Type);
-                WriteInt(t.ItemId);
-                WriteInt(t.Count);
-                WriteInt(t.Unk);
+                WriteIntAsync(t.Type);
+                WriteIntAsync(t.ItemId);
+                WriteIntAsync(t.Count);
+                WriteIntAsync(t.Unk);
             });
         }
     }

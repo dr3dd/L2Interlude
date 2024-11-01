@@ -1,12 +1,14 @@
-﻿namespace Core.NetworkPacket.ServerPacket
+﻿using System.Threading.Tasks;
+
+namespace Core.NetworkPacket.ServerPacket
 {
     internal sealed class ExCursedWeaponList : Network.ServerPacket
     {
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0xfe);
-            WriteShort(0x45);
-            WriteInt(0);
+            await WriteByteAsync(0xfe);
+            await WriteShortAsync(0x45);
+            await WriteIntAsync(0);
         }
     }
 }

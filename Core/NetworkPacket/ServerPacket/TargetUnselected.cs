@@ -1,4 +1,5 @@
-﻿using Core.Module.CharacterData;
+﻿using System.Threading.Tasks;
+using Core.Module.CharacterData;
 
 namespace Core.NetworkPacket.ServerPacket
 {
@@ -17,13 +18,13 @@ namespace Core.NetworkPacket.ServerPacket
             _z = character.GetZ();
         }
         
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x2a);
-            WriteInt(_targetObjId);
-            WriteInt(_x);
-            WriteInt(_y);
-            WriteInt(_z);
+            await WriteByteAsync(0x2a);
+            await WriteIntAsync(_targetObjId);
+            await WriteIntAsync(_x);
+            await WriteIntAsync(_y);
+            await WriteIntAsync(_z);
         }
     }
 }

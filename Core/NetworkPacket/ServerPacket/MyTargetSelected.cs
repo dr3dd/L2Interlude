@@ -1,4 +1,6 @@
-﻿namespace Core.NetworkPacket.ServerPacket
+﻿using System.Threading.Tasks;
+
+namespace Core.NetworkPacket.ServerPacket
 {
     public class MyTargetSelected : Network.ServerPacket
     {
@@ -12,11 +14,11 @@
             _objectId = objectId;
             _color = color;
         }
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0xa6);
-            WriteInt(_objectId);
-            WriteShort(_color);
+            await WriteByteAsync(0xa6);
+            await WriteIntAsync(_objectId);
+            await WriteShortAsync(_color);
         }
     }
 }

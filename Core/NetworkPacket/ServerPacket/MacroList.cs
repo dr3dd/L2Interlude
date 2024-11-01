@@ -1,10 +1,4 @@
 ﻿using Core.Module.Player.Macroses;
-using Google.Protobuf;
-using L2Logger;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 
@@ -26,30 +20,30 @@ namespace Core.NetworkPacket.ServerPacket
             _macros = macros;
             _updateType = updateType;
         }
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0xe7);
-            WriteByte((byte)_updateType);
-            WriteInt(_updateType != MacroUpdateType.LIST ? _macros.UserMacrosId : 0); // modified, created or deleted macro's id
-            WriteByte(_count);
-            WriteByte(_macros != null);
+            await WriteByteAsync(0xe7);
+            await WriteByteAsync((byte)_updateType);
+            await WriteIntAsync(_updateType != MacroUpdateType.LIST ? _macros.UserMacrosId : 0); // modified, created or deleted macro's id
+            await WriteByteAsync(_count);
+            await WriteByteAsync(_macros != null);
 
             if (_macros != null && (_updateType != MacroUpdateType.DELETE))
             {
-                WriteInt(_macros.UserMacrosId); // Macro ID
-                WriteString(_macros.Name); // Macro Name
-                WriteString(_macros.Description); // Desc
-                WriteString(_macros.Acronym); // acronym
-                WriteByte(_macros.Icon); // icon
-                WriteByte(_macros.CommandArray.Count); // count
+                await WriteIntAsync(_macros.UserMacrosId); // Macro ID
+                await WriteStringAsync(_macros.Name); // Macro Name
+                await WriteStringAsync(_macros.Description); // Desc
+                await WriteStringAsync(_macros.Acronym); // acronym
+                await WriteByteAsync(_macros.Icon); // icon
+                await WriteByteAsync(_macros.CommandArray.Count); // count
                 int i = 0;
                 foreach (MacrosCmd cmd in _macros.CommandArray)
                 {
-                    WriteByte(++i); // command count
-                    WriteByte((byte)cmd.type); // type 1 = skill, 3 = action, 4 = shortcut
-                    WriteInt(cmd.d1); // skill id
-                    WriteByte(cmd.d2); // shortcut id
-                    WriteString(cmd.cmd); // command name
+                    await WriteByteAsync(++i); // command count
+                    await WriteByteAsync((byte)cmd.type); // type 1 = skill, 3 = action, 4 = shortcut
+                    await WriteIntAsync(cmd.d1); // skill id
+                    await WriteByteAsync(cmd.d2); // shortcut id
+                    await WriteStringAsync(cmd.cmd); // command name
                 }
             }
             

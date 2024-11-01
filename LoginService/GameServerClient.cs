@@ -87,7 +87,7 @@ namespace LoginService
         }
         public async Task SendAsync(ServerPacket serverPacket)
         {
-            serverPacket.Write();
+            await serverPacket.WriteAsync();
 
             byte[] data = serverPacket.GetBuffer();
 

@@ -27,6 +27,8 @@ namespace LoginService
             _loggedClients = new ConcurrentDictionary<int, LoginClient>();
         }
 
+        public IServiceProvider GetServiceProvider() => _serviceProvider;
+
         public async Task AcceptClient(TcpClient client)
         {
             LoginClient clientObject = new LoginClient(client, this, _loginPacketHandler);

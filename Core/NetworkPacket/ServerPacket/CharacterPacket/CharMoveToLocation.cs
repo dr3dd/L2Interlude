@@ -1,4 +1,5 @@
-﻿using Core.Module.CharacterData;
+﻿using System.Threading.Tasks;
+using Core.Module.CharacterData;
 
 namespace Core.NetworkPacket.ServerPacket.CharacterPacket;
 
@@ -23,15 +24,15 @@ public class CharMoveToLocation : Network.ServerPacket
         _zDst = character.CharacterMovement().GetZDestination();
     }
         
-    public override void Write()
+    public override async Task WriteAsync()
     {
-        WriteByte(0x01);
-        WriteInt(_objectId);
-        WriteInt(_xDst);
-        WriteInt(_yDst);
-        WriteInt(_zDst);
-        WriteInt(_x);
-        WriteInt(_y);
-        WriteInt(_z);
+        await WriteByteAsync(0x01);
+        await WriteIntAsync(_objectId);
+        await WriteIntAsync(_xDst);
+        await WriteIntAsync(_yDst);
+        await WriteIntAsync(_zDst);
+        await WriteIntAsync(_x);
+        await WriteIntAsync(_y);
+        await WriteIntAsync(_z);
     }
 }

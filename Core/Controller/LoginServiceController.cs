@@ -52,7 +52,7 @@ namespace Core.Controller
 
         private async Task SendPacketAsync(ServerPacket packet)
         {
-            packet.Write();
+            await packet.WriteAsync();
             List<byte> blist = new List<byte>();
             byte[] db = packet.ToByteArray();
 

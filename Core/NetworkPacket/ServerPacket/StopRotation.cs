@@ -1,4 +1,5 @@
-﻿using Core.Module.CharacterData;
+﻿using System.Threading.Tasks;
+using Core.Module.CharacterData;
 
 namespace Core.NetworkPacket.ServerPacket
 {
@@ -13,13 +14,13 @@ namespace Core.NetworkPacket.ServerPacket
             _degree = degree;
             _speed = speed;
         }
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x63);
-            WriteInt(_objectId);
-            WriteInt(_degree);
-            WriteInt(_speed);
-            WriteByte(0); // ?
+            await WriteByteAsync(0x63);
+            await WriteIntAsync(_objectId);
+            await WriteIntAsync(_degree);
+            await WriteIntAsync(_speed);
+            await WriteByteAsync(0); // ?
         }
     }
 }

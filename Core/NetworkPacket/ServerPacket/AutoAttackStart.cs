@@ -1,4 +1,6 @@
-﻿namespace Core.NetworkPacket.ServerPacket
+﻿using System.Threading.Tasks;
+
+namespace Core.NetworkPacket.ServerPacket
 {
     public class AutoAttackStart : global::Network.ServerPacket
     {
@@ -7,10 +9,10 @@
         {
             _targetObjId = targetObjId;
         }
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x2b);
-            WriteInt(_targetObjId);
+            await WriteByteAsync(0x2b);
+            await WriteIntAsync(_targetObjId);
         }
     }
 }

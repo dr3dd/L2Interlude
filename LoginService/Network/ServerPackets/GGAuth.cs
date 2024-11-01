@@ -1,4 +1,5 @@
-﻿using Network;
+﻿using System.Threading.Tasks;
+using Network;
 
 namespace LoginService.Network.ServerPackets
 {
@@ -11,11 +12,11 @@ namespace LoginService.Network.ServerPackets
             _sessionId = sessionId;
         }
 
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(SkipGameGuardAuthRequest);
-            WriteInt(_sessionId);
-            WriteBytesArray(new byte[4]);
+            await WriteByteAsync(SkipGameGuardAuthRequest);
+            await WriteIntAsync(_sessionId);
+            await WriteBytesArrayAsync(new byte[4]);
         }
     }
 }

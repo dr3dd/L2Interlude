@@ -1,4 +1,6 @@
-﻿namespace Core.NetworkPacket.ServerPacket
+﻿using System.Threading.Tasks;
+
+namespace Core.NetworkPacket.ServerPacket
 {
     public class AccountInGame : Network.ServerPacket
     {
@@ -10,11 +12,11 @@
             _account = account;
             _status = status;
         }
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x03);
-            WriteString(_account.ToLower());
-            WriteByte(_status ? (byte)1 : (byte)0);
+            await WriteByteAsync(0x03);
+            await WriteStringAsync(_account.ToLower());
+            await WriteByteAsync(_status ? (byte)1 : (byte)0);
         }
     }
 }

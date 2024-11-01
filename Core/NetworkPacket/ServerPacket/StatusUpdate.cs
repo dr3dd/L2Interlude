@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Module.Player;
 
 namespace Core.NetworkPacket.ServerPacket;
@@ -72,84 +73,84 @@ public class StatusUpdate : Network.ServerPacket
 		_attributes.Add(new Attribute(id, value));
 	}
 
-	public override void Write()
+	public override async Task WriteAsync()
 	{
-		WriteByte(0x0e);
+		await WriteByteAsync(0x0e);
 
 		if (_playerInstance != null)
 		{
-			WriteInt(_playerInstance.ObjectId);
-			WriteInt(28); // all the attributes
+			await WriteIntAsync(_playerInstance.ObjectId);
+			await WriteIntAsync(28); // all the attributes
 
-			WriteInt(Level);
-			WriteInt(_playerInstance.PlayerStatus().Level);
-			WriteInt(Exp);
-			WriteInt((int) _playerInstance.PlayerCharacterInfo().Exp);
-			WriteInt(Str);
-			WriteInt(_playerInstance.TemplateHandler().GetStr());
-			WriteInt(Dex);
-			WriteInt(_playerInstance.TemplateHandler().GetDex());
-			WriteInt(Con);
-			WriteInt(_playerInstance.TemplateHandler().GetCon());
-			WriteInt(Int);
-			WriteInt(_playerInstance.TemplateHandler().GetInt());
-			WriteInt(Wit);
-			WriteInt(_playerInstance.TemplateHandler().GetWit());
-			WriteInt(Men);
-			WriteInt(_playerInstance.TemplateHandler().GetMen());
+			await WriteIntAsync(Level);
+			await WriteIntAsync(_playerInstance.PlayerStatus().Level);
+			await WriteIntAsync(Exp);
+			await WriteIntAsync((int) _playerInstance.PlayerCharacterInfo().Exp);
+			await WriteIntAsync(Str);
+			await WriteIntAsync(_playerInstance.TemplateHandler().GetStr());
+			await WriteIntAsync(Dex);
+			await WriteIntAsync(_playerInstance.TemplateHandler().GetDex());
+			await WriteIntAsync(Con);
+			await WriteIntAsync(_playerInstance.TemplateHandler().GetCon());
+			await WriteIntAsync(Int);
+			await WriteIntAsync(_playerInstance.TemplateHandler().GetInt());
+			await WriteIntAsync(Wit);
+			await WriteIntAsync(_playerInstance.TemplateHandler().GetWit());
+			await WriteIntAsync(Men);
+			await WriteIntAsync(_playerInstance.TemplateHandler().GetMen());
 
-			WriteInt(CurHp);
-			WriteInt((int) _playerInstance.CharacterStatus().CurrentHp);
-			WriteInt(MaxHp);
-			WriteInt(_playerInstance.CharacterBaseStatus().GetMaxHp());
-			WriteInt(CurMp);
-			WriteInt((int) _playerInstance.CharacterStatus().CurrentMp);
-			WriteInt(MaxMp);
-			WriteInt(_playerInstance.CharacterBaseStatus().GetMaxMp());
-			WriteInt(Sp);
-			WriteInt(_playerInstance.PlayerCharacterInfo().Sp);
-			WriteInt(CurLoad);
-			WriteInt(_playerInstance.CharacterBaseStatus().GetCurrentLoad()); //_actor.Stat.CurrentLoad()
-			WriteInt(MaxLoad);
-			WriteInt(_playerInstance.CharacterBaseStatus().GetMaxLoad()); //_actor.Stat.GetMaxLoad()
+			await WriteIntAsync(CurHp);
+			await WriteIntAsync((int) _playerInstance.CharacterStatus().CurrentHp);
+			await WriteIntAsync(MaxHp);
+			await WriteIntAsync(_playerInstance.CharacterBaseStatus().GetMaxHp());
+			await WriteIntAsync(CurMp);
+			await WriteIntAsync((int) _playerInstance.CharacterStatus().CurrentMp);
+			await WriteIntAsync(MaxMp);
+			await WriteIntAsync(_playerInstance.CharacterBaseStatus().GetMaxMp());
+			await WriteIntAsync(Sp);
+			await WriteIntAsync(_playerInstance.PlayerCharacterInfo().Sp);
+			await WriteIntAsync(CurLoad);
+			await WriteIntAsync(_playerInstance.CharacterBaseStatus().GetCurrentLoad()); //_actor.Stat.CurrentLoad()
+			await WriteIntAsync(MaxLoad);
+			await WriteIntAsync(_playerInstance.CharacterBaseStatus().GetMaxLoad()); //_actor.Stat.GetMaxLoad()
 
-			WriteInt(PAtk);
-			WriteInt(_playerInstance.PlayerCombat().GetPhysicalAttack());
-			WriteInt(AtkSpd);
-			WriteInt(_playerInstance.PlayerCombat().GetPhysicalAttackSpeed());
-			WriteInt(PDef);
-			WriteInt(_playerInstance.PlayerCombat().GetPhysicalDefence());
-			WriteInt(Evasion);
-			WriteInt(_playerInstance.PlayerCombat().GetEvasion());
-			WriteInt(Accuracy);
-			WriteInt(_playerInstance.PlayerCombat().GetAccuracy());
-			WriteInt(Critical);
-			WriteInt(_playerInstance.PlayerCombat().GetCriticalRate());
-			WriteInt(MAtk);
-			WriteInt(_playerInstance.PlayerCombat().GetMagicalAttack());
+			await WriteIntAsync(PAtk);
+			await WriteIntAsync(_playerInstance.PlayerCombat().GetPhysicalAttack());
+			await WriteIntAsync(AtkSpd);
+			await WriteIntAsync(_playerInstance.PlayerCombat().GetPhysicalAttackSpeed());
+			await WriteIntAsync(PDef);
+			await WriteIntAsync(_playerInstance.PlayerCombat().GetPhysicalDefence());
+			await WriteIntAsync(Evasion);
+			await WriteIntAsync(_playerInstance.PlayerCombat().GetEvasion());
+			await WriteIntAsync(Accuracy);
+			await WriteIntAsync(_playerInstance.PlayerCombat().GetAccuracy());
+			await WriteIntAsync(Critical);
+			await WriteIntAsync(_playerInstance.PlayerCombat().GetCriticalRate());
+			await WriteIntAsync(MAtk);
+			await WriteIntAsync(_playerInstance.PlayerCombat().GetMagicalAttack());
 
-			WriteInt(CastSpd);
-			WriteInt(_playerInstance.PlayerCombat().GetCastSpeed());
-			WriteInt(MDef);
-			WriteInt(_playerInstance.PlayerCombat().GetMagicalDefence());
-			WriteInt(PvpFlag);
-			WriteInt(0); //_actor.Stat.PvpKills
-			WriteInt(Karma);
-			WriteInt(0); //_actor.Stat.Karma
-			WriteInt(CurCp);
-			WriteInt((int) _playerInstance.PlayerStatus().CurrentCp);
-			WriteInt(MaxCp);
-			WriteInt(_playerInstance.PlayerStatus().GetMaxCp());
+			await WriteIntAsync(CastSpd);
+			await WriteIntAsync(_playerInstance.PlayerCombat().GetCastSpeed());
+			await WriteIntAsync(MDef);
+			await WriteIntAsync(_playerInstance.PlayerCombat().GetMagicalDefence());
+			await WriteIntAsync(PvpFlag);
+			await WriteIntAsync(0); //_actor.Stat.PvpKills
+			await WriteIntAsync(Karma);
+			await WriteIntAsync(0); //_actor.Stat.Karma
+			await WriteIntAsync(CurCp);
+			await WriteIntAsync((int) _playerInstance.PlayerStatus().CurrentCp);
+			await WriteIntAsync(MaxCp);
+			await WriteIntAsync(_playerInstance.PlayerStatus().GetMaxCp());
 		}
 		else
 		{
-			WriteInt(_objectId);
-			WriteInt(_attributes.Count);
+			await WriteIntAsync(_objectId);
+			await WriteIntAsync(_attributes.Count);
 			
 			foreach (var temp in _attributes)
 			{
-				WriteInt(temp.Id);
-				WriteInt(temp.Value);
+				await WriteIntAsync(temp.Id);
+				await WriteIntAsync(temp.Value);
 			}
 		}
 	}

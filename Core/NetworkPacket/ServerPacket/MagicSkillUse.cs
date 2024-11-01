@@ -1,4 +1,5 @@
-﻿using Core.Module.CharacterData;
+﻿using System.Threading.Tasks;
+using Core.Module.CharacterData;
 using Core.Module.Player;
 
 namespace Core.NetworkPacket.ServerPacket
@@ -27,24 +28,24 @@ namespace Core.NetworkPacket.ServerPacket
             _y = character.GetY();
             _z = character.GetZ();
         }
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x48);
-            WriteInt(_objectId);
-            WriteInt(_targetId);
-            WriteInt(_skillId);
-            WriteInt(_skillLevel);
-            WriteInt(_hitTime);
-            WriteInt(_reuseDelay);
-            WriteInt(_x);
-            WriteInt(_y);
-            WriteInt(_z);
-            WriteShort(0x00); // unknown loop but not AoE
+            await WriteByteAsync(0x48);
+            await WriteIntAsync(_objectId);
+            await WriteIntAsync(_targetId);
+            await WriteIntAsync(_skillId);
+            await WriteIntAsync(_skillLevel);
+            await WriteIntAsync(_hitTime);
+            await WriteIntAsync(_reuseDelay);
+            await WriteIntAsync(_x);
+            await WriteIntAsync(_y);
+            await WriteIntAsync(_z);
+            await WriteShortAsync(0x00); // unknown loop but not AoE
             // for()
             // {
-            WriteShort(0x00);
-            WriteShort(0x00);
-            WriteShort(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
+            await WriteShortAsync(0x00);
         }
     }
 }

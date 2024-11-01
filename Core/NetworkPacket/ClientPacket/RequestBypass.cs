@@ -64,7 +64,7 @@ namespace Core.NetworkPacket.ClientPacket
             if (_command.StartsWith("admin_"))
             {
                 var adminCommandHandler = _serviceProvider.GetRequiredService<AdminCommandHandler>();
-                adminCommandHandler.Request(_playerInstance, _command);
+                await adminCommandHandler.Request(_playerInstance, _command);
             }
             
         }

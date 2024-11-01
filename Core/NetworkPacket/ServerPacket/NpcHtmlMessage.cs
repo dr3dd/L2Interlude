@@ -1,4 +1,5 @@
-﻿using Core.Module.Player;
+﻿using System.Threading.Tasks;
+using Core.Module.Player;
 using L2Logger;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -65,12 +66,12 @@ namespace Core.NetworkPacket.ServerPacket
             _html = _html.Replace(pattern, value);
         }
 	
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x0f);
-            WriteInt(_npcObjId);
-            WriteString(GetContent());
-            WriteInt(0x00);
+            await WriteByteAsync(0x0f);
+            await WriteIntAsync(_npcObjId);
+            await WriteStringAsync(GetContent());
+            await WriteIntAsync(0x00);
         }
     }
 }

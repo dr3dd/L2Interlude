@@ -1,4 +1,5 @@
-﻿using Network;
+﻿using System.Threading.Tasks;
+using Network;
 
 namespace LoginService.Network.ServerPackets
 {
@@ -21,20 +22,20 @@ namespace LoginService.Network.ServerPackets
             _blowfishKey = blowfishkey;
         }
 
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x00); // init packet id
-            WriteInt(_sessionId); // session id
-            WriteInt(0x0000c621); // protocol revision
-            WriteBytesArray(_publicKey); // RSA Public Key
+            await WriteByteAsync(0x00); // init packet id
+            await WriteIntAsync(_sessionId); // session id
+            await WriteIntAsync(0x0000c621); // protocol revision
+            await WriteBytesArrayAsync(_publicKey); // RSA Public Key
             
-            WriteInt(0x29DD954E);
-            WriteInt(0x77C39CFC);
-            WriteInt(0x97ADB620);
-            WriteInt(0x07BDE0F7);
+            await WriteIntAsync(0x29DD954E);
+            await WriteIntAsync(0x77C39CFC);
+            await WriteIntAsync(0x97ADB620);
+            await WriteIntAsync(0x07BDE0F7);
 
-            WriteBytesArray(_blowfishKey); // BlowFish key
-            WriteByte(0x00);
+            await WriteBytesArrayAsync(_blowfishKey); // BlowFish key
+            await WriteByteAsync(0x00);
         }
     }
 }

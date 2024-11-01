@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Core.Module.ItemData;
 
 namespace Core.NetworkPacket.ServerPacket;
@@ -16,25 +17,25 @@ public class SellList : Network.ServerPacket
         _sellLists = sellLists;
     }
     
-    public override void Write()
+    public override async Task WriteAsync()
     {
-        WriteByte(0x11);
-        WriteInt(_currentMoney);
-        WriteInt(_npcId); //Trader Id
-        WriteShort(_sellLists.Count);
+        await WriteByteAsync(0x11);
+        await WriteIntAsync(_currentMoney);
+        await WriteIntAsync(_npcId); //Trader Id
+        await WriteShortAsync(_sellLists.Count);
         foreach (var itemData in _sellLists.Where(itemData => itemData.MaximumCount > 0))
         {
-            WriteShort(0); //type1
-            WriteInt(0); //ObjectId
-            WriteInt(itemData.ItemId);
-            WriteInt(itemData.MaximumCount);
-            WriteShort((short)itemData.ItemType); //type2
-            WriteShort(0); //??
-            WriteInt(0); //??
-            WriteShort(0); //enchant level
-            WriteShort(0); //?
-            WriteShort(0); //?
-            WriteInt(itemData.DefaultPrice);
+            await WriteShortAsync(0); //type1
+            await WriteIntAsync(0); //ObjectId
+            await WriteIntAsync(itemData.ItemId);
+            await WriteIntAsync(itemData.MaximumCount);
+            await WriteShortAsync((short)itemData.ItemType); //type2
+            await WriteShortAsync(0); //??
+            await WriteIntAsync(0); //??
+            await WriteShortAsync(0); //enchant level
+            await WriteShortAsync(0); //?
+            await WriteShortAsync(0); //?
+            await WriteIntAsync(itemData.DefaultPrice);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Helpers;
 
 namespace Core.NetworkPacket.ServerPacket
@@ -47,41 +48,41 @@ namespace Core.NetworkPacket.ServerPacket
             return (int) (duration - (DateTimeHelper.GetCurrentUnixTimeMillis() - periodStartTime));
         }
         
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x7f);
+            await WriteByteAsync(0x7f);
 		
-            WriteShort(_effects.Count + _deBuffs.Count);
+            await WriteShortAsync(_effects.Count + _deBuffs.Count);
 		
             foreach (Effect temp in _effects)
             {
-                WriteInt(temp.SkillId);
-                WriteShort(temp.Level);
+                await WriteIntAsync(temp.SkillId);
+                await WriteShortAsync(temp.Level);
 			
                 if (temp.Duration == -1)
                 {
-                    WriteInt(-1);
+                    await WriteIntAsync(-1);
                 }
                 else
                 {
-                    //WriteInt(temp.Duration / 1000);
-                    WriteInt(GetDelay(temp.Duration, temp.PeriodStartTime) / 1000);
-                    //WriteInt(30000 / 1000);
+                    //WriteIntAsync(temp.Duration / 1000);
+                    await WriteIntAsync(GetDelay(temp.Duration, temp.PeriodStartTime) / 1000);
+                    //WriteIntAsync(30000 / 1000);
                 }
             }
 		
             foreach (Effect temp in _deBuffs)
             {
-                WriteInt(temp.SkillId);
-                WriteShort(temp.Level);
+                await WriteIntAsync(temp.SkillId);
+                await WriteShortAsync(temp.Level);
 			
                 if (temp.Duration == -1)
                 {
-                    WriteInt(-1);
+                    await WriteIntAsync(-1);
                 }
                 else
                 {
-                    WriteInt(temp.Duration / 1000);
+                    await WriteIntAsync(temp.Duration / 1000);
                 }
             }
         }

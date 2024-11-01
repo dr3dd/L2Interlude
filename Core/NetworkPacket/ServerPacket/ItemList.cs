@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Module.ItemData;
 using Core.Module.Player;
 
@@ -16,26 +17,26 @@ namespace Core.NetworkPacket.ServerPacket
             _showWindow = showWindow;
         }
         
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x1b);
-            WriteShort(_showWindow); //?? show window
-            WriteShort(_items.Count);
+            await WriteByteAsync(0x1b);
+            await WriteShortAsync(_showWindow); //?? show window
+            await WriteShortAsync(_items.Count);
             _items.ForEach(item =>
             {
-                WriteShort(0); //?? Type1
-                WriteInt(item.ObjectId);
-                WriteInt(item.ItemId);
-                WriteInt(item.Amount);
-                WriteShort((int)item.GetItemType()); //(int)temp.Item.Type2
-                WriteShort(0); //CustomType1
-                WriteShort(item.IsEquipped(_characterInfo) ? 0x01 : 0x00); //IsEquipped() ? 0x01 : 0x00
-                WriteInt((int) item.GetSlotBitType());
-                WriteShort(0); //item.EnchantLevel
+                WriteShortAsync(0); //?? Type1
+                WriteIntAsync(item.ObjectId);
+                WriteIntAsync(item.ItemId);
+                WriteIntAsync(item.Amount);
+                WriteShortAsync((int)item.GetItemType()); //(int)temp.Item.Type2
+                WriteShortAsync(0); //CustomType1
+                WriteShortAsync(item.IsEquipped(_characterInfo) ? 0x01 : 0x00); //IsEquipped() ? 0x01 : 0x00
+                WriteIntAsync((int) item.GetSlotBitType());
+                WriteShortAsync(0); //item.EnchantLevel
                 // race tickets
-                WriteShort(0); //CustomType2
-                WriteInt(0);//WriteInt((isAugmented()) ? getAugmentation().getAugmentationId() : 0x00);
-                WriteInt(0); //Mana
+                WriteShortAsync(0); //CustomType2
+                WriteIntAsync(0);//WriteIntAsync((isAugmented()) ? getAugmentation().getAugmentationId() : 0x00);
+                WriteIntAsync(0); //Mana
             });
         }
     }

@@ -1,4 +1,5 @@
-﻿using Core.Controller;
+﻿using System.Threading.Tasks;
+using Core.Controller;
 
 namespace Core.NetworkPacket.ServerPacket
 {
@@ -13,13 +14,13 @@ namespace Core.NetworkPacket.ServerPacket
             _next = n;
         }
 
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x00);
-            WriteByte(0x01);
-            WriteBytesArray(_key);
-            WriteInt(0x01);
-            WriteInt(0x01);
+            await WriteByteAsync(0x00);
+            await WriteByteAsync(0x01);
+            await WriteBytesArrayAsync(_key);
+            await WriteIntAsync(0x01);
+            await WriteIntAsync(0x01);
         }
     }
 }

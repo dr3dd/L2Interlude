@@ -1,4 +1,5 @@
-﻿using Core.Controller;
+﻿using System.Threading.Tasks;
+using Core.Controller;
 using Helpers;
 
 namespace Core.NetworkPacket.ServerPacket.LoginServicePacket
@@ -11,10 +12,10 @@ namespace Core.NetworkPacket.ServerPacket.LoginServicePacket
             _loginServiceController = loginServiceController;
             _loginServiceController.RandomPingKey = Rnd.Next();
         }
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0xA0);
-            WriteInt(_loginServiceController.RandomPingKey);
+            await WriteByteAsync(0xA0);
+            await WriteIntAsync(_loginServiceController.RandomPingKey);
         }
     }
 }

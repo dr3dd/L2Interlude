@@ -28,7 +28,7 @@ namespace Core.NetworkPacket.ClientPacket
         public override async Task Execute()
         {
             var adminCommandHandler = _serviceProvider.GetRequiredService<AdminCommandHandler>();
-            adminCommandHandler.Request(_playerInstance, _bypass);
+            await adminCommandHandler.Request(_playerInstance, _bypass);
         }
     }
 }

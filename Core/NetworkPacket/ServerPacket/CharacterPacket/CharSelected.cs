@@ -1,4 +1,5 @@
-﻿using Core.Controller;
+﻿using System.Threading.Tasks;
+using Core.Controller;
 using Core.Module.CharacterData;
 using Core.Module.CharacterData.Template;
 using Core.Module.Player;
@@ -29,65 +30,65 @@ namespace Core.NetworkPacket.ServerPacket.CharacterPacket
             _gameTimeController = Initializer.TimeController();
         }
         
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x15);
+            await WriteByteAsync(0x15);
 		
-            WriteString(_playerAppearance.CharacterName);
-            WriteInt(_playerInstance.ObjectId); // ObjectId
-            WriteString("");
-            WriteInt(_sessionId);
-            WriteInt(0);
-            WriteInt(0x00); // ??
-            WriteInt(_playerAppearance.Gender);
-            WriteInt(_template.GetRaceId());
-            WriteInt(_template.GetClassId());
-            WriteInt(0x01); // active ??
-            WriteInt(_playerInstance.GetX());
-            WriteInt(_playerInstance.GetY());
-            WriteInt(_playerInstance.GetZ());
+            await WriteStringAsync(_playerAppearance.CharacterName);
+            await WriteIntAsync(_playerInstance.ObjectId); // ObjectId
+            await WriteStringAsync("");
+            await WriteIntAsync(_sessionId);
+            await WriteIntAsync(0);
+            await WriteIntAsync(0x00); // ??
+            await WriteIntAsync(_playerAppearance.Gender);
+            await WriteIntAsync(_template.GetRaceId());
+            await WriteIntAsync(_template.GetClassId());
+            await WriteIntAsync(0x01); // active ??
+            await WriteIntAsync(_playerInstance.GetX());
+            await WriteIntAsync(_playerInstance.GetY());
+            await WriteIntAsync(_playerInstance.GetZ());
 		
-            WriteInt(_playerInstance.CharacterStatus().CurrentHp);//_player.getCurrentHp()
-            WriteInt(_playerInstance.CharacterStatus().CurrentMp);//_player.getCurrentMp()
-            WriteInt(_characterInfo.Sp);//_player.getSp()
-            WriteLong(_characterInfo.Exp);//_player.getExp()
-            WriteInt(_level);//_player.getLevel()
-            WriteInt(0); // _player.getKarma()
-            WriteInt(0x0); // ?
-            WriteInt(_template.GetInt());//_player.getINT()
-            WriteInt(_template.GetStr());//_player.getSTR()
-            WriteInt(_template.GetCon());//_player.getCON()
-            WriteInt(_template.GetMen());//_player.getMEN()
-            WriteInt(_template.GetDex());//_player.getDEX()
-            WriteInt(_template.GetWit());//_player.getWIT()
+            await WriteIntAsync(_playerInstance.CharacterStatus().CurrentHp);//_player.getCurrentHp()
+            await WriteIntAsync(_playerInstance.CharacterStatus().CurrentMp);//_player.getCurrentMp()
+            await WriteIntAsync(_characterInfo.Sp);//_player.getSp()
+            await WriteLongAsync(_characterInfo.Exp);//_player.getExp()
+            await WriteIntAsync(_level);//_player.getLevel()
+            await WriteIntAsync(0); // _player.getKarma()
+            await WriteIntAsync(0x0); // ?
+            await WriteIntAsync(_template.GetInt());//_player.getINT()
+            await WriteIntAsync(_template.GetStr());//_player.getSTR()
+            await WriteIntAsync(_template.GetCon());//_player.getCON()
+            await WriteIntAsync(_template.GetMen());//_player.getMEN()
+            await WriteIntAsync(_template.GetDex());//_player.getDEX()
+            await WriteIntAsync(_template.GetWit());//_player.getWIT()
             for (int i = 0; i < 30; i++)
             {
-                WriteInt(0x00);
+                await WriteIntAsync(0x00);
             }
-            WriteInt(0x00); // c3 work
-            WriteInt(0x00); // c3 work
+            await WriteIntAsync(0x00); // c3 work
+            await WriteIntAsync(0x00); // c3 work
 		
             // extra info
-            WriteInt(_gameTimeController.GetGameTime());//WriteInt(GameTimeController.getInstance().getGameTime()); // in-game time
+            await WriteIntAsync(_gameTimeController.GetGameTime());//WriteIntAsync(GameTimeController.getInstance().getGameTime()); // in-game time
             
 		
-            WriteInt(0x00); //
+            await WriteIntAsync(0x00); //
 		
-            WriteInt(0x00); // c3
+            await WriteIntAsync(0x00); // c3
 		
-            WriteInt(0x00); // c3 InspectorBin
-            WriteInt(0x00); // c3
-            WriteInt(0x00); // c3
-            WriteInt(0x00); // c3
+            await WriteIntAsync(0x00); // c3 InspectorBin
+            await WriteIntAsync(0x00); // c3
+            await WriteIntAsync(0x00); // c3
+            await WriteIntAsync(0x00); // c3
 		
-            WriteInt(0x00); // c3 InspectorBin for 528 client
-            WriteInt(0x00); // c3
-            WriteInt(0x00); // c3
-            WriteInt(0x00); // c3
-            WriteInt(0x00); // c3
-            WriteInt(0x00); // c3
-            WriteInt(0x00); // c3
-            WriteInt(0x00); // c3
+            await WriteIntAsync(0x00); // c3 InspectorBin for 528 client
+            await WriteIntAsync(0x00); // c3
+            await WriteIntAsync(0x00); // c3
+            await WriteIntAsync(0x00); // c3
+            await WriteIntAsync(0x00); // c3
+            await WriteIntAsync(0x00); // c3
+            await WriteIntAsync(0x00); // c3
+            await WriteIntAsync(0x00); // c3
         }
     }
 }

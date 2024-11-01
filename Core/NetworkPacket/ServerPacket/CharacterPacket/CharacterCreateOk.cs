@@ -1,11 +1,13 @@
-﻿namespace Core.NetworkPacket.ServerPacket.CharacterPacket
+﻿using System.Threading.Tasks;
+
+namespace Core.NetworkPacket.ServerPacket.CharacterPacket
 {
     internal sealed class CharacterCreateOk : Network.ServerPacket
     {
-        public override void Write()
+        public override async Task WriteAsync()
         {
-            WriteByte(0x19);
-            WriteInt(0x01);
+            await WriteByteAsync(0x19);
+            await WriteIntAsync(0x01);
         }
     }
 }
