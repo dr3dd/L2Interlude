@@ -38,7 +38,7 @@ namespace Core.Controller.Handlers.AdminCommands
             {
                 if (args[len - 1].EndsWithIgnoreCase(".htm"))
                 {
-                    await admin.ShowHtm($"admin/{args[len - 1]}", admin);
+                    await admin.ShowHtm($"admin/{args[len - 1]}");
                 }
             }
         }

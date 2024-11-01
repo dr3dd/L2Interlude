@@ -55,6 +55,7 @@ namespace Core.Controller.Handlers
             _clientPackets.TryAdd(0x5B, typeof(SendBypassBuildCmd));
             _clientPackets.TryAdd(0xC1, typeof(RequestMakeMacro));
             _clientPackets.TryAdd(0xC2, typeof(RequestDeleteMacro));
+            _clientPackets.TryAdd(0x20, typeof(RequestLinkHtml));
             
             _clientPacketsD0.TryAdd(0x08, typeof(RequestManorList));
             _clientPacketsD0.TryAdd(0x22, typeof(RequestCursedWeaponList));
