@@ -41,7 +41,7 @@ namespace Core.Controller.Handlers.AdminCommands
             }
             else
             {
-                await admin.ShowHtm("admin/teleport/main.htm", admin);
+                await admin.ShowHtm("admin/teleport/main.htm");
             }
 
             await LastAction(admin, args);
