@@ -16,29 +16,29 @@ namespace Core.Controller.Handlers.AdminCommands
 {
     public abstract class AbstractAdminCommand
     {
-        internal void UseCommand(PlayerInstance admin, string alias)
+        internal async Task UseCommand(PlayerInstance admin, string alias)
         {
             if (!Initializer.AdminAccessManager().CheckCommand(admin, alias))
             {
-                admin.SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString("Access denied"));
+                await admin.SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString("Access denied"));
                 return;
             }
 
             LoggerManager.Debug($"{GetType().Name}: char {admin.CharacterName} alias {alias}");
 
-            Use(admin, alias);
+            await Use(admin, alias);
         }
 
-        protected internal abstract void Use(PlayerInstance admin, string command);
+        protected internal abstract Task Use(PlayerInstance admin, string command);
 
-        public void LastAction(PlayerInstance admin, string[] args)
+        public async Task LastAction(PlayerInstance admin, string[] args)
         {
             int len = args.Length;
             if (len > 2)
             {
                 if (args[len - 1].EndsWithIgnoreCase(".htm"))
                 {
-                    admin.ShowHtm($"admin/{args[len - 1]}", admin);
+                    await admin.ShowHtm($"admin/{args[len - 1]}", admin);
                 }
             }
         }

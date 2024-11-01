@@ -44,6 +44,11 @@ namespace Core.NetworkPacket.ClientPacket
                     await TeleportGoTo(split);
                     break;
                 }
+                case "talk_select":
+                {
+                    await TalkSelected(split);
+                    break;
+                }
                 case "menu_select":
                 {
                     await MenuSelect(split.Last());
@@ -59,9 +64,16 @@ namespace Core.NetworkPacket.ClientPacket
             if (_command.StartsWith("admin_"))
             {
                 var adminCommandHandler = _serviceProvider.GetRequiredService<AdminCommandHandler>();
-                adminCommandHandler.Request(_playerInstance, _command);
+                await adminCommandHandler.Request(_playerInstance, _command);
             }
             
+        }
+
+        private async Task TalkSelected(IEnumerable<string> split)
+        {
+            var npcObjectId = Convert.ToInt32(split.Last());
+            var npcInstance = GetNpcInstance(npcObjectId);
+            await npcInstance.TalkSelected(_playerInstance);
         }
 
         private async Task TeleportRequest(IEnumerable<string> split)

@@ -9,6 +9,10 @@ namespace Core.Module.NpcData
     {
         public static async Task ShowPage(PlayerInstance player, string fnHi, NpcInstance npcInstance)
         {
+            if (player.IsGM)
+            {
+                await player.SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString($"[HTML] {fnHi}"));
+            }
             var html = Initializer.HtmlCacheInit().GetHtmlText(fnHi);
             var htmlText = new NpcHtmlMessage(npcInstance.ObjectId, html);
             await player.SendPacketAsync(htmlText);

@@ -45,10 +45,10 @@ public class Doorkeeper : Citizen
                 switch (reply)
                 {
                     case 1:
-                        MySelf.InstantTeleport(talker, PosX01, PosY01, PosZ01);
+                        await MySelf.InstantTeleport(talker, PosX01, PosY01, PosZ01);
                         break;
                     case 2:
-                        MySelf.InstantTeleport(talker, PosX02, PosY02, PosZ02);
+                        await MySelf.InstantTeleport(talker, PosX02, PosY02, PosZ02);
                         break;
                 }
                 break;
