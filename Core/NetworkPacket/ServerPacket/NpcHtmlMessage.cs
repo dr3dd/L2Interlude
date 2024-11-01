@@ -58,6 +58,7 @@ namespace Core.NetworkPacket.ServerPacket
             content = content.Replace("learn_skill", "learn_skill#" + _npcObjId); //add ObjectId
             content = content.Replace("talk_select", "talk_select#" + _npcObjId); //add ObjectId
             content = content.Replace("quest_accept", "quest_accept#" + _npcObjId); //add ObjectId
+            content = content.Replace("link ", "link " + _npcObjId + "#"); //add ObjectId
             return content;
         }
         

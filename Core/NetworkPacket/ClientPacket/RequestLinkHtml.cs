@@ -5,6 +5,8 @@ using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 using Network;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 
@@ -36,8 +38,16 @@ namespace Core.NetworkPacket.ClientPacket
             }
 
             //TODO add some checks
+            var split = _link.Split("#");
+            await GoLink(split);
+        }
 
-            await _playerInstance.ShowHtm(_link);
+        private async Task GoLink(IEnumerable<string> split)
+        {
+            var npcObjectId = Convert.ToInt32(split.First());
+            var link = split.Last();
+            var npcInstance = _worldInit.GetNpcInstance(npcObjectId);
+            await npcInstance.ShowPage(_playerInstance, link);
         }
 
     }
