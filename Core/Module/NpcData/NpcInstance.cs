@@ -87,6 +87,14 @@ public sealed class NpcInstance : Character
         }
         await NpcAi().Talked(playerInstance);
     }
+    private async Task SendRequestShiftAsync(PlayerInstance playerInstance)
+    {
+        if (playerInstance.IsGM)
+        {
+            await NpcChatWindow.ShowShiftPage(playerInstance, this);
+        }
+        return;
+    }
 
     public async Task ShowPage(PlayerInstance player, string fnHi)
     {
@@ -111,6 +119,17 @@ public sealed class NpcInstance : Character
             return;
         }
         await base.RequestActionAsync(playerInstance);
+        await ShowTargetInfoAsync(playerInstance);
+    }
+
+    public override async Task RequestActionShiftAsync(PlayerInstance playerInstance)
+    {
+        if (await IsTargetSelected(playerInstance))
+        {
+            await SendRequestShiftAsync(playerInstance);
+            return;
+        }
+        await base.RequestActionShiftAsync(playerInstance);
         await ShowTargetInfoAsync(playerInstance);
     }
 

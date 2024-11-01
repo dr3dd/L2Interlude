@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Core.Controller;
+﻿using Core.Controller;
 using Core.Controller.Handlers;
 using Core.Module.NpcData;
 using Core.Module.Player;
 using Core.Module.WorldData;
+using Core.NetworkPacket.ServerPacket;
 using Microsoft.Extensions.DependencyInjection;
-using MySqlX.XDevAPI;
 using Network;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Core.NetworkPacket.ClientPacket
 {
@@ -30,6 +30,11 @@ namespace Core.NetworkPacket.ClientPacket
 
         public override async Task Execute()
         {
+            if (_playerInstance.IsGM)
+            {
+                await _playerInstance.SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString($"[BYPASS] {_command}"));
+            }
+
             var split = _command.Split("#");
             var command = split.First();
             switch (command)

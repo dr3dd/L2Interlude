@@ -75,18 +75,72 @@ public class Citizen : DefaultNpc
         MySelf.AddTimerEx(1671, 10000);
     }
 
-    public override Task MenuSelected(Talker talker, int ask, int reply, string fhtml0)
+    public override async Task MenuSelected(Talker talker, int ask, int reply, string fhtml0)
     {
         if (ask == -1000)
         {
-                
+            if (reply == 0)
+            {
+                await MySelf.ShowPage(talker, FnHi);
+            }
+            /*
+            else if (1)
+            {
+                if (MySelf.Sm.residence_id > 0)
+                {
+                    if (MySelf.Castle_GetPledgeId())
+                    {
+                        MySelf.FHTML_SetFileName(fhtml0, fnFeudInfo);
+                        MySelf.FHTML_SetStr(fhtml0, "my_pledge_name", MySelf.Castle_GetPledgeName());
+                        MySelf.FHTML_SetStr(fhtml0, "my_owner_name", MySelf.Castle_GetOwnerName());
+                        MySelf.FHTML_SetInt(fhtml0, "current_tax_rate", MySelf.Residence_GetTaxRateCurrent());
+                    }
+                    else
+                    {
+                        MySelf.FHTML_SetFileName(fhtml0, FnNoFeudInfo);
+                    }
+                    if (MySelf.Sm.residence_id < 7)
+                    {
+                        MySelf.FHTML_SetStr(fhtml0, "kingdom_name", MySelf.MakeFString(1001000, "", "", "", "", ""));
+                    }
+                    else
+                    {
+                        MySelf.FHTML_SetStr(fhtml0, "kingdom_name", MySelf.MakeFString(1001100, "", "", "", "", ""));
+                    }
+                    MySelf.FHTML_SetStr(fhtml0, "feud_name", MySelf.MakeFString((1001000 + MySelf.Sm.residence_id), "", "", "", "", ""));
+                    MySelf.ShowFHTML(talker, fhtml0);
+                }
+            }*/
         }
 
         if (ask == -303)
         {
-                
+            if (reply == 203)
+            {
+                if (MySelf.GetSSQStatus() == 3)
+                {
+                    if (MySelf.GetSSQPart(talker) != 0)
+                    {
+                        await MySelf.ShowMultiSell(reply, talker);
+                    }
+                }
+            }
+            else if (reply == 532 || reply == 549)
+            {
+                /*
+                gg.IsEventServer();
+                if (1)
+                {
+                    await MySelf.ShowMultiSell(reply, talker);
+                }
+                */
+            }
+            else
+            {
+                await MySelf.ShowMultiSell(reply, talker);
+            }
         }
 
-        return Task.FromResult(1);
+        return;
     }
 }

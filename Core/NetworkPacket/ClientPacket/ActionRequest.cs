@@ -33,7 +33,7 @@ namespace Core.NetworkPacket.ClientPacket
         {
             //var worldObject = GetWorldObject();
             //await _playerInstance.OnActionAsync(worldObject);
-            await GetWorldObject().RequestActionAsync(_playerInstance);
+            await GetWorldObject().RequestActionAsync(_playerInstance, _actionId == 1);
         }
         
         private WorldObject GetWorldObject()
