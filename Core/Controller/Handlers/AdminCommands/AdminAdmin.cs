@@ -24,13 +24,13 @@ namespace Core.Controller.Handlers.AdminCommands
             {
                 if (args[1].EndsWithIgnoreCase(".htm"))
                 {
-                    await admin.ShowHtm($"admin/{args[1]}", admin);
+                    await admin.ShowHtm($"admin/{args[1]}");
                 }
             }
             else
             {
 
-                await admin.ShowHtm("admin/admin.htm", admin);
+                await admin.ShowHtm("admin/admin.htm");
             }
         }
     }

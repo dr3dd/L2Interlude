@@ -127,16 +127,16 @@ namespace Core.Module.Player
             //Broadcast.toKnownPlayers(this, new CharInfo(this)); TODO
         }
 
-        public async Task ShowHtm(string fileName, PlayerInstance player)
+        public async Task ShowHtm(string fileName)
         {
-            if (player.IsGM)
+            if (IsGM)
             {
-                await player.SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString($"[HTML] {fileName}"));
+                await SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString($"[HTML] {fileName}"));
             }
 
             if (fileName.EndsWithIgnoreCase(".htm"))
             {
-                await SendPacketAsync(new NpcHtmlMessage(this, fileName, player.ObjectId));
+                await SendPacketAsync(new NpcHtmlMessage(this, fileName, ObjectId));
 
             }
         }
