@@ -14,7 +14,10 @@ public class NpcAiDefault
         
         if (defaultNpc is Citizen citizen)
         {
-            citizen.FnHi = fnHi;
+            if (fnHi != null)
+            {
+                citizen.FnHi = fnHi;
+            }
         }
         if (defaultNpc is Teleporter teleporter)
         {
