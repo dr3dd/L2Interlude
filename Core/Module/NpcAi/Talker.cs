@@ -14,6 +14,7 @@ public struct Talker
     public int IsPledgeMaster { get; }
     public int PledgeId { get; }
     public int NoblessType { get; }
+    public int HeroType { get; }
 
     public Talker(PlayerInstance playerInstance)
     {
@@ -28,5 +29,6 @@ public struct Talker
         IsPledgeMaster = 0;
         PledgeId = 0;
         NoblessType = 0;
+        HeroType = 0;
     }
 }

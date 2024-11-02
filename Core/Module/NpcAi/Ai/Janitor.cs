@@ -45,7 +45,7 @@ public class Janitor : Citizen
             {
                 MySelf.FHTML_SetFileName(ref fhtml0, FnOwner);
             }
-            MySelf.FHTML_SetStr(fhtml0, "my_pledge_name", MySelf.Castle_GetPledgeName());
+            MySelf.FHTML_SetStr(ref fhtml0, "my_pledge_name", MySelf.Castle_GetPledgeName());
             await MySelf.ShowFHTML(talker, fhtml0);
         }
         else if (MySelf.Sm.ResidenceId > 0)
@@ -53,9 +53,9 @@ public class Janitor : Citizen
             if (MySelf.Castle_GetPledgeId() > 0)
             {
                 MySelf.FHTML_SetFileName(ref fhtml0, FnNoFeudInfo);
-                MySelf.FHTML_SetStr(fhtml0, "my_pledge_name", MySelf.Castle_GetPledgeName());
-                MySelf.FHTML_SetStr(fhtml0, "my_owner_name", MySelf.Castle_GetOwnerName());
-                MySelf.FHTML_SetInt(fhtml0, "current_tax_rate", MySelf.Residence_GetTaxRateCurrent());
+                MySelf.FHTML_SetStr(ref fhtml0, "my_pledge_name", MySelf.Castle_GetPledgeName());
+                MySelf.FHTML_SetStr(ref fhtml0, "my_owner_name", MySelf.Castle_GetOwnerName());
+                MySelf.FHTML_SetInt(ref fhtml0, "current_tax_rate", MySelf.Residence_GetTaxRateCurrent());
             }
             else
             {
