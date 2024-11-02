@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Core.Module.CategoryData;
 using Core.Module.CharacterData;
 using Core.Module.DoorData;
+using Core.Module.ItemData;
 using Core.Module.NpcAi;
 using Core.Module.NpcAi.Ai;
 using Core.Module.NpcAi.Handlers;
@@ -15,14 +16,18 @@ using Core.Module.Player;
 using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
 using Core.TaskManager;
+using Google.Protobuf.WellKnownTypes;
 using Helpers;
+using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
+using static NLog.LayoutRenderers.Wrappers.ReplaceLayoutRendererWrapper;
 
 namespace Core.Module.NpcData
 {
     public class NpcAi
     {
         private readonly NpcInstance _npcInstance;
+        private readonly ItemDataInit _itemInit;
         private readonly WorldInit _worldInit;
         private readonly DefaultNpc _defaultNpc;
         private readonly ConcurrentDictionary<int, Task> _tasks;
@@ -41,6 +46,7 @@ namespace Core.Module.NpcData
             _aiTeleport = new NpcAiTeleport(this);
             _npcAiSell = new NpcAiSell(this);
             _worldInit = npcInstance.ServiceProvider.GetRequiredService<WorldInit>();
+            _itemInit = npcInstance.ServiceProvider.GetRequiredService<ItemDataInit>();
             _tasks = new ConcurrentDictionary<int, Task>();
             _cts = new CancellationTokenSource();
             var npcName = _npcInstance.GetStat().Name;
@@ -137,6 +143,11 @@ namespace Core.Module.NpcData
             var player = (PlayerInstance) _worldInit.GetWorldObject(talker.ObjectId);
             await _npcInstance.ShowPage(player, fnHi);
         }
+        public async Task ShowHTML(Talker talker, string htmlText)
+        {
+            var player = (PlayerInstance) _worldInit.GetWorldObject(talker.ObjectId);
+            await _npcInstance.ShowHTML(player, htmlText);
+        }
         
         public async Task Teleport(Talker talker, IList<TeleportList> position, string shopName, string empty, string s,
             string empty1, int itemId, string itemName)
@@ -178,9 +189,15 @@ namespace Core.Module.NpcData
             return talker.PlayerInstance.PlayerInventory().GetItemInstance(itemId).Amount;
         }
 
-        public string MakeFString(int i, string empty, string s, string empty1, string s1, string empty2)
+        public int OwnItemCount(Talker talker, string itemName)
         {
-            return "TmpItemName";
+            var itemId = _itemInit.GetItemByName(itemName).ItemId;
+            return OwnItemCount(talker, itemId);
+        }
+
+        public string MakeFString(int stringId, string empty, string s, string empty1, string s1, string empty2)
+        {
+            return $"FString {stringId}";
         }
 
         public async Task ShowSkillList(Talker talker, string empty)
@@ -191,7 +208,8 @@ namespace Core.Module.NpcData
 
         public async Task ShowGrowSkillMessage(Talker talker, int skillNameId, string empty)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn("ShowGrowSkillMessage NotImplementedException");
+            await Task.FromResult(1);
         }
 
         /// <summary>
@@ -218,12 +236,12 @@ namespace Core.Module.NpcData
 
         public void AddUseSkillDesire(Talker talker, int p1, int p2, int p3, int p4)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn("AddUseSkillDesire NotImplementedException");
         }
 
         public void AddAttackDesire(Talker attacked, int i, int f0)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn("AddAttackDesire NotImplementedException");
         }
 
         public async Task TalkSelected(PlayerInstance playerInstance)
@@ -258,22 +276,25 @@ namespace Core.Module.NpcData
         /// <param name="p4"></param>
         public void DeleteRadar(Talker talker, int p1, int p2, int p3, int p4)
         {
-            
+            LoggerManager.Warn("DeleteRadar NotImplementedException");
         }
 
         public async Task ShowEnchantSkillList(Talker talker)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn("ShowEnchantSkillList NotImplementedException");
+            await Task.FromResult(1);
         }
 
         public async Task ShowEnchantSkillMessage(Talker talker, int skillNameId)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn("ShowEnchantSkillMessage NotImplementedException");
+            await Task.FromResult(1);
         }
 
         public async Task ShowMultiSell(int i, Talker talker)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn("ShowMultiSell NotImplementedException");
+            await Task.FromResult(1);
         }
 
         public async Task Sell(Talker talker, IEnumerable<BuySellList> sellList, string shopName, string fnBuy, string empty, string p5)
@@ -283,32 +304,138 @@ namespace Core.Module.NpcData
 
         public async Task SellPreview(Talker talker, IList<BuySellList> sellList0, string shopName, string fnBuy, string empty, string p5)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn("SellPreview NotImplementedException");
+            await Task.FromResult(1);
         }
 
         public async Task ShowRadar(Talker talker, int v1, int v2, int v3, int v4)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn("ShowRadar NotImplementedException");
+            await Task.FromResult(1);
         }
 
         public async Task DeleteAllRadar(Talker talker, int v)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn("DeleteAllRadar NotImplementedException");
+            await Task.FromResult(1);
         }
 
         internal int GetSSQStatus()
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn("GetSSQStatus NotImplementedException");
+            return 0;
         }
 
         internal int GetSSQPart(Talker talker)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn("GetSSQPart NotImplementedException");
+            return 0;
         }
 
-        internal void DeleteItem1(Talker talker, int itemNeeded, int itemId)
+        internal void DeleteItem1(Talker talker, string itemName, int itemCount)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn("DeleteItem1 NotImplementedException");
+        }
+
+        internal async Task ShowSystemMessage(Talker talker, int messageId)
+        {
+            await talker.PlayerInstance.SendPacketAsync(new SystemMessage((SystemMessageId)messageId));
+        }
+
+        internal void SetCurrentQuestID(string v)
+        {
+            LoggerManager.Warn("SetCurrentQuestID NotImplementedException");
+        }
+
+        internal int GetInventoryInfo(Talker talker, int v)
+        {
+            LoggerManager.Warn("GetInventoryInfo NotImplementedException");
+            return 0;
+        }
+
+        internal void VoiceEffect(Talker talker, string v1, int v2)
+        {
+            LoggerManager.Warn("VoiceEffect NotImplementedException");
+        }
+
+        internal void GiveItem1(Talker talker, string v1, int v2)
+        {
+            LoggerManager.Warn("GiveItem1 NotImplementedException");
+        }
+
+        internal void IncrementParam(Talker talker, int v1, int v2)
+        {
+            LoggerManager.Warn("IncrementParam NotImplementedException");
+        }
+
+        internal int GetIndexFromCreature(Talker talker)
+        {
+            LoggerManager.Warn("GetIndexFromCreature NotImplementedException");
+            return 0;
+        }
+
+        internal int GetMemoStateEx(Talker talker, int v1, string v2)
+        {
+            LoggerManager.Warn("GetIndexFromCreature NotImplementedException");
+            return 0;
+        }
+
+        internal void SetMemoStateEx(Talker talker, int v1, string v2, int v3)
+        {
+            LoggerManager.Warn("SetMemoStateEx NotImplementedException");
+        }
+
+        internal bool Castle_GetPledgeId()
+        {
+            LoggerManager.Warn("Castle_GetPledgeId NotImplementedException");
+            return false;
+        }
+
+        internal void FHTML_SetFileName(ref string fhtml0, string fileName)
+        {
+            fhtml0 = Initializer.HtmlCacheInit().GetHtmlText(fileName);
+        }
+
+        internal void FHTML_SetStr(ref string fhtml0, string replaceStr, string value)
+        {
+            fhtml0 = fhtml0.Replace($"<?{replaceStr}?>", value);
+        }
+        internal void FHTML_SetInt(ref string fhtml0, string replaceStr, int value)
+        {
+            FHTML_SetStr(ref fhtml0, replaceStr, value.ToString());
+        }
+
+        internal string Castle_GetPledgeName()
+        {
+            LoggerManager.Warn("Castle_GetPledgeName NotImplementedException");
+            return "NONE";
+        }
+
+        internal string Castle_GetOwnerName()
+        {
+            LoggerManager.Warn("Castle_GetOwnerName NotImplementedException");
+            return "NONE";
+        }
+
+        internal int Residence_GetTaxRateCurrent()
+        {
+            LoggerManager.Warn("Residence_GetTaxRateCurrent NotImplementedException");
+            return 0;
+        }
+
+        public async Task ShowFHTML(Talker talker, string fhtml0)
+        {
+            await ShowHTML(talker, fhtml0);
+        }
+
+        internal void AddDoNothingDesire(int v1, int v2)
+        {
+            LoggerManager.Warn("AddDoNothingDesire NotImplementedException");
+        }
+
+        internal void AddMoveToDesire(object start_x, object start_y, object start_z, int v)
+        {
+            LoggerManager.Warn("AddMoveToDesire NotImplementedException");
         }
     }
 }

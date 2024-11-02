@@ -100,6 +100,10 @@ public sealed class NpcInstance : Character
     {
         await NpcChatWindow.ShowPage(player, fnHi, this);
     }
+    public async Task ShowHTML(PlayerInstance player, string htmlText)
+    {
+        await NpcChatWindow.ShowHTML(player, htmlText, this);
+    }
 
     public async Task TalkSelected(PlayerInstance playerInstance)
     {

@@ -10,9 +10,9 @@ public class TeleporterNeedItem : Teleporter
     {
         if (ask == -6)
         {
-            if (MySelf.OwnItemCount(talker, ItemNeeded) != 0)
+            if (MySelf.OwnItemCount(talker, "small_sword") != 0)
             {
-                MySelf.DeleteItem1(talker, ItemNeeded, 1/*@small_sword*/);
+                MySelf.DeleteItem1(talker, "small_sword", ItemNeeded);
             }
             else
             {

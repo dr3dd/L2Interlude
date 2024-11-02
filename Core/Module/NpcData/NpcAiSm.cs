@@ -4,5 +4,6 @@ public struct NpcAiSm
 {
     public int Race { get; init; }
     public int Level { get; init; }
+    public int ResidenceId { get; init; }
     public string Name { get; init; }
 }

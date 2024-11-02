@@ -21,7 +21,10 @@ public class NpcAiDefault
         }
         if (defaultNpc is Teleporter teleporter)
         {
-            teleporter.FnHi = fnHi;
+            if (fnHi != null)
+            {
+                teleporter.FnHi = fnHi;
+            }
             teleporter.FnNobless = fnNobless;
             teleporter.FnNoNobless = fnNoNobless;
             teleporter.FnNoNoblessItem = fnNoNoblessItem;
@@ -29,7 +32,10 @@ public class NpcAiDefault
         }
         if (defaultNpc is Guard guard)
         {
-            guard.FnHi = fnHi;
+            if (fnHi != null)
+            {
+                guard.FnHi = fnHi;
+            }
         }
 
         if (defaultNpc is Doorkeeper doorkeeper)

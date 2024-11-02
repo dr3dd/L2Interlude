@@ -18,6 +18,16 @@ namespace Core.Module.NpcData
             await player.SendPacketAsync(htmlText);
             await player.SendActionFailedPacketAsync();
         }
+        public static async Task ShowHTML(PlayerInstance player, string htmlText, NpcInstance npcInstance)
+        {
+            if (player.IsGM)
+            {
+                await player.SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString($"[HTML] generated on the fly"));
+            }
+            var htmlMsg = new NpcHtmlMessage(npcInstance.ObjectId, htmlText);
+            await player.SendPacketAsync(htmlMsg);
+            await player.SendActionFailedPacketAsync();
+        }
         
         public static async Task ShowShiftPage(PlayerInstance player, NpcInstance npcInstance)
         {
