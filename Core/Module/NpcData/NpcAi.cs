@@ -295,5 +295,20 @@ namespace Core.Module.NpcData
         {
             throw new NotImplementedException();
         }
+
+        internal int GetSSQStatus()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal int GetSSQPart(Talker talker)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void DeleteItem1(Talker talker, int itemNeeded, int itemId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

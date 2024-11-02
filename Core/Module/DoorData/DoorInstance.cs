@@ -25,4 +25,8 @@ public sealed class DoorInstance : WorldObject
     {
         throw new NotImplementedException();
     }
+    public override Task RequestActionShiftAsync(PlayerInstance playerInstance)
+    {
+        throw new NotImplementedException();
+    }
 }

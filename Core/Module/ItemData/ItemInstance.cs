@@ -117,7 +117,11 @@ namespace Core.Module.ItemData
 
         public override Task RequestActionAsync(PlayerInstance player)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
+        }
+        public override Task RequestActionShiftAsync(PlayerInstance player)
+        {
+            throw new NotImplementedException();
         }
     }
 }

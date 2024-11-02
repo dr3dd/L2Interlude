@@ -17,6 +17,18 @@ namespace Core.Module.WorldData
         }
         
         public abstract Task RequestActionAsync(PlayerInstance playerInstance);
+        public abstract Task RequestActionShiftAsync(PlayerInstance playerInstance);
+        public virtual async Task RequestActionAsync(PlayerInstance playerInstance, bool isShift)
+        {
+            if (isShift)
+            {
+                await RequestActionShiftAsync(playerInstance);
+            }
+            else
+            {
+                await RequestActionAsync(playerInstance);
+            }
+        }
 
         public virtual async Task RequestForcedAttack(PlayerInstance playerInstance)
         {

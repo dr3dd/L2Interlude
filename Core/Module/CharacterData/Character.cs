@@ -68,6 +68,12 @@ public abstract class Character : WorldObject
         playerInstance.CharacterTargetAction().SetTarget(this);
         await playerInstance.SendPacketAsync(new ValidateLocation(this));
     }
+    public override async Task RequestActionShiftAsync(PlayerInstance playerInstance)
+    {
+        // Set the target of the PlayerInstance player
+        playerInstance.CharacterTargetAction().SetTarget(this);
+        await playerInstance.SendPacketAsync(new ValidateLocation(this));
+    }
 
     public virtual async Task SendToKnownPlayers(ServerPacket packet)
     {
