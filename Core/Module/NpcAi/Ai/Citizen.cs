@@ -87,7 +87,7 @@ public class Citizen : DefaultNpc
                 case 1:
                     if (MySelf.Sm.ResidenceId >= 0)
                     {
-                        if (MySelf.Castle_GetPledgeId())
+                        if (MySelf.Castle_GetPledgeId() > 0)
                         {
                             MySelf.FHTML_SetFileName(ref fhtml0, FnFeudInfo);
                             MySelf.FHTML_SetStr(ref fhtml0, "my_pledge_name", MySelf.Castle_GetPledgeName());

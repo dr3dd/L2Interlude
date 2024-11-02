@@ -199,9 +199,12 @@ namespace Core.Module.NpcData
             return OwnItemCount(talker, itemId);
         }
 
+        /// <summary>
+        /// Get String Name from fstring file
+        /// </summary>
         public string MakeFString(int stringId, string empty, string s, string empty1, string s1, string empty2)
         {
-            return _fString.GetFString(i);
+            return _fString.GetFString(stringId);
         }
 
         public async Task ShowSkillList(Talker talker, string empty)
@@ -273,11 +276,6 @@ namespace Core.Module.NpcData
         /// <summary>
         /// TODO
         /// </summary>
-        /// <param name="talker"></param>
-        /// <param name="p1"></param>
-        /// <param name="p2"></param>
-        /// <param name="p3"></param>
-        /// <param name="p4"></param>
         public void DeleteRadar(Talker talker, int p1, int p2, int p3, int p4)
         {
             LoggerManager.Warn("DeleteRadar NotImplementedException");
@@ -360,50 +358,13 @@ namespace Core.Module.NpcData
         {
             return false;
         }
-        
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <returns></returns>
-        public int Castle_GetPledgeId()
-        {
-            return 0;
-        }
-
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <returns></returns>
-        public string Castle_GetPledgeName()
-        {
-            return "";
-        }
-
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <returns></returns>
-        public string Castle_GetOwnerName()
-        {
-            return "";
-        }
-
-        public Int16 Residence_GetTaxRateCurrent()
-        {
-            return 15;
-        }
-
-        public void FHTML_SetFileName(out string fhtml0, string fnWyvernOwner)
-        {
-            fhtml0 = fnWyvernOwner;
-        }
 
         public void FHTML_SetStr(string fhtml0, string myPledgeName, string castleGetPledgeName)
         {
             throw new NotImplementedException();
         }
 
-        public void FHTML_SetInt(string fhtml0, string currentTaxRate, short residenceGetTaxRateCurrent)
+        public void FHTML_SetInt(string fhtml0, string currentTaxRate, int residenceGetTaxRateCurrent)
         {
             LoggerManager.Warn("DeleteItem1 NotImplementedException");
         }
@@ -456,10 +417,10 @@ namespace Core.Module.NpcData
             LoggerManager.Warn("SetMemoStateEx NotImplementedException");
         }
 
-        internal bool Castle_GetPledgeId()
+        internal int Castle_GetPledgeId()
         {
             LoggerManager.Warn("Castle_GetPledgeId NotImplementedException");
-            return false;
+            return 0;
         }
 
         internal void FHTML_SetFileName(ref string fhtml0, string fileName)
