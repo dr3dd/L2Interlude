@@ -8,6 +8,7 @@ using Core.Module.CategoryData;
 using Core.Module.CharacterData;
 using Core.Module.DoorData;
 using Core.Module.ItemData;
+using Core.Module.FStringData;
 using Core.Module.NpcAi;
 using Core.Module.NpcAi.Ai;
 using Core.Module.NpcAi.Handlers;
@@ -29,6 +30,7 @@ namespace Core.Module.NpcData
         private readonly NpcInstance _npcInstance;
         private readonly ItemDataInit _itemInit;
         private readonly WorldInit _worldInit;
+        private readonly FStringInit _fString;
         private readonly DefaultNpc _defaultNpc;
         private readonly ConcurrentDictionary<int, Task> _tasks;
         private readonly NpcAiTeleport _aiTeleport;
@@ -46,7 +48,8 @@ namespace Core.Module.NpcData
             _aiTeleport = new NpcAiTeleport(this);
             _npcAiSell = new NpcAiSell(this);
             _worldInit = npcInstance.ServiceProvider.GetRequiredService<WorldInit>();
-            _itemInit = npcInstance.ServiceProvider.GetRequiredService<ItemDataInit>();
+            _fString = npcInstance.ServiceProvider.GetRequiredService<FStringInit>();
+            _itemInit = npcInstance.ServiceProvider.GetRequiredService<ItemDataInit>();            
             _tasks = new ConcurrentDictionary<int, Task>();
             _cts = new CancellationTokenSource();
             var npcName = _npcInstance.GetStat().Name;
@@ -60,7 +63,8 @@ namespace Core.Module.NpcData
             {
                 Level = _npcInstance.Level,
                 Race = GetNpcRaceId(_npcInstance.GetStat().Race),
-                Name = _npcInstance.GetStat().Name
+                Name = _npcInstance.GetStat().Name,
+                ResidenceId = 1 //Should be Id of ClanHall
             };
         }
 
@@ -197,7 +201,7 @@ namespace Core.Module.NpcData
 
         public string MakeFString(int stringId, string empty, string s, string empty1, string s1, string empty2)
         {
-            return $"FString {stringId}";
+            return _fString.GetFString(i);
         }
 
         public async Task ShowSkillList(Talker talker, string empty)
@@ -333,6 +337,73 @@ namespace Core.Module.NpcData
         }
 
         internal void DeleteItem1(Talker talker, string itemName, int itemCount)
+        {
+            throw new NotImplementedException();
+        }
+        
+        /// <summary>
+        /// TODO by default false
+        /// </summary>
+        /// <param name="talker"></param>
+        /// <returns></returns>
+        public bool IsMyLord(Talker talker)
+        {
+            return false;
+        }
+        
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="talker"></param>
+        /// <returns></returns>
+        public bool HavePledgePower(Talker talker)
+        {
+            return false;
+        }
+        
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <returns></returns>
+        public int Castle_GetPledgeId()
+        {
+            return 0;
+        }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <returns></returns>
+        public string Castle_GetPledgeName()
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <returns></returns>
+        public string Castle_GetOwnerName()
+        {
+            return "";
+        }
+
+        public Int16 Residence_GetTaxRateCurrent()
+        {
+            return 15;
+        }
+
+        public void FHTML_SetFileName(out string fhtml0, string fnWyvernOwner)
+        {
+            fhtml0 = fnWyvernOwner;
+        }
+
+        public void FHTML_SetStr(string fhtml0, string myPledgeName, string castleGetPledgeName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void FHTML_SetInt(string fhtml0, string currentTaxRate, short residenceGetTaxRateCurrent)
         {
             LoggerManager.Warn("DeleteItem1 NotImplementedException");
         }
