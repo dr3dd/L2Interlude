@@ -9,6 +9,7 @@ using Core.Module.AreaData;
 using Core.Module.CategoryData;
 using Core.Module.CharacterData.Template;
 using Core.Module.DoorData;
+using Core.Module.FStringData;
 using Core.Module.HtmlCacheData;
 using Core.Module.ItemData;
 using Core.Module.ManualData;
@@ -104,6 +105,11 @@ namespace Core
             return ServiceProvider.GetService<PcParameterInit>();
         }
 
+        public static FStringInit FStringInit()
+        {
+            return ServiceProvider.GetRequiredService<FStringInit>();
+        }
+
         public void Load()
         {
             ServiceProvider.GetRequiredService<ObjectIdInit>();
@@ -114,6 +120,7 @@ namespace Core
             ServiceProvider.GetRequiredService<WorldInit>().Run();
             ServiceProvider.GetRequiredService<AreaDataInit>().Run();
             ServiceProvider.GetRequiredService<NpcDataInit>().Run();
+            ServiceProvider.GetRequiredService<FStringInit>().Run();
             //ServiceProvider.GetRequiredService<NpcAiObj>().Run(); use only once 
             ServiceProvider.GetRequiredService<DoorDataInit>().Run();
             //ServiceProvider.GetRequiredService<NpcPosInitNew>().Run();

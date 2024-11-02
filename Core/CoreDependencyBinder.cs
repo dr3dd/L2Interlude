@@ -6,6 +6,7 @@ using Core.Module.AreaData;
 using Core.Module.CategoryData;
 using Core.Module.CharacterData.Template;
 using Core.Module.DoorData;
+using Core.Module.FStringData;
 using Core.Module.HtmlCacheData;
 using Core.Module.ItemData;
 using Core.Module.ManualData;
@@ -31,6 +32,7 @@ namespace Core
             services.AddSingleton<WorldInit>();
             services.AddSingleton<TemplateInit>();
             services.AddSingleton<ManualPchInit>();
+            services.AddSingleton<FStringInit>();
             services.AddSingleton<PcParameterInit>();
             services.AddSingleton<GameTimeController>();
             services.AddSingleton<HtmlCacheInit>();

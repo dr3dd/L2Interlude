@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Core.Module.CategoryData;
 using Core.Module.CharacterData;
 using Core.Module.DoorData;
+using Core.Module.FStringData;
 using Core.Module.NpcAi;
 using Core.Module.NpcAi.Ai;
 using Core.Module.NpcAi.Handlers;
@@ -24,6 +25,7 @@ namespace Core.Module.NpcData
     {
         private readonly NpcInstance _npcInstance;
         private readonly WorldInit _worldInit;
+        private readonly FStringInit _fString;
         private readonly DefaultNpc _defaultNpc;
         private readonly ConcurrentDictionary<int, Task> _tasks;
         private readonly NpcAiTeleport _aiTeleport;
@@ -41,6 +43,7 @@ namespace Core.Module.NpcData
             _aiTeleport = new NpcAiTeleport(this);
             _npcAiSell = new NpcAiSell(this);
             _worldInit = npcInstance.ServiceProvider.GetRequiredService<WorldInit>();
+            _fString = npcInstance.ServiceProvider.GetRequiredService<FStringInit>();
             _tasks = new ConcurrentDictionary<int, Task>();
             _cts = new CancellationTokenSource();
             var npcName = _npcInstance.GetStat().Name;
@@ -181,7 +184,7 @@ namespace Core.Module.NpcData
 
         public string MakeFString(int i, string empty, string s, string empty1, string s1, string empty2)
         {
-            return "TmpItemName";
+            return _fString.GetFString(i);
         }
 
         public async Task ShowSkillList(Talker talker, string empty)
