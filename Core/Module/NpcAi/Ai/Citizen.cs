@@ -79,41 +79,43 @@ public class Citizen : DefaultNpc
     {
         if (ask == -1000)
         {
-            if (reply == 0)
+            switch (reply)
             {
-                await MySelf.ShowPage(talker, FnHi);
+                case 0:
+                    await MySelf.ShowPage(talker, FnHi);
+                    break;
+                case 1:
+                    if (MySelf.Sm.ResidenceId >= 0)
+                    {
+                        if (MySelf.Castle_GetPledgeId())
+                        {
+                            MySelf.FHTML_SetFileName(ref fhtml0, FnFeudInfo);
+                            MySelf.FHTML_SetStr(ref fhtml0, "my_pledge_name", MySelf.Castle_GetPledgeName());
+                            MySelf.FHTML_SetStr(ref fhtml0, "my_owner_name", MySelf.Castle_GetOwnerName());
+                            MySelf.FHTML_SetInt(ref fhtml0, "current_tax_rate", MySelf.Residence_GetTaxRateCurrent());
+                        }
+                        else
+                        {
+                            MySelf.FHTML_SetFileName(ref fhtml0, FnNoFeudInfo);
+                        }
+                        if (MySelf.Sm.ResidenceId < 7)
+                        {
+                            MySelf.FHTML_SetStr(ref fhtml0, "kingdom_name", MySelf.MakeFString(1001000, "", "", "", "", ""));
+                        }
+                        else
+                        {
+                            MySelf.FHTML_SetStr(ref fhtml0, "kingdom_name", MySelf.MakeFString(1001100, "", "", "", "", ""));
+                        }
+                        MySelf.FHTML_SetStr(ref fhtml0, "feud_name", MySelf.MakeFString((1001000 + MySelf.Sm.ResidenceId), "", "", "", "", ""));
+                        await MySelf.ShowFHTML(talker, fhtml0);
+                    }
+                    break;
+                default:
+                    break;
             }
-            else if (reply == 1)
-            {
-                if (MySelf.Sm.ResidenceId > 0)
-                {
-                    if (MySelf.Castle_GetPledgeId() > 0)
-                    {
-                        MySelf.FHTML_SetFileName(out fhtml0, FnFeudInfo);
-                        MySelf.FHTML_SetStr(fhtml0, "my_pledge_name", MySelf.Castle_GetPledgeName());
-                        MySelf.FHTML_SetStr(fhtml0, "my_owner_name", MySelf.Castle_GetOwnerName());
-                        MySelf.FHTML_SetInt(fhtml0, "current_tax_rate", MySelf.Residence_GetTaxRateCurrent());
-                    }
-                    else
-                    {
-                        MySelf.FHTML_SetFileName(out fhtml0, FnNoFeudInfo);
-                    }
-                    if (MySelf.Sm.ResidenceId < 7)
-                    {
-                        MySelf.FHTML_SetStr(fhtml0, "kingdom_name", MySelf.MakeFString(1001000, "", "", "", "", ""));
-                    }
-                    else
-                    {
-                        MySelf.FHTML_SetStr(fhtml0, "kingdom_name", MySelf.MakeFString(1001100, "", "", "", "", ""));
-                    }
-                    MySelf.FHTML_SetStr(fhtml0, "feud_name", MySelf.MakeFString((1001000 + MySelf.Sm.ResidenceId), "", "", "", "", ""));
-                    await MySelf.ShowPage(talker, fhtml0);
-                }
-            }
-            return;
         }
 
-        if (ask == -303)
+        else if (ask == -303)
         {
             if (reply == 203)
             {
@@ -128,8 +130,7 @@ public class Citizen : DefaultNpc
             else if (reply == 532 || reply == 549)
             {
                 /*
-                gg.IsEventServer();
-                if (1)
+                if (gg.IsEventServer())
                 {
                     await MySelf.ShowMultiSell(reply, talker);
                 }
@@ -139,6 +140,10 @@ public class Citizen : DefaultNpc
             {
                 await MySelf.ShowMultiSell(reply, talker);
             }
+        }
+        else
+        {
+            await base.MenuSelected(talker, ask, reply, fhtml0);
         }
     }
 }
