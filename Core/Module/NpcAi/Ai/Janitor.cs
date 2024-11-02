@@ -34,8 +34,34 @@ public class Janitor : Citizen
 
     public override async Task Talked(Talker talker)
     {
-        var fhtml0 = FnHi;
-        
+        var fhtml0 = ""; 
+        if (MySelf.IsMyLord(talker) || (MySelf.HavePledgePower(talker) && MySelf.Castle_GetPledgeId() == talker.PledgeId && talker.PledgeId != 0))
+        {
+            if (IsWyvern == 1)
+            {
+                MySelf.FHTML_SetFileName(out fhtml0, FnWyvernOwner);
+            }
+            else
+            {
+                MySelf.FHTML_SetFileName(out fhtml0, FnOwner);
+            }
+            MySelf.FHTML_SetStr(fhtml0, "my_pledge_name", MySelf.Castle_GetPledgeName());
+            await MySelf.ShowPage(talker, fhtml0);
+        }
+        else if (MySelf.Sm.ResidenceId > 0)
+        {
+            if (MySelf.Castle_GetPledgeId() > 0)
+            {
+                MySelf.FHTML_SetFileName(out fhtml0, FnNoFeudInfo);
+                MySelf.FHTML_SetStr(fhtml0, "my_pledge_name", MySelf.Castle_GetPledgeName());
+                MySelf.FHTML_SetStr(fhtml0, "my_owner_name", MySelf.Castle_GetOwnerName());
+                MySelf.FHTML_SetInt(fhtml0, "current_tax_rate", MySelf.Residence_GetTaxRateCurrent());
+            }
+            else
+            {
+                MySelf.FHTML_SetFileName(out fhtml0, FnNoFeudInfo);
+            }
+        }
         await MySelf.ShowPage(talker, fhtml0);
     }
 }

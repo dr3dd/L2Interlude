@@ -54,7 +54,8 @@ namespace Core.Module.NpcData
             {
                 Level = _npcInstance.Level,
                 Race = GetNpcRaceId(_npcInstance.GetStat().Race),
-                Name = _npcInstance.GetStat().Name
+                Name = _npcInstance.GetStat().Name,
+                ResidenceId = 1 //Should be Id of ClanHall
             };
         }
 
@@ -307,6 +308,73 @@ namespace Core.Module.NpcData
         }
 
         internal void DeleteItem1(Talker talker, int itemNeeded, int itemId)
+        {
+            throw new NotImplementedException();
+        }
+        
+        /// <summary>
+        /// TODO by default false
+        /// </summary>
+        /// <param name="talker"></param>
+        /// <returns></returns>
+        public bool IsMyLord(Talker talker)
+        {
+            return false;
+        }
+        
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="talker"></param>
+        /// <returns></returns>
+        public bool HavePledgePower(Talker talker)
+        {
+            return false;
+        }
+        
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <returns></returns>
+        public int Castle_GetPledgeId()
+        {
+            return 0;
+        }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <returns></returns>
+        public string Castle_GetPledgeName()
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <returns></returns>
+        public string Castle_GetOwnerName()
+        {
+            return "";
+        }
+
+        public Int16 Residence_GetTaxRateCurrent()
+        {
+            return 15;
+        }
+
+        public void FHTML_SetFileName(out string fhtml0, string fnWyvernOwner)
+        {
+            fhtml0 = fnWyvernOwner;
+        }
+
+        public void FHTML_SetStr(string fhtml0, string myPledgeName, string castleGetPledgeName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void FHTML_SetInt(string fhtml0, string currentTaxRate, short residenceGetTaxRateCurrent)
         {
             throw new NotImplementedException();
         }

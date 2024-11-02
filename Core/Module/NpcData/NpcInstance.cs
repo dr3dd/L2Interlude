@@ -93,7 +93,7 @@ public sealed class NpcInstance : Character
         {
             await NpcChatWindow.ShowShiftPage(playerInstance, this);
         }
-        return;
+        await playerInstance.SendActionFailedPacketAsync();
     }
 
     public async Task ShowPage(PlayerInstance player, string fnHi)

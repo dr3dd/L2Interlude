@@ -83,23 +83,22 @@ public class Citizen : DefaultNpc
             {
                 await MySelf.ShowPage(talker, FnHi);
             }
-            /*
-            else if (1)
+            else if (reply == 1)
             {
-                if (MySelf.Sm.residence_id > 0)
+                if (MySelf.Sm.ResidenceId > 0)
                 {
-                    if (MySelf.Castle_GetPledgeId())
+                    if (MySelf.Castle_GetPledgeId() > 0)
                     {
-                        MySelf.FHTML_SetFileName(fhtml0, fnFeudInfo);
+                        MySelf.FHTML_SetFileName(out fhtml0, FnFeudInfo);
                         MySelf.FHTML_SetStr(fhtml0, "my_pledge_name", MySelf.Castle_GetPledgeName());
                         MySelf.FHTML_SetStr(fhtml0, "my_owner_name", MySelf.Castle_GetOwnerName());
                         MySelf.FHTML_SetInt(fhtml0, "current_tax_rate", MySelf.Residence_GetTaxRateCurrent());
                     }
                     else
                     {
-                        MySelf.FHTML_SetFileName(fhtml0, FnNoFeudInfo);
+                        MySelf.FHTML_SetFileName(out fhtml0, FnNoFeudInfo);
                     }
-                    if (MySelf.Sm.residence_id < 7)
+                    if (MySelf.Sm.ResidenceId < 7)
                     {
                         MySelf.FHTML_SetStr(fhtml0, "kingdom_name", MySelf.MakeFString(1001000, "", "", "", "", ""));
                     }
@@ -107,10 +106,11 @@ public class Citizen : DefaultNpc
                     {
                         MySelf.FHTML_SetStr(fhtml0, "kingdom_name", MySelf.MakeFString(1001100, "", "", "", "", ""));
                     }
-                    MySelf.FHTML_SetStr(fhtml0, "feud_name", MySelf.MakeFString((1001000 + MySelf.Sm.residence_id), "", "", "", "", ""));
-                    MySelf.ShowFHTML(talker, fhtml0);
+                    MySelf.FHTML_SetStr(fhtml0, "feud_name", MySelf.MakeFString((1001000 + MySelf.Sm.ResidenceId), "", "", "", "", ""));
+                    await MySelf.ShowPage(talker, fhtml0);
                 }
-            }*/
+            }
+            return;
         }
 
         if (ask == -303)
@@ -140,7 +140,5 @@ public class Citizen : DefaultNpc
                 await MySelf.ShowMultiSell(reply, talker);
             }
         }
-
-        return;
     }
 }
