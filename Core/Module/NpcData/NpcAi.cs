@@ -358,17 +358,6 @@ namespace Core.Module.NpcData
         {
             return false;
         }
-
-        public void FHTML_SetStr(string fhtml0, string myPledgeName, string castleGetPledgeName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void FHTML_SetInt(string fhtml0, string currentTaxRate, int residenceGetTaxRateCurrent)
-        {
-            LoggerManager.Warn("DeleteItem1 NotImplementedException");
-        }
-
         internal async Task ShowSystemMessage(Talker talker, int messageId)
         {
             await talker.PlayerInstance.SendPacketAsync(new SystemMessage((SystemMessageId)messageId));
@@ -390,9 +379,9 @@ namespace Core.Module.NpcData
             LoggerManager.Warn("VoiceEffect NotImplementedException");
         }
 
-        internal void GiveItem1(Talker talker, string v1, int v2)
+        internal void GiveItem1(Talker talker, string itemName, int count)
         {
-            LoggerManager.Warn("GiveItem1 NotImplementedException");
+            LoggerManager.Warn($"GiveItem1 {itemName} {count} NotImplementedException");
         }
 
         internal void IncrementParam(Talker talker, int v1, int v2)
@@ -468,6 +457,101 @@ namespace Core.Module.NpcData
         internal void AddMoveToDesire(object start_x, object start_y, object start_z, int v)
         {
             LoggerManager.Warn("AddMoveToDesire NotImplementedException");
+        }
+
+        internal int GetDateTime(int v1, int v2)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal int GetOlympiadWaitingCount()
+        {
+            LoggerManager.Warn("GetOlympiadWaitingCount NotImplementedException");
+            return 0;
+        }
+
+        internal int GetClassFreeOlympiadWaitingCount()
+        {
+            LoggerManager.Warn("GetClassFreeOlympiadWaitingCount NotImplementedException");
+            return 0;
+        }
+
+        internal int IsMainClass(Talker talker)
+        {
+            LoggerManager.Warn("IsMainClass NotImplementedException");
+            return 1;
+        }
+
+        internal int GetOlympiadPoint(Talker talker)
+        {
+            LoggerManager.Warn("GetOlympiadPoint NotImplementedException");
+            return 0;
+        }
+
+        internal void AddClassFreeOlympiad(Talker talker)
+        {
+            LoggerManager.Warn("AddClassFreeOlympiad NotImplementedException");
+        }
+
+        internal void AddOlympiad(Talker talker)
+        {
+            LoggerManager.Warn("AddOlympiad NotImplementedException");
+        }
+
+        internal void RemoveOlympiad(Talker talker)
+        {
+            LoggerManager.Warn("RemoveOlympiad NotImplementedException");
+        }
+
+        internal int GetStatusForOlympiadField(int fieldId)
+        {
+            LoggerManager.Warn($"GetStatusForOlympiadField {fieldId} NotImplementedException");
+            return 0;
+        }
+
+        internal string GetPlayer1ForOlympiadField(int fieldId)
+        {
+            LoggerManager.Warn($"GetPlayer1ForOlympiadField {fieldId} NotImplementedException");
+            return "Player1";
+        }
+
+        internal string GetPlayer2ForOlympiadField(int fieldId)
+        {
+            LoggerManager.Warn($"GetPlayer2ForOlympiadField {fieldId} NotImplementedException");
+            return "Player2";
+        }
+
+        internal int GetPreviousOlympiadPoint(Talker talker)
+        {
+            LoggerManager.Warn("GetPreviousOlympiadPoint NotImplementedException");
+            return 0;
+        }
+
+        internal void DeletePreviousOlympiadPoint(Talker talker, int v)
+        {
+            LoggerManager.Warn("DeletePreviousOlympiadPoint NotImplementedException");
+        }
+
+        internal int GetRankByOlympiadRankOrder(int reply, int rank)
+        {
+            LoggerManager.Warn($"GetRankByOlympiadRankOrder {rank} NotImplementedException");
+            return 0;
+        }
+
+        internal string GetNameByOlympiadRankOrder(int reply, int rank)
+        {
+            LoggerManager.Warn($"GetNameByOlympiadRankOrder {rank} NotImplementedException");
+            return "NONE";
+        }
+
+        internal void ObserveOlympiad(Talker talker, int fieldId)
+        {
+            LoggerManager.Warn($"ObserveOlympiad field{fieldId}  NotImplementedException");
+        }
+
+        internal void AddLogEx(int v, Talker talker, int ask, int i0)
+        {
+            throw new NotImplementedException();
         }
     }
 }
