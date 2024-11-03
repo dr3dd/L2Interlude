@@ -219,7 +219,9 @@ public class Teleporter : AnnounceRaidBossPosition
         {
             return PositionNoblessNoItemSSQ;
         }
-
-        return base.GetPositionList(hashCode);
+        else
+        {
+            return base.GetPositionList(hashCode);
+        }
     }
 }

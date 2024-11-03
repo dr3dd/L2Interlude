@@ -268,6 +268,7 @@ namespace Core.Module.Player
             await SendPacketAsync(teleportToLocation);
             await SendToKnownPlayers(teleportToLocation);
             WorldObjectPosition().SetXYZ(x, y, z);
+            await PlayerModel().CharacterStoreAsync();
         }
     }
 }

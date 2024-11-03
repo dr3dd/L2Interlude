@@ -47,7 +47,7 @@ public class OlympiadOperatorBasic : Citizen
                     await MySelf.ShowPage(talker, "olympiad_operator001.htm");
                     break;
                 case 1:
-                    if (MySelf.GetDateTime(0, 3) >= 23 && MySelf.GetDateTime(0, 4) >= 50)
+                    if (Gg.GetDateTime(0, 3) >= 23 && Gg.GetDateTime(0, 4) >= 50)
                     {
                         await MySelf.ShowPage(talker, "olympiad_operator010k.htm");
                     }
@@ -57,7 +57,7 @@ public class OlympiadOperatorBasic : Citizen
                     }
                     break;
                 case 2:
-                    if (MySelf.GetDateTime(0, 3) >= 23 && MySelf.GetDateTime(0, 4) >= 50)
+                    if (Gg.GetDateTime(0, 3) >= 23 && Gg.GetDateTime(0, 4) >= 50)
                     {
                         await MySelf.ShowPage(talker, "olympiad_operator010k.htm");
                     }
