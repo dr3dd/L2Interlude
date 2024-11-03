@@ -52,7 +52,7 @@ public class Janitor : Citizen
         {
             if (MySelf.Castle_GetPledgeId() > 0)
             {
-                MySelf.FHTML_SetFileName(ref fhtml0, FnNoFeudInfo);
+                MySelf.FHTML_SetFileName(ref fhtml0, FnFeudInfo);
                 MySelf.FHTML_SetStr(ref fhtml0, "my_pledge_name", MySelf.Castle_GetPledgeName());
                 MySelf.FHTML_SetStr(ref fhtml0, "my_owner_name", MySelf.Castle_GetOwnerName());
                 MySelf.FHTML_SetInt(ref fhtml0, "current_tax_rate", MySelf.Residence_GetTaxRateCurrent());

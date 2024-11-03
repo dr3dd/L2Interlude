@@ -139,6 +139,7 @@ namespace Core.Module.AreaData
                     }
                 }
             }
+            _areas.Add(baseArea);
         }
     }
 }
