@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Module.NpcAi.Models;
 
 namespace Core.Module.NpcAi.Ai.NpcMerchant;
@@ -48,4 +49,30 @@ public class Uno : MerchantForNewbie
         new(176, 15, 0.000000, 0), // Journeyman's Staff
         new(310, 15, 0.000000, 0), // Relic of The Saints
     };
+
+    public override async Task MenuSelected(Talker talker, int ask, int reply, string fhtml0)
+    {
+        if (ask == 162)
+        {
+            MySelf.SetCurrentQuestID("curse_of_fortress");
+            if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
+            {
+                await MySelf.ShowSystemMessage(talker, 1118);
+                return;
+            }
+        }
+        if (ask == 162)
+        {
+            if (reply == 1)
+            {
+                MySelf.FHTML_SetFileName(ref fhtml0, "uno_q0314_03.htm");
+                MySelf.FHTML_SetInt(ref fhtml0, "quest_id", 162);
+                await MySelf.ShowFHTML(talker, fhtml0);
+            }
+        }
+        else
+        {
+            await MenuSelected(talker, ask, reply, fhtml0);
+        }
+    }
 }

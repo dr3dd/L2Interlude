@@ -459,11 +459,6 @@ namespace Core.Module.NpcData
             LoggerManager.Warn("AddMoveToDesire NotImplementedException");
         }
 
-        internal int GetDateTime(int v1, int v2)
-        {
-            throw new NotImplementedException();
-        }
-
         internal int GetOlympiadWaitingCount()
         {
             LoggerManager.Warn("GetOlympiadWaitingCount NotImplementedException");
@@ -552,6 +547,16 @@ namespace Core.Module.NpcData
         internal void AddLogEx(int v, Talker talker, int ask, int i0)
         {
             throw new NotImplementedException();
+        }
+
+        internal void AddMoveSuperPointDesire(string name, int v1, int v2)
+        {
+            LoggerManager.Warn($"AddMoveSuperPointDesire nanme {name}  NotImplementedException");
+        }
+
+        internal void ChangeMoveType(int type)
+        {
+            LoggerManager.Warn($"ChangeMoveType {type}  NotImplementedException");
         }
     }
 }

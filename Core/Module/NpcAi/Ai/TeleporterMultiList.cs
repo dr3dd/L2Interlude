@@ -66,7 +66,7 @@ public class TeleporterMultiList : Teleporter
         await base.MenuSelected(talker, ask, reply, fhtml0);
     }
 
-    public virtual IList<TeleportList> GetPositionList(int hashCode)
+    public override IList<TeleportList> GetPositionList(int hashCode)
     {
         if (Position1.GetHashCodeByValue() == hashCode)
         {
@@ -84,7 +84,9 @@ public class TeleporterMultiList : Teleporter
         {
             return Position3;
         }
-
-        return base.GetPositionList(hashCode);
+        else
+        {
+            return base.GetPositionList(hashCode);
+        }
     }
 }
