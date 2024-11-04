@@ -68,4 +68,9 @@ public static class Gg
         var dayOfWeek = (int)date.DayOfWeek;
         return dayOfWeek == 0 ? 7 : dayOfWeek;
     }
+
+    internal static int Rand(int v)
+    {
+        return new Random().Next(v);
+    }
 }
