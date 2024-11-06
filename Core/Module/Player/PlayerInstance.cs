@@ -140,6 +140,14 @@ namespace Core.Module.Player
 
             }
         }
+        public async Task ShowHtmText(string htmlText)
+        {
+            if (IsGM)
+            {
+                await SendPacketAsync(new SystemMessage(SystemMessageId.S1).AddString($"[HTML] generated on the fly"));
+            }
+            await SendPacketAsync(new NpcHtmlMessage(ObjectId, htmlText));
+        }
 
         public PlayerMoveToLocation PlayerLocation()
         {

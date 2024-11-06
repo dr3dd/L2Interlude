@@ -1,5 +1,5 @@
 ﻿<html>
-    <title>NCore [GM]</title>
+    <title>NCore [GM-Npc List]</title>
     <center>
         <table width=270 border=0 bgcolor="444444">
             <tr>
@@ -14,9 +14,27 @@
     <center>
         <table width=270>
             <tr>
-                <td><button value="NPC List" action="bypass -h admin_npc" width=65 height=21 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
-
+                <td><font color="d69d85">Search NPC:</font></td>
+                <td><edit var="search" width=120 height=12></td>
+                <td><button value="Search" action="bypass admin_npc find $search" width=45 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
             </tr>
         </table>
     </center>
+    <br>
+    <table width=280 border=0>
+        <tr>
+            <td>%npc_list%</td>
+            <td></td>
+        </tr>
+    </table>
+	<br>
+	<center>
+		<table width=280 border=0>
+			<tr>
+				<td width=45>%page_prev%</td>
+				<td>NPC Count: <font color="b8d7a3">%npc_count%</font></td>
+				<td width=45>%page_next%</td>
+			</tr>
+		</table>
+	</center>
 </html>

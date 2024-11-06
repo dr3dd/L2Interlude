@@ -66,6 +66,10 @@ namespace Core
         {
             return ServiceProvider.GetService<WorldInit>();
         }
+        internal static NpcDataInit NpcDataInit()
+        {
+            return ServiceProvider.GetService<NpcDataInit>();
+        }
         
         internal static ChatHandler ChatHandler()
         {
