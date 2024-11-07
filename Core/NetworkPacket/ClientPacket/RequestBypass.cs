@@ -1,5 +1,5 @@
 ﻿using Core.Controller;
-using Core.Controller.Handlers;
+using Core.Module.Handlers;
 using Core.Module.NpcData;
 using Core.Module.Player;
 using Core.Module.WorldData;
@@ -64,6 +64,11 @@ namespace Core.NetworkPacket.ClientPacket
                     await LearnSkill(split);
                     break;
                 }
+                case "_heroes":
+                {
+                    await ShowHeroes();
+                    break;
+                }
             }
 
             if (_command.StartsWith("admin_"))
@@ -74,6 +79,11 @@ namespace Core.NetworkPacket.ClientPacket
             
         }
 
+        private async Task ShowHeroes()
+        {
+            //TODO
+            await _playerInstance.SendPacketAsync(new ExHeroList());
+        }
         private async Task TalkSelected(IEnumerable<string> split)
         {
             var npcObjectId = Convert.ToInt32(split.Last());

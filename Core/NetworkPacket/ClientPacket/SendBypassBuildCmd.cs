@@ -1,5 +1,5 @@
 ﻿using Core.Controller;
-using Core.Controller.Handlers;
+using Core.Module.Handlers;
 using Core.Module.Player;
 using Microsoft.Extensions.DependencyInjection;
 using Network;

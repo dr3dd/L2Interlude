@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 //USER: GL
 //DATE: 15.08.2024 20:00:40
 
-namespace Core.Controller.Handlers
+namespace Core.Module.Handlers
 {
     public interface IAdminCommandHandler
     {

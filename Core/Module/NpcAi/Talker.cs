@@ -1,4 +1,5 @@
-﻿using Core.Module.Player;
+﻿using Core.Enums;
+using Core.Module.Player;
 
 namespace Core.Module.NpcAi;
 
@@ -13,8 +14,8 @@ public struct Talker
     public PlayerInstance PlayerInstance { get; }
     public int IsPledgeMaster { get; }
     public int PledgeId { get; }
-    public int NoblessType { get; }
-    public int HeroType { get; }
+    public NoblessType NoblessType { get; }
+    public HeroType HeroType { get; }
 
     public Talker(PlayerInstance playerInstance)
     {
@@ -28,7 +29,7 @@ public struct Talker
         PlayerInstance = playerInstance;
         IsPledgeMaster = 0;
         PledgeId = 0;
-        NoblessType = 0;
-        HeroType = 0;
+        NoblessType = NoblessType.NOBLESS_NONE;
+        HeroType = HeroType.HERO_NONE;
     }
 }
