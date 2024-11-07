@@ -1,4 +1,6 @@
-﻿using Core.Module.Player;
+﻿using Core.Enums;
+using Core.Module.Player;
+using System.Threading.Tasks;
 
 
 //CLR: 4.0.30319.42000
@@ -9,7 +11,7 @@ namespace Core.Module.Handlers
 {
     public interface IChatHandler
     {
-        void Chat(PlayerInstance player, ChatType type, string target, string text);
+        Task Chat(PlayerInstance player, ChatType type, string target, string text);
 
         void Register(object processor);
     }

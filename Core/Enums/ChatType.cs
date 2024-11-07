@@ -2,7 +2,7 @@
 //USER: GL
 //DATE: 10.08.2024 23:10:22
 
-namespace Core.Module.Handlers
+namespace Core.Enums
 {
     public enum ChatType
     {

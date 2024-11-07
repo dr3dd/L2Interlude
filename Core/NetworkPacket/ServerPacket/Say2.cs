@@ -1,5 +1,5 @@
-﻿using Core.Module.CharacterData;
-using Core.Module.Handlers;
+﻿using Core.Enums;
+using Core.Module.CharacterData;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

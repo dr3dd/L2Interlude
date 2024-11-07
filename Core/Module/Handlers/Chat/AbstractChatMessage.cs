@@ -1,4 +1,4 @@
-﻿using Core.Module.Handlers;
+﻿using Core.Enums;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
 using L2Logger;
@@ -18,22 +18,22 @@ namespace Core.Module.Handlers.Chat
 {
     public abstract class AbstractChatMessage
     {
-        internal void Chatting(PlayerInstance player, ChatType chatType, string text, string paramsValue)
+        internal async Task Chatting(PlayerInstance player, ChatType chatType, string text, string paramsValue)
         {
             LoggerManager.Debug($"{GetType().Name}: login {player.Controller.AccountName} text {text}");
 
 
-            Chat(player, chatType, text, paramsValue);
+            await Chat(player, chatType, text, paramsValue);
         }
-        protected internal abstract void Chat(PlayerInstance player, ChatType chatType, string text, string paramsValue);
+        protected internal abstract Task Chat(PlayerInstance player, ChatType chatType, string text, string paramsValue);
 
-        public bool commonChecksChat(PlayerInstance player, ChatType chatType, string text, string paramsValue)
+        public async Task<bool> commonChecksChat(PlayerInstance player, ChatType chatType, string text, string paramsValue)
         {
             bool allow = true;
 
             if (text == "жопа") //TODO config
             {
-                player.SendPacketAsync(new SystemMessage(SystemMessageId.ChattingIsCurrentlyProhibited));
+                await player.SendPacketAsync(new SystemMessage(SystemMessageId.ChattingIsCurrentlyProhibited));
                 allow = false;
             }
 

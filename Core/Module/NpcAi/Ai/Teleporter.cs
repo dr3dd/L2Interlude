@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.Enums;
 using Helpers;
 using MySqlX.XDevAPI;
 
@@ -105,7 +106,7 @@ public class Teleporter : AnnounceRaidBossPosition
         }
         else if (ask == -19)
         {
-            await MySelf.ShowPage(talker, talker.NoblessType == 0 ? FnNobless : FnNoNobless);
+            await MySelf.ShowPage(talker, talker.NoblessType == NoblessType.NOBLESS_NONE ? FnNobless : FnNoNobless);
         }
         else if (ask == -20)
         {

@@ -22,6 +22,7 @@ using Helpers;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 using static NLog.LayoutRenderers.Wrappers.ReplaceLayoutRendererWrapper;
+using System.Xml.Linq;
 
 namespace Core.Module.NpcData
 {
@@ -379,9 +380,10 @@ namespace Core.Module.NpcData
             LoggerManager.Warn("VoiceEffect NotImplementedException");
         }
 
-        internal void GiveItem1(Talker talker, string itemName, int count)
+        public async Task GiveItem1(Talker talker, string itemName, int count)
         {
             LoggerManager.Warn($"GiveItem1 {itemName} {count} NotImplementedException");
+            await Task.FromResult(1);
         }
 
         internal void IncrementParam(Talker talker, int v1, int v2)
@@ -544,14 +546,15 @@ namespace Core.Module.NpcData
             LoggerManager.Warn($"ObserveOlympiad field{fieldId}  NotImplementedException");
         }
 
-        internal void AddLogEx(int v, Talker talker, int ask, int i0)
+        public async Task AddLogEx(int v, Talker talker, int ask, int i0)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn($"AddLogEx NotImplementedException");
+            await Task.FromResult(1);
         }
 
         internal void AddMoveSuperPointDesire(string name, int v1, int v2)
         {
-            LoggerManager.Warn($"AddMoveSuperPointDesire nanme {name}  NotImplementedException");
+            LoggerManager.Warn($"AddMoveSuperPointDesire name {name}  NotImplementedException");
         }
 
         internal void ChangeMoveType(int type)
