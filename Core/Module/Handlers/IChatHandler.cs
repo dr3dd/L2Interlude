@@ -5,7 +5,7 @@
 //USER: GL
 //DATE: 10.08.2024 23:13:11
 
-namespace Core.Controller.Handlers
+namespace Core.Module.Handlers
 {
     public interface IChatHandler
     {

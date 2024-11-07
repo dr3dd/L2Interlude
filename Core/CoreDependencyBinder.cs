@@ -1,5 +1,4 @@
 ﻿using Core.Controller;
-using Core.Controller.Handlers;
 using Core.GeoEngine;
 using Core.Manager;
 using Core.Module.AreaData;
@@ -7,6 +6,7 @@ using Core.Module.CategoryData;
 using Core.Module.CharacterData.Template;
 using Core.Module.DoorData;
 using Core.Module.FStringData;
+using Core.Module.Handlers;
 using Core.Module.HtmlCacheData;
 using Core.Module.ItemData;
 using Core.Module.ManualData;

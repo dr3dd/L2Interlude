@@ -1,4 +1,5 @@
-﻿using Core.Module.Player;
+﻿using Core.Module.Handlers;
+using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
 using L2Logger;
 using NLog;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 //USER: GL
 //DATE: 10.08.2024 23:15:26
 
-namespace Core.Controller.Handlers.Chat
+namespace Core.Module.Handlers.Chat
 {
     public abstract class AbstractChatMessage
     {

@@ -1,5 +1,5 @@
-﻿using Core.Controller.Handlers;
-using Core.Module.CharacterData;
+﻿using Core.Module.CharacterData;
+using Core.Module.Handlers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

@@ -1,4 +1,5 @@
 ﻿using Core.Attributes;
+using Core.Module.Handlers;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
 
@@ -7,7 +8,7 @@ using Core.NetworkPacket.ServerPacket;
 //USER: GL
 //DATE: 10.08.2024 23:31:36
 
-namespace Core.Controller.Handlers.Chat
+namespace Core.Module.Handlers.Chat
 {
     [ChatType(Type = ChatType.GENERAL)]
     class ChatGeneral : AbstractChatMessage
@@ -21,11 +22,12 @@ namespace Core.Controller.Handlers.Chat
             }
 
             player.SendPacketAsync(new Say2(player, chatType, text));
-            foreach (PlayerInstance targetInstance in Initializer.WorldInit().GetVisiblePlayers(player)) {
+            foreach (PlayerInstance targetInstance in Initializer.WorldInit().GetVisiblePlayers(player))
+            {
 
                 targetInstance.SendPacketAsync(new Say2(player, chatType, text));
             }
-                
+
         }
     }
 }

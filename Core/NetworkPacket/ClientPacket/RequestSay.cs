@@ -1,6 +1,6 @@
 ﻿using Config;
 using Core.Controller;
-using Core.Controller.Handlers;
+using Core.Module.Handlers;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
 using L2Logger;

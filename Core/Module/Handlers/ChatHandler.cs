@@ -1,5 +1,5 @@
 ﻿using Core.Attributes;
-using Core.Controller.Handlers.Chat;
+using Core.Module.Handlers.Chat;
 using Core.Module.Player;
 using Helpers;
 using L2Logger;
@@ -12,7 +12,7 @@ using System.Reflection;
 //USER: GL
 //DATE: 10.08.2024 23:13:53
 
-namespace Core.Controller.Handlers
+namespace Core.Module.Handlers
 {
     public class ChatHandler : IChatHandler
     {
@@ -21,7 +21,7 @@ namespace Core.Controller.Handlers
         public ChatHandler(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            IEnumerable<Type> typelist = Utility.GetTypesInNamespace(Assembly.GetExecutingAssembly(), "Core.Controller.Handlers.Chat");
+            IEnumerable<Type> typelist = Utility.GetTypesInNamespace(Assembly.GetExecutingAssembly(), "Core.Module.Handlers.Chat");
             foreach (Type t in typelist)
             {
                 if (!t.Name.StartsWith("Abstract"))

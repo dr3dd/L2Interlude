@@ -12,12 +12,13 @@ using System.Threading.Tasks;
 //USER: GL
 //DATE: 05.11.2024 09:49:56
 
-namespace Core.Controller.Handlers.AdminCommands
+namespace Core.Module.Handlers.AdminCommands
 {
     [Command(CommandName = "admin_npc")]
     class AdminNpc : AbstractAdminCommand
     {
         private int Page { get; set; } = 0;
+        private int PagePrev { get; set; } = 0;
         private int Size { get; set; } = 14;
         protected internal override async Task Use(PlayerInstance admin, string alias)
         {
@@ -58,9 +59,10 @@ namespace Core.Controller.Handlers.AdminCommands
                             break;
                     }
                 }
-                else {
+                else
+                {
                     await ShowNpcList(admin);
-                }         
+                }
             }
             else
             {
@@ -68,12 +70,14 @@ namespace Core.Controller.Handlers.AdminCommands
             }
         }
 
-        private async Task GoToNpc(PlayerInstance admin, int objId) {
+        private async Task GoToNpc(PlayerInstance admin, int objId)
+        {
             NpcInstance npcInstance = Initializer.WorldInit().GetNpcInstance(objId);
             await admin.TeleportToLocation(npcInstance.GetX(), npcInstance.GetY(), npcInstance.GetZ());
             await ShowNpcInstance(admin, objId);
         }
-        private async Task ShowNpcInstance(PlayerInstance admin, int objId) {
+        private async Task ShowNpcInstance(PlayerInstance admin, int objId)
+        {
             var html = Initializer.HtmlCacheInit().GetHtmlText("admin/gm/npc_instance.htm");
 
             NpcInstance npcInstance = Initializer.WorldInit().GetNpcInstance(objId);
@@ -89,7 +93,8 @@ namespace Core.Controller.Handlers.AdminCommands
 
             await admin.ShowHtmText(html);
         }
-        private async Task ShowNpc(PlayerInstance admin, int npcId) {
+        private async Task ShowNpc(PlayerInstance admin, int npcId)
+        {
             var html = Initializer.HtmlCacheInit().GetHtmlText("admin/gm/npc_info.htm");
 
             NpcTemplateInit npcTemplate = Initializer.NpcDataInit().GetNpcTemplate(npcId);
@@ -104,8 +109,9 @@ namespace Core.Controller.Handlers.AdminCommands
             string npcInstanceLinks = "";
             int count = npcInstances.Count();
             //TODO adding pagination
-            foreach (NpcInstance npc in npcInstances) {
-                npcInstanceLinks = npcInstanceLinks + $"<a action=\"bypass -h admin_npc show_i {npc.ObjectId}\">[{npc.ObjectId}] {npc.CharacterName}</a><br1>"; 
+            foreach (NpcInstance npc in npcInstances)
+            {
+                npcInstanceLinks = npcInstanceLinks + $"<a action=\"bypass -h admin_npc show_i {npc.ObjectId}\">[{npc.ObjectId}] {npc.CharacterName}</a><br1>";
             }
             html = html.Replace("%npcInstances%", count == 0 ? "<font color=\"ffad46\">NpcInstances not found</font>" : npcInstanceLinks);
             html = html.Replace("%npc_count%", count.ToString());
@@ -115,6 +121,7 @@ namespace Core.Controller.Handlers.AdminCommands
             html = html.Replace("%race%", npcStat.Race);
             html = html.Replace("%npcId%", npcStat.Id.ToString());
             html = html.Replace("%level%", npcStat.Level.ToString());
+            html = html.Replace("%page%", $"page {PagePrev}");
 
             await admin.ShowHtmText(html);
         }
@@ -133,10 +140,10 @@ namespace Core.Controller.Handlers.AdminCommands
                 int id = 0;
                 int.TryParse(searchStr, out id);
                 npcList = npcList.Where(npc => npc.GetStat().Name.ToLowerInvariant().Contains(searchStr.ToLowerInvariant()) || npc.GetStat().Id == id).ToList();
-                
             }
+
             //get range list
-            npcList = npcList.Skip(Page* Size).Take((Page * Size) + Size);
+            npcList = npcList.Skip(Page * Size).Take(Page * Size + Size);
 
             foreach (var npc in npcList)
             {
@@ -152,11 +159,12 @@ namespace Core.Controller.Handlers.AdminCommands
 
             string pagePrev = "";
             string pageNext = "";
-            if (Page > 0) {
+            if (Page > 0)
+            {
                 pagePrev = $"<button value=\"Page {Page - 1}\" action=\"bypass admin_npc page {Page - 1}\" width=45 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\">";
                 pageNext = $"<button value=\"Page {Page + 1}\" action=\"bypass admin_npc page {Page + 1}\" width=45 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\">";
             }
-            else if (count>=Size)
+            else if (count >= Size)
             {
                 pageNext = $"<button value=\"Page {Page + 1}\" action=\"bypass admin_npc page {Page + 1}\" width=45 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\">";
             }
@@ -165,9 +173,12 @@ namespace Core.Controller.Handlers.AdminCommands
             html = html.Replace("%npc_count%", $"{count} of {npcCount}");
             html = html.Replace("%page_prev%", pagePrev);
             html = html.Replace("%page_next%", pageNext);
+            html = html.Replace("%page%", Page == 0 ? "" : $"Page: {Page}");
+
+            //save previous page
+            PagePrev = Page;
             //reset page
             Page = 0;
-
             await admin.ShowHtmText(html);
         }
     }

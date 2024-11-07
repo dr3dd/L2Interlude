@@ -1,4 +1,4 @@
-﻿using Core.Controller.Handlers;
+﻿using Core.Module.Handlers;
 using System;
 
 
