@@ -1,3 +1,4 @@
+using Core.Enums;
 using System.Threading.Tasks;
 
 namespace Core.Module.NpcAi.Ai;
@@ -35,7 +36,7 @@ public class Janitor : Citizen
     public override async Task Talked(Talker talker)
     {
         var fhtml0 = ""; 
-        if (MySelf.IsMyLord(talker) || (MySelf.HavePledgePower(talker) && MySelf.Castle_GetPledgeId() == talker.PledgeId && talker.PledgeId != 0))
+        if (MySelf.IsMyLord(talker) || (MySelf.HavePledgePower(talker, PledgePower.OPEN_AGIT_DOOR) && MySelf.CastleGetPledgeId() == talker.PledgeId && talker.PledgeId != 0))
         {
             if (IsWyvern == 1)
             {
@@ -50,7 +51,7 @@ public class Janitor : Citizen
         }
         else if (MySelf.Sm.ResidenceId > 0)
         {
-            if (MySelf.Castle_GetPledgeId() > 0)
+            if (MySelf.CastleGetPledgeId() > 0)
             {
                 MySelf.FHTML_SetFileName(ref fhtml0, FnFeudInfo);
                 MySelf.FHTML_SetStr(ref fhtml0, "my_pledge_name", MySelf.Castle_GetPledgeName());

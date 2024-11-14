@@ -29,7 +29,7 @@ public struct Talker
         PlayerInstance = playerInstance;
         IsPledgeMaster = 0;
         PledgeId = 0;
-        NoblessType = NoblessType.NOBLESS_NONE;
-        HeroType = HeroType.HERO_NONE;
+        NoblessType = NoblessType.NONE;
+        HeroType = HeroType.NONE;
     }
 }

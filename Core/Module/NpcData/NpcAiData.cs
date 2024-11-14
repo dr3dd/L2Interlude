@@ -28,5 +28,11 @@
         public string FnGuideM07 { get; set; }
         public string FnGuideM14 { get; set; }
         public string FnGuideM20 { get; set; }
+        public int PosX01 { get; set; } = 0;
+        public int PosY01 { get; set; } = 0;
+        public int PosZ01 { get; set; } = 0;
+        public int PosX02 { get; set; } = 0;
+        public int PosY02 { get; set; } = 0;
+        public int PosZ02 { get; set; } = 0;
     }
 }

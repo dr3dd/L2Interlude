@@ -67,7 +67,7 @@ namespace Core.NetworkPacket.ClientPacket
 
             //TODO more condition
 
-            _chatHandler.Chat(_playerInstance, chatType, target, text);
+            await _chatHandler.Chat(_playerInstance, chatType, target, text);
         }
     }
 }

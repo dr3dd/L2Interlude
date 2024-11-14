@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.Enums;
 using Helpers;
 
 namespace Core.Module.NpcAi.Ai;
@@ -29,12 +30,12 @@ public class NewbieGuide : Citizen
 
 	public override async Task Talked(Talker talker)
 	{
-		MySelf.DeleteRadar(talker, -71073, 258711, -3099, 2);
-		MySelf.DeleteRadar(talker, -84081, 243277, -3723, 2);
-		MySelf.DeleteRadar(talker, 45492, 48359, -3060, 2);
-		MySelf.DeleteRadar(talker, 12111, 16686, -4582, 2);
-		MySelf.DeleteRadar(talker, -45042, -113598, -192, 2);
-		MySelf.DeleteRadar(talker, 115632, -177996, -905, 2);
+		await MySelf.DeleteRadar(talker, -71073, 258711, -3099, RadarPositionType.BOTH);
+		await MySelf.DeleteRadar(talker, -84081, 243277, -3723, RadarPositionType.BOTH);
+		await MySelf.DeleteRadar(talker, 45492, 48359, -3060, RadarPositionType.BOTH);
+		await MySelf.DeleteRadar(talker, 12111, 16686, -4582, RadarPositionType.BOTH);
+		await MySelf.DeleteRadar(talker, -45042, -113598, -192, RadarPositionType.BOTH);
+        await MySelf.DeleteRadar(talker, 115632, -177996, -905, RadarPositionType.BOTH);
 		await MySelf.ShowPage(talker, FnHi);
 	}
 

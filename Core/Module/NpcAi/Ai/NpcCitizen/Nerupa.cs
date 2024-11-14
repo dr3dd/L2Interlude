@@ -1,3 +1,4 @@
+using Core.Enums;
 using System.Threading.Tasks;
 
 namespace Core.Module.NpcAi.Ai.NpcCitizen;
@@ -34,7 +35,7 @@ public class Nerupa : Citizen
                 await MySelf.ShowPage(talker, "nerupa002.htm");
                 MySelf.DeleteItem1(talker, "leaf_of_mothertree", 1);
                 MySelf.AddTimerEx((MySelf.GetIndexFromCreature(talker) + 1000000), (1000 * 60));
-                await MySelf.ShowRadar(talker, 45475, 48359, -3060, 2);
+                await MySelf.ShowRadar(talker, 45475, 48359, -3060, RadarPositionType.BOTH);
                 if (MySelf.GetMemoStateEx(talker, 255, "letters_of_love1") <= 3)
                 {
                     MySelf.SetMemoStateEx(talker, 255, "letters_of_love1", 4);

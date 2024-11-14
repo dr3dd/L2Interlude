@@ -6,7 +6,7 @@ namespace Core.Enums
 {
     public enum NoblessType
     {
-        NOBLESS_NONE,
-        NOBLESS_ACTIVE
+        NONE,
+        ACTIVE
     }
 }

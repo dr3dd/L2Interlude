@@ -42,6 +42,12 @@ public class NpcAiDefault
         {
             doorkeeper.DoorName1 = npcAiData.DoorName1;
             doorkeeper.DoorName2 = npcAiData.DoorName2;
+            doorkeeper.PosX01 = npcAiData.PosX01;
+            doorkeeper.PosY01 = npcAiData.PosY01;
+            doorkeeper.PosZ01 = npcAiData.PosZ01;
+            doorkeeper.PosX02 = npcAiData.PosX02;
+            doorkeeper.PosY02 = npcAiData.PosY02;
+            doorkeeper.PosZ02 = npcAiData.PosZ02;
         }
         
         if (defaultNpc is NewbieGuide newbieGuide)
