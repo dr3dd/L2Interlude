@@ -575,8 +575,7 @@ namespace Core.Module.NpcData
 
         internal async Task ShowTelPosListPage(Talker talker, IList<TeleportList> position)
         {
-            LoggerManager.Warn($"ShowTelPosListPage NotImplementedException");
-            await Task.FromResult(1);
+            await _npcInstance.NpcRadar().Radar(talker, position);
         }
     }
 }

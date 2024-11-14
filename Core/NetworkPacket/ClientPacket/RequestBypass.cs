@@ -49,6 +49,11 @@ namespace Core.NetworkPacket.ClientPacket
                     await TeleportGoTo(split);
                     break;
                 }
+                case "show_radar":
+                {
+                    await ShowRadar(split);
+                    break;
+                }
                 case "talk_select":
                 {
                     await TalkSelected(split);
@@ -106,6 +111,15 @@ namespace Core.NetworkPacket.ClientPacket
             var teleportId = Convert.ToInt32(parseNpc.Last().Split("=")[1].Split(",")[1]);
             var npcInstance = GetNpcInstance(npcObjectId);
             await npcInstance.NpcTeleport().TeleportToLocation(teleportHashId, teleportId, _playerInstance);
+        }
+        private async Task ShowRadar(IReadOnlyList<string> split)
+        {
+            var parseNpc = split[1].Split("?");
+            var npcObjectId = Convert.ToInt32(parseNpc.First());
+            var radarHashId = Convert.ToInt32(parseNpc.Last().Split("=")[1].Split(",")[0]);
+            var radarId = Convert.ToInt32(parseNpc.Last().Split("=")[1].Split(",")[1]);
+            var npcInstance = GetNpcInstance(npcObjectId);
+            await npcInstance.NpcRadar().ShowPositionOnRadar(radarHashId, radarId, _playerInstance);
         }
 
         private async Task MenuSelect(string spl)
