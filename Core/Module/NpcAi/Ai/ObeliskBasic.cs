@@ -7,7 +7,7 @@ public class ObeliskBasic : Citizen
 {
     public override async Task Talked(Talker talker)
     {
-        if (talker.NoblessType == NoblessType.NOBLESS_ACTIVE)
+        if (talker.NoblessType == NoblessType.ACTIVE)
         {
             await MySelf.ShowPage(talker, "obelisk001.htm");
         }

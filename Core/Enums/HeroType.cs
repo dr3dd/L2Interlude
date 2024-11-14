@@ -6,8 +6,8 @@ namespace Core.Enums
 {
     public enum HeroType
     {
-        HERO_NONE,
-        HERO_WAITING,
-        HERO_ACTIVE
+        NONE,
+        WAITING,
+        ACTIVE
     }
 }

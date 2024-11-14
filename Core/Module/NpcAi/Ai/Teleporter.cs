@@ -106,7 +106,7 @@ public class Teleporter : AnnounceRaidBossPosition
         }
         else if (ask == -19)
         {
-            await MySelf.ShowPage(talker, talker.NoblessType == NoblessType.NOBLESS_NONE ? FnNobless : FnNoNobless);
+            await MySelf.ShowPage(talker, talker.NoblessType == NoblessType.NONE ? FnNobless : FnNoNobless);
         }
         else if (ask == -20)
         {

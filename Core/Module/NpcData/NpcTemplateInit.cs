@@ -235,8 +235,38 @@ namespace Core.Module.NpcData
                 {
                     npcAiName.MoveAroundSocial2 = ToShort(match.Groups[3].Value);
                 }
+
             }
-            
+            var matchesPos = Regex.Matches(input, @"{(\[([\w\s]+)\])=(\d+|[\w\-d\s.]+)}");
+            foreach (Match match in matchesPos)
+            {
+
+                if (match.Groups[2].Value == "pos_x01")
+                {
+                    npcAiName.PosX01 = ToInt(match.Groups[3].Value);
+                }
+                if (match.Groups[2].Value == "pos_y01")
+                {
+                    npcAiName.PosY01 = ToInt(match.Groups[3].Value);
+                }
+                if (match.Groups[2].Value == "pos_z01")
+                {
+                    npcAiName.PosZ01 = ToInt(match.Groups[3].Value);
+                }
+                if (match.Groups[2].Value == "pos_x02")
+                {
+                    npcAiName.PosX02 = ToInt(match.Groups[3].Value);
+                }
+                if (match.Groups[2].Value == "pos_y02")
+                {
+                    npcAiName.PosY02 = ToInt(match.Groups[3].Value);
+                }
+                if (match.Groups[2].Value == "pos_z02")
+                {
+                    npcAiName.PosZ02 = ToInt(match.Groups[3].Value);
+                }
+            }
+
             return npcAiName;
             /*
             
