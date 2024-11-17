@@ -1,3 +1,4 @@
+using Core.Enums;
 using System.Threading.Tasks;
 
 namespace Core.Module.NpcAi.Ai;
@@ -6,7 +7,7 @@ public class ObeliskBasic : Citizen
 {
     public override async Task Talked(Talker talker)
     {
-        if (talker.NoblessType == 1)
+        if (talker.NoblessType == NoblessType.ACTIVE)
         {
             await MySelf.ShowPage(talker, "obelisk001.htm");
         }

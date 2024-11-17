@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 //USER: GL
 //DATE: 15.08.2024 20:04:34
 
-namespace Core.Controller.Handlers.AdminCommands
+namespace Core.Module.Handlers.AdminCommands
 {
     public abstract class AbstractAdminCommand
     {

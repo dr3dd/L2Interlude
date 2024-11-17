@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 //USER: GL
 //DATE: 16.08.2024 23:10:48
 
-namespace Core.Controller.Handlers.AdminCommands
+namespace Core.Module.Handlers.AdminCommands
 {
     [Command(CommandName = "admin_teleport")]
     class AdminTeleport : AbstractAdminCommand

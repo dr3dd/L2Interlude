@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Core.Module.CharacterData;
 using Core.Module.DoorData;
 using Core.Module.NpcData;
@@ -143,7 +144,15 @@ namespace Core.Module.WorldData
         {
             return _allObjects[objectId] as NpcInstance;
         }
-        
+        public IEnumerable<NpcInstance> GetAllNpcInstance()
+        {
+            return _allObjects.Values.OfType<NpcInstance>().OrderBy(d => d.NpcId).ToList();
+        }
+        public IEnumerable<NpcInstance> GetAllNpcInstanceByNpcId(int npcId)
+        {
+            return _allObjects.Values.OfType<NpcInstance>().OrderBy(d => d.NpcId).Where(n => n.NpcId == npcId).ToList();
+        }
+
         public void RemoveFromAllPlayers(PlayerInstance playerInstance)
         {
             _allPlayers.TryRemove(playerInstance.PlayerAppearance().CharacterName, out _);

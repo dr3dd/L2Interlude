@@ -1,6 +1,7 @@
 ﻿using Config;
 using Core.Controller;
-using Core.Controller.Handlers;
+using Core.Enums;
+using Core.Module.Handlers;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
 using L2Logger;
@@ -66,7 +67,7 @@ namespace Core.NetworkPacket.ClientPacket
 
             //TODO more condition
 
-            _chatHandler.Chat(_playerInstance, chatType, target, text);
+            await _chatHandler.Chat(_playerInstance, chatType, target, text);
         }
     }
 }

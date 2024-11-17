@@ -1,5 +1,5 @@
 ﻿using Core.Attributes;
-using Core.Controller.Handlers.AdminCommands;
+using Core.Module.Handlers.AdminCommands;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
 using Helpers;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 //USER: GL
 //DATE: 15.08.2024 20:01:45
 
-namespace Core.Controller.Handlers
+namespace Core.Module.Handlers
 {
     public class AdminCommandHandler : IAdminCommandHandler
     {
@@ -22,7 +22,7 @@ namespace Core.Controller.Handlers
         public AdminCommandHandler(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            IEnumerable<Type> typelist = Utility.GetTypesInNamespace(Assembly.GetExecutingAssembly(), "Core.Controller.Handlers.AdminCommands");
+            IEnumerable<Type> typelist = Utility.GetTypesInNamespace(Assembly.GetExecutingAssembly(), "Core.Module.Handlers.AdminCommands");
             foreach (Type t in typelist)
             {
                 if (!t.Name.StartsWith("Abstract") && t.BaseType.Name.Equals("AbstractAdminCommand"))
@@ -34,7 +34,7 @@ namespace Core.Controller.Handlers
             LoggerManager.Info($"AdminCommandHandler: Loaded {commands.Count} commands.");
         }
 
-        public async Task Request(PlayerInstance admin, string alias) 
+        public async Task Request(PlayerInstance admin, string alias)
         {
             if (!alias.StartsWith("admin_"))
                 alias = "admin_" + alias;

@@ -1,3 +1,4 @@
+using Core.Enums;
 using System.Threading.Tasks;
 
 namespace Core.Module.NpcAi.Ai;
@@ -12,7 +13,7 @@ public class OlympiadOperatorBasic : Citizen
             return;
         }
         
-        if (talker.NoblessType == 1)
+        if (talker.NoblessType == NoblessType.ACTIVE)
         {
             await MySelf.ShowPage(talker, "olympiad_operator001.htm");
         }
@@ -26,7 +27,7 @@ public class OlympiadOperatorBasic : Citizen
     {
         if (ask == -50)
         {
-            if (talker.NoblessType == 1)
+            if (talker.NoblessType == NoblessType.ACTIVE)
             {
                 await MySelf.ShowPage(talker, "olympiad_operator001.htm");
             }
@@ -47,7 +48,7 @@ public class OlympiadOperatorBasic : Citizen
                     await MySelf.ShowPage(talker, "olympiad_operator001.htm");
                     break;
                 case 1:
-                    if (MySelf.GetDateTime(0, 3) >= 23 && MySelf.GetDateTime(0, 4) >= 50)
+                    if (Gg.GetDateTime(0, 3) >= 23 && Gg.GetDateTime(0, 4) >= 50)
                     {
                         await MySelf.ShowPage(talker, "olympiad_operator010k.htm");
                     }
@@ -57,7 +58,7 @@ public class OlympiadOperatorBasic : Citizen
                     }
                     break;
                 case 2:
-                    if (MySelf.GetDateTime(0, 3) >= 23 && MySelf.GetDateTime(0, 4) >= 50)
+                    if (Gg.GetDateTime(0, 3) >= 23 && Gg.GetDateTime(0, 4) >= 50)
                     {
                         await MySelf.ShowPage(talker, "olympiad_operator010k.htm");
                     }
@@ -201,7 +202,7 @@ public class OlympiadOperatorBasic : Citizen
         {
             if (reply == 0)
             {
-                if (talker.NoblessType == 1)
+                if (talker.NoblessType == NoblessType.ACTIVE)
                 {
                     await MySelf.ShowPage(talker, "olympiad_operator001.htm");
                 }
@@ -229,7 +230,7 @@ public class OlympiadOperatorBasic : Citizen
                 }
                 else if (MySelf.GetPreviousOlympiadPoint(talker) < 50)
                 {
-                    if (talker.HeroType == 1 || talker.HeroType == 2)
+                    if (talker.HeroType == HeroType.WAITING || talker.HeroType == HeroType.ACTIVE)
                     {
                         await MySelf.ShowPage(talker, "olympiad_operator031.htm");
                     }
@@ -295,7 +296,7 @@ public class OlympiadOperatorBasic : Citizen
         i1 = 0;
         if (reply != 0)
         {
-            if (talker.HeroType == 1 || talker.HeroType == 2)
+            if (talker.HeroType == HeroType.WAITING || talker.HeroType == HeroType.ACTIVE)
             {
                 i1 = 300;
             }
@@ -311,8 +312,8 @@ public class OlympiadOperatorBasic : Citizen
             {
                 i0 = ((ask + i1) * 1000);
             }
-            MySelf.AddLogEx(1, talker, ask, i0);
-            MySelf.GiveItem1(talker, "nobless_gate_pass", i0);
+            await MySelf.AddLogEx(1, talker, ask, i0);
+            await MySelf.GiveItem1(talker, "nobless_gate_pass", i0);
         }
     }
 

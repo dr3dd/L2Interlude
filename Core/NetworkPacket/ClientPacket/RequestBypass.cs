@@ -1,5 +1,5 @@
 ﻿using Core.Controller;
-using Core.Controller.Handlers;
+using Core.Module.Handlers;
 using Core.Module.NpcData;
 using Core.Module.Player;
 using Core.Module.WorldData;
@@ -49,6 +49,11 @@ namespace Core.NetworkPacket.ClientPacket
                     await TeleportGoTo(split);
                     break;
                 }
+                case "show_radar":
+                {
+                    await ShowRadar(split);
+                    break;
+                }
                 case "talk_select":
                 {
                     await TalkSelected(split);
@@ -64,6 +69,11 @@ namespace Core.NetworkPacket.ClientPacket
                     await LearnSkill(split);
                     break;
                 }
+                case "_heroes":
+                {
+                    await ShowHeroes();
+                    break;
+                }
             }
 
             if (_command.StartsWith("admin_"))
@@ -74,6 +84,11 @@ namespace Core.NetworkPacket.ClientPacket
             
         }
 
+        private async Task ShowHeroes()
+        {
+            //TODO
+            await _playerInstance.SendPacketAsync(new ExHeroList());
+        }
         private async Task TalkSelected(IEnumerable<string> split)
         {
             var npcObjectId = Convert.ToInt32(split.Last());
@@ -96,6 +111,15 @@ namespace Core.NetworkPacket.ClientPacket
             var teleportId = Convert.ToInt32(parseNpc.Last().Split("=")[1].Split(",")[1]);
             var npcInstance = GetNpcInstance(npcObjectId);
             await npcInstance.NpcTeleport().TeleportToLocation(teleportHashId, teleportId, _playerInstance);
+        }
+        private async Task ShowRadar(IReadOnlyList<string> split)
+        {
+            var parseNpc = split[1].Split("?");
+            var npcObjectId = Convert.ToInt32(parseNpc.First());
+            var radarHashId = Convert.ToInt32(parseNpc.Last().Split("=")[1].Split(",")[0]);
+            var radarId = Convert.ToInt32(parseNpc.Last().Split("=")[1].Split(",")[1]);
+            var npcInstance = GetNpcInstance(npcObjectId);
+            await npcInstance.NpcRadar().ShowPositionOnRadar(radarHashId, radarId, _playerInstance);
         }
 
         private async Task MenuSelect(string spl)

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 //USER: GL
 //DATE: 15.08.2024 20:52:56
 
-namespace Core.Controller.Handlers.AdminCommands
+namespace Core.Module.Handlers.AdminCommands
 {
     [Command(CommandName = "admin_admin")]
     class AdminAdmin : AbstractAdminCommand

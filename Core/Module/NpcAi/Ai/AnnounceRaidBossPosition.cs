@@ -1,4 +1,5 @@
 using Helpers;
+using MySqlX.XDevAPI;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -280,5 +281,43 @@ public class AnnounceRaidBossPosition : Citizen
         }
 
         return Position;
+    }
+
+    public override async Task MenuSelected(Talker talker, int ask, int reply, string fhtml0)
+    {
+        if (ask == -18)
+        {
+            switch (reply)
+            {
+                case 1:
+                    await MySelf.ShowQuestInfoList(talker);
+                    break;
+                case 2:
+                    await MySelf.ShowTelPosListPage(talker, RaidBossList20_29);
+                    break;
+                case 3:
+                    await MySelf.ShowTelPosListPage(talker, RaidBossList30_39);
+                    break;
+                case 4:
+                    await MySelf.ShowTelPosListPage(talker, RaidBossList40_49);
+                    break;
+                case 5:
+                    await MySelf.ShowTelPosListPage(talker, RaidBossList50_59);
+                    break;
+                case 6:
+                    await MySelf.ShowTelPosListPage(talker, RaidBossList60_69);
+                    break;
+                case 7:
+                    await MySelf.ShowTelPosListPage(talker, RaidBossList70_79);
+                    break;
+                case 8:
+                    await MySelf.ShowTelPosListPage(talker, RaidBossList80_89);
+                    break;
+                case 9:
+                    await MySelf.ShowTelPosListPage(talker, RaidBossList90_99);
+                    break;
+            }
+        }
+        await base.MenuSelected(talker, ask, reply, fhtml0);
     }
 }

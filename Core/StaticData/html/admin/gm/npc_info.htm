@@ -1,5 +1,5 @@
 ﻿<html>
-    <title>NCore [GM]</title>
+    <title>NCore [GM-Npc Info-%npcId%]</title>
     <center>
         <table width=270 border=0 bgcolor="444444">
             <tr>
@@ -10,13 +10,27 @@
             </tr>
         </table>
     </center>
-    <br>
-    <center>
-        <table width=270>
+	<br>
+	<center>
+        <table width=280>
             <tr>
-                <td><button value="NPC List" action="bypass -h admin_npc" width=65 height=21 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
-
+                <td width=280><button value="<<< Back" action="bypass -h admin_npc %page%" width=60 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+				
             </tr>
         </table>
+		<font color="b8d7a3">%level% [%name%] %race%</font>
     </center>
+	
+	<br>
+	<center>
+		<table width=280 border=0>
+			<tr>
+				<td align=center>%npcInstances%</td>
+			</tr>
+			<tr>
+				<td align=center>NPC Count: <font color="b8d7a3">%npc_count%</font></td>
+			</tr>
+		</table>
+	</center>
+    
 </html>

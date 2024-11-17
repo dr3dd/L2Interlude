@@ -47,6 +47,16 @@ namespace Core.Module.NpcData
             return _npcDataCollection[name];
         }
 
+        public NpcTemplateInit GetNpcTemplate(int npcId)
+        {
+            return _npcDataCollection.Values.Where(n => n.GetStat().Id == npcId).FirstOrDefault();
+        }
+
+        public IEnumerable<NpcTemplateInit> GetAllNpcTemplate()
+        {
+            return _npcDataCollection.Values.OfType<NpcTemplateInit>().OrderBy(d => d.GetStat().Id).ToList(); ;
+        }
+
         /// <summary>
         /// 
         /// </summary>

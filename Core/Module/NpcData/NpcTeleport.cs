@@ -37,6 +37,7 @@ public class NpcTeleport
         await playerInstance.SendPacketAsync(teleportToLocation);
         await playerInstance.SendToKnownPlayers(teleportToLocation);
         playerInstance.WorldObjectPosition().SetXYZ(x, y, z);
+        await playerInstance.PlayerModel().CharacterStoreAsync();
     }
 
     private async Task ShowTeleportList(string html, PlayerInstance player)

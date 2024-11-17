@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Config;
 using Core.Controller;
-using Core.Controller.Handlers;
 using Core.GeoEngine;
 using Core.Manager;
 using Core.Module.AreaData;
@@ -10,6 +9,7 @@ using Core.Module.CategoryData;
 using Core.Module.CharacterData.Template;
 using Core.Module.DoorData;
 using Core.Module.FStringData;
+using Core.Module.Handlers;
 using Core.Module.HtmlCacheData;
 using Core.Module.ItemData;
 using Core.Module.ManualData;
@@ -65,6 +65,10 @@ namespace Core
         internal static WorldInit WorldInit()
         {
             return ServiceProvider.GetService<WorldInit>();
+        }
+        internal static NpcDataInit NpcDataInit()
+        {
+            return ServiceProvider.GetService<NpcDataInit>();
         }
         
         internal static ChatHandler ChatHandler()

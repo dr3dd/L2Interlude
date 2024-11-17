@@ -22,6 +22,8 @@ using Helpers;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 using static NLog.LayoutRenderers.Wrappers.ReplaceLayoutRendererWrapper;
+using System.Xml.Linq;
+using Core.Enums;
 
 namespace Core.Module.NpcData
 {
@@ -276,14 +278,6 @@ namespace Core.Module.NpcData
             await _defaultNpc.MenuSelected(talker, askId, replyId, String.Empty);
         }
 
-        /// <summary>
-        /// TODO
-        /// </summary>
-        public void DeleteRadar(Talker talker, int p1, int p2, int p3, int p4)
-        {
-            LoggerManager.Warn("DeleteRadar NotImplementedException");
-        }
-
         public async Task ShowEnchantSkillList(Talker talker)
         {
             LoggerManager.Warn("ShowEnchantSkillList NotImplementedException");
@@ -313,16 +307,19 @@ namespace Core.Module.NpcData
             await Task.FromResult(1);
         }
 
-        public async Task ShowRadar(Talker talker, int v1, int v2, int v3, int v4)
+        public async Task ShowRadar(Talker talker, int x, int y, int z, RadarPositionType type)
         {
-            LoggerManager.Warn("ShowRadar NotImplementedException");
-            await Task.FromResult(1);
+            await talker.PlayerInstance.SendPacketAsync(new RadarControl(RadarControlType.SHOW, type, x, y, z));
         }
 
-        public async Task DeleteAllRadar(Talker talker, int v)
+        public async Task DeleteRadar(Talker talker, int x, int y, int z, RadarPositionType type)
         {
-            LoggerManager.Warn("DeleteAllRadar NotImplementedException");
-            await Task.FromResult(1);
+            await talker.PlayerInstance.SendPacketAsync(new DeleteRadar(type, x, y, z));
+        }
+
+        public async Task DeleteAllRadar(Talker talker, RadarPositionType type)
+        {
+            await talker.PlayerInstance.SendPacketAsync(new RadarControl(RadarControlType.DELETE_ALL, type, 0, 0, 0));
         }
 
         internal int GetSSQStatus()
@@ -349,6 +346,10 @@ namespace Core.Module.NpcData
         /// <returns></returns>
         public bool IsMyLord(Talker talker)
         {
+            if (talker.PlayerInstance.IsGM)
+            {
+                return true;
+            }
             return false;
         }
         
@@ -357,9 +358,9 @@ namespace Core.Module.NpcData
         /// </summary>
         /// <param name="talker"></param>
         /// <returns></returns>
-        public bool HavePledgePower(Talker talker)
+        public bool HavePledgePower(Talker talker, PledgePower pledgePower)
         {
-            return false;
+            return true;
         }
         internal async Task ShowSystemMessage(Talker talker, int messageId)
         {
@@ -382,9 +383,10 @@ namespace Core.Module.NpcData
             LoggerManager.Warn("VoiceEffect NotImplementedException");
         }
 
-        internal void GiveItem1(Talker talker, string itemName, int count)
+        public async Task GiveItem1(Talker talker, string itemName, int count)
         {
             LoggerManager.Warn($"GiveItem1 {itemName} {count} NotImplementedException");
+            await Task.FromResult(1);
         }
 
         internal void IncrementParam(Talker talker, int v1, int v2)
@@ -409,7 +411,7 @@ namespace Core.Module.NpcData
             LoggerManager.Warn("SetMemoStateEx NotImplementedException");
         }
 
-        internal int Castle_GetPledgeId()
+        internal int CastleGetPledgeId()
         {
             LoggerManager.Warn("Castle_GetPledgeId NotImplementedException");
             return 0;
@@ -460,11 +462,6 @@ namespace Core.Module.NpcData
         internal void AddMoveToDesire(object start_x, object start_y, object start_z, int v)
         {
             LoggerManager.Warn("AddMoveToDesire NotImplementedException");
-        }
-
-        internal int GetDateTime(int v1, int v2)
-        {
-            throw new NotImplementedException();
         }
 
         internal int GetOlympiadWaitingCount()
@@ -552,9 +549,36 @@ namespace Core.Module.NpcData
             LoggerManager.Warn($"ObserveOlympiad field{fieldId}  NotImplementedException");
         }
 
-        internal void AddLogEx(int v, Talker talker, int ask, int i0)
+        public async Task AddLogEx(int v, Talker talker, int ask, int i0)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn($"AddLogEx NotImplementedException");
+            await Task.FromResult(1);
+        }
+
+        internal void AddMoveSuperPointDesire(string name, int v1, int v2)
+        {
+            LoggerManager.Warn($"AddMoveSuperPointDesire name {name}  NotImplementedException");
+        }
+
+        internal void ChangeMoveType(int type)
+        {
+            LoggerManager.Warn($"ChangeMoveType {type}  NotImplementedException");
+        }
+
+        internal int CastleGetPledgeState(Talker talker)
+        {
+            LoggerManager.Warn($"CastleGetPledgeState NotImplementedException");
+            return 2;
+        }
+
+        internal async Task ShowQuestInfoList(Talker talker)
+        {
+            await talker.PlayerInstance.SendPacketAsync(new ExShowQuestInfo());
+        }
+
+        internal async Task ShowTelPosListPage(Talker talker, IList<TeleportList> position)
+        {
+            await _npcInstance.NpcRadar().Radar(talker, position);
         }
     }
 }

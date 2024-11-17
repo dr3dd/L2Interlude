@@ -1,18 +1,20 @@
 ﻿using Core.Attributes;
-using Core.Controller.Handlers.Chat;
+using Core.Enums;
+using Core.Module.Handlers.Chat;
 using Core.Module.Player;
 using Helpers;
 using L2Logger;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 
 
 //CLR: 4.0.30319.42000
 //USER: GL
 //DATE: 10.08.2024 23:13:53
 
-namespace Core.Controller.Handlers
+namespace Core.Module.Handlers
 {
     public class ChatHandler : IChatHandler
     {
@@ -21,17 +23,17 @@ namespace Core.Controller.Handlers
         public ChatHandler(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            IEnumerable<Type> typelist = Utility.GetTypesInNamespace(Assembly.GetExecutingAssembly(), "Core.Controller.Handlers.Chat");
+            IEnumerable<Type> typelist = Utility.GetTypesInNamespace(Assembly.GetExecutingAssembly(), "Core.Module.Handlers.Chat");
             foreach (Type t in typelist)
             {
-                if (!t.Name.StartsWith("Abstract"))
+                if (!t.Name.StartsWith("Abstract") && t.BaseType.Name.Equals("AbstractChatMessage"))
                 {
                     Register(Activator.CreateInstance(t));
                 }
             }
             LoggerManager.Info($"ChatHandler: Loaded {chatTypes.Count} handlers.");
         }
-        public void Chat(PlayerInstance player, ChatType type, string target, string text)
+        public async Task Chat(PlayerInstance player, ChatType type, string target, string text)
         {
             if (!chatTypes.ContainsKey(type))
             {
@@ -42,7 +44,7 @@ namespace Core.Controller.Handlers
             AbstractChatMessage processor = chatTypes[type];
             try
             {
-                processor.Chatting(player, type, text, target);
+                await processor.Chatting(player, type, text, target);
             }
             catch (Exception ex)
             {

@@ -20,6 +20,7 @@ public sealed class NpcInstance : Character
     private readonly NpcDesire _npcDesire;
     private readonly NpcAi _npcAi;
     private readonly NpcTeleport _npcTeleport;
+    private readonly NpcRadar _npcRadar;
     private readonly NpcLearnSkill _npcLearnSkill;
     public readonly int NpcId;
     public readonly int NpcHashId;
@@ -42,12 +43,14 @@ public sealed class NpcInstance : Character
         _npcBaseStatus = new NpcBaseStatus(this);
         _npcAi = new NpcAi(this);
         _npcTeleport = new NpcTeleport(this);
+        _npcRadar = new NpcRadar(this);
         _npcDesire = new NpcDesire(this);
         _npcLearnSkill = new NpcLearnSkill(this);
     }
 
     public NpcUseSkill NpcUseSkill() => _npcUseSkill;
     public NpcTeleport NpcTeleport() => _npcTeleport;
+    public NpcRadar NpcRadar() => _npcRadar;
     public override Weapon GetActiveWeaponItem()
     {
         var weapon = new Weapon(0, _npcCombat.GetWeaponType()); 

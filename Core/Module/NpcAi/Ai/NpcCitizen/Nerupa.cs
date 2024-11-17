@@ -1,3 +1,4 @@
+using Core.Enums;
 using System.Threading.Tasks;
 
 namespace Core.Module.NpcAi.Ai.NpcCitizen;
@@ -22,19 +23,19 @@ public class Nerupa : Citizen
                 if (MySelf.IsInCategory(0, talker.Occupation) && MySelf.OwnItemCount(talker, "soulshot_none_for_rookie") <= 200)
                 {
                     MySelf.VoiceEffect(talker, "tutorial_voice_026", 1000);
-                    MySelf.GiveItem1(talker, "soulshot_none_for_rookie", 200);
+                    await MySelf.GiveItem1(talker, "soulshot_none_for_rookie", 200);
                     MySelf.IncrementParam(talker, 1, 50);
                 }
                 if (MySelf.IsInCategory(1, talker.Occupation) && MySelf.OwnItemCount(talker, "soulshot_none_for_rookie") <= 200 && MySelf.OwnItemCount(talker, "spiritshot_none_for_rookie") <= 100)
                 {
                     MySelf.VoiceEffect(talker, "tutorial_voice_027", 1000);
-                    MySelf.GiveItem1(talker, "spiritshot_none_for_rookie", 100);
+                    await MySelf.GiveItem1(talker, "spiritshot_none_for_rookie", 100);
                     MySelf.IncrementParam(talker, 1, 50);
                 }
                 await MySelf.ShowPage(talker, "nerupa002.htm");
                 MySelf.DeleteItem1(talker, "leaf_of_mothertree", 1);
                 MySelf.AddTimerEx((MySelf.GetIndexFromCreature(talker) + 1000000), (1000 * 60));
-                await MySelf.ShowRadar(talker, 45475, 48359, -3060, 2);
+                await MySelf.ShowRadar(talker, 45475, 48359, -3060, RadarPositionType.BOTH);
                 if (MySelf.GetMemoStateEx(talker, 255, "letters_of_love1") <= 3)
                 {
                     MySelf.SetMemoStateEx(talker, 255, "letters_of_love1", 4);
