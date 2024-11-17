@@ -78,7 +78,7 @@ namespace Core.Module.NpcData
 
                         if (npcBegin.PosAny.Count > 0)
                         {
-                            if (npcBegin.Name == "tutorial_gremlin")
+                            if (npcBegin.Name == "tutorial_gremlin") //goblin_raider
                             {
 
                                 var maxX = npcBegin.PosAny.Aggregate((x1, x2) => x1["X"] > x2["X"] ? x1 : x2)["X"];
@@ -124,7 +124,7 @@ namespace Core.Module.NpcData
                                 }
                                 
                                 //npcBegin.Total
-                                foreach (var item in lst.OrderBy(x => Rnd.Next()).Take(npcBegin.Total))
+                                foreach (var item in lst.OrderBy(x => Rnd.Next()).Take(npcBegin.Total))//npcBegin.Total
                                 {
                                     var npcInstance = new NpcInstance(_objectIdInit.NextObjectId(), npcTemplate, _serviceProvider);
                                     npcInstance.CharacterStatus().CurrentHp = npcTemplate.GetStat().OrgHp;

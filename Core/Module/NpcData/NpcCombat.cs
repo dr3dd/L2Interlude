@@ -2,19 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Module.CharacterData;
+using Core.Module.CharacterData.Template;
+using Core.Module.ItemData;
 using Core.Module.Player;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.NpcData
 {
     public class NpcCombat : ICharacterCombat
     {
         private readonly NpcInstance _npcInstance;
+        private readonly CharacterMovementStatus _movementStatus;
         private readonly NpcStat _stat;
+        private readonly PcParameterInit _statBonusInit;
         
         public NpcCombat(NpcInstance npcInstance)
         {
             _npcInstance = npcInstance;
             _stat = _npcInstance.GetTemplate().GetStat();
+            _statBonusInit = _npcInstance.ServiceProvider.GetRequiredService<PcParameterInit>();
+            _movementStatus = _npcInstance.CharacterMovement().CharacterMovementStatus();
         }
 
         /// <summary>
@@ -25,7 +32,7 @@ namespace Core.Module.NpcData
         /// <returns></returns>
         public int GetMagicalAttack()
         {
-            var baseMAtk = _stat.BasePhysicalAttack;
+            var baseMAtk = _stat.BaseMagicAttack;
             var intBonus = _stat.IntBonus;
             var levelBonus = _stat.LevelBonus;
             
@@ -59,8 +66,8 @@ namespace Core.Module.NpcData
 
         public double GetMovementSpeedMultiplier()
         {
-            var baseSpeed = GetLowSpeed();
-            return GetCharacterSpeed() / baseSpeed;
+            var baseSpeed = _movementStatus.IsGroundHigh() ? GetBaseHighSpeed() : GetBaseLowSpeed();
+            return GetCharacterSpeed() * (1.0 / baseSpeed);
         }
 
         /// <summary>
@@ -120,18 +127,35 @@ namespace Core.Module.NpcData
         
         public double GetHighSpeed()
         {
-            double result = _stat.GroundHigh.First();
+            var baseGroundHighSpeed = GetBaseHighSpeed();
+            var dexStat = _stat.Dex;
+            var dexBonus = (_statBonusInit.GetDexBonus(dexStat) + 100) / 100d;
+            var result = baseGroundHighSpeed * dexBonus;
+            
             var effects = GetNpcEffects();
             result = CalculateStats.CalculateSpeed(effects, result);
             return result;
         }
 
+        public double GetBaseHighSpeed()
+        {
+            return _stat.GroundHigh.First();;
+        }
+
         public double GetLowSpeed()
         {
-            double result = _stat.GroundLow.First();
+            var baseGroundLowSpeed = GetBaseLowSpeed();
+            var dexStat = _stat.Dex;
+            var dexBonus = (_statBonusInit.GetDexBonus(dexStat) + 100) / 100d;
+            var result = baseGroundLowSpeed * dexBonus;
             var effects = GetNpcEffects();
             result = CalculateStats.CalculateSpeed(effects, result);
             return result;
+        }
+
+        public double GetBaseLowSpeed()
+        {
+            return _stat.GroundLow.First();
         }
 
         public int GetEvasion()
@@ -178,6 +202,38 @@ namespace Core.Module.NpcData
             var modDex = (dexBonus + 100) / 100f;
             var result = modDex * baseAttackSpeed;
             return (int) Math.Round(result);
+        }
+
+        public int GetMagicalAttackSpeed()
+        {
+            var baseAttackSpeed = _stat.BaseMagicalAttackSpeed;
+            var intBonus = _stat.IntBonus;
+            var modInt = (intBonus + 100) / 100f;
+            var result = modInt * baseAttackSpeed;
+            return (int) Math.Round(result);
+        }
+        
+        public int GetBaseAttackRange()
+        {
+            return _npcInstance.GetTemplate().GetStat().BaseAttackRange;
+        }
+        
+        public int GetPhysicalAttackRange()
+        {
+            var weapon = _npcInstance.GetActiveWeaponItem();
+            int attackRange = weapon?.AttackRange ?? GetBaseAttackRange();
+            return attackRange;
+        }
+
+        public float GetAttackSpeedMultiplier()
+        {
+            return (float)((1.1 * GetPhysicalAttackSpeed()) / _npcInstance.GetTemplate().GetStat().BaseMagicalAttackSpeed);
+        }
+
+        public WeaponType GetWeaponType()
+        {
+            var baseAttackType = _npcInstance.GetTemplate().GetStat().BaseAttackType;
+            return WeaponHelper.GetWeaponType(baseAttackType);;
         }
     }
 }

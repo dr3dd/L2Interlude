@@ -43,6 +43,7 @@ public abstract class CharacterAttackAbstract
     }
 
     protected void SetAttacking() => _attacking = true;
+    protected bool GetAttacking() => _attacking;
     public bool IsAttackingNow() => AttackEndTime > DateTime.Now.Ticks * 100;
 
     public bool IsAttackAborted()

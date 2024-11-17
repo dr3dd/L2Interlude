@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using L2Logger;
 
 namespace Core.GeoEngine.Blocks;
 
@@ -69,13 +70,19 @@ public class MultilayerBlock : IBlock
     {
         var cellLocalOffset = ((geoX % IBlock.BLOCK_CELLS_X) * IBlock.BLOCK_CELLS_Y) + (geoY % IBlock.BLOCK_CELLS_Y);
         var cellDataOffset = 0;
-        // Move index to cell, we need to parse on each request, OR we parse on creation and save indexes.
-        for (var i = 0; i < cellLocalOffset; i++)
+        try
         {
-            cellDataOffset += 1 + (_data[cellDataOffset] * 2);
+            // Move index to cell, we need to parse on each request, OR we parse on creation and save indexes.
+            for (var i = 0; i < cellLocalOffset; i++)
+            {
+                cellDataOffset += 1 + (_data[cellDataOffset] * 2);
+            }
+            // Now the index points to the cell we need.
         }
-        // Now the index points to the cell we need.
-		
+        catch (Exception ex)
+        {
+            LoggerManager.Error(ex.Message + " cellLocalOffset: " + cellLocalOffset);
+        }
         return cellDataOffset;
     }
     

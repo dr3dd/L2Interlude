@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Core.Module.CharacterData.PhysicalAttack;
 using Core.Module.ItemData;
+using Core.Module.NpcData;
+using Core.Module.Player;
 using Core.Module.SkillData;
 using Core.NetworkPacket.ServerPacket;
 using Core.TaskManager;
@@ -64,6 +66,10 @@ public class CharacterPhysicalAttack : CharacterAttackAbstract
                 await SendAttackPacketsAsync(attack);
             }
             ScheduleNextAttack(timeAtk + reuse);
+            if (_character is PlayerInstance playerInstance && target is NpcInstance npcInstance)
+            {
+                npcInstance.NpcAi().Attacked(playerInstance, attack.LastHit().Damage);
+            }
         } 
         finally
         {
