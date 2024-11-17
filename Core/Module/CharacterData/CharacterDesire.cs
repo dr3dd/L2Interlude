@@ -9,9 +9,11 @@ public class CharacterDesire : AbstractDesire
 {
     private readonly CharacterDesireCast _characterDesireCast;
     public CharacterDesireCast DesireCast() => _characterDesireCast;
+    private Character _character;
     public CharacterDesire(Character character) : base(character)
     {
         _characterDesireCast = new CharacterDesireCast(character);
+        _character = character;
     }
 
     protected override async Task MoveToDesireAsync(Location destination)
@@ -40,8 +42,9 @@ public class CharacterDesire : AbstractDesire
     /// Stop the actor auto-attack client side by sending Server->Client packet AutoAttackStop (broadcast)
     /// Abort the attack of the Creature and send Server->Client ActionFailed packet
     /// </summary>
-    private async Task StopAutoAttackAndAbortAsync()
+    public async Task StopAutoAttackAndAbortAsync()
     {
+        ChangeDesire(Desire.IdleDesire);
         await ClientStopAutoAttackAsync();
         await AbortAttackAsync();
     }

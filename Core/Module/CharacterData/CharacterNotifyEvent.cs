@@ -44,10 +44,29 @@ public class CharacterNotifyEvent : CharacterNotifyEventAbstract
             _thinking = false;
         }
     }
-
+    private Character GetAttackTarget() => _character.CharacterDesire().AttackTarget;
     public virtual async Task ThinkAttackAsync()
     {
-        throw new NotImplementedException();
+        var target = GetAttackTarget();
+        if (target == null)
+        {
+            return;
+        }
+
+        if (CheckTargetLostOrDead(target))
+        {
+            // Notify the target
+            _character.CharacterDesire().AttackTarget = null;
+            return;
+        }
+
+        if (await _character.CharacterDesire().MaybeMoveToPawnAsync(target, _character.CharacterCombat().GetPhysicalAttackRange()))
+        {
+            return;
+        }
+        await _character.CharacterDesire().ClientStopMovingAsync(null);
+        //LoggerManager.Info($"Start Attack Target: {target.ObjectId}");
+        await _character.PhysicalAttack().DoAttackAsync(target).ContinueWith(_character.CharacterDesire().HandleException);
     }
 
     public override async Task OnEvtAttackedAsync(Character arg0)

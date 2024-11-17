@@ -303,6 +303,11 @@ namespace Core.Module.Player
             return (int) result;
         }
 
+        public int GetMagicalAttackSpeed()
+        {
+            throw new NotImplementedException();
+        }
+
         public float GetCollisionRadius()
         {
             return _templateHandler.GetCollisionRadius();

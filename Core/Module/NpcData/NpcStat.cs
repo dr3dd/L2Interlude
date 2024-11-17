@@ -58,7 +58,8 @@ namespace Core.Module.NpcData
         public float BasePhysicalAttack { get; set; }
         public short BaseCritical { get; set; }
         public double PhysicalHitModify { get; set; }
-        public float BaseAttackSpeed { get; set; }
+        public float BaseAttackSpeed { get; set; } = 300;
+        public float BaseMagicalAttackSpeed { get; set; } = 333;
         public int BaseReuseDelay { get; set; }
         public float BaseMagicAttack { get; set; }
         public float BaseDefend { get; set; }

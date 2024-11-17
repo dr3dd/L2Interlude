@@ -33,7 +33,7 @@ namespace Core.Module.ItemData
             Name = itemBegin.Name;
             SlotBitType = GetSlotBitType(itemBegin.SlotBitType);
             ItemType = GetItemType(itemBegin.ItemType);
-            WeaponType = GetWeaponType(itemBegin.WeaponType);
+            WeaponType = WeaponHelper.GetWeaponType(itemBegin.WeaponType);
             ActionType = GetActionType(itemBegin.DefaultAction);
             MagicalDamage = itemBegin.MagicalDamage;
             PhysicalDamage = itemBegin.PhysicalDamage;
@@ -89,23 +89,6 @@ namespace Core.Module.ItemData
                 "hair" => SlotBitType.Hair,
                 "alldress" => SlotBitType.HairAll,
                 _ => SlotBitType.None
-            };
-        }
-
-        private WeaponType GetWeaponType(string weaponType)
-        {
-            return weaponType switch
-            {
-                "none" => WeaponType.None,
-                "sword" => WeaponType.Sword,
-                "dagger" => WeaponType.Dagger,
-                "blunt" => WeaponType.Blunt,
-                "pole" => WeaponType.Pole,
-                "bow" => WeaponType.Bow,
-                "dualfist" => WeaponType.DualFist,
-                "dual" => WeaponType.Dual,
-                "etc" => WeaponType.Etc,
-                _ => WeaponType.None
             };
         }
 

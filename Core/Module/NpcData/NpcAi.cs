@@ -91,6 +91,7 @@ namespace Core.Module.NpcData
             _defaultNpc.MySelf = this;
             _defaultNpc.Created();
             _defaultNpc.NoDesire();
+            _npcInstance.NpcDesire().StartProcessingDesires();
         }
 
         public void NoDesire()
@@ -98,10 +99,13 @@ namespace Core.Module.NpcData
             _defaultNpc.NoDesire();
         }
 
-        public void Attacked(PlayerInstance playerInstance)
+        public void Attacked(PlayerInstance playerInstance, int damage)
         {
             var attacker = new Talker(playerInstance);
-            _npcInstance.NpcDesire().AddDesire(Desire.AttackDesire, playerInstance);
+            
+            var desire = _npcInstance.NpcDesire().GetDesire();
+            _defaultNpc.Attacked(attacker, damage);
+            //_npcInstance.NpcDesire().AddDesire(Desire.AttackDesire, playerInstance);
             //_defaultNpc.Attacked(attacker, damage);
         }
 
@@ -129,7 +133,6 @@ namespace Core.Module.NpcData
         public async Task AddEffectActionDesire (NpcAiSm sm, int actionId, int moveAround, int desire)
         {
             await _npcInstance.NpcDesire().AddEffectActionDesire(actionId, moveAround, desire);
-            //await _npcInstance.SendToKnownPlayers(new SocialAction(_npcInstance.ObjectId, actionId));
         }
 
         public async Task AddMoveAroundDesire(int moveAround, int desire)
@@ -246,9 +249,9 @@ namespace Core.Module.NpcData
             LoggerManager.Warn("AddUseSkillDesire NotImplementedException");
         }
 
-        public void AddAttackDesire(Talker attacked, int i, int f0)
+        public async Task AddAttackDesire(Talker attacker, int i, int f0)
         {
-            LoggerManager.Warn("AddAttackDesire NotImplementedException");
+            await _npcInstance.NpcDesire().AddAttackDesire(attacker, i, f0);
         }
 
         public async Task TalkSelected(PlayerInstance playerInstance)

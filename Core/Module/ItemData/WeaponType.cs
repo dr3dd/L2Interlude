@@ -12,6 +12,7 @@ namespace Core.Module.ItemData
         Pole,
         Bow,
         DualFist,
+        Fist,
         Dual,
         Etc
     }
