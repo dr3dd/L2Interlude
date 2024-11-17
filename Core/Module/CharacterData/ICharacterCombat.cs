@@ -16,5 +16,8 @@
         int GetCriticalRate();
         int GetMagicalAttack();
         int GetPhysicalAttackSpeed();
+        int GetMagicalAttackSpeed();
+        int GetPhysicalAttackRange();
+        float GetAttackSpeedMultiplier();
     }
 }

@@ -41,10 +41,10 @@ public sealed class NpcInstance : Character
         _npcUseSkill = new NpcUseSkill(this);
         _npcCombat = new NpcCombat(this);
         _npcBaseStatus = new NpcBaseStatus(this);
-        _npcDesire = new NpcDesire(this);
         _npcAi = new NpcAi(this);
         _npcTeleport = new NpcTeleport(this);
         _npcRadar = new NpcRadar(this);
+        _npcDesire = new NpcDesire(this);
         _npcLearnSkill = new NpcLearnSkill(this);
     }
 
@@ -53,7 +53,8 @@ public sealed class NpcInstance : Character
     public NpcRadar NpcRadar() => _npcRadar;
     public override Weapon GetActiveWeaponItem()
     {
-        throw new NotImplementedException();
+        var weapon = new Weapon(0, _npcCombat.GetWeaponType()); 
+        return weapon;
     }
 
     public override ICharacterCombat CharacterCombat() => _npcCombat;
@@ -85,7 +86,7 @@ public sealed class NpcInstance : Character
 
         if (_npcTemplate.GetStat().CanBeAttacked == 1)
         {
-            NpcAi().Attacked(playerInstance);
+            //NpcAi().Attacked(playerInstance);
             return;
         }
         await NpcAi().Talked(playerInstance);
