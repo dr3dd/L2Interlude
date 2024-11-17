@@ -24,13 +24,13 @@ public class Nerupa : Citizen
                 {
                     MySelf.VoiceEffect(talker, "tutorial_voice_026", 1000);
                     await MySelf.GiveItem1(talker, "soulshot_none_for_rookie", 200);
-                    MySelf.IncrementParam(talker, 1, 50);
+                    MySelf.IncrementParam(talker, ParameterType.SP, 50);
                 }
                 if (MySelf.IsInCategory(1, talker.Occupation) && MySelf.OwnItemCount(talker, "soulshot_none_for_rookie") <= 200 && MySelf.OwnItemCount(talker, "spiritshot_none_for_rookie") <= 100)
                 {
                     MySelf.VoiceEffect(talker, "tutorial_voice_027", 1000);
                     await MySelf.GiveItem1(talker, "spiritshot_none_for_rookie", 100);
-                    MySelf.IncrementParam(talker, 1, 50);
+                    MySelf.IncrementParam(talker, ParameterType.SP, 50);
                 }
                 await MySelf.ShowPage(talker, "nerupa002.htm");
                 MySelf.DeleteItem1(talker, "leaf_of_mothertree", 1);
@@ -46,5 +46,6 @@ public class Nerupa : Citizen
         {
             await base.MenuSelected(talker, ask, reply, fhtml0);
         }
+
     }
 }

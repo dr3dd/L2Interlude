@@ -386,9 +386,9 @@ namespace Core.Module.NpcData
             await Task.FromResult(1);
         }
 
-        internal void IncrementParam(Talker talker, int v1, int v2)
+        internal void IncrementParam(Talker talker, ParameterType parameterType, int value)
         {
-            LoggerManager.Warn("IncrementParam NotImplementedException");
+            LoggerManager.Warn($"IncrementParam {parameterType} - {value} NotImplementedException");
         }
 
         internal int GetIndexFromCreature(Talker talker)

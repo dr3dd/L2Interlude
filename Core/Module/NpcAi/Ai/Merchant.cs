@@ -37,61 +37,64 @@ public class Merchant : Citizen
 
     public override async Task MenuSelected(Talker talker, int ask, int reply)
     {
-        if(ask == -1)
+        if (ask == -1)
         {
-            if(reply == 0)
+            if (reply == 0)
             {
                 await MySelf.Sell(talker, SellList0, ShopName, FnBuy, "", "");
             }
-            if(reply == 1)
+            if (reply == 1)
             {
                 await MySelf.Sell(talker, SellList1, ShopName, FnBuy, "", "");
             }
-            if(reply == 2)
+            if (reply == 2)
             {
                 await MySelf.SellPreview(talker, SellList0, ShopName, FnBuy, "", "");
             }
-            if(reply == 3)
+            if (reply == 3)
             {
                 await MySelf.SellPreview(talker, SellList1, ShopName, FnBuy, "", "");
             }
-            if(reply == 4)
+            if (reply == 4)
             {
                 await MySelf.Sell(talker, SellList4, ShopName, FnBuy, "", "");
             }
-            if(reply == 5)
+            if (reply == 5)
             {
                 await MySelf.Sell(talker, SellList5, ShopName, FnBuy, "", "");
             }
-            if(reply == 6)
+            if (reply == 6)
             {
                 await MySelf.Sell(talker, SellList6, ShopName, FnBuy, "", "");
             }
-            if(reply == 7)
+            if (reply == 7)
             {
                 await MySelf.Sell(talker, SellList7, ShopName, FnBuy, "", "");
             }
-            if(reply == 8)
+            if (reply == 8)
             {
                 //MySelf.Buy(talker, BuyList0, ShopName, FnBuy, FnUnableItemSell, -50);
             }
-            if(reply == 9)
+            if (reply == 9)
             {
                 //MySelf.Buy(talker, BuyList1, ShopName, FnBuy, FnUnableItemSell, -50);
             }
-            if(reply == 10)
+            if (reply == 10)
             {
                 //MySelf.Buy(talker, BuyList2, ShopName, FnBuy, FnUnableItemSell, -50);
             }
-            if(reply == 11)
+            if (reply == 11)
             {
                 //MySelf.Buy(talker, BuyList3, ShopName, FnBuy, FnUnableItemSell, -50);
             }
-            if(reply == 12)
+            if (reply == 12)
             {
                 //MySelf.Buy(talker, BuyList4, ShopName, FnBuy, FnUnableItemSell, -50);
             }
         }
-        await base.MenuSelected(talker, ask, reply);
+        else
+        {
+            await base.MenuSelected(talker, ask, reply, string.Empty);
+        }
     }
 }
