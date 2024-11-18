@@ -66,6 +66,10 @@ namespace Core
         {
             return ServiceProvider.GetService<WorldInit>();
         }
+        internal static ItemDataInit ItemDataInit()
+        {
+            return ServiceProvider.GetService<ItemDataInit>();
+        }
         internal static NpcDataInit NpcDataInit()
         {
             return ServiceProvider.GetService<NpcDataInit>();

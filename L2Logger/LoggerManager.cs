@@ -1,4 +1,6 @@
 ﻿using NLog;
+using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace L2Logger
 {
@@ -22,6 +24,12 @@ namespace L2Logger
         public static void Error(string text)
         {
             LogManager.GetCurrentClassLogger().Error(text);
+        }
+
+        public static void ErrorTrace(string text)
+        {
+            StackTrace stackTrace = new StackTrace();
+            LogManager.GetCurrentClassLogger().Error($"{stackTrace.GetFrame(3).GetMethod().ReflectedType.FullName} > {stackTrace.GetFrame(2).GetMethod().ReflectedType.Name} - {text}");
         }
 
         public static void Warn(string text)

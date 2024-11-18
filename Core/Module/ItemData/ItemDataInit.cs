@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Xml.Linq;
 using Core.Module.ParserEngine;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
@@ -75,8 +77,9 @@ namespace Core.Module.ItemData
             {
                 return _itemDataModel[id];
             }
-            catch (Exception)
+            catch
             {
+                LoggerManager.ErrorTrace($"GetItemById: there is no item id {id}"); 
                 throw new Exception($": there is no item id {id}");
             }
         }
@@ -88,8 +91,9 @@ namespace Core.Module.ItemData
                 int itemId = _itemPchInit.GetItemIdByName(name);
                 return _itemDataModel[itemId];
             }
-            catch (Exception)
+            catch
             {
+                LoggerManager.ErrorTrace($"GetItemByName: there is no item name {name}");
                 throw new Exception($": there is no item name {name}");
             }
         }
