@@ -72,7 +72,7 @@ public class Uno : MerchantForNewbie
         }
         else
         {
-            await MenuSelected(talker, ask, reply, fhtml0);
+            await base.MenuSelected(talker, ask, reply);
         }
     }
 }

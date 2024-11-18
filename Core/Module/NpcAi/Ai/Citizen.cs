@@ -129,12 +129,10 @@ public class Citizen : DefaultNpc
             }
             else if (reply == 532 || reply == 549)
             {
-                /*
-                if (gg.IsEventServer())
+                if (Gg.IsEventServer())
                 {
                     await MySelf.ShowMultiSell(reply, talker);
                 }
-                */
             }
             else
             {

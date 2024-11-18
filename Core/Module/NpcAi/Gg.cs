@@ -1,4 +1,5 @@
-﻿using System;
+﻿using L2Logger;
+using System;
 
 namespace Core.Module.NpcAi;
 
@@ -72,5 +73,11 @@ public static class Gg
     internal static int Rand(int v)
     {
         return new Random().Next(v);
+    }
+
+    internal static bool IsEventServer()
+    {
+        LoggerManager.Warn("AddUseSkillDesire NotImplementedException");
+        return false;
     }
 }
