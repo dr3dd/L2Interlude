@@ -13,7 +13,7 @@ public class DefaultNpc
 
     protected double IdleDesireDecayRatio = 0.000000;
     protected double MoveAroundDecayRatio = 0.000000;
-    protected double DoNothingDecayRatio = 0.000000;
+    public virtual float DoNothing_DecayRatio { get; set; } = 0.000000f;
     public virtual float Attack_DecayRatio { get; set; } = 0.000000f;
     protected double ChaseDecayRatio = 0.000000;
     protected double FleeDecayRatio = 0.000000;

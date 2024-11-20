@@ -1,13 +1,7 @@
 ﻿using Core.Module.NpcAi;
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 
 
 //CLR: 4.0.30319.42000
@@ -18,44 +12,31 @@ namespace Core.Module.NpcData
 {
     public class NpcChoice
     {
-        private readonly NpcInstance _npcInstance;
-        private ConcurrentDictionary<int, string> _choices;
-        public NpcChoice(NpcInstance npcInstance)
+        private readonly NpcAi _npcAi;
+        public NpcChoice(NpcAi npcAi)
         {
-            _npcInstance = npcInstance;
-            _choices = new ConcurrentDictionary<int, string>();
-        }
-
-        public void Add(int choice, string value)
-        {
-            _choices.TryAdd(choice, value);
-        }
-
-        public void Clear()
-        {
-            _choices.Clear();
+            _npcAi = npcAi;
         }
 
         public async Task ShowChoice(Talker talker, int option)
         {
             var htmlString = string.Empty;
             var url = @"<a action=""bypass -h quest_choice##objectId#?choice=#choice#&option=#option#"">#value#</a><br1>";
-            foreach (var choice in _choices)
+            foreach (var choice in _npcAi.GetTalker().GetQuestChoiceCollection())
             {
-                var replace = url.Replace("#objectId#", _npcInstance.ObjectId.ToString());
+                var replace = url.Replace("#objectId#", _npcAi.NpcInstance().ObjectId.ToString());
                 replace = replace.Replace("#choice#", choice.Key.ToString());
                 replace = replace.Replace("#option#", option.ToString());
                 replace = replace.Replace("#value#", choice.Value);
                 htmlString += replace;
             }
-            Clear();
             var html = "<html><body><br>" + htmlString + "</body></html>";
             await ShowChoicePage(html, talker.PlayerInstance);
         }
 
         private async Task ShowChoicePage(string html, PlayerInstance player)
         {
-            var htmlText = new NpcHtmlMessage(_npcInstance.ObjectId, html);
+            var htmlText = new NpcHtmlMessage(_npcAi.NpcInstance().ObjectId, html);
             await player.SendPacketAsync(htmlText);
             await player.SendActionFailedPacketAsync();
         }

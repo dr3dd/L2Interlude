@@ -1,4 +1,5 @@
-﻿using Core.Enums;
+﻿using System.Collections.Concurrent;
+using Core.Enums;
 using Core.Module.Player;
 
 namespace Core.Module.NpcAi;
@@ -17,10 +18,12 @@ public struct Talker
     public NoblessType NoblessType { get; }
     public HeroType HeroType { get; }
     public int quest_last_reward_time { get; set; }
+    private ConcurrentDictionary<int, string> _questChoiceCollection;
 
     public Talker(PlayerInstance playerInstance)
     {
         var template = playerInstance.TemplateHandler();
+        _questChoiceCollection = new ConcurrentDictionary<int, string>();
         ObjectId = playerInstance.ObjectId;
         Karma = 0;
         Level = playerInstance.Level;
@@ -33,5 +36,20 @@ public struct Talker
         NoblessType = NoblessType.NONE;
         HeroType = HeroType.NONE;
         quest_last_reward_time = 0;
+    }
+    
+    public void AddQuestChoice(int choice, string value)
+    {
+        _questChoiceCollection.TryAdd(choice, value);
+    }
+
+    public ConcurrentDictionary<int, string> GetQuestChoiceCollection()
+    {
+        return _questChoiceCollection;
+    }
+
+    public void Clear()
+    {
+        _questChoiceCollection.Clear();
     }
 }

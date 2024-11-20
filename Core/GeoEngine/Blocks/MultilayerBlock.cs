@@ -38,31 +38,38 @@ public class MultilayerBlock : IBlock
     
     private short GetNearestLayer(int geoX, int geoY, int worldZ)
     {
-        var startOffset = GetCellDataOffset(geoX, geoY);
-        var nLayers = _data[startOffset];
-        var endOffset = startOffset + 1 + (nLayers * 2);
-		
-        // One layer at least was required on loading so this is set at least once on the loop below.
-        var nearestDZ = 0;
         short nearestData = 0;
-        for (var offset = startOffset + 1; offset < endOffset; offset += 2)
+        try
         {
-            var layerData = ExtractLayerData(offset);
-            var layerZ = ExtractLayerHeight(layerData);
-            if (layerZ == worldZ)
+            var startOffset = GetCellDataOffset(geoX, geoY);
+            var nLayers = _data[startOffset];
+            var endOffset = startOffset + 1 + (nLayers * 2);
+
+            // One layer at least was required on loading so this is set at least once on the loop below.
+            var nearestDZ = 0;
+
+            for (var offset = startOffset + 1; offset < endOffset; offset += 2)
             {
-                // Exact z.
-                return layerData;
-            }
-			
-            var layerDZ = Math.Abs(layerZ - worldZ);
-            if ((offset == (startOffset + 1)) || (layerDZ < nearestDZ))
-            {
-                nearestDZ = layerDZ;
-                nearestData = layerData;
+                var layerData = ExtractLayerData(offset);
+                var layerZ = ExtractLayerHeight(layerData);
+                if (layerZ == worldZ)
+                {
+                    // Exact z.
+                    return layerData;
+                }
+
+                var layerDZ = Math.Abs(layerZ - worldZ);
+                if ((offset == (startOffset + 1)) || (layerDZ < nearestDZ))
+                {
+                    nearestDZ = layerDZ;
+                    nearestData = layerData;
+                }
             }
         }
-		
+        catch (Exception ex)
+        {
+            LoggerManager.Error(ex.Message + " GetNearestLayer");
+        }
         return nearestData;
     }
     

@@ -6,10 +6,10 @@ public class Guard : Citizen
 {
     public override string FnHi { get; set; } = "chi.htm";
     public override string FnYouAreChaotic { get; set; } = "chi.htm";
-    public virtual float Attack_DecayRatio { get; set; } = 6.600000F;
-    public virtual float UseSkill_DecayRatio { get; set; } = 66000.000000F;
-    public virtual float Attack_BoostValue { get; set; } = 500.000000F;
-    public virtual float UseSkill_BoostValue { get; set; } = 100000.000000F;
+    public override float Attack_DecayRatio { get; set; } = 6.600000F;
+    public override float UseSkill_DecayRatio { get; set; } = 66000.000000F;
+    public override float Attack_BoostValue { get; set; } = 500.000000F;
+    public override float UseSkill_BoostValue { get; set; } = 100000.000000F;
 
     public override async Task Talked(Talker talker)
     {

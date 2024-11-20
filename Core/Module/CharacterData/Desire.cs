@@ -8,6 +8,7 @@
         AttackDesire,
         CastDesire,
         EffectDesire,
+        MoveAroundDesire,
         MoveToDesire,
         FollowDesire,
         PickUpDesire,

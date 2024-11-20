@@ -37,17 +37,25 @@ namespace Core.Module.NpcData
         private readonly ConcurrentDictionary<int, Task> _tasks;
         private readonly NpcAiTeleport _aiTeleport;
         private readonly NpcAiSell _npcAiSell;
+        private readonly NpcChoice _npcChoice;
         private int _additionalTime;
         private readonly CancellationTokenSource _cts;
+        public Talker _talker;
         public NpcAiSm Sm { get; } //PTS object AI require
+        public int StartX { get; }
+        public int StartY { get; }
+        public int StartZ { get; }
 
         public DefaultNpc GetDefaultNpc() => _defaultNpc;
         public NpcInstance NpcInstance() => _npcInstance;
+        public NpcChoice GetChoice() => _npcChoice;
+        public Talker GetTalker() => _talker;
         public NpcAi(NpcInstance npcInstance)
         {
             _npcInstance = npcInstance;
             _aiTeleport = new NpcAiTeleport(this);
             _npcAiSell = new NpcAiSell(this);
+            _npcChoice = new NpcChoice(this);
             _worldInit = npcInstance.ServiceProvider.GetRequiredService<WorldInit>();
             _fString = npcInstance.ServiceProvider.GetRequiredService<FStringInit>();
             _itemInit = npcInstance.ServiceProvider.GetRequiredService<ItemDataInit>();            
@@ -59,7 +67,10 @@ namespace Core.Module.NpcData
             
             var npcAiData = _npcInstance.GetStat().NpcAiData;
             NpcAiDefault.SetDefaultAiParams(_defaultNpc, npcAiData);
-            
+
+            StartX = _npcInstance.GetX();
+            StartY = _npcInstance.GetY();
+            StartZ = _npcInstance.GetZ();
             Sm = new NpcAiSm
             {
                 Level = _npcInstance.Level,
@@ -112,8 +123,8 @@ namespace Core.Module.NpcData
 
         public async Task Talked(PlayerInstance playerInstance, bool _from_choice, int _code, int _choiceN)
         {
-            var talker = new Talker(playerInstance);
-            await _defaultNpc.Talked(talker, _from_choice, _code, _choiceN);
+            _talker = new Talker(playerInstance);
+            await _defaultNpc.Talked(_talker, _from_choice, _code, _choiceN);
         }
         
         public void AddTimerEx(int timerId, int delay)
@@ -502,9 +513,9 @@ namespace Core.Module.NpcData
             LoggerManager.Warn("AddDoNothingDesire NotImplementedException");
         }
 
-        internal void AddMoveToDesire(object start_x, object start_y, object start_z, int v)
+        internal void AddMoveToDesire(int startX, int startY, int startZ, int v)
         {
-            LoggerManager.Warn("AddMoveToDesire NotImplementedException");
+            _npcInstance.NpcDesire().AddMoveToDesire(startX, startY, startZ, v);
         }
 
         internal int GetOlympiadWaitingCount()
@@ -652,7 +663,7 @@ namespace Core.Module.NpcData
         /// <param name="questName"></param>
         internal void AddChoice(int choice, string questName/*, int msgIndex*/)
         {
-            _npcInstance.NpcChoice().Add(choice, questName);
+            _talker.AddQuestChoice(choice, questName);
         }
         /// <summary>
         /// Show page choice for player
@@ -662,7 +673,7 @@ namespace Core.Module.NpcData
         /// <returns></returns>
         internal async Task ShowChoicePage(Talker talker, int option)
         {
-            await _npcInstance.NpcChoice().ShowChoice(talker, option);
+            await _npcChoice.ShowChoice(talker, option);
         }
         /// <summary>
         /// Return Quests count from player

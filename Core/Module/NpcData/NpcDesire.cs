@@ -49,12 +49,22 @@ public class NpcDesire : CharacterDesire
 
     public async Task AddMoveAroundDesire(int timeDesire, int desire)
     {
-        AddNpcDesire(new DesireObject(Desire.MoveToDesire, _npcInstance, desire));
+        AddNpcDesire(new DesireObject(Desire.MoveAroundDesire, _npcInstance, desire));
         //start no desire when moving finished
         TaskManagerScheduler.Schedule(() =>
         {
             _npcInstance.NpcAi().NoDesire();
         }, timeDesire * 1000);
+    }
+
+    public void AddMoveToDesire(int startX, int startY, int startZ, int desire)
+    {
+        AddNpcDesire(new DesireObject(Desire.MoveToDesire, _npcInstance, startX, startY, startZ, desire));
+        //start no desire when moving finished
+        TaskManagerScheduler.Schedule(() =>
+        {
+            _npcInstance.NpcAi().NoDesire();
+        }, desire * 1000);
     }
 
     /// <summary>
@@ -184,18 +194,17 @@ public class NpcDesire : CharacterDesire
         }
         switch (topDesire.Type)
         {
-            case Desire.MoveToDesire:
-            {
-                await HandleMoveToDesire(topDesire);
+            case Desire.MoveAroundDesire:
+                await HandleMoveAroundDesire(topDesire);
                 break;
-            }
             case Desire.EffectDesire:
-            {
                 await HandleEffectDesire(topDesire);
                 break;
-            }
             case Desire.AttackDesire:
                 await HandleAttackDesire(topDesire);
+                break;
+            case Desire.MoveToDesire:
+                await HandleMoveToDesire(topDesire);
                 break;
         }
         //LoggerManager.Info($"Processing desire: {topDesire.Type} on {topDesire.Target} with priority {topDesire.Priority}");
@@ -242,6 +251,31 @@ public class NpcDesire : CharacterDesire
     /// HandleMoveToDesire
     /// </summary>
     /// <param name="topDesire"></param>
+    private async Task HandleMoveAroundDesire(DesireObject topDesire)
+    {
+        if (_npcInstance.CharacterDesire().GetDesire() == Desire.AttackDesire)
+        {
+            if (topDesire.Type == Desire.AttackDesire)
+            {
+                RemoveDesireAt(0);
+            }
+            StopDecayProcess();
+            await _npcInstance.CharacterDesire().StopAutoAttackAndAbortAsync();
+        }
+
+        if (_npcInstance.CharacterDesire().GetDesire() == Desire.IdleDesire)
+        {
+            await SetGroundLow();
+            if (Rnd.Next(100) < 30)
+            {
+                var x1 = (_npcInstance.SpawnX + Rnd.Next(300 * 2)) - 300;
+                var y1 = (_npcInstance.SpawnY + Rnd.Next(300 * 2)) - 300;
+                var z1 = _npcInstance.SpawnZ;
+                await _npcInstance.NpcDesire().MoveToAsync(x1, y1, z1);
+            }
+        }
+    }
+    
     private async Task HandleMoveToDesire(DesireObject topDesire)
     {
         if (_npcInstance.CharacterDesire().GetDesire() == Desire.AttackDesire)

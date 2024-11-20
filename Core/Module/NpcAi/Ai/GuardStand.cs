@@ -4,11 +4,10 @@ namespace Core.Module.NpcAi.Ai;
 
 public class GuardStand : Guard
 {
-    public virtual float DoNothing_DecayRatio { get; set; } = 000000F;
+    public override float DoNothing_DecayRatio { get; set; } = 000000F;
     public override async Task NoDesire()
     {
-        //await MySelf.AddMoveToDesire(MySelf.start_x, MySelf.start_y, MySelf.start_z, 30);
-        await Task.FromResult(1);
+        MySelf.AddMoveToDesire(MySelf.StartX, MySelf.StartY, MySelf.StartZ, 30);
     }
     /*
     public override void MoveToFinished(int x, int y, int z)
