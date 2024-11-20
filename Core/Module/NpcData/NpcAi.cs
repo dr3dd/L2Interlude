@@ -43,7 +43,6 @@ namespace Core.Module.NpcData
 
         public DefaultNpc GetDefaultNpc() => _defaultNpc;
         public NpcInstance NpcInstance() => _npcInstance;
-        
         public NpcAi(NpcInstance npcInstance)
         {
             _npcInstance = npcInstance;
@@ -111,10 +110,10 @@ namespace Core.Module.NpcData
             //_defaultNpc.Attacked(attacker, damage);
         }
 
-        public async Task Talked(PlayerInstance playerInstance)
+        public async Task Talked(PlayerInstance playerInstance, bool _from_choice, int _code, int _choiceN)
         {
             var talker = new Talker(playerInstance);
-            await _defaultNpc.Talked(talker);
+            await _defaultNpc.Talked(talker, _from_choice, _code, _choiceN);
         }
         
         public void AddTimerEx(int timerId, int delay)
@@ -372,10 +371,39 @@ namespace Core.Module.NpcData
             LoggerManager.Warn("SetCurrentQuestID NotImplementedException");
         }
 
-        internal int GetInventoryInfo(Talker talker, int v)
+        internal uint GetInventoryInfo(Talker talker, int param)
         {
             LoggerManager.Warn("GetInventoryInfo NotImplementedException");
-            return 0;
+            uint result = uint.MaxValue;
+            switch (param)
+            {
+                case 0: //m_nNumInventory
+                    result = 0;
+                    break;
+                case 1: //m_nMaxInventoryNum
+                    result = 100;
+                    break;
+                case 2: //m_nInventoryWeight
+                    result = 0;
+                    break;
+                case 3: //m_dCarryWeight
+                    result = 100;
+                    break;
+                case 4: //m_nCurrentQuestInventoryNum
+                    result = 0;
+                    break;
+                case 5://m_nMaxQuestInventoryNum
+                    result = 100;
+                    break;
+                case 6: //m_nCurrentArtifactInventoryNum
+                    result = 0;
+                    break;
+                case 7: //m_nMaxArtifactInventoryNum
+                    result = 100;
+                    break;
+            }
+
+            return result;
         }
 
         internal void VoiceEffect(Talker talker, string v1, int v2)
@@ -416,16 +444,31 @@ namespace Core.Module.NpcData
             LoggerManager.Warn("Castle_GetPledgeId NotImplementedException");
             return 0;
         }
-
+        /// <summary>
+        /// Assign file name to variable fhtml0
+        /// </summary>
+        /// <param name="fhtml0"></param>
+        /// <param name="fileName"></param>
         internal void FHTML_SetFileName(ref string fhtml0, string fileName)
         {
             fhtml0 = Initializer.HtmlCacheInit().GetHtmlText(fileName);
         }
-
+        /// <summary>
+        /// Replace in line fhtml0 variable replaceStr with string
+        /// </summary>
+        /// <param name="fhtml0"></param>
+        /// <param name="replaceStr"></param>
+        /// <param name="value"></param>
         internal void FHTML_SetStr(ref string fhtml0, string replaceStr, string value)
         {
             fhtml0 = fhtml0.Replace($"<?{replaceStr}?>", value);
         }
+        /// <summary>
+        /// Replace in line fhtml0 variable replaceStr with number
+        /// </summary>
+        /// <param name="fhtml0"></param>
+        /// <param name="replaceStr"></param>
+        /// <param name="value"></param>
         internal void FHTML_SetInt(ref string fhtml0, string replaceStr, int value)
         {
             FHTML_SetStr(ref fhtml0, replaceStr, value.ToString());
@@ -579,6 +622,82 @@ namespace Core.Module.NpcData
         internal async Task ShowTelPosListPage(Talker talker, IList<TeleportList> position)
         {
             await _npcInstance.NpcRadar().Radar(talker, position);
+        }
+        /// <summary>
+        /// Is there a variable in memo
+        /// </summary>
+        /// <param name="talker"></param>
+        /// <param name="questName"></param>
+        /// <returns></returns>
+        internal bool HaveMemo(Talker talker, string questName)
+        {
+            LoggerManager.Warn($"HaveMemo {questName} NotImplementedException");
+            return false;
+        }
+        /// <summary>
+        /// Шs the quest fully completed
+        /// </summary>
+        /// <param name="talker"></param>
+        /// <param name="questName"></param>
+        /// <returns></returns>
+        internal bool GetOneTimeQuestFlag(Talker talker, string questName)
+        {
+            LoggerManager.Warn($"GetOneTimeQuestFlag {questName} NotImplementedException");
+            return false;
+        }
+        /// <summary>
+        /// Add variant choice for player
+        /// </summary>
+        /// <param name="choice"></param>
+        /// <param name="questName"></param>
+        internal void AddChoice(int choice, string questName/*, int msgIndex*/)
+        {
+            _npcInstance.NpcChoice().Add(choice, questName);
+        }
+        /// <summary>
+        /// Show page choice for player
+        /// </summary>
+        /// <param name="talker"></param>
+        /// <param name="option"></param>
+        /// <returns></returns>
+        internal async Task ShowChoicePage(Talker talker, int option)
+        {
+            await _npcInstance.NpcChoice().ShowChoice(talker, option);
+        }
+        /// <summary>
+        /// Return Quests count from player
+        /// </summary>
+        /// <param name="talker"></param>
+        /// <returns></returns>
+        internal int GetMemoCount(Talker talker)
+        {
+            LoggerManager.Warn($"GetMemoCount NotImplementedException");
+            return 0;
+        }
+
+        internal int GetCurrentTick()
+        {
+            return Environment.TickCount;
+        }
+
+        internal void RemoveMemo(Talker talker, string v)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void AddLog(int v1, Talker talker, int v2)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void SoundEffect(Talker talker, string v)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void SetOneTimeQuestFlag(Talker talker, string v1, bool v2)
+        {
+            throw new NotImplementedException();
         }
     }
 }
