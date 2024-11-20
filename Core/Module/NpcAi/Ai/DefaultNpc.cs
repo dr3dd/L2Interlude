@@ -47,6 +47,14 @@ public class DefaultNpc
     {
     }
 
+    public virtual async Task Talked(Talker talker, bool _from_choice, int _code, int _choiceN)
+    {
+        await Talked(talker, _from_choice, _code);
+    }
+    public virtual async Task Talked(Talker talker, bool _from_choice, int _code)
+    {
+        await Talked(talker);
+    }
     public virtual async Task Talked(Talker talker)
     {
         await MySelf.ShowPage(talker, "noquest.htm");
@@ -83,6 +91,14 @@ public class DefaultNpc
 
     public virtual async Task TalkSelected(Talker talker)
     {
-        await MySelf.ShowPage(talker, "noquest.htm");
+        await TalkSelected("noquest.htm", talker, false, 0);
+    }
+    public virtual async Task TalkSelected(string fhtml0, Talker talker, bool _from_choice, int _code)
+    {
+        await TalkSelected("noquest.htm", talker, false, 0, 0);
+    }
+    public virtual async Task TalkSelected(string fhtml0, Talker talker, bool _from_choice, int _code, int _choiceN)
+    {
+        await MySelf.ShowPage(talker, fhtml0);
     }
 }
