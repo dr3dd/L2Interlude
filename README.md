@@ -19,6 +19,8 @@ PTS script files are included and working with the server.
 <li>Day/Night</li>
 <li>Mini Map</li>
 <li>Basic inventory</li>
+<li>ShortCuts</li>
+<li>Macroses</li>
 <li>Loading Zones from PTS files</li>
 <li>Loading NpcData from PTS files</li>
 <li>Loading NpcPos from PTS files</li>
