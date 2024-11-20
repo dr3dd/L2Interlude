@@ -101,4 +101,8 @@ public class DefaultNpc
     {
         await MySelf.ShowPage(talker, fhtml0);
     }
+    public virtual Task QuestAccepted(int quest_id, Talker talker)
+    {
+        return Task.FromResult(1);
+    }
 }

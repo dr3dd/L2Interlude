@@ -24,6 +24,7 @@ using Microsoft.Extensions.DependencyInjection;
 using static NLog.LayoutRenderers.Wrappers.ReplaceLayoutRendererWrapper;
 using System.Xml.Linq;
 using Core.Enums;
+using System.Runtime.CompilerServices;
 
 namespace Core.Module.NpcData
 {
@@ -270,6 +271,11 @@ namespace Core.Module.NpcData
         {
             var talker = new Talker(playerInstance);
             await _defaultNpc.TalkSelected(talker);
+        }
+        public async Task QuestAccepted(int questId, PlayerInstance playerInstance)
+        {
+            var talker = new Talker(playerInstance);
+            await _defaultNpc.QuestAccepted(questId, talker);
         }
         
         public async Task MenuSelect(int askId, int replyId, PlayerInstance playerInstance)
@@ -691,24 +697,35 @@ namespace Core.Module.NpcData
             return Environment.TickCount;
         }
 
-        internal void RemoveMemo(Talker talker, string v)
+        internal void RemoveMemo(Talker talker, string quest_id)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn($"RemoveMemo {quest_id} NotImplementedException");
         }
 
-        internal void AddLog(int v1, Talker talker, int v2)
+        internal void AddLog(int logType, Talker talker, int quest_id)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn($"AddLog {quest_id} NotImplementedException");
         }
 
-        internal void SoundEffect(Talker talker, string v)
+        public async Task SoundEffect(Talker talker, string sound_file)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn($"SoundEffect {sound_file} NotImplementedException");
+            await talker.PlayerInstance.SendPacketAsync(new PlaySound(sound_file));
         }
 
-        internal void SetOneTimeQuestFlag(Talker talker, string v1, bool v2)
+        internal void SetOneTimeQuestFlag(Talker talker, string quest_id, bool state)
         {
-            throw new NotImplementedException();
+            LoggerManager.Warn($"SetOneTimeQuestFlag {quest_id} {state} NotImplementedException");
+        }
+
+        internal void SetMemo(Talker talker, int quest_id)
+        {
+            LoggerManager.Warn($"SetMemo {quest_id} NotImplementedException");
+        }
+
+        internal void SetFlagJournal(Talker talker, int quest_id, int flag)
+        {
+            LoggerManager.Warn($"SetFlagJournal {quest_id} {flag} NotImplementedException");
         }
     }
 }

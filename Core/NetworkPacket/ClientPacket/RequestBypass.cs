@@ -9,6 +9,7 @@ using Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Core.NetworkPacket.ClientPacket
@@ -59,6 +60,11 @@ namespace Core.NetworkPacket.ClientPacket
                     await TalkSelected(split);
                     break;
                 }
+                case "quest_accept":
+                {
+                    await QuestAccepted(split);
+                    break;
+                }
                 case "menu_select":
                 {
                     await MenuSelect(split.Last());
@@ -94,6 +100,17 @@ namespace Core.NetworkPacket.ClientPacket
             var npcObjectId = Convert.ToInt32(split.Last());
             var npcInstance = GetNpcInstance(npcObjectId);
             await npcInstance.TalkSelected(_playerInstance);
+        }
+        private async Task QuestAccepted(IEnumerable<string> split)
+        {
+            MatchCollection matches = new Regex(@"(\d+)\?quest_id=(\d+)").Matches(split.Last());
+            if (matches.Count > 0 & matches[0].Groups.Count == 3)
+            {
+                var npcObjectId = Convert.ToInt32(matches[0].Groups[1].Value);
+                var questId = Convert.ToInt32(matches[0].Groups[2].Value);
+                var npcInstance = GetNpcInstance(npcObjectId);
+                await npcInstance.QuestAccepted(questId, _playerInstance);
+            }
         }
 
         private async Task TeleportRequest(IEnumerable<string> split)

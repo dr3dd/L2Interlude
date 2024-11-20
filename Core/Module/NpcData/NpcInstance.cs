@@ -113,7 +113,12 @@ public sealed class NpcInstance : Character
     {
         await NpcAi().TalkSelected(playerInstance);
     }
-    
+
+    public async Task QuestAccepted(int questId, PlayerInstance playerInstance)
+    {
+        await NpcAi().QuestAccepted(questId, playerInstance);
+    }
+
     public async Task MenuSelect(int askId, int replyId, PlayerInstance playerInstance)
     {
         await NpcAi().MenuSelect(askId, replyId, playerInstance);

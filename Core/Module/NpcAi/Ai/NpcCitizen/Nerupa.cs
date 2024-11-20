@@ -1,4 +1,5 @@
 using Core.Enums;
+using MySqlX.XDevAPI;
 using System.Threading.Tasks;
 
 namespace Core.Module.NpcAi.Ai.NpcCitizen;
@@ -191,7 +192,7 @@ public class Nerupa : Citizen
                             MySelf.DeleteItem1(talker, "nightshade_leaf", MySelf.OwnItemCount(talker, 1029));
                             MySelf.RemoveMemo(talker, "nerupas_favor");
                             MySelf.AddLog(2, talker, 160);
-                            MySelf.SoundEffect(talker, "ItemSound.quest_finish");
+                            await MySelf.SoundEffect(talker, "ItemSound.quest_finish");
                             MySelf.SetOneTimeQuestFlag(talker, "nerupas_favor", true);
                             await MySelf.GiveItem1(talker, "lesser_healing_potion", 5);
                             MySelf.IncrementParam(talker, 0, 1000);
@@ -204,23 +205,36 @@ public class Nerupa : Citizen
             }
         }
 
-        /*
-        if (talker.Race != 1)
-        {
-            await MySelf.ShowPage(talker, "nerupa_q0311_00.htm");
-        }
-        else if (talker.Level >= 3)
-        {
-            MySelf.FHTML_SetFileName(ref fhtml0, "nerupa_q0311_03.htm");
-            MySelf.FHTML_SetInt(ref fhtml0, "quest_id", 160);
-            await MySelf.ShowFHTML(talker, fhtml0);
-        }
-        else
-        {
-            await MySelf.ShowPage(talker, "nerupa_q0311_02.htm");
-        }
-        */
     }
+
+    public override async Task QuestAccepted(int quest_id, Talker talker)
+    {
+        if (quest_id == 160)
+        {
+            MySelf.SetCurrentQuestID("nerupas_favor");
+            if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
+            {
+                await MySelf.ShowSystemMessage(talker, 1118);
+                return;
+            }
+            if ((MySelf.GetCurrentTick() - talker.quest_last_reward_time) > 1)
+            {
+                talker.quest_last_reward_time = MySelf.GetCurrentTick();
+                MySelf.SetMemo(talker, quest_id);
+                MySelf.AddLog(1, talker, 160);
+                await MySelf.SoundEffect(talker, "ItemSound.quest_accept");
+                if (MySelf.OwnItemCount(talker, "silvery_spidersilk") == 0)
+                {
+                    await MySelf.GiveItem1(talker, "silvery_spidersilk", 1);
+                }
+                await MySelf.ShowPage(talker, "nerupa_q0311_04.htm");
+                MySelf.SetFlagJournal(talker, 160, 1);
+            }
+            return;
+        }
+        await base.QuestAccepted(quest_id, talker);
+    }
+
     public override async Task MenuSelected(Talker talker, int ask, int reply, string fhtml0)
     {
         if (ask == 203)
