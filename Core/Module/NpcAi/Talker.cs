@@ -16,6 +16,7 @@ public struct Talker
     public int PledgeId { get; }
     public NoblessType NoblessType { get; }
     public HeroType HeroType { get; }
+    public int quest_last_reward_time { get; set; }
 
     public Talker(PlayerInstance playerInstance)
     {
@@ -31,5 +32,6 @@ public struct Talker
         PledgeId = 0;
         NoblessType = NoblessType.NONE;
         HeroType = HeroType.NONE;
+        quest_last_reward_time = 0;
     }
 }
