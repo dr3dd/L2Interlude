@@ -11,6 +11,7 @@ using Core.Module.HtmlCacheData;
 using Core.Module.ItemData;
 using Core.Module.ManualData;
 using Core.Module.NpcData;
+using Core.Module.QuestData;
 using Core.Module.SkillData;
 using Core.Module.WorldData;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +43,7 @@ namespace Core
             services.AddSingleton<NpcAiObj>();
             services.AddSingleton<DoorDataInit>();
             services.AddSingleton<ItemPchInit>();
+            services.AddSingleton<QuestPchInit>();
             services.AddSingleton<ItemDataInit>();
             services.AddSingleton<SkillPchInit>();
             services.AddSingleton<SkillDataInit>();

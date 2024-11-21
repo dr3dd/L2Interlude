@@ -14,6 +14,7 @@ using Core.Module.HtmlCacheData;
 using Core.Module.ItemData;
 using Core.Module.ManualData;
 using Core.Module.NpcData;
+using Core.Module.QuestData;
 using Core.Module.SkillData;
 using Core.Module.WorldData;
 using DataBase.Interfaces;
@@ -69,6 +70,10 @@ namespace Core
         internal static ItemDataInit ItemDataInit()
         {
             return ServiceProvider.GetService<ItemDataInit>();
+        }
+        internal static QuestPchInit QuestPchInit()
+        {
+            return ServiceProvider.GetService<QuestPchInit>();
         }
         internal static NpcDataInit NpcDataInit()
         {
@@ -139,6 +144,7 @@ namespace Core
             LoggerManager.Info("----Json Teleports----");
             LoggerManager.Info("----Players----");
             ServiceProvider.GetRequiredService<ItemPchInit>().Run();
+            ServiceProvider.GetRequiredService<QuestPchInit>().Run();
             ServiceProvider.GetRequiredService<ManualPchInit>().Run();
             ServiceProvider.GetService<TemplateInit>();
             LoggerManager.Info("----Bonus Stats----");

@@ -41,7 +41,7 @@ public class Nerupa : Citizen
                 case 0:
                     if (_from_choice == false || MySelf.OwnItemCount(talker, "leaf_of_mothertree") > 0)
                     {
-                        MySelf.SetCurrentQuestID("elf_tutorial");
+                        await MySelf.SetCurrentQuestID("elf_tutorial");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
@@ -53,7 +53,7 @@ public class Nerupa : Citizen
                 case 1:
                     if (_from_choice == false || (MySelf.OwnItemCount(talker, "leaf_of_mothertree") == 0 && MySelf.GetMemoStateEx(talker, 255, "letters_of_love1") > 3))
                     {
-                        MySelf.SetCurrentQuestID("elf_tutorial");
+                        await MySelf.SetCurrentQuestID("elf_tutorial");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
@@ -66,7 +66,7 @@ public class Nerupa : Citizen
                 case 2:
                     if (_from_choice == false || (MySelf.OwnItemCount(talker, "leaf_of_mothertree") == 0 && MySelf.GetMemoStateEx(talker, 255, "letters_of_love1") <= 3))
                     {
-                        MySelf.SetCurrentQuestID("elf_tutorial");
+                        await MySelf.SetCurrentQuestID("elf_tutorial");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
@@ -124,7 +124,7 @@ public class Nerupa : Citizen
                 case 0:
                     if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_favor") == false && MySelf.GetOneTimeQuestFlag(talker, "nerupas_favor") == false))
                     {
-                        MySelf.SetCurrentQuestID("nerupas_favor");
+                        await MySelf.SetCurrentQuestID("nerupas_favor");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
@@ -136,7 +136,7 @@ public class Nerupa : Citizen
                             {
                                 await MySelf.ShowPage(talker, "nerupa_q0311_00.htm");
                             }
-                            else if (talker.Level >= 3)
+                            else if (talker.Level >= 1)
                             {
                                 MySelf.FHTML_SetFileName(ref fhtml0, "nerupa_q0311_03.htm");
                                 MySelf.FHTML_SetInt(ref fhtml0, "quest_id", 160);
@@ -156,7 +156,7 @@ public class Nerupa : Citizen
                 case 1:
                     if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_favor") == false && MySelf.GetOneTimeQuestFlag(talker, "nerupas_favor") == false))
                     {
-                        MySelf.SetCurrentQuestID("nerupas_favor");
+                        await MySelf.SetCurrentQuestID("nerupas_favor");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
@@ -168,7 +168,7 @@ public class Nerupa : Citizen
                 case 2:
                     if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_favor") != false && (MySelf.OwnItemCount(talker, "silvery_spidersilk") != 0 || MySelf.OwnItemCount(talker, "unos_receipt") != 0 || MySelf.OwnItemCount(talker, "cels_ticket") != 0)))
                     {
-                        MySelf.SetCurrentQuestID("nerupas_favor");
+                        await MySelf.SetCurrentQuestID("nerupas_favor");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
@@ -180,7 +180,7 @@ public class Nerupa : Citizen
                 case 3:
                     if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_favor") != false && MySelf.OwnItemCount(talker, "nightshade_leaf") != 0 && MySelf.GetOneTimeQuestFlag(talker, "nerupas_favor") == false))
                     {
-                        MySelf.SetCurrentQuestID("nerupas_favor");
+                        await MySelf.SetCurrentQuestID("nerupas_favor");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
@@ -211,7 +211,7 @@ public class Nerupa : Citizen
     {
         if (quest_id == 160)
         {
-            MySelf.SetCurrentQuestID("nerupas_favor");
+            await MySelf.SetCurrentQuestID("nerupas_favor");
             if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
             {
                 await MySelf.ShowSystemMessage(talker, 1118);
@@ -239,7 +239,7 @@ public class Nerupa : Citizen
     {
         if (ask == 203)
         {
-            MySelf.SetCurrentQuestID("elf_tutorial");
+            await MySelf.SetCurrentQuestID("elf_tutorial");
             if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
             {
                 await MySelf.ShowSystemMessage(talker, 1118);

@@ -383,9 +383,15 @@ namespace Core.Module.NpcData
             await talker.PlayerInstance.SendPacketAsync(new SystemMessage((SystemMessageId)messageId));
         }
 
-        internal void SetCurrentQuestID(string v)
+        internal async Task SetCurrentQuestID(string quest_name)
+        {
+            int quest_id = Initializer.QuestPchInit().GetQuestIdByName(quest_name);
+            await SetCurrentQuestID(quest_id);
+        }
+        internal async Task SetCurrentQuestID(int quest_id)
         {
             LoggerManager.Warn("SetCurrentQuestID NotImplementedException");
+            await Task.FromResult(1);
         }
 
         internal uint GetInventoryInfo(Talker talker, int param)

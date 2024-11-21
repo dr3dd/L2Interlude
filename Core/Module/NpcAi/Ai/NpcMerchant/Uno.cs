@@ -54,7 +54,7 @@ public class Uno : MerchantForNewbie
     {
         if (ask == 162)
         {
-            MySelf.SetCurrentQuestID("curse_of_fortress");
+            await MySelf.SetCurrentQuestID("curse_of_fortress");
             if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
             {
                 await MySelf.ShowSystemMessage(talker, 1118);
