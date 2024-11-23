@@ -663,10 +663,20 @@ namespace Core.Module.NpcData
         /// <param name="talker"></param>
         /// <param name="questName"></param>
         /// <returns></returns>
-        internal bool GetOneTimeQuestFlag(Talker talker, string questName)
+        internal bool GetOneTimeQuestFlag(Talker talker, string quest_name)
         {
-            LoggerManager.Warn($"GetOneTimeQuestFlag {questName} NotImplementedException");
-            return false;
+            int quest_id = Initializer.QuestPchInit().GetQuestIdByName(quest_name);
+            return GetOneTimeQuestFlag(talker, quest_id);
+        }
+        /// <summary>
+        /// Шs the quest fully completed
+        /// </summary>
+        /// <param name="talker"></param>
+        /// <param name="quest_id"></param>
+        /// <returns></returns>
+        internal bool GetOneTimeQuestFlag(Talker talker, int quest_id)
+        {
+            return talker.PlayerInstance.PlayerCharacterInfo().GetOneTimeFlag(quest_id);
         }
         /// <summary>
         /// Add variant choice for player
@@ -719,9 +729,15 @@ namespace Core.Module.NpcData
             await talker.PlayerInstance.SendPacketAsync(new PlaySound(sound_file));
         }
 
-        internal void SetOneTimeQuestFlag(Talker talker, string quest_id, bool state)
+        internal void SetOneTimeQuestFlag(Talker talker, string quest_name, bool state)
         {
-            LoggerManager.Warn($"SetOneTimeQuestFlag {quest_id} {state} NotImplementedException");
+            int quest_id = Initializer.QuestPchInit().GetQuestIdByName(quest_name);
+            SetOneTimeQuestFlag(talker, quest_id, state);
+        }
+
+        internal void SetOneTimeQuestFlag(Talker talker, int quest_id, bool state)
+        {
+            talker.PlayerInstance.PlayerCharacterInfo().SetOneTimeFlag(quest_id, state);
         }
 
         internal void SetMemo(Talker talker, int quest_id)

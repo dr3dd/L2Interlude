@@ -43,7 +43,15 @@ namespace Core.Module.QuestData
 
         public int GetQuestIdByName(string name)
         {
-            return _quests[name];
+            try
+            {
+                return _quests[name];
+            }
+            catch (Exception ex)
+            {
+                LoggerManager.Error($"QuestPchInit: {name} not found");
+                return 0;
+            }
         }
 
         public IDictionary<string, int> GetQuests()

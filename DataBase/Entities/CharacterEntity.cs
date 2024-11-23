@@ -41,7 +41,7 @@ namespace DataBase.Entities
         public int StHair { get; set; }
         public int StFace { get; set; }
         public int StHairAll { get; set; }
-        public string QuestFlag { get; set; }
+        public byte[] QuestFlag { get; set; }
         public string Nickname { get; set; }
         public int MaxCp { get; set; }
         public int MaxHp { get; set; }
