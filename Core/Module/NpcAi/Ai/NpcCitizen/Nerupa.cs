@@ -205,6 +205,7 @@ public class Nerupa : Citizen
             }
         }
 
+        await base.TalkSelected(fhtml0, talker, _from_choice, _code, _choiceN);
     }
 
     public override async Task QuestAccepted(int quest_id, Talker talker)
