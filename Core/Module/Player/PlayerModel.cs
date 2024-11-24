@@ -88,7 +88,7 @@ namespace Core.Module.Player
                 MaxCp = _playerInstance.PlayerStatus().GetMaxCp(),
                 MaxHp = _playerInstance.PlayerStatus().GetMaxHp(),
                 MaxMp = _playerInstance.PlayerStatus().GetMaxMp(),
-                QuestFlag = new byte[128],
+                QuestFlag = characterInfo.GetQuestFlags(),
                 QuestMemo = "",
                 StBack = characterInfo.StBack,
                 StChest = characterInfo.StChest,

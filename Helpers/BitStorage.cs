@@ -9,7 +9,7 @@ namespace Helpers
 {
     public class BitStorage
     {
-        public byte[] _flags;
+        private byte[] _flags;
 
         public BitStorage()
         {
@@ -50,5 +50,9 @@ namespace Helpers
             return (_flags[byteIndex] & (1 << bitIndex)) != 0; // Checking the bit
         }
 
+        public byte[] GetAllFlags()
+        {
+            return _flags;
+        }
     }
 }

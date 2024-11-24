@@ -80,5 +80,10 @@ namespace Core.Module.Player
             int c_quest_id = ConvertToInternalOneTimeQuestID(questId);
             return QuestFlag.GetFlag(c_quest_id);
         }
+
+        internal byte[] GetQuestFlags()
+        {
+            return QuestFlag.GetAllFlags();
+        }
     }
 }
