@@ -350,9 +350,16 @@ namespace Core.Module.NpcData
             return 0;
         }
 
-        internal void DeleteItem1(Talker talker, string itemName, int itemCount)
+        public async Task GiveItem1(Talker talker, string itemName, int count)
         {
-            throw new NotImplementedException();
+            int item_id = _itemInit.GetItemByName(itemName).ItemId;
+            await talker.PlayerInstance.PlayerInventory().AddOrUpdate().AddOrUpdateItemToInventory(item_id, count);
+        }
+
+        public async Task DeleteItem1(Talker talker, string itemName, int itemCount)
+        {
+            int item_id = _itemInit.GetItemByName(itemName).ItemId;
+            await talker.PlayerInstance.PlayerInventory().AddOrUpdate().DestroyItemInInventoryById(item_id, itemCount);
         }
         
         /// <summary>
@@ -432,12 +439,6 @@ namespace Core.Module.NpcData
         internal void VoiceEffect(Talker talker, string v1, int v2)
         {
             LoggerManager.Warn("VoiceEffect NotImplementedException");
-        }
-
-        public async Task GiveItem1(Talker talker, string itemName, int count)
-        {
-            LoggerManager.Warn($"GiveItem1 {itemName} {count} NotImplementedException");
-            await Task.FromResult(1);
         }
 
         internal void IncrementParam(Talker talker, ParameterType parameterType, int value)

@@ -353,6 +353,10 @@ public class PlayerInventory
     {
         return _items.Values.SingleOrDefault(obj => obj.ObjectId == objectId);
     }
+    public ItemInstance GetInventoryItemByItemId(int itemId)
+    {
+        return _items.Values.SingleOrDefault(obj => obj.ItemId == itemId);
+    }
 
     /// <summary>
     /// Refresh Inventory Weight

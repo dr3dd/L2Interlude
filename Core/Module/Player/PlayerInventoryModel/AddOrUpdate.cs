@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Core.Module.ItemData;
+﻿using Core.Module.ItemData;
 using Core.NetworkPacket.ServerPacket;
 using DataBase.Entities;
 using DataBase.Interfaces;
+using System.Threading.Tasks;
 
 namespace Core.Module.Player.PlayerInventoryModel;
 
@@ -54,6 +53,7 @@ public class AddOrUpdate
 
         var itemInstance = _playerInventory.GetItemInstance(inventoryItem.UserItemId);
         itemInstance.Amount = newQuantity;
+        await SendInventoryUpdate(itemInstance);
     }
 
     private async Task AddItemToInventory(ItemDataAbstract item, int quantity)
@@ -77,11 +77,20 @@ public class AddOrUpdate
             Amount = quantity
         };
         _playerInventory.AddItemToInventoryCollection(itemInstance);
+        await SendInventoryUpdate(itemInstance);
     }
 
     public async Task DestroyItemInInventory(int objectId, int quantity)
     {
         var itemInstance = _playerInventory.GetInventoryItemByObjectId(objectId);
+        await RemoveUpdateItemInDb(itemInstance, quantity);
+        RefreshWeight();
+        await SendInventoryUpdate(itemInstance);
+    }
+
+    public async Task DestroyItemInInventoryById(int item_id, int quantity)
+    {
+        var itemInstance = _playerInventory.GetInventoryItemByItemId(item_id);
         await RemoveUpdateItemInDb(itemInstance, quantity);
         RefreshWeight();
         await SendInventoryUpdate(itemInstance);
