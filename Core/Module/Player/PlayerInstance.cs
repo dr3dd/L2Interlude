@@ -37,6 +37,7 @@ namespace Core.Module.Player
         private readonly PlayerAction _playerAction;
         private readonly PlayerShortCut _shortCut;
         private readonly PlayerMacros _macros;
+        private readonly PlayerQuest _quest;
 
         public Location Location { get; set; }
         public NpcInstance LastTalkedNpc { get; set; }
@@ -65,6 +66,7 @@ namespace Core.Module.Player
             _notifyEvent = new PlayerNotifyEvent(this);
             _shortCut = new PlayerShortCut(this);
             _macros = new PlayerMacros(this);
+            _quest = new PlayerQuest(this);
 
             Level = PlayerStatus().Level;
             _worldInit = provider.GetRequiredService<WorldInit>();
@@ -87,6 +89,7 @@ namespace Core.Module.Player
         public PlayerAction PlayerAction() => _playerAction;
         public PlayerShortCut PlayerShortCut() => _shortCut;
         public PlayerMacros PlayerMacros() => _macros;
+        public PlayerQuest PlayerQuest() => _quest;
         public override Weapon GetActiveWeaponItem()
         {
             var itemInstance = _playerCombat.GetWeapon();

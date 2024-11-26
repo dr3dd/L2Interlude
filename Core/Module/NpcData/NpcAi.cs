@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Core.Enums;
 using Core.Module.CategoryData;
-using Core.Module.CharacterData;
 using Core.Module.DoorData;
-using Core.Module.ItemData;
 using Core.Module.FStringData;
+using Core.Module.ItemData;
 using Core.Module.NpcAi;
 using Core.Module.NpcAi.Ai;
 using Core.Module.NpcAi.Handlers;
@@ -17,14 +11,15 @@ using Core.Module.Player;
 using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
 using Core.TaskManager;
-using Google.Protobuf.WellKnownTypes;
 using Helpers;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
-using static NLog.LayoutRenderers.Wrappers.ReplaceLayoutRendererWrapper;
-using System.Xml.Linq;
-using Core.Enums;
-using System.Runtime.CompilerServices;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Core.Module.NpcData
 {
@@ -206,7 +201,12 @@ namespace Core.Module.NpcData
 
         public int OwnItemCount(Talker talker, int itemId)
         {
-            return talker.PlayerInstance.PlayerInventory().GetItemInstance(itemId).Amount;
+            var itemInstance = talker.PlayerInstance.PlayerInventory().GetInventoryItemByItemId(itemId);
+            if (itemInstance != null)
+            {
+                return itemInstance.Amount;
+            }
+            return 0;
         }
 
         public int OwnItemCount(Talker talker, string itemName)
@@ -271,6 +271,11 @@ namespace Core.Module.NpcData
         {
             var talker = new Talker(playerInstance);
             await _defaultNpc.TalkSelected(talker);
+        }
+        public async Task TalkSelected(string fhtml0, PlayerInstance playerInstance, bool fromChoice, int choice, int option)
+        {
+            var talker = new Talker(playerInstance);
+            await _defaultNpc.TalkSelected(fhtml0, talker, fromChoice, choice, option);
         }
         public async Task QuestAccepted(int questId, PlayerInstance playerInstance)
         {
@@ -452,13 +457,7 @@ namespace Core.Module.NpcData
             return 0;
         }
 
-        internal int GetMemoStateEx(Talker talker, int v1, string v2)
-        {
-            LoggerManager.Warn("GetIndexFromCreature NotImplementedException");
-            return 0;
-        }
-
-        internal void SetMemoStateEx(Talker talker, int v1, string v2, int v3)
+        internal void SetMemoStateEx(Talker talker, int quest_id, int slot, int state)
         {
             LoggerManager.Warn("SetMemoStateEx NotImplementedException");
         }
@@ -655,8 +654,12 @@ namespace Core.Module.NpcData
         /// <returns></returns>
         internal bool HaveMemo(Talker talker, string questName)
         {
-            LoggerManager.Warn($"HaveMemo {questName} NotImplementedException");
-            return false;
+            int questId = Initializer.QuestPchInit().GetQuestIdByName(questName);
+            return HaveMemo(talker, questId);
+        }
+        internal bool HaveMemo(Talker talker, int questId)
+        {
+            return talker.PlayerInstance.PlayerQuest().HaveMemo(questId);
         }
         /// <summary>
         /// Шs the quest fully completed
@@ -705,18 +708,12 @@ namespace Core.Module.NpcData
         /// <returns></returns>
         internal int GetMemoCount(Talker talker)
         {
-            LoggerManager.Warn($"GetMemoCount NotImplementedException");
-            return 0;
+            return talker.PlayerInstance.PlayerQuest().GetMemoCount();
         }
 
         internal int GetCurrentTick()
         {
             return Environment.TickCount;
-        }
-
-        internal void RemoveMemo(Talker talker, string quest_id)
-        {
-            LoggerManager.Warn($"RemoveMemo {quest_id} NotImplementedException");
         }
 
         internal void AddLog(int logType, Talker talker, int quest_id)
@@ -741,14 +738,42 @@ namespace Core.Module.NpcData
             talker.PlayerInstance.PlayerCharacterInfo().SetOneTimeFlag(quest_id, state);
         }
 
-        internal void SetMemo(Talker talker, int quest_id)
+        public async Task SetMemo(Talker talker, string quest_name)
         {
-            LoggerManager.Warn($"SetMemo {quest_id} NotImplementedException");
+            int quest_id = Initializer.QuestPchInit().GetQuestIdByName(quest_name);
+            await SetMemo(talker, quest_id);
+        }
+        public async Task SetMemo(Talker talker, int quest_id)
+        {
+            await talker.PlayerInstance.PlayerQuest().SetMemo(quest_id);
         }
 
-        internal void SetFlagJournal(Talker talker, int quest_id, int flag)
+        public async Task SetFlagJournal(Talker talker, int quest_id, int flag)
         {
-            LoggerManager.Warn($"SetFlagJournal {quest_id} {flag} NotImplementedException");
+            await talker.PlayerInstance.PlayerQuest().SetFlagJournal(quest_id, flag);
         }
+        public int GetMemoStateEx(Talker talker, string quest_name, int slot)
+        {
+            int quest_id = Initializer.QuestPchInit().GetQuestIdByName(quest_name);
+            return GetMemoStateEx(talker, quest_id, slot);
+        }
+        public int GetMemoStateEx(Talker talker, int quest_id, int slot)
+        {
+            LoggerManager.Warn("GetIndexFromCreature NotImplementedException");
+            return talker.PlayerInstance.PlayerQuest().GetMemoStateEx(quest_id, slot);
+        }
+
+        public async Task RemoveMemo(Talker talker, string quest_name)
+        {
+            int quest_id = Initializer.QuestPchInit().GetQuestIdByName(quest_name);
+            await RemoveMemo(talker, quest_id);
+        }
+
+        public async Task RemoveMemo(Talker talker, int quest_id)
+        {
+            await talker.PlayerInstance.PlayerQuest().RemoveMemo(quest_id);
+        }
+
+        
     }
 }

@@ -1,8 +1,6 @@
+using Core.Module.NpcAi.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.Module.NpcAi.Ai.NpcCitizen;
-using Core.Module.NpcAi.Models;
-using MySqlX.XDevAPI;
 
 namespace Core.Module.NpcAi.Ai.NpcMerchant;
 
@@ -56,23 +54,23 @@ public class Uno : MerchantForNewbie
     {
         if (!_from_choice)
         {
-            if (MySelf.HaveMemo(talker, "nerupas_favor") != false && MySelf.OwnItemCount(talker, "silvery_spidersilk") != 0)
+            if (MySelf.HaveMemo(talker, "nerupas_request") != false && MySelf.OwnItemCount(talker, "silvery_spidersilk") != 0)
             {
                 _choiceN = (_choiceN + 1);
                 _code = 0;
-                MySelf.AddChoice(0, "Nerupa's Request");
+                MySelf.AddChoice(0, "Nerupa's Request (In Progress)");
             }
-            if (MySelf.HaveMemo(talker, "nerupas_favor") != false && MySelf.OwnItemCount(talker, "unos_receipt") != 0)
+            if (MySelf.HaveMemo(talker, "nerupas_request") != false && MySelf.OwnItemCount(talker, "unos_receipt") != 0)
             {
                 _choiceN = (_choiceN + 1);
                 _code = 1;
-                MySelf.AddChoice(1, "Nerupa's Request");
+                MySelf.AddChoice(1, "Nerupa's Request (In Progress)");
             }
-            if (MySelf.HaveMemo(talker, "nerupas_favor") != false && MySelf.OwnItemCount(talker, "nightshade_leaf") != 0)
+            if (MySelf.HaveMemo(talker, "nerupas_request") != false && MySelf.OwnItemCount(talker, "nightshade_leaf") != 0)
             {
                 _choiceN = (_choiceN + 1);
                 _code = 2;
-                MySelf.AddChoice(2, "Nerupa's Request");
+                MySelf.AddChoice(2, "Nerupa's Request (In Progress)");
             }
             if (MySelf.HaveMemo(talker, "curse_of_fortress") == false && MySelf.GetOneTimeQuestFlag(talker, "curse_of_fortress") == false)
             {
@@ -109,27 +107,27 @@ public class Uno : MerchantForNewbie
             switch (_code)
             {
                 case 0:
-                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_favor") != false && MySelf.OwnItemCount(talker, "silvery_spidersilk") != 0))
+                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_request") != false && MySelf.OwnItemCount(talker, "silvery_spidersilk") != 0))
                     {
-                        await MySelf.SetCurrentQuestID("nerupas_favor");
+                        await MySelf.SetCurrentQuestID("nerupas_request");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
                             return;
                         }
-                        MySelf.DeleteItem1(talker, "silvery_spidersilk", MySelf.OwnItemCount(talker, 1026));
+                        await MySelf.DeleteItem1(talker, "silvery_spidersilk", MySelf.OwnItemCount(talker, 1026));
                         if (MySelf.OwnItemCount(talker, "unos_receipt") == 0)
                         {
                             await MySelf.GiveItem1(talker, "unos_receipt", 1);
                         }
                         await MySelf.ShowPage(talker, "uno_q0311_01.htm");
-                        MySelf.SetFlagJournal(talker, 160, 2);
+                        await MySelf.SetFlagJournal(talker, 160, 2);
                     }
                     break;
                 case 1:
-                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_favor") != false && MySelf.OwnItemCount(talker, "unos_receipt") != 0))
+                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_request") != false && MySelf.OwnItemCount(talker, "unos_receipt") != 0))
                     {
-                        await MySelf.SetCurrentQuestID("nerupas_favor");
+                        await MySelf.SetCurrentQuestID("nerupas_request");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
@@ -139,9 +137,9 @@ public class Uno : MerchantForNewbie
                     }
                     break;
                 case 2:
-                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_favor") != false && MySelf.OwnItemCount(talker, "nightshade_leaf") != 0))
+                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_request") != false && MySelf.OwnItemCount(talker, "nightshade_leaf") != 0))
                     {
-                        await MySelf.SetCurrentQuestID("nerupas_favor");
+                        await MySelf.SetCurrentQuestID("nerupas_request");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
@@ -219,9 +217,9 @@ public class Uno : MerchantForNewbie
                             await MySelf.ShowPage(talker, "uno_q0314_06.htm");
                             await MySelf.GiveItem1(talker, "bone_shield", 1);
                             await MySelf.GiveItem1(talker, "adena", 24000);
-                            MySelf.DeleteItem1(talker, "elf_skull", MySelf.OwnItemCount(talker, 1159));
-                            MySelf.DeleteItem1(talker, "bone_fragment3", MySelf.OwnItemCount(talker, 1158));
-                            MySelf.RemoveMemo(talker, "curse_of_fortress");
+                            await MySelf.DeleteItem1(talker, "elf_skull", MySelf.OwnItemCount(talker, 1159));
+                            await MySelf.DeleteItem1(talker, "bone_fragment3", MySelf.OwnItemCount(talker, 1158));
+                            await MySelf.RemoveMemo(talker, "curse_of_fortress");
                             MySelf.AddLog(2, talker, 162);
                             await MySelf.SoundEffect(talker, "ItemSound.quest_finish");
                             MySelf.SetOneTimeQuestFlag(talker, "curse_of_fortress", true);
@@ -231,6 +229,7 @@ public class Uno : MerchantForNewbie
                 default:
                     return;
             }
+            return;
         }
         await base.TalkSelected(fhtml0, talker, _from_choice, _code, _choiceN);
     }

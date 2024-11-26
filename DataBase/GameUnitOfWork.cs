@@ -15,6 +15,7 @@ namespace DataBase
         public ICharacterSkillRepository CharacterSkill { get; }
         public IShortCutRepository ShortCut { get; }
         public IMacrosRepository Macros { get; }
+        public IUserQuestRepository UserQuest { get; }
 
         public GameUnitOfWork( 
             ICharacterRepository characterRepository,
@@ -25,7 +26,8 @@ namespace DataBase
             ICharacterSkillRepository characterSkillRepository,
             IShortCutRepository shortCutRepository,
             IMacrosRepository macrosRepository,
-            IRaidBossSpawnListRepository raidBossSpawnListRepository
+            IRaidBossSpawnListRepository raidBossSpawnListRepository,
+            IUserQuestRepository userQuestRepository
             )
         {
             Characters = characterRepository;
@@ -37,6 +39,7 @@ namespace DataBase
             ShortCut = shortCutRepository;
             Macros = macrosRepository;
             RaidBossSpawnList = raidBossSpawnListRepository;
+            UserQuest = userQuestRepository;
         }
     }
 }

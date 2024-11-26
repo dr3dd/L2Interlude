@@ -27,6 +27,7 @@ namespace Core.NetworkPacket.ClientPacket
                 await _playerInstance.SendToKnownPlayers(new CharInfo(_playerInstance));
                 await _playerInstance.UpdateKnownObjects();
                 await _playerInstance.SendPacketAsync(new EtcStatusUpdate(_playerInstance));
+                await _playerInstance.PlayerQuest().SendQuestList();
                 await _playerInstance.SendPacketAsync(new UserInfo(_playerInstance));
                 await _playerInstance.SendPacketAsync(new ClientSetTime()); // SetClientTime
                 await _playerInstance.SendPacketAsync(new ItemList(_playerInstance, false));

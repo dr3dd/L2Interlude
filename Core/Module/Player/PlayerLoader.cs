@@ -29,6 +29,7 @@ namespace Core.Module.Player
             await playerInstance.PlayerSkill().RestorePassiveSkills();
             await playerInstance.PlayerShortCut().RestoreShortCuts();
             await playerInstance.PlayerMacros().RestoreMacroses();
+            await playerInstance.PlayerQuest().RestoreQuests();
             return playerInstance;
         }
         

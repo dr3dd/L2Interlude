@@ -1,12 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using Core.Module.CharacterData;
+﻿using Core.Module.CharacterData;
 using Core.Module.ItemData;
 using Core.Module.Player;
 using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
 using Core.TaskManager;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace Core.Module.NpcData;
 
@@ -112,6 +112,14 @@ public sealed class NpcInstance : Character
     public async Task TalkSelected(PlayerInstance playerInstance)
     {
         await NpcAi().TalkSelected(playerInstance);
+    }
+    public async Task TalkSelected(string fhtml0, PlayerInstance playerInstance, bool fromChoice, int choice)
+    {
+        await TalkSelected(fhtml0, playerInstance, fromChoice, choice, 0);
+    }
+    public async Task TalkSelected(string fhtml0, PlayerInstance playerInstance, bool fromChoice, int choice, int option)
+    {
+        await NpcAi().TalkSelected(fhtml0, playerInstance, fromChoice, choice, option);
     }
 
     public async Task QuestAccepted(int questId, PlayerInstance playerInstance)

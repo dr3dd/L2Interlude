@@ -65,6 +65,11 @@ namespace Core.NetworkPacket.ClientPacket
                     await QuestAccepted(split);
                     break;
                 }
+                case "quest_choice":
+                {
+                    await QuestChoice(split);
+                    break;
+                }
                 case "menu_select":
                 {
                     await MenuSelect(split.Last());
@@ -110,6 +115,26 @@ namespace Core.NetworkPacket.ClientPacket
                 var questId = Convert.ToInt32(matches[0].Groups[2].Value);
                 var npcInstance = GetNpcInstance(npcObjectId);
                 await npcInstance.QuestAccepted(questId, _playerInstance);
+            }
+        }
+
+        private async Task QuestChoice(IEnumerable<string> split)
+        {
+            MatchCollection matchesWithOption = new Regex(@"(\d+)\?choice=(\d+)&option=(\d+)").Matches(split.Last());
+            MatchCollection matchesWithoutOption = new Regex(@"(\d+)\?choice=(\d+)").Matches(split.Last());
+            if (matchesWithOption.Count > 0 & matchesWithOption[0].Groups.Count == 4)
+            {
+                var npcObjectId = Convert.ToInt32(matchesWithOption[0].Groups[1].Value);
+                var choice = Convert.ToInt32(matchesWithOption[0].Groups[2].Value);
+                var option = Convert.ToInt32(matchesWithOption[0].Groups[3].Value);
+                var npcInstance = GetNpcInstance(npcObjectId);
+                await npcInstance.TalkSelected(string.Empty, _playerInstance, true, choice, option);
+            }else if(matchesWithoutOption.Count > 0 & matchesWithoutOption[0].Groups.Count == 3)
+            {
+                var npcObjectId = Convert.ToInt32(matchesWithOption[0].Groups[1].Value);
+                var choice = Convert.ToInt32(matchesWithOption[0].Groups[2].Value);
+                var npcInstance = GetNpcInstance(npcObjectId);
+                await npcInstance.TalkSelected(string.Empty, _playerInstance, true, choice);
             }
         }
 

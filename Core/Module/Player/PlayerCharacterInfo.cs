@@ -81,7 +81,7 @@ namespace Core.Module.Player
             return QuestFlag.GetFlag(c_quest_id);
         }
 
-        internal byte[] GetQuestFlags()
+        public byte[] GetQuestFlags()
         {
             return QuestFlag.GetAllFlags();
         }
