@@ -75,7 +75,6 @@ namespace Core.Module.Player
             characterInfo.StRightFinger = characterEntity.StRightFinger;
             characterInfo.QuestFlag = new BitStorage(characterEntity.QuestFlag);
 
-            playerInstance.PlayerStatus().Level = characterEntity.Level;
             return playerInstance;
         }
     }

@@ -11,8 +11,19 @@ public class PlayerBaseStatus : IPlayerBaseStatus
     private readonly PlayerInstance _playerInstance;
     private readonly PcParameterInit _statBonusInit;
     private readonly CharacterMovement _characterMovement;
+    private byte _level;
     public float CurrentCp { get; set; }
-    public byte Level { get; set; } = 1;
+
+    public byte Level
+    {
+        get => _level;
+        set
+        {
+            _level = value;
+            _playerInstance.Level = value;
+        }
+    }
+    
     public PlayerBaseStatus(PlayerInstance playerInstance)
     {
         _playerInstance = playerInstance;

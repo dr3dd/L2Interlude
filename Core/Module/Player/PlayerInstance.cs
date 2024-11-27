@@ -68,7 +68,6 @@ namespace Core.Module.Player
             _macros = new PlayerMacros(this);
             _quest = new PlayerQuest(this);
 
-            Level = PlayerStatus().Level;
             _worldInit = provider.GetRequiredService<WorldInit>();
         }
 
