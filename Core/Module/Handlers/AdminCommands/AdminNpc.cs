@@ -78,7 +78,7 @@ namespace Core.Module.Handlers.AdminCommands
         }
         private async Task ShowNpcInstance(PlayerInstance admin, int objId)
         {
-            var html = Initializer.HtmlCacheInit().GetHtmlText("admin/gm/npc_instance.htm");
+            var html = Initializer.HtmlCacheInit().GetHtmlText("admin/gm/npc/npc_instance.htm");
 
             NpcInstance npcInstance = Initializer.WorldInit().GetNpcInstance(objId);
             html = html.Replace("%npcId%", npcInstance.NpcId.ToString());
@@ -95,7 +95,7 @@ namespace Core.Module.Handlers.AdminCommands
         }
         private async Task ShowNpc(PlayerInstance admin, int npcId)
         {
-            var html = Initializer.HtmlCacheInit().GetHtmlText("admin/gm/npc_info.htm");
+            var html = Initializer.HtmlCacheInit().GetHtmlText("admin/gm/npc/npc_info.htm");
 
             NpcTemplateInit npcTemplate = Initializer.NpcDataInit().GetNpcTemplate(npcId);
             if (npcTemplate == null)
@@ -128,7 +128,7 @@ namespace Core.Module.Handlers.AdminCommands
 
         private async Task ShowNpcList(PlayerInstance admin, string searchStr = "")
         {
-            var html = Initializer.HtmlCacheInit().GetHtmlText("admin/gm/npc_list.htm");
+            var html = Initializer.HtmlCacheInit().GetHtmlText("admin/gm/npc/npc_list.htm");
 
             IEnumerable<NpcTemplateInit> npcList = Initializer.NpcDataInit().GetAllNpcTemplate();
             string npcCount = npcList.Count().ToString();

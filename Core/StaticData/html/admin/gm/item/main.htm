@@ -1,5 +1,5 @@
 ﻿<html>
-    <title>NCore [GM]</title>
+    <title>NCore [GM-Item]</title>
     <center>
         <table width=270 border=0 bgcolor="444444">
             <tr>
@@ -14,11 +14,9 @@
     <center>
         <table width=270>
             <tr>
-                <td><button value="NPC List" action="bypass -h admin_npc" width=65 height=21 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
-
-            </tr>
-            <tr>
-                <td><button value="Item" action="bypass -h admin_item" width=65 height=21 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+                <td><font color="d69d85">Item ID:</font></td>
+                <td><edit var="item_id" width=120 height=12></td>
+                <td><button value="Create" action="bypass admin_item create $item_id" width=45 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
             </tr>
         </table>
     </center>

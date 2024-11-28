@@ -76,7 +76,7 @@ public class Andellria : Citizen
                 case 0:
                     if (_from_choice == false || (MySelf.HaveMemo(talker, "fruit_of_the_mothertree") == false && MySelf.GetOneTimeQuestFlag(talker, "fruit_of_the_mothertree") == false))
                     {
-                        MySelf.SetCurrentQuestID("fruit_of_the_mothertree");
+                        await MySelf.SetCurrentQuestID("fruit_of_the_mothertree");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
