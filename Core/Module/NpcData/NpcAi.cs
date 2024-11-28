@@ -752,6 +752,10 @@ namespace Core.Module.NpcData
         {
             await talker.PlayerInstance.PlayerQuest().SetFlagJournal(quest_id, flag);
         }
+        public int GetMemoState(Talker talker, string quest_name)
+        {
+            return GetMemoStateEx(talker, quest_name, 0);
+        }
         public int GetMemoStateEx(Talker talker, string quest_name, int slot)
         {
             int quest_id = Initializer.QuestPchInit().GetQuestIdByName(quest_name);
@@ -774,6 +778,10 @@ namespace Core.Module.NpcData
             await talker.PlayerInstance.PlayerQuest().RemoveMemo(quest_id);
         }
 
-        
+        public async Task SetMemoState(Talker talker, string quest_name, int state)
+        {
+            int quest_id = Initializer.QuestPchInit().GetQuestIdByName(quest_name);
+            await SetFlagJournal(talker, quest_id, state);
+        }
     }
 }

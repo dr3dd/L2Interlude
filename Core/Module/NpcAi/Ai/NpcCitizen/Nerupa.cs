@@ -190,12 +190,12 @@ public class Nerupa : Citizen
                         {
                             talker.quest_last_reward_time = MySelf.GetCurrentTick();
                             await MySelf.DeleteItem1(talker, "nightshade_leaf", MySelf.OwnItemCount(talker, 1029));
-                            MySelf.RemoveMemo(talker, "nerupas_request");
+                            await MySelf.RemoveMemo(talker, "nerupas_request");
                             MySelf.AddLog(2, talker, 160);
                             await MySelf.SoundEffect(talker, "ItemSound.quest_finish");
                             MySelf.SetOneTimeQuestFlag(talker, "nerupas_request", true);
                             await MySelf.GiveItem1(talker, "lesser_healing_potion", 5);
-                            MySelf.IncrementParam(talker, 0, 1000);
+                            MySelf.IncrementParam(talker, ParameterType.EXP, 1000);
                             await MySelf.ShowPage(talker, "nerupa_q0311_06.htm");
                         }
                     }
