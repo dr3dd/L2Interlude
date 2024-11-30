@@ -31,7 +31,7 @@ namespace DataBase.Repositories
                 using (var connection = _connectionFactory.GetDbConnection())
                 {
                     connection.Open();
-                    var sql = "SELECT * FROM user_shortcut";
+                    var sql = "SELECT * FROM shortcut_data";
                     var result = await connection.QueryAsync<ShortCutEntity>(sql);
                     return result.ToList();
                 }
@@ -51,7 +51,7 @@ namespace DataBase.Repositories
                 {
                     connection.Open();
                     var sql =
-                        "REPLACE INTO user_shortcut (char_id,slot,page,type,shortcut_id,level,class_index) VALUES (@CharacterObjectId, @Slot, @Page, @Type, @ShortcutId, @Level, @ClassIndex)";
+                        "REPLACE INTO shortcut_data (char_id,slotnum,shortcut_type,shortcut_id,shortcut_macro,subjob_id) VALUES (@CharacterId, @SlotNum, @ShortcutType, @ShortcutId, @ShortcutMacro, @SubjobId)";
                     var result = await connection.ExecuteAsync(sql, entity);
                     return result;
                 }
@@ -73,16 +73,16 @@ namespace DataBase.Repositories
             throw new System.NotImplementedException();
         }
 
-        public async Task<List<ShortCutEntity>> GetShortCutsByOwnerIdAsync(int ownerId, int classIndex)
+        public async Task<List<ShortCutEntity>> GetShortCutsByOwnerIdAsync(int ownerId, int subjobId)
         {
             try
             {
                 using (var connection = _connectionFactory.GetDbConnection())
                 {
                     connection.Open();
-                    var sql = "SELECT * FROM user_shortcut WHERE char_id=@CharacterObjectId AND class_index=@ClassIndex";
+                    var sql = "SELECT * FROM shortcut_data WHERE char_id=@CharacterId AND subjob_id=@SubjobId";
                     var result = await connection.QueryAsync<ShortCutEntity>(sql,
-                        new {CharacterObjectId = ownerId, ClassIndex = classIndex});
+                        new {CharacterId = ownerId, SubjobId = subjobId });
                     return result.ToList();
                 }
             }
@@ -101,7 +101,7 @@ namespace DataBase.Repositories
                 {
                     connection.Open();
                     var sql =
-                        "DELETE FROM user_shortcut WHERE char_id=@CharacterObjectId AND slot=@Slot AND page=@Page AND class_index=@ClassIndex";
+                        "DELETE FROM shortcut_data WHERE char_id=@CharacterId AND slotnum=@SlotNum AND subjob_id=@SubjobId";
                     var result = await connection.ExecuteAsync(sql, entity);
                     return result;
                 }

@@ -4,10 +4,8 @@ using Core.NetworkPacket.ServerPacket;
 using DataBase.Entities;
 using DataBase.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 //CLR: 4.0.30319.42000
@@ -42,7 +40,7 @@ namespace Core.Module.Player
         /// <param name="shortCut"></param>
         public async Task RegisterShortCut(ShortCut shortcut)
         {
-            switch (shortcut.Type)
+            switch (shortcut.ShortcutType)
             {
                 case ShortCutType.NONE:
                 case ShortCutType.ITEM:
@@ -52,10 +50,10 @@ namespace Core.Module.Player
                 case ShortCutType.BOOKMARK:
                     break;
                 case ShortCutType.SKILL:
-                    int level = _playerInstance.PlayerSkill().GetSkillLevel(shortcut.Id);
-                    if (level > 0)
+                    int shortcutMacro = _playerInstance.PlayerSkill().GetSkillLevel(shortcut.Id);
+                    if (shortcutMacro > 0)
                     {
-                        shortcut.Level = level;
+                        shortcut.ShortcutMacro = shortcutMacro;
                     }
                     else { 
                         return; 
@@ -64,7 +62,7 @@ namespace Core.Module.Player
             }
 
             var shortCutEntity = ToEntity(shortcut);
-            ShortCut currentShortCut = _shortCuts.FirstOrDefault(sc => (sc.Slot == shortcut.Slot) && (sc.Page == shortcut.Page));
+            ShortCut currentShortCut = _shortCuts.FirstOrDefault(sc => (sc.SlotNum == shortcut.SlotNum));
             if (currentShortCut != null)
             {
                 _shortCuts.Remove(shortcut);
@@ -83,9 +81,9 @@ namespace Core.Module.Player
         /// <param name="slot"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task DeleteShortCutAsync(int slot, int page)
+        public async Task DeleteShortCutAsync(int slotNum)
         {
-            ShortCut currentShortCut = _shortCuts.FirstOrDefault(sc => (sc.Slot == slot) && (sc.Page == page));
+            ShortCut currentShortCut = _shortCuts.FirstOrDefault(sc => (sc.SlotNum == slotNum));
             if (currentShortCut == null)
             {
                 return;
@@ -93,7 +91,7 @@ namespace Core.Module.Player
             _shortCuts.Remove(currentShortCut);
             await _shortCutRepository.DeleteShortCutAsync(ToEntity(currentShortCut));
 
-            if (currentShortCut.Type == ShortCutType.ITEM)
+            if (currentShortCut.ShortcutType == ShortCutType.ITEM)
             {
                 ItemInstance item = _playerInstance.PlayerInventory().GetInventoryItemByObjectId(currentShortCut.Id);
                 //TODO add soulshot
@@ -105,12 +103,11 @@ namespace Core.Module.Player
         {
             ShortCutEntity shortCutEntity = new ShortCutEntity
             {
-                CharacterObjectId = _characterInfo.CharacterId,
-                Level = shortcut.Level,
-                Page = shortcut.Page,
-                Slot = shortcut.Slot,
-                Type = (int)shortcut.Type,
-                ClassIndex = _playerInstance.TemplateHandler().GetClassId(),
+                CharacterId = _characterInfo.CharacterId,
+                ShortcutMacro = shortcut.ShortcutMacro,
+                SlotNum = shortcut.SlotNum,
+                ShortcutType = (int)shortcut.ShortcutType,
+                SubjobId = _playerInstance.TemplateHandler().GetClassId(), //TODO replace subjob id
                 ShortcutId = shortcut.Id
             };
             return shortCutEntity;
@@ -122,8 +119,8 @@ namespace Core.Module.Player
                 _playerInstance.TemplateHandler().GetClassId());
             foreach (var shortCutEntity in shortCuts)
             {
-                ShortCut sc = new ShortCut(shortCutEntity.Slot, shortCutEntity.Page, (ShortCutType)shortCutEntity.Type,
-                    shortCutEntity.ShortcutId, shortCutEntity.Level);
+                ShortCut sc = new ShortCut(shortCutEntity.SlotNum, (ShortCutType)shortCutEntity.ShortcutType,
+                    shortCutEntity.ShortcutId, shortCutEntity.ShortcutMacro);
                 _shortCuts.Add(sc);
             }
         }

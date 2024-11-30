@@ -171,11 +171,11 @@ namespace Core.Module.Player
                     {
                         await SendAllMacros();
 
-                        var shortCuts = _playerShortCut.GetAllShortCuts().ToList().Where(shortCut => shortCut.Type == ShortCutType.MACRO && shortCut.Id == userMacrosId);
+                        var shortCuts = _playerShortCut.GetAllShortCuts().ToList().Where(shortCut => shortCut.ShortcutType == ShortCutType.MACRO && shortCut.Id == userMacrosId);
                         foreach (var shortCut in shortCuts)
                         {
                             LoggerManager.Info(shortCut.Id.ToString());
-                            await _playerShortCut.DeleteShortCutAsync(shortCut.Slot, shortCut.Page);
+                            await _playerShortCut.DeleteShortCutAsync(shortCut.SlotNum);
                         }
                     }
 

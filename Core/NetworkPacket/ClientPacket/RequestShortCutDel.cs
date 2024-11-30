@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using L2Logger;
 
 
 //CLR: 4.0.30319.42000
@@ -17,27 +18,25 @@ namespace Core.NetworkPacket.ClientPacket
 {
     public class RequestShortCutDel : PacketBase
     {
-        private readonly int _slot;
-        private readonly int _page;
+        private readonly int _slotNum;
 
         private readonly PlayerInstance _playerInstance;
 
         public RequestShortCutDel(IServiceProvider serviceProvider, Packet packet, GameServiceController controller) : base(serviceProvider)
         {
-            int id = packet.ReadInt();
-            _slot = id % 12;
-            _page = id / 12;
+            _slotNum = packet.ReadInt();
             _playerInstance = controller.GameServiceHelper.CurrentPlayer;
         }
 
         public override async Task Execute()
         {
-            if (_slot < 0 || _slot > 11 || _page < 0 || _page > 10)
+            if (_slotNum > 143)
             {
+                LoggerManager.Warn($"RequestShortCutDel >143 char:{_playerInstance.CharacterName}");
                 return;
             }
 
-            await _playerInstance.PlayerShortCut().DeleteShortCutAsync(_slot, _page);
+            await _playerInstance.PlayerShortCut().DeleteShortCutAsync(_slotNum);
         }
     }
 }

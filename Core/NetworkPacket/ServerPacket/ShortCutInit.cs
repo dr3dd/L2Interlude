@@ -24,9 +24,9 @@ namespace Core.NetworkPacket.ServerPacket
             await WriteIntAsync(_shortCuts.Count);
             foreach (var shortCut in _shortCuts)
             {
-                await WriteIntAsync((int)shortCut.Type);
-                await WriteIntAsync(shortCut.Slot + (shortCut.Page * 12));
-                switch (shortCut.Type)
+                await WriteIntAsync((int)shortCut.ShortcutType);
+                await WriteIntAsync(shortCut.SlotNum);
+                switch (shortCut.ShortcutType)
                 {
                     case ShortCutType.NONE:
                     case ShortCutType.ACTION:
@@ -47,7 +47,7 @@ namespace Core.NetworkPacket.ServerPacket
                         break;
                     case ShortCutType.SKILL:
                         await WriteIntAsync(shortCut.Id);
-                        await WriteIntAsync(shortCut.Level);
+                        await WriteIntAsync(shortCut.ShortcutMacro);
                         await WriteByteAsync(0x00); // C5
                         await WriteIntAsync(0x01); // C6
                         break;
