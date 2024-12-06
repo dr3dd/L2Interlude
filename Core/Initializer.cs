@@ -88,6 +88,10 @@ namespace Core
         {
             return ServiceProvider.GetService<AdminAccessManager>();
         }
+        internal static UserCommandHandler UserCommandHandler()
+        {
+            return ServiceProvider.GetService<UserCommandHandler>();
+        }
         internal static AdminCommandHandler AdminCommandHandler()
         {
             return ServiceProvider.GetService<AdminCommandHandler>();
@@ -162,6 +166,7 @@ namespace Core
             LoggerManager.Info("----World----");
             ServiceProvider.GetRequiredService<ChatHandler>();
             ServiceProvider.GetRequiredService<AdminAccessManager>();
+            ServiceProvider.GetRequiredService<UserCommandHandler>();
             ServiceProvider.GetRequiredService<AdminCommandHandler>();
             LoggerManager.Info("----Npc----");
             //ServiceProvider.GetService<NpcTableInit>();

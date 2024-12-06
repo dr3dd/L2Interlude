@@ -10,5 +10,7 @@ namespace Core.Attributes
     public class CommandAttribute : Attribute
     {
         public string CommandName { get; set; }
+        public int CommandId { get; set; }
+        public string CommandDescription { get; set; }
     }
 }

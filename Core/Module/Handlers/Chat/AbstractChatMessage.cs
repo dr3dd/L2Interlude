@@ -2,11 +2,6 @@
 using Core.Module.Player;
 using Core.NetworkPacket.ServerPacket;
 using L2Logger;
-using NLog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 

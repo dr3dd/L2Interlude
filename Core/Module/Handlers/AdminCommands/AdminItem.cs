@@ -1,10 +1,6 @@
 ﻿using Core.Attributes;
-using Core.Module.NpcAi;
 using Core.Module.Player;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 

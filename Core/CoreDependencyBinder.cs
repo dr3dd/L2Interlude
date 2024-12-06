@@ -50,6 +50,7 @@ namespace Core
             services.AddSingleton<SkillAcquireInit>();
             services.AddSingleton<EffectInit>();
             services.AddSingleton<ChatHandler>();
+            services.AddSingleton<UserCommandHandler>();
             services.AddSingleton<AdminCommandHandler>();
             services.AddSingleton<AdminAccessManager>();
         }
