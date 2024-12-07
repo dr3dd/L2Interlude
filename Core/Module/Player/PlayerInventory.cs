@@ -264,6 +264,10 @@ public class PlayerInventory
                 _bodyParts[SlotBitType.LeftRightHand] = itemInstance.UserItemId;
                 break;
             case SlotBitType.OnePiece:
+                _characterInfo.StChest = itemInstance.UserItemId;
+                _characterInfo.StLegs = itemInstance.UserItemId;
+                _bodyParts[SlotBitType.Chest] = itemInstance.UserItemId;
+                _bodyParts[SlotBitType.Legs] = itemInstance.UserItemId;
                 break;
             case SlotBitType.Hair:
                 break;

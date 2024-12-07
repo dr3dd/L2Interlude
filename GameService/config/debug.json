@@ -2,6 +2,9 @@
   "DebugSection": {
     "ShowHeaderPacket": true,
     "ShowNamePacket": true,
-    "ShowPacket": true
+    "ShowPacket": true,
+    "ShowPacketToAuth": true,
+    "ShowPacketToClient": true,
+    "ShowPacketFromClient": true
   }
 }

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using Config;
 using L2Logger;
 using LoginService.Network.ClientPackets;
+using Microsoft.Extensions.DependencyInjection;
 using Network;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace LoginService
 {
@@ -25,11 +28,49 @@ namespace LoginService
 
         public void HandlePacket(Packet packet, LoginClient client)
         {
-            byte opCode = packet.FirstOpcode();
-            LoggerManager.Info($"Received packet with Opcode:{opCode:X2} for State:{client.State}");
+            var config = _serviceProvider.GetService<LoginConfig>();
+            try
+            {
+                byte opCode = packet.FirstOpcode();
+                if (config.DebugConfig.ShowHeaderPacket && config.DebugConfig.ShowPacketFromClient)
+                { // show packet header  
+                    LoggerManager.Debug($"LoginPacketHandler: CLIENT>>LS header: [{opCode.ToString("x2")}] size: [{packet.GetBuffer().Length}] for State:{client.State}");
+                }
+                
+                PacketBase loginClientPacket = null;
 
-            PacketBase loginClientPacket = (PacketBase)Activator.CreateInstance(_clientPackets[opCode], _serviceProvider, packet, client);
-            loginClientPacket?.Execute();
+                if (!_clientPackets.ContainsKey(opCode))
+                {
+                    LoggerManager.Warn($"LoginPacketHandler: Not found packet FirstOpcode={opCode.ToString("x2")}");
+                    printPacketBody(packet);
+                    return;
+                }
+
+                loginClientPacket = (PacketBase)Activator.CreateInstance(_clientPackets[opCode], _serviceProvider, packet, client);
+                
+                if (config.DebugConfig.ShowNamePacket && config.DebugConfig.ShowPacketFromClient)
+                {
+                    LoggerManager.Debug($"LoginPacketHandler: CLIENT>>LS name: {loginClientPacket.GetType().Name}");
+                }
+                if (config.DebugConfig.ShowPacket && config.DebugConfig.ShowPacketFromClient) // show packet header & body 
+                {
+                    printPacketBody(packet);
+                }
+
+                loginClientPacket?.Execute();
+            }
+            catch(Exception ex)
+            {
+                LoggerManager.Error("LoginPacketHandler: " + ex.StackTrace);
+            }
+        }
+
+        private void printPacketBody(Packet packet)
+        {
+            string str = "";
+            foreach (byte b in packet.GetBuffer())
+                str += b.ToString("x2") + " ";
+            LoggerManager.Debug($"LoginPacketHandler: CLIENT>>LS body: [ {str} ]");
         }
     }
 }

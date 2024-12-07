@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Config;
 using DataBase.Entities;
 using Helpers;
 using L2Logger;
@@ -12,6 +13,8 @@ using Network;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
 using Security;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace LoginService
 {
@@ -31,9 +34,10 @@ namespace LoginService
 
         public byte[] BlowFishKey;
         private LoginCrypt _loginCrypt;
-
-        public LoginClient(TcpClient tcpClient, LoginController loginController, LoginPacketHandler loginPacketHandler)
+        private LoginConfig _config;
+        public LoginClient(TcpClient tcpClient, LoginController loginController, LoginPacketHandler loginPacketHandler, LoginConfig config)
         {
+            _config = config;
             _tcpClient = tcpClient;
             _networkStream = tcpClient.GetStream();
             _loginController = loginController;
@@ -121,6 +125,21 @@ namespace LoginService
         {
             await loginServerPacket.WriteAsync();
             byte[] data = loginServerPacket.ToByteArray();
+            if (_config.DebugConfig.ShowHeaderPacket && _config.DebugConfig.ShowPacketToClient)
+            {
+                LoggerManager.Debug($"LoginClient: LS>>CLIENT header: [{data[0].ToString("x2")}] size: [{data.Length}]");
+            }
+            if (_config.DebugConfig.ShowNamePacket && _config.DebugConfig.ShowPacketToClient)
+            {
+                LoggerManager.Debug($"LoginClient: LS>>CLIENT name: {loginServerPacket.GetType().Name}");
+            }
+            if (_config.DebugConfig.ShowPacket && _config.DebugConfig.ShowPacketToClient)
+            {
+                string str = "";
+                foreach (byte b in data)
+                    str += b.ToString("x2") + " ";
+                LoggerManager.Debug($"LoginClient: LS>>CLIENT body: [ {str} ]");
+            }
 
             data = _loginCrypt.Encrypt(data, 0, data.Length);
 

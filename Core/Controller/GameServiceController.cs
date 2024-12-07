@@ -1,12 +1,13 @@
-﻿using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
+﻿using Config;
 using Core.Controller.Handlers;
 using L2Logger;
 using Network;
 using Security;
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 namespace Core.Controller
 {
@@ -24,6 +25,7 @@ namespace Core.Controller
         public GameServiceHelper GameServiceHelper { get; }
 
         private readonly BufferBlock<PacketStream> _bufferBlock;
+        private readonly GameConfig _config;
 
         public GameServiceController(GameServicePacketHandler gameServicePacketHandler)
         {
@@ -31,7 +33,7 @@ namespace Core.Controller
         }
         
         public GameServiceController(ClientManager clientManager, TcpClient tcpClient,
-            GameServicePacketHandler gameServicePacketHandler, BufferBlock<PacketStream> bufferBlock)
+            GameServicePacketHandler gameServicePacketHandler, BufferBlock<PacketStream> bufferBlock, GameConfig config)
         {
             GameServiceHelper = new GameServiceHelper(this);
             Address = tcpClient.Client.RemoteEndPoint;
@@ -41,6 +43,7 @@ namespace Core.Controller
             _stream = tcpClient.GetStream();
             _crypt = new GameCrypt();
             _bufferBlock = bufferBlock;
+            _config = config;
             Task.Factory.StartNew(Read);
         }
 
@@ -115,6 +118,10 @@ namespace Core.Controller
         {
             try
             {
+                if (_config.DebugConfig.ShowNamePacket && _config.DebugConfig.ShowPacketToClient)
+                {
+                    LoggerManager.Debug($"GameServiceController: GS>>CLIENT name: {packet.GetType().Name}");
+                }
                 await _bufferBlock.SendAsync(new PacketStream()
                 {
                     Packet = packet,

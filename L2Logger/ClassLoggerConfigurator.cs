@@ -28,8 +28,10 @@ namespace L2Logger
             consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("WARN", ConsoleOutputColor.Yellow, ConsoleOutputColor.NoChange));
             consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("GAME>>AUTH", ConsoleOutputColor.DarkGreen, ConsoleOutputColor.NoChange));
             consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("AUTH>>GAME", ConsoleOutputColor.DarkGreen, ConsoleOutputColor.NoChange));
-            consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("GS>>CLIENT", ConsoleOutputColor.DarkGreen, ConsoleOutputColor.NoChange));
+            consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("GS>>CLIENT", ConsoleOutputColor.Cyan, ConsoleOutputColor.NoChange));
             consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("CLIENT>>GS", ConsoleOutputColor.DarkGreen, ConsoleOutputColor.NoChange));
+            consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("LS>>CLIENT", ConsoleOutputColor.Cyan, ConsoleOutputColor.NoChange));
+            consoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule("CLIENT>>LS", ConsoleOutputColor.DarkGreen, ConsoleOutputColor.NoChange));
 
             configuration.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, consoleTarget));
             configuration.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, fileTarget));

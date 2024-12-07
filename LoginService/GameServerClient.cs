@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Sockets;
-using System.Threading.Tasks;
+﻿using Config;
 using L2Logger;
 using LoginService.Network.GameServerPackets;
 using Network;
+using System;
+using System.Collections.Generic;
+using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace LoginService
 {
@@ -24,9 +25,11 @@ namespace LoginService
         private NetworkStream _stream;
         private TcpClient _client;
         private readonly List<int> _accountsInGame;
-        public GameServerClient(GameServerPacketHandler packetHandler)
+        private LoginConfig _config;
+        public GameServerClient(GameServerPacketHandler packetHandler, LoginConfig config)
         {
             _packetHandler = packetHandler;
+            _config = config;
             _accountsInGame = new List<int>();
         }
 
@@ -90,6 +93,21 @@ namespace LoginService
             await serverPacket.WriteAsync();
 
             byte[] data = serverPacket.GetBuffer();
+            if (_config.DebugConfig.ShowHeaderPacket && _config.DebugConfig.ShowPacketToGame)
+            {
+                LoggerManager.Debug($"GameServerClient: AUTH>>GAME header: [{data[0].ToString("x2")}] size: [{data.Length}]");
+            }
+            if (_config.DebugConfig.ShowNamePacket && _config.DebugConfig.ShowPacketToGame)
+            {
+                LoggerManager.Debug($"GameServerClient: AUTH>>GAME name: {serverPacket.GetType().Name}");
+            }
+            if (_config.DebugConfig.ShowPacket && _config.DebugConfig.ShowPacketToGame)
+            {
+                string str = "";
+                foreach (byte b in data)
+                    str += b.ToString("x2") + " ";
+                LoggerManager.Debug($"GameServerClient: AUTH>>GAME body: [ {str} ]");
+            }
 
             byte[] lengthInBytes = BitConverter.GetBytes((short)data.Length);
             byte[] message = new byte[data.Length + 2];

@@ -31,7 +31,7 @@ namespace Core.Controller.Handlers
             {
                 byte opCode = packet.FirstOpcode();
 
-                if (config.DebugConfig.ShowHeaderPacket){ // show packet header  
+                if (config.DebugConfig.ShowHeaderPacket && config.DebugConfig.ShowPacketToGame){ // show packet header  
                     LoggerManager.Debug($"LoginServicePacketHandler: AUTH>>GAME header: [{opCode.ToString("x2")}] size: [{packet.GetBuffer().Length}]");
                 }
                 PacketBase packetBase = null;
@@ -45,11 +45,11 @@ namespace Core.Controller.Handlers
 
                 packetBase = (PacketBase)Activator.CreateInstance(_loginServerPackets[opCode], _serviceProvider, packet, loginServiceController);
 
-                if (config.DebugConfig.ShowNamePacket)
+                if (config.DebugConfig.ShowNamePacket && config.DebugConfig.ShowPacketToGame)
                 {
                     LoggerManager.Debug($"LoginServicePacketHandler: AUTH>>GAME name: {packetBase.GetType().Name}");
                 }
-                if (config.DebugConfig.ShowPacket) // show packet header & body 
+                if (config.DebugConfig.ShowPacket && config.DebugConfig.ShowPacketToGame) // show packet header & body 
                 {
                     printPacketBody(packet);
                 }

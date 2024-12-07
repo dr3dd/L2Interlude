@@ -2,8 +2,10 @@
 using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using Config;
 using Helpers;
 using L2Logger;
+using Microsoft.Extensions.DependencyInjection;
 using Security;
 
 namespace LoginService
@@ -15,6 +17,7 @@ namespace LoginService
         private byte[][] _blowfishKeys;
         private IServiceProvider _serviceProvider;
         private ScrambledKeyPair[] _keyPairs;
+        private LoginConfig _config;
 
         private readonly LoginPacketHandler _loginPacketHandler;
 
@@ -25,13 +28,14 @@ namespace LoginService
             _serviceProvider = serviceProvider;
             _loginPacketHandler = loginPacketHandler;
             _loggedClients = new ConcurrentDictionary<int, LoginClient>();
+            _config = _serviceProvider.GetService<LoginConfig>();
         }
 
         public IServiceProvider GetServiceProvider() => _serviceProvider;
 
         public async Task AcceptClient(TcpClient client)
         {
-            LoginClient clientObject = new LoginClient(client, this, _loginPacketHandler);
+            LoginClient clientObject = new LoginClient(client, this, _loginPacketHandler, _config);
             await clientObject.Process();
 
             _loggedClients.TryAdd(clientObject.SessionId, clientObject);
