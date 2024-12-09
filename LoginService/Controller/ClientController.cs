@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 using Config;
 using Helpers;
 using L2Logger;
-using LoginService.Controller;
 using LoginService.Controller.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 using Security;
 
-namespace LoginService
+namespace LoginService.Controller
 {
     public class ClientController
     {

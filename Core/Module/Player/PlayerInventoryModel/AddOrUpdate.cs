@@ -88,6 +88,20 @@ public class AddOrUpdate
         await SendInventoryUpdate(itemInstance);
     }
 
+    public async Task DestroyItemInInventoryById(int[] items)
+    {
+        foreach (int itemId in items)
+        {
+            var itemInstance = _playerInventory.GetInventoryItemByItemId(itemId);
+            if (itemInstance != null)
+            {
+                await RemoveUpdateItemInDb(itemInstance, itemInstance.Amount);
+                RefreshWeight();
+                await SendInventoryUpdate(itemInstance);
+            }
+        }
+    }
+    
     public async Task DestroyItemInInventoryById(int item_id, int quantity)
     {
         var itemInstance = _playerInventory.GetInventoryItemByItemId(item_id);

@@ -43,6 +43,7 @@ namespace Core
             services.AddSingleton<NpcAiObj>();
             services.AddSingleton<DoorDataInit>();
             services.AddSingleton<ItemPchInit>();
+            services.AddSingleton<QuestPch2Init>();
             services.AddSingleton<QuestPchInit>();
             services.AddSingleton<ItemDataInit>();
             services.AddSingleton<SkillPchInit>();

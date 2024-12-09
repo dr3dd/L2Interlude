@@ -1,6 +1,5 @@
 ﻿using Config;
 using L2Logger;
-using LoginService.Controller;
 using LoginService.Controller.Handlers;
 using LoginService.Network.GameServerPackets;
 using Network;
@@ -9,7 +8,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
-namespace LoginService
+namespace LoginService.Controller
 {
     public class GameServerClient
     {

@@ -1,17 +1,11 @@
 ﻿using Core.Enums;
-using Core.Module.ItemData;
-using Core.Module.Player.PlayerInventoryModel;
-using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
 using DataBase.Entities;
 using DataBase.Interfaces;
 using L2Logger;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 
 
@@ -123,6 +117,10 @@ namespace Core.Module.Player
             {
                 await _userQuestRepository.DeleteAsync(currentQuest);
                 await SendQuestList();
+            }
+            int[] questItems = Initializer.QuestPch2Init().GetQuestItemsById(quest_id);
+            if (questItems.Length > 0) {
+                await _playerInstance.PlayerInventory().AddOrUpdate().DestroyItemInInventoryById(questItems);
             }
         }
 

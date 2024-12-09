@@ -1,9 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using Config;
+﻿using Config;
 using DataBase.Entities;
 using Helpers;
 using L2Logger;
@@ -11,11 +6,12 @@ using LoginService.Controller.Handlers;
 using LoginService.Enum;
 using LoginService.Network.ServerPackets;
 using Network;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Engines;
 using Security;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static Org.BouncyCastle.Math.EC.ECCurve;
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace LoginService.Controller
 {
@@ -23,7 +19,7 @@ namespace LoginService.Controller
     {
         private TcpClient _tcpClient;
         private readonly NetworkStream _networkStream;
-        private readonly LoginController _loginController;
+        private readonly ClientController _loginController;
         public LoginClientState State { get; set; }
         private readonly EndPoint _remoteEndpoint;
         private readonly LoginPacketHandler _loginPacketHandler;
@@ -36,7 +32,7 @@ namespace LoginService.Controller
         public byte[] BlowFishKey;
         private LoginCrypt _loginCrypt;
         private LoginConfig _config;
-        public LoginServiceController(TcpClient tcpClient, LoginController loginController, LoginPacketHandler loginPacketHandler, LoginConfig config)
+        public LoginServiceController(TcpClient tcpClient, ClientController loginController, LoginPacketHandler loginPacketHandler, LoginConfig config)
         {
             _config = config;
             _tcpClient = tcpClient;
@@ -54,7 +50,7 @@ namespace LoginService.Controller
             State = LoginClientState.Connected;
         }
 
-        public LoginController GetLoginController() => _loginController;
+        public ClientController GetLoginController() => _loginController;
 
         public async Task Process()
         {

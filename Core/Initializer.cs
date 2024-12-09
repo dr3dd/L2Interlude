@@ -71,6 +71,10 @@ namespace Core
         {
             return ServiceProvider.GetService<ItemDataInit>();
         }
+        internal static QuestPch2Init QuestPch2Init()
+        {
+            return ServiceProvider.GetService<QuestPch2Init>();
+        }
         internal static QuestPchInit QuestPchInit()
         {
             return ServiceProvider.GetService<QuestPchInit>();
@@ -148,6 +152,7 @@ namespace Core
             LoggerManager.Info("----Json Teleports----");
             LoggerManager.Info("----Players----");
             ServiceProvider.GetRequiredService<ItemPchInit>().Run();
+            ServiceProvider.GetRequiredService<QuestPch2Init>().Run();
             ServiceProvider.GetRequiredService<QuestPchInit>().Run();
             ServiceProvider.GetRequiredService<ManualPchInit>().Run();
             ServiceProvider.GetService<TemplateInit>();

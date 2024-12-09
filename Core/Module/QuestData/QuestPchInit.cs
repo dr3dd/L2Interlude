@@ -2,9 +2,6 @@
 using L2Logger;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 //CLR: 4.0.30319.42000
