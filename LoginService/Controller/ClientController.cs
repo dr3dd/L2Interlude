@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using Config;
 using Helpers;
 using L2Logger;
+using LoginService.Controller;
+using LoginService.Controller.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 using Security;
 
 namespace LoginService
 {
-    public class LoginController
+    public class ClientController
     {
         private const int ScrambleCount = 10;
         private const int BlowfishCount = 20;
@@ -21,13 +23,13 @@ namespace LoginService
 
         private readonly LoginPacketHandler _loginPacketHandler;
 
-        private readonly ConcurrentDictionary<int, LoginClient> _loggedClients;
+        private readonly ConcurrentDictionary<int, LoginServiceController> _loggedClients;
 
-        public LoginController(IServiceProvider serviceProvider, LoginPacketHandler loginPacketHandler)
+        public ClientController(IServiceProvider serviceProvider, LoginPacketHandler loginPacketHandler)
         {
             _serviceProvider = serviceProvider;
             _loginPacketHandler = loginPacketHandler;
-            _loggedClients = new ConcurrentDictionary<int, LoginClient>();
+            _loggedClients = new ConcurrentDictionary<int, LoginServiceController>();
             _config = _serviceProvider.GetService<LoginConfig>();
         }
 
@@ -35,7 +37,7 @@ namespace LoginService
 
         public async Task AcceptClient(TcpClient client)
         {
-            LoginClient clientObject = new LoginClient(client, this, _loginPacketHandler, _config);
+            LoginServiceController clientObject = new LoginServiceController(client, this, _loginPacketHandler, _config);
             await clientObject.Process();
 
             _loggedClients.TryAdd(clientObject.SessionId, clientObject);
@@ -90,14 +92,14 @@ namespace LoginService
             return _keyPairs[0];
         }
 
-        public void RemoveClient(LoginClient loginClient)
+        public void RemoveClient(LoginServiceController loginClient)
         {
             if (!_loggedClients.ContainsKey(loginClient.SessionId))
             {
                 return;
             }
 
-            LoginClient o;
+            LoginServiceController o;
             _loggedClients.TryRemove(loginClient.SessionId, out o);
         }
     }

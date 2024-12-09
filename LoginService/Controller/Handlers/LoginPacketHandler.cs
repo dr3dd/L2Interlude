@@ -7,12 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Network;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 
-namespace LoginService
+namespace LoginService.Controller.Handlers
 {
     public class LoginPacketHandler
     {
         private readonly IServiceProvider _serviceProvider;
-        
+
         private readonly ConcurrentDictionary<byte, Type> _clientPackets;
 
         public LoginPacketHandler(IServiceProvider serviceProvider)
@@ -26,7 +26,7 @@ namespace LoginService
             _clientPackets.TryAdd(0x07, typeof(AuthGameGuard));
         }
 
-        public void HandlePacket(Packet packet, LoginClient client)
+        public void HandlePacket(Packet packet, LoginServiceController client)
         {
             var config = _serviceProvider.GetService<LoginConfig>();
             try
@@ -36,7 +36,7 @@ namespace LoginService
                 { // show packet header  
                     LoggerManager.Debug($"LoginPacketHandler: CLIENT>>LS header: [{opCode.ToString("x2")}] size: [{packet.GetBuffer().Length}] for State:{client.State}");
                 }
-                
+
                 PacketBase loginClientPacket = null;
 
                 if (!_clientPackets.ContainsKey(opCode))
@@ -47,7 +47,7 @@ namespace LoginService
                 }
 
                 loginClientPacket = (PacketBase)Activator.CreateInstance(_clientPackets[opCode], _serviceProvider, packet, client);
-                
+
                 if (config.DebugConfig.ShowNamePacket && config.DebugConfig.ShowPacketFromClient)
                 {
                     LoggerManager.Debug($"LoginPacketHandler: CLIENT>>LS name: {loginClientPacket.GetType().Name}");
@@ -59,7 +59,7 @@ namespace LoginService
 
                 loginClientPacket?.Execute();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LoggerManager.Error("LoginPacketHandler: " + ex.StackTrace);
             }

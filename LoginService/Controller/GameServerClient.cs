@@ -1,5 +1,7 @@
 ﻿using Config;
 using L2Logger;
+using LoginService.Controller;
+using LoginService.Controller.Handlers;
 using LoginService.Network.GameServerPackets;
 using Network;
 using System;
@@ -126,7 +128,7 @@ namespace LoginService
             }
         }
 
-        public async Task SendPlayerAsync(LoginClient loginClient)
+        public async Task SendPlayerAsync(LoginServiceController loginClient)
         {
             await SendAsync(new PleaseAcceptPlayer(1, loginClient.SessionKey));
         }

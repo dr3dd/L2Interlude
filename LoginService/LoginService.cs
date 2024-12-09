@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using Config;
 using L2Logger;
+using LoginService.Controller;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LoginService
@@ -22,7 +23,7 @@ namespace LoginService
         {
             var config = ServiceProvider.GetService<LoginConfig>();
             GameServerListener gameServerListener = ServiceProvider.GetService<GameServerListener>();
-            await ServiceProvider.GetRequiredService<LoginController>().Initialise();
+            await ServiceProvider.GetRequiredService<ClientController>().Initialise();
             ServiceProvider.GetService<GameServerListener>();
 
             try
@@ -65,7 +66,7 @@ namespace LoginService
             TcpClient client = (TcpClient)obj;
             LoggerManager.Info($"Received connection request from: {client.Client.RemoteEndPoint}");
 
-            await ServiceProvider.GetRequiredService<LoginController>().AcceptClient(client);
+            await ServiceProvider.GetRequiredService<ClientController>().AcceptClient(client);
         }
     }
 }

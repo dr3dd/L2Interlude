@@ -7,6 +7,7 @@ using Config;
 using DataBase.Entities;
 using Helpers;
 using L2Logger;
+using LoginService.Controller.Handlers;
 using LoginService.Enum;
 using LoginService.Network.ServerPackets;
 using Network;
@@ -16,9 +17,9 @@ using Security;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 
-namespace LoginService
+namespace LoginService.Controller
 {
-    public class LoginClient
+    public class LoginServiceController
     {
         private TcpClient _tcpClient;
         private readonly NetworkStream _networkStream;
@@ -35,7 +36,7 @@ namespace LoginService
         public byte[] BlowFishKey;
         private LoginCrypt _loginCrypt;
         private LoginConfig _config;
-        public LoginClient(TcpClient tcpClient, LoginController loginController, LoginPacketHandler loginPacketHandler, LoginConfig config)
+        public LoginServiceController(TcpClient tcpClient, LoginController loginController, LoginPacketHandler loginPacketHandler, LoginConfig config)
         {
             _config = config;
             _tcpClient = tcpClient;
@@ -45,9 +46,9 @@ namespace LoginService
             _loginPacketHandler = loginPacketHandler;
             SessionId = Rnd.Next();
             SessionKey = new SessionKey(
-                Rnd.Next(), 
-                Rnd.Next(), 
-                Rnd.Next(), 
+                Rnd.Next(),
+                Rnd.Next(),
+                Rnd.Next(),
                 Rnd.Next()
                 );
             State = LoginClientState.Connected;
@@ -153,7 +154,8 @@ namespace LoginService
             {
                 await _networkStream.WriteAsync(message, 0, message.Length);
                 await _networkStream.FlushAsync();
-            } catch(Exception ex )
+            }
+            catch (Exception ex)
             {
                 LoggerManager.Info(ex.Message);
             }

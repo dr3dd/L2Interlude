@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Config;
 using DataBase.Entities;
 using DataBase.Interfaces;
+using LoginService.Controller;
 using LoginService.Enum;
 using LoginService.Network.ServerPackets;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,11 +14,11 @@ namespace LoginService.Network.ClientPackets
 {
     internal class RequestAuthLogin : PacketBase
     {
-        private readonly LoginClient _client;
+        private readonly LoginServiceController _client;
         private readonly IAccountRepository _accountRepository;
         private readonly LoginServerConfig _config;
         private readonly byte[] _raw;
-        public RequestAuthLogin(IServiceProvider serviceProvider, Packet packet, LoginClient client) : base (serviceProvider)
+        public RequestAuthLogin(IServiceProvider serviceProvider, Packet packet, LoginServiceController client) : base (serviceProvider)
         {
             _accountRepository = ServiceProvider.GetService<IUnitOfWorkLogin>()?.Accounts;
             _client = client;

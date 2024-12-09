@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Network;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 
-namespace LoginService
+namespace LoginService.Controller.Handlers
 {
     public class GameServerPacketHandler
     {
@@ -38,7 +38,7 @@ namespace LoginService
                 { // show packet header  
                     LoggerManager.Debug($"GameServerPacketHandler: GAME>>AUTH header: [{opCode.ToString("x2")}] size: [{packet.GetBuffer().Length}]");
                 }
-                
+
                 PacketBase loginClientPacket = null;
 
                 if (!_serverPackets.ContainsKey(opCode))
