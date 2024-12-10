@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LoginService.Controller;
 using LoginService.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Network;
@@ -11,8 +12,8 @@ namespace LoginService.Network.ServerPackets
     //this class very important to connect to game server
     internal class ServerList : ServerPacket
     {
-        LoginClient _client;
-        public ServerList(LoginClient client)
+        LoginServiceController _client;
+        public ServerList(LoginServiceController client)
         {
             _client = client;
         }

@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Module.Player;
 using Core.Module.Player.ShortCuts;
+using L2Logger;
 
 
 //CLR: 4.0.30319.42000
@@ -22,8 +23,7 @@ namespace Core.NetworkPacket.ClientPacket
     {
         private readonly ShortCutType _type;
         private readonly int _id;
-        private readonly int _slot;
-        private readonly int _page;
+        private readonly int _slotNum;
         private readonly PlayerInstance _playerInstance;
         private readonly PlayerShortCut _playerShortCut;
 
@@ -34,20 +34,19 @@ namespace Core.NetworkPacket.ClientPacket
 
             int typeId = packet.ReadInt();
             _type = (ShortCutType)((typeId < 1) || (typeId > 6) ? 0 : typeId);
-            int slot = packet.ReadInt();
+            _slotNum = packet.ReadInt();
             _id = packet.ReadInt();
-            _slot = slot % 12;
-            _page = slot / 12;
         }
 
         public override async Task Execute()
         {
-            if (_slot < 0 || _slot > 11 || _page < 0 || _page > 10)
+            if ( _slotNum > 143)
             {
+                LoggerManager.Warn($"RequestShortCutReg >143 char:{_playerInstance.CharacterName}");
                 return;
             }
 
-            await _playerShortCut.RegisterShortCut(new ShortCut(_slot, _page, _type, _id));
+            await _playerShortCut.RegisterShortCut(new ShortCut(_slotNum, _type, _id));
         }
     }
 }

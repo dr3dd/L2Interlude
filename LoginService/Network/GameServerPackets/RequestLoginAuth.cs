@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using L2Logger;
+using LoginService.Controller;
 using LoginService.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Network;

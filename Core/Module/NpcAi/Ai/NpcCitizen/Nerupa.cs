@@ -15,13 +15,13 @@ public class Nerupa : Citizen
                 _code = 0;
                 MySelf.AddChoice(0, "Elf's Tutorial");
             }
-            if (MySelf.OwnItemCount(talker, "leaf_of_mothertree") == 0 && MySelf.GetMemoStateEx(talker, 255, "letters_of_love1") > 3)
+            if (MySelf.OwnItemCount(talker, "leaf_of_mothertree") == 0 && MySelf.GetMemoStateEx(talker, 255, 1) > 3)
             {
                 _choiceN = (_choiceN + 1);
                 _code = 1;
                 MySelf.AddChoice(1, "Elf's Tutorial");
             }
-            if (MySelf.OwnItemCount(talker, "leaf_of_mothertree") == 0 && MySelf.GetMemoStateEx(talker, 255, "letters_of_love1") <= 3)
+            if (MySelf.OwnItemCount(talker, "leaf_of_mothertree") == 0 && MySelf.GetMemoStateEx(talker, 255, 1) <= 3)
             {
                 _choiceN = (_choiceN + 1);
                 _code = 2;
@@ -40,7 +40,7 @@ public class Nerupa : Citizen
                 case 0:
                     if (_from_choice == false || MySelf.OwnItemCount(talker, "leaf_of_mothertree") > 0)
                     {
-                        MySelf.SetCurrentQuestID("elf_tutorial");
+                        await MySelf.SetCurrentQuestID("elf_tutorial");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
@@ -50,9 +50,9 @@ public class Nerupa : Citizen
                     }
                     break;
                 case 1:
-                    if (_from_choice == false || (MySelf.OwnItemCount(talker, "leaf_of_mothertree") == 0 && MySelf.GetMemoStateEx(talker, 255, "letters_of_love1") > 3))
+                    if (_from_choice == false || (MySelf.OwnItemCount(talker, "leaf_of_mothertree") == 0 && MySelf.GetMemoStateEx(talker, 255, 1) > 3))
                     {
-                        MySelf.SetCurrentQuestID("elf_tutorial");
+                        await MySelf.SetCurrentQuestID("elf_tutorial");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
@@ -63,9 +63,9 @@ public class Nerupa : Citizen
                     break;
 
                 case 2:
-                    if (_from_choice == false || (MySelf.OwnItemCount(talker, "leaf_of_mothertree") == 0 && MySelf.GetMemoStateEx(talker, 255, "letters_of_love1") <= 3))
+                    if (_from_choice == false || (MySelf.OwnItemCount(talker, "leaf_of_mothertree") == 0 && MySelf.GetMemoStateEx(talker, 255, 1) <= 3))
                     {
-                        MySelf.SetCurrentQuestID("elf_tutorial");
+                        await MySelf.SetCurrentQuestID("elf_tutorial");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
@@ -86,25 +86,25 @@ public class Nerupa : Citizen
 
         if (_from_choice == false)
         {
-            if (MySelf.HaveMemo(talker, "nerupas_favor") == false && MySelf.GetOneTimeQuestFlag(talker, "nerupas_favor") == false)
+            if (MySelf.HaveMemo(talker, "nerupas_request") == false && MySelf.GetOneTimeQuestFlag(talker, "nerupas_request") == false)
             {
                 _choiceN = (_choiceN + 1);
                 _code = 0;
                 MySelf.AddChoice(0, "Nerupa's Request");
             }
-            if (MySelf.HaveMemo(talker, "nerupas_favor") == false && MySelf.GetOneTimeQuestFlag(talker, "nerupas_favor") == true)
+            if (MySelf.HaveMemo(talker, "nerupas_request") == false && MySelf.GetOneTimeQuestFlag(talker, "nerupas_request") == true)
             {
                 _choiceN = (_choiceN + 1);
                 _code = 1;
                 MySelf.AddChoice(1, "Nerupa's Request (Complete)");
             }
-            if (MySelf.HaveMemo(talker, "nerupas_favor") != false && (MySelf.OwnItemCount(talker, "silvery_spidersilk") != 0 || MySelf.OwnItemCount(talker, "unos_receipt") != 0 || MySelf.OwnItemCount(talker, "cels_ticket") != 0))
+            if (MySelf.HaveMemo(talker, "nerupas_request") != false && (MySelf.OwnItemCount(talker, "silvery_spidersilk") != 0 || MySelf.OwnItemCount(talker, "unos_receipt") != 0 || MySelf.OwnItemCount(talker, "cels_ticket") != 0))
             {
                 _choiceN = (_choiceN + 1);
                 _code = 2;
                 MySelf.AddChoice(2, "Nerupa's Request (Continue)");
             }
-            if (MySelf.HaveMemo(talker, "nerupas_favor") != false && MySelf.OwnItemCount(talker, "nightshade_leaf") != 0 && MySelf.GetOneTimeQuestFlag(talker, "nerupas_favor") == false)
+            if (MySelf.HaveMemo(talker, "nerupas_request") != false && MySelf.OwnItemCount(talker, "nightshade_leaf") != 0 && MySelf.GetOneTimeQuestFlag(talker, "nerupas_request") == false)
             {
                 _choiceN = (_choiceN + 1);
                 _code = 3;
@@ -121,9 +121,9 @@ public class Nerupa : Citizen
             switch (_code)
             {
                 case 0:
-                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_favor") == false && MySelf.GetOneTimeQuestFlag(talker, "nerupas_favor") == false))
+                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_request") == false && MySelf.GetOneTimeQuestFlag(talker, "nerupas_request") == false))
                     {
-                        MySelf.SetCurrentQuestID("nerupas_favor");
+                        await MySelf.SetCurrentQuestID("nerupas_request");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
@@ -135,7 +135,7 @@ public class Nerupa : Citizen
                             {
                                 await MySelf.ShowPage(talker, "nerupa_q0311_00.htm");
                             }
-                            else if (talker.Level >= 3)
+                            else if (talker.Level >= 1)
                             {
                                 MySelf.FHTML_SetFileName(ref fhtml0, "nerupa_q0311_03.htm");
                                 MySelf.FHTML_SetInt(ref fhtml0, "quest_id", 160);
@@ -153,9 +153,9 @@ public class Nerupa : Citizen
                     }
                     break;
                 case 1:
-                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_favor") == false && MySelf.GetOneTimeQuestFlag(talker, "nerupas_favor") == false))
+                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_request") == false && MySelf.GetOneTimeQuestFlag(talker, "nerupas_request") == false))
                     {
-                        MySelf.SetCurrentQuestID("nerupas_favor");
+                        await MySelf.SetCurrentQuestID("nerupas_request");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
@@ -165,9 +165,9 @@ public class Nerupa : Citizen
                     }
                     break;
                 case 2:
-                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_favor") != false && (MySelf.OwnItemCount(talker, "silvery_spidersilk") != 0 || MySelf.OwnItemCount(talker, "unos_receipt") != 0 || MySelf.OwnItemCount(talker, "cels_ticket") != 0)))
+                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_request") != false && (MySelf.OwnItemCount(talker, "silvery_spidersilk") != 0 || MySelf.OwnItemCount(talker, "unos_receipt") != 0 || MySelf.OwnItemCount(talker, "cels_ticket") != 0)))
                     {
-                        MySelf.SetCurrentQuestID("nerupas_favor");
+                        await MySelf.SetCurrentQuestID("nerupas_request");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
@@ -177,9 +177,9 @@ public class Nerupa : Citizen
                     }
                     break;
                 case 3:
-                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_favor") != false && MySelf.OwnItemCount(talker, "nightshade_leaf") != 0 && MySelf.GetOneTimeQuestFlag(talker, "nerupas_favor") == false))
+                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_request") != false && MySelf.OwnItemCount(talker, "nightshade_leaf") != 0 && MySelf.GetOneTimeQuestFlag(talker, "nerupas_request") == false))
                     {
-                        MySelf.SetCurrentQuestID("nerupas_favor");
+                        await MySelf.SetCurrentQuestID("nerupas_request");
                         if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
                         {
                             await MySelf.ShowSystemMessage(talker, 1118);
@@ -188,13 +188,13 @@ public class Nerupa : Citizen
                         if ((MySelf.GetCurrentTick() - talker.quest_last_reward_time) > 1)
                         {
                             talker.quest_last_reward_time = MySelf.GetCurrentTick();
-                            MySelf.DeleteItem1(talker, "nightshade_leaf", MySelf.OwnItemCount(talker, 1029));
-                            MySelf.RemoveMemo(talker, "nerupas_favor");
+                            await MySelf.DeleteItem1(talker, "nightshade_leaf", MySelf.OwnItemCount(talker, 1029));
+                            await MySelf.RemoveMemo(talker, "nerupas_request");
                             MySelf.AddLog(2, talker, 160);
-                            MySelf.SoundEffect(talker, "ItemSound.quest_finish");
-                            MySelf.SetOneTimeQuestFlag(talker, "nerupas_favor", true);
+                            await MySelf.SoundEffect(talker, "ItemSound.quest_finish");
+                            MySelf.SetOneTimeQuestFlag(talker, "nerupas_request", true);
                             await MySelf.GiveItem1(talker, "lesser_healing_potion", 5);
-                            MySelf.IncrementParam(talker, 0, 1000);
+                            MySelf.IncrementParam(talker, ParameterType.EXP, 1000);
                             await MySelf.ShowPage(talker, "nerupa_q0311_06.htm");
                         }
                     }
@@ -202,30 +202,44 @@ public class Nerupa : Citizen
                 default:
                     return;
             }
+            return;
         }
-
-        /*
-        if (talker.Race != 1)
-        {
-            await MySelf.ShowPage(talker, "nerupa_q0311_00.htm");
-        }
-        else if (talker.Level >= 3)
-        {
-            MySelf.FHTML_SetFileName(ref fhtml0, "nerupa_q0311_03.htm");
-            MySelf.FHTML_SetInt(ref fhtml0, "quest_id", 160);
-            await MySelf.ShowFHTML(talker, fhtml0);
-        }
-        else
-        {
-            await MySelf.ShowPage(talker, "nerupa_q0311_02.htm");
-        }
-        */
+        await base.TalkSelected(fhtml0, talker, _from_choice, _code, _choiceN);
     }
+
+    public override async Task QuestAccepted(int quest_id, Talker talker)
+    {
+        if (quest_id == 160)
+        {
+            await MySelf.SetCurrentQuestID("nerupas_request");
+            if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
+            {
+                await MySelf.ShowSystemMessage(talker, 1118);
+                return;
+            }
+            if ((MySelf.GetCurrentTick() - talker.quest_last_reward_time) > 1)
+            {
+                talker.quest_last_reward_time = MySelf.GetCurrentTick();
+                await MySelf.SetMemo(talker, quest_id);
+                MySelf.AddLog(1, talker, 160);
+                await MySelf.SoundEffect(talker, "ItemSound.quest_accept");
+                if (MySelf.OwnItemCount(talker, "silvery_spidersilk") == 0)
+                {
+                    await MySelf.GiveItem1(talker, "silvery_spidersilk", 1);
+                }
+                await MySelf.ShowPage(talker, "nerupa_q0311_04.htm");
+                await MySelf.SetFlagJournal(talker, 160, 1);
+            }
+            return;
+        }
+        await base.QuestAccepted(quest_id, talker);
+    }
+
     public override async Task MenuSelected(Talker talker, int ask, int reply, string fhtml0)
     {
         if (ask == 203)
         {
-            MySelf.SetCurrentQuestID("elf_tutorial");
+            await MySelf.SetCurrentQuestID("elf_tutorial");
             if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
             {
                 await MySelf.ShowSystemMessage(talker, 1118);
@@ -249,12 +263,12 @@ public class Nerupa : Citizen
                     MySelf.IncrementParam(talker, ParameterType.SP, 50);
                 }
                 await MySelf.ShowPage(talker, "nerupa002.htm");
-                MySelf.DeleteItem1(talker, "leaf_of_mothertree", 1);
+                await MySelf.DeleteItem1(talker, "leaf_of_mothertree", 1);
                 MySelf.AddTimerEx((MySelf.GetIndexFromCreature(talker) + 1000000), (1000 * 60));
                 await MySelf.ShowRadar(talker, 45475, 48359, -3060, RadarPositionType.BOTH);
-                if (MySelf.GetMemoStateEx(talker, 255, "letters_of_love1") <= 3)
+                if (MySelf.GetMemoStateEx(talker, 255, 1) <= 3)
                 {
-                    MySelf.SetMemoStateEx(talker, 255, "letters_of_love1", 4);
+                    MySelf.SetMemoStateEx(talker, 255, 1, 4);
                 }
             }
         }

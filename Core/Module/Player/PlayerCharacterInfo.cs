@@ -1,4 +1,7 @@
 ﻿using Core.Module.CharacterData.Template;
+using Helpers;
+using L2Logger;
+using System;
 
 namespace Core.Module.Player
 {
@@ -29,6 +32,7 @@ namespace Core.Module.Player
         public int StHair { get; set; }
         public int StFace { get; set; }
         public int StHairAll { get; set; }
+        public BitStorage QuestFlag { get; set; } = new BitStorage(new byte[128]);
 
         private readonly PlayerInstance _playerInstance;
         private readonly ITemplateHandler _templateHandler;
@@ -42,6 +46,44 @@ namespace Core.Module.Player
         public int GetMAtkSpd()
         {
             return _templateHandler.GetBaseAttackSpeed();
+        }
+
+        private int ConvertToInternalOneTimeQuestID(int questId)
+        {
+            int result = 0;
+            if (questId < 10255 || questId > 12047)
+            {
+                if (questId <= 12047)
+                {
+                    return questId;
+                }
+                else
+                {
+                    Console.WriteLine($"Current onetime quest id({questId}) is over 12047!!");
+                }
+            }
+            else
+            {
+                return (questId - 10000);
+            }
+            return result;
+        }
+
+        public void SetOneTimeFlag(int questId, bool complete)
+        {
+            int c_quest_id = ConvertToInternalOneTimeQuestID(questId);
+            QuestFlag.SetFlag(c_quest_id, complete);
+        }
+
+        public bool GetOneTimeFlag(int questId)
+        {
+            int c_quest_id = ConvertToInternalOneTimeQuestID(questId);
+            return QuestFlag.GetFlag(c_quest_id);
+        }
+
+        public byte[] GetQuestFlags()
+        {
+            return QuestFlag.GetAllFlags();
         }
     }
 }

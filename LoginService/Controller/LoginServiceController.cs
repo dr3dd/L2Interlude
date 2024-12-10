@@ -1,25 +1,25 @@
-﻿using System;
+﻿using Config;
+using DataBase.Entities;
+using Helpers;
+using L2Logger;
+using LoginService.Controller.Handlers;
+using LoginService.Enum;
+using LoginService.Network.ServerPackets;
+using Network;
+using Security;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using DataBase.Entities;
-using Helpers;
-using L2Logger;
-using LoginService.Enum;
-using LoginService.Network.ServerPackets;
-using Network;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Engines;
-using Security;
 
-namespace LoginService
+namespace LoginService.Controller
 {
-    public class LoginClient
+    public class LoginServiceController
     {
         private TcpClient _tcpClient;
         private readonly NetworkStream _networkStream;
-        private readonly LoginController _loginController;
+        private readonly ClientController _loginController;
         public LoginClientState State { get; set; }
         private readonly EndPoint _remoteEndpoint;
         private readonly LoginPacketHandler _loginPacketHandler;
@@ -31,9 +31,10 @@ namespace LoginService
 
         public byte[] BlowFishKey;
         private LoginCrypt _loginCrypt;
-
-        public LoginClient(TcpClient tcpClient, LoginController loginController, LoginPacketHandler loginPacketHandler)
+        private LoginConfig _config;
+        public LoginServiceController(TcpClient tcpClient, ClientController loginController, LoginPacketHandler loginPacketHandler, LoginConfig config)
         {
+            _config = config;
             _tcpClient = tcpClient;
             _networkStream = tcpClient.GetStream();
             _loginController = loginController;
@@ -41,15 +42,15 @@ namespace LoginService
             _loginPacketHandler = loginPacketHandler;
             SessionId = Rnd.Next();
             SessionKey = new SessionKey(
-                Rnd.Next(), 
-                Rnd.Next(), 
-                Rnd.Next(), 
+                Rnd.Next(),
+                Rnd.Next(),
+                Rnd.Next(),
                 Rnd.Next()
                 );
             State = LoginClientState.Connected;
         }
 
-        public LoginController GetLoginController() => _loginController;
+        public ClientController GetLoginController() => _loginController;
 
         public async Task Process()
         {
@@ -121,6 +122,21 @@ namespace LoginService
         {
             await loginServerPacket.WriteAsync();
             byte[] data = loginServerPacket.ToByteArray();
+            if (_config.DebugConfig.ShowHeaderPacket && _config.DebugConfig.ShowPacketToClient)
+            {
+                LoggerManager.Debug($"LoginClient: LS>>CLIENT header: [{data[0].ToString("x2")}] size: [{data.Length}]");
+            }
+            if (_config.DebugConfig.ShowNamePacket && _config.DebugConfig.ShowPacketToClient)
+            {
+                LoggerManager.Debug($"LoginClient: LS>>CLIENT name: {loginServerPacket.GetType().Name}");
+            }
+            if (_config.DebugConfig.ShowPacket && _config.DebugConfig.ShowPacketToClient)
+            {
+                string str = "";
+                foreach (byte b in data)
+                    str += b.ToString("x2") + " ";
+                LoggerManager.Debug($"LoginClient: LS>>CLIENT body: [ {str} ]");
+            }
 
             data = _loginCrypt.Encrypt(data, 0, data.Length);
 
@@ -134,7 +150,8 @@ namespace LoginService
             {
                 await _networkStream.WriteAsync(message, 0, message.Length);
                 await _networkStream.FlushAsync();
-            } catch(Exception ex )
+            }
+            catch (Exception ex)
             {
                 LoggerManager.Info(ex.Message);
             }

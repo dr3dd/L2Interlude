@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using LoginService.Controller;
 using Network;
 
 namespace LoginService.Network.ServerPackets
@@ -6,9 +7,9 @@ namespace LoginService.Network.ServerPackets
     internal class PlayOk : ServerPacket
     {
         private const byte Opcode = 0x07;
-        private readonly LoginClient _client;
+        private readonly LoginServiceController _client;
 
-        public PlayOk(LoginClient client)
+        public PlayOk(LoginServiceController client)
         {
             _client = client;
         }

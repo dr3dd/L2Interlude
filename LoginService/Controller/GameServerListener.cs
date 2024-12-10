@@ -8,8 +8,9 @@ using System.Linq;
 using Config;
 using L2Logger;
 using LoginService.Model;
+using LoginService.Controller.Handlers;
 
-namespace LoginService
+namespace LoginService.Controller
 {
     public class GameServerListener
     {

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Core.Module.CharacterData;
 using Core.Module.CharacterData.Template;
 using DataBase.Interfaces;
+using Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Module.Player
@@ -28,6 +29,7 @@ namespace Core.Module.Player
             await playerInstance.PlayerSkill().RestorePassiveSkills();
             await playerInstance.PlayerShortCut().RestoreShortCuts();
             await playerInstance.PlayerMacros().RestoreMacroses();
+            await playerInstance.PlayerQuest().RestoreQuests();
             return playerInstance;
         }
         
@@ -71,8 +73,8 @@ namespace Core.Module.Player
             characterInfo.StHairAll = characterEntity.StHairAll;
             characterInfo.StLeftFinger = characterEntity.StLeftFinger;
             characterInfo.StRightFinger = characterEntity.StRightFinger;
+            characterInfo.QuestFlag = new BitStorage(characterEntity.QuestFlag);
 
-            playerInstance.PlayerStatus().Level = characterEntity.Level;
             return playerInstance;
         }
     }

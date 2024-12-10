@@ -45,7 +45,7 @@ CREATE TABLE `user_data` (
      `create_date` DATETIME NOT NULL DEFAULT (curdate()),
      `login` DATETIME NULL DEFAULT (curdate()),
      `logout` DATETIME NULL DEFAULT (curdate()),
-     `quest_flag` CHAR(32) NULL DEFAULT NULL,
+     `quest_flag` binary(128) NULL DEFAULT 0x00,
      `nickname` VARCHAR(50) NULL DEFAULT NULL,
      `max_cp` INT(11) NOT NULL DEFAULT 0,
      `max_hp` INT(11) NOT NULL DEFAULT 0,

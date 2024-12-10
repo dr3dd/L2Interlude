@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using L2Logger;
+using LoginService.Controller;
 using LoginService.Enum;
 using LoginService.Network.ServerPackets;
 using Network;
@@ -9,9 +10,9 @@ namespace LoginService.Network.ClientPackets
 {
     internal class AuthGameGuard : PacketBase
     {
-        private readonly LoginClient _client;
+        private readonly LoginServiceController _client;
         private readonly int _sessionId;
-        public AuthGameGuard(IServiceProvider serviceProvider, Packet packet, LoginClient client) : base(serviceProvider)
+        public AuthGameGuard(IServiceProvider serviceProvider, Packet packet, LoginServiceController client) : base(serviceProvider)
         {
             _client = client;
             _sessionId = packet.ReadInt();

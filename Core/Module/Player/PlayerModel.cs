@@ -88,7 +88,7 @@ namespace Core.Module.Player
                 MaxCp = _playerInstance.PlayerStatus().GetMaxCp(),
                 MaxHp = _playerInstance.PlayerStatus().GetMaxHp(),
                 MaxMp = _playerInstance.PlayerStatus().GetMaxMp(),
-                QuestFlag = "",
+                QuestFlag = characterInfo.GetQuestFlags(),
                 QuestMemo = "",
                 StBack = characterInfo.StBack,
                 StChest = characterInfo.StChest,
@@ -149,16 +149,16 @@ namespace Core.Module.Player
 
         private async Task AddInitialSkillShortCut()
         {
-            await _playerInstance.PlayerShortCut().RegisterShortCut(new ShortCut(0, 0, ShortCutType.ACTION, 2, -1)); //Action Attack
-            await _playerInstance.PlayerShortCut().RegisterShortCut(new ShortCut(3, 0, ShortCutType.ACTION, 5, -1)); //Action Take
-            await _playerInstance.PlayerShortCut().RegisterShortCut(new ShortCut(10, 0, ShortCutType.ACTION, 0, -1)); //Action Sit
+            await _playerInstance.PlayerShortCut().RegisterShortCut(new ShortCut(0, ShortCutType.ACTION, 2, -1)); //Action Attack
+            await _playerInstance.PlayerShortCut().RegisterShortCut(new ShortCut(3, ShortCutType.ACTION, 5, -1)); //Action Take
+            await _playerInstance.PlayerShortCut().RegisterShortCut(new ShortCut(10, ShortCutType.ACTION, 0, -1)); //Action Sit
 
             List<ItemInstance> playerItems = _playerInstance.PlayerInventory().GetInventoryItems();
             foreach (var item in playerItems)
             {
                 if (item.ItemId == 5588) // Tutorial Book
                 {
-                    await _playerInstance.PlayerShortCut().RegisterShortCut(new ShortCut(11, 0, ShortCutType.ITEM, item.ObjectId, -1));
+                    await _playerInstance.PlayerShortCut().RegisterShortCut(new ShortCut(11, ShortCutType.ITEM, item.ObjectId, -1));
                 }
             }
         }

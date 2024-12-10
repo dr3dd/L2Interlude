@@ -99,6 +99,10 @@ public class DefaultNpc
     }
     public virtual async Task TalkSelected(string fhtml0, Talker talker, bool _from_choice, int _code, int _choiceN)
     {
-        await MySelf.ShowPage(talker, fhtml0);
+        await MySelf.ShowPage(talker, "noquest.htm");
+    }
+    public virtual Task QuestAccepted(int quest_id, Talker talker)
+    {
+        return Task.FromResult(1);
     }
 }

@@ -14,6 +14,7 @@ using Core.Module.HtmlCacheData;
 using Core.Module.ItemData;
 using Core.Module.ManualData;
 using Core.Module.NpcData;
+using Core.Module.QuestData;
 using Core.Module.SkillData;
 using Core.Module.WorldData;
 using DataBase.Interfaces;
@@ -70,6 +71,14 @@ namespace Core
         {
             return ServiceProvider.GetService<ItemDataInit>();
         }
+        internal static QuestPch2Init QuestPch2Init()
+        {
+            return ServiceProvider.GetService<QuestPch2Init>();
+        }
+        internal static QuestPchInit QuestPchInit()
+        {
+            return ServiceProvider.GetService<QuestPchInit>();
+        }
         internal static NpcDataInit NpcDataInit()
         {
             return ServiceProvider.GetService<NpcDataInit>();
@@ -82,6 +91,10 @@ namespace Core
         internal static AdminAccessManager AdminAccessManager()
         {
             return ServiceProvider.GetService<AdminAccessManager>();
+        }
+        internal static UserCommandHandler UserCommandHandler()
+        {
+            return ServiceProvider.GetService<UserCommandHandler>();
         }
         internal static AdminCommandHandler AdminCommandHandler()
         {
@@ -139,6 +152,8 @@ namespace Core
             LoggerManager.Info("----Json Teleports----");
             LoggerManager.Info("----Players----");
             ServiceProvider.GetRequiredService<ItemPchInit>().Run();
+            ServiceProvider.GetRequiredService<QuestPch2Init>().Run();
+            ServiceProvider.GetRequiredService<QuestPchInit>().Run();
             ServiceProvider.GetRequiredService<ManualPchInit>().Run();
             ServiceProvider.GetService<TemplateInit>();
             LoggerManager.Info("----Bonus Stats----");
@@ -156,6 +171,7 @@ namespace Core
             LoggerManager.Info("----World----");
             ServiceProvider.GetRequiredService<ChatHandler>();
             ServiceProvider.GetRequiredService<AdminAccessManager>();
+            ServiceProvider.GetRequiredService<UserCommandHandler>();
             ServiceProvider.GetRequiredService<AdminCommandHandler>();
             LoggerManager.Info("----Npc----");
             //ServiceProvider.GetService<NpcTableInit>();

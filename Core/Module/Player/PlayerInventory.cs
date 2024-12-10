@@ -264,6 +264,10 @@ public class PlayerInventory
                 _bodyParts[SlotBitType.LeftRightHand] = itemInstance.UserItemId;
                 break;
             case SlotBitType.OnePiece:
+                _characterInfo.StChest = itemInstance.UserItemId;
+                _characterInfo.StLegs = itemInstance.UserItemId;
+                _bodyParts[SlotBitType.Chest] = itemInstance.UserItemId;
+                _bodyParts[SlotBitType.Legs] = itemInstance.UserItemId;
                 break;
             case SlotBitType.Hair:
                 break;
@@ -352,6 +356,10 @@ public class PlayerInventory
     public ItemInstance GetInventoryItemByObjectId(int objectId)
     {
         return _items.Values.SingleOrDefault(obj => obj.ObjectId == objectId);
+    }
+    public ItemInstance GetInventoryItemByItemId(int itemId)
+    {
+        return _items.Values.SingleOrDefault(obj => obj.ItemId == itemId);
     }
 
     /// <summary>

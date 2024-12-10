@@ -2,6 +2,9 @@
   "DebugSection": {
     "ShowHeaderPacket": true,
     "ShowNamePacket": true,
-    "ShowPacket": true
+    "ShowPacket": true,
+    "ShowPacketToGame": true,
+    "ShowPacketToClient": true,
+    "ShowPacketFromClient": true
   }
 }

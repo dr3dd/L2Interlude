@@ -7,7 +7,7 @@ public class GuardStand : Guard
     public override float DoNothing_DecayRatio { get; set; } = 000000F;
     public override async Task NoDesire()
     {
-        MySelf.AddMoveToDesire(MySelf.StartX, MySelf.StartY, MySelf.StartZ, 30);
+        //MySelf.AddMoveToDesire(MySelf.StartX, MySelf.StartY, MySelf.StartZ, 30);
     }
     /*
     public override void MoveToFinished(int x, int y, int z)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DataBase.Interfaces;
+using LoginService.Controller;
 using LoginService.Model;
 using LoginService.Network.ServerPackets;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,13 +11,13 @@ namespace LoginService.Network.ClientPackets
 {
     internal class RequestServerLogin : PacketBase
     {
-        private readonly LoginClient _client;
+        private readonly LoginServiceController _client;
         private readonly int _loginOkID1;
         private readonly IAccountRepository _accountRepository;
         private readonly int _loginOkID2;
         private readonly byte _serverId;
 
-        public RequestServerLogin(IServiceProvider serviceProvider, Packet packet, LoginClient client)
+        public RequestServerLogin(IServiceProvider serviceProvider, Packet packet, LoginServiceController client)
             :base(serviceProvider)
         {
             _client = client;

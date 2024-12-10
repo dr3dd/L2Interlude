@@ -19,9 +19,9 @@ namespace Core.NetworkPacket.ServerPacket
         {
             await WriteByteAsync(0x44);
 
-            await WriteIntAsync((int)_shortcut.Type);
-            await WriteIntAsync(_shortcut.Slot + (_shortcut.Page * 12)); // C4 Client
-            switch (_shortcut.Type)
+            await WriteIntAsync((int)_shortcut.ShortcutType);
+            await WriteIntAsync(_shortcut.SlotNum); // C4 Client
+            switch (_shortcut.ShortcutType)
             {
                 case ShortCutType.NONE:
                 case ShortCutType.ITEM:
@@ -33,7 +33,7 @@ namespace Core.NetworkPacket.ServerPacket
                     break;
                 case ShortCutType.SKILL:
                     await WriteIntAsync(_shortcut.Id);
-                    await WriteIntAsync(_shortcut.Level);
+                    await WriteIntAsync(_shortcut.ShortcutMacro);
                     await WriteByteAsync(0x00); // C5
                     break;
             }

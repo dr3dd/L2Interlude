@@ -22,5 +22,21 @@ namespace Config
         /// Показывать тело пакета
         /// </summary>
         public bool ShowPacket { get; set; } = false;
+        /// <summary>
+        /// Show packet auth>game
+        /// </summary>
+        public bool ShowPacketToGame { get; set; } = false;
+        /// <summary>
+        /// Show packet game>auth
+        /// </summary>
+        public bool ShowPacketToAuth { get; set; } = false;
+        /// <summary>
+        /// Show packet server>client
+        /// </summary>
+        public bool ShowPacketToClient { get; set; } = false;
+        /// <summary>
+        /// Show packet client>server
+        /// </summary>
+        public bool ShowPacketFromClient { get; set; } = false;
     }
 }

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Core.Module.NpcAi.Ai.NpcCitizen;
 using Core.Module.NpcAi.Models;
 
 namespace Core.Module.NpcAi.Ai.NpcMerchant;
@@ -66,4 +68,205 @@ public class Cel : MerchantForNewbie
 		new("sb_poison1", 15, 0.000000, 0),  // Spellbook: Poison
 		new("sb_poison_recovery1", 15, 0.000000, 0),  // Spellbook: Poison Recovery
     };
+
+    public override async Task TalkSelected(string fhtml0, Talker talker, bool _from_choice, int _code, int _choiceN)
+	{
+        if (_from_choice == false)
+        {
+            if (MySelf.HaveMemo(talker, "blood_fiend") == false && MySelf.GetOneTimeQuestFlag(talker, "blood_fiend") == false)
+            {
+                _choiceN = (_choiceN + 1);
+                _code = 0;
+                MySelf.AddChoice(0, "Blood Fiend");
+            }
+            if (MySelf.HaveMemo(talker, "blood_fiend") == false && MySelf.GetOneTimeQuestFlag(talker, "blood_fiend") == true)
+            {
+                _choiceN = (_choiceN + 1);
+                _code = 1;
+                MySelf.AddChoice(1, "Blood Fiend (Complete)");
+            }
+            if (MySelf.HaveMemo(talker, "blood_fiend"))
+            {
+                _choiceN = (_choiceN + 1);
+                _code = 2;
+                MySelf.AddChoice(2, "Blood Fiend (Continue)");
+            }
+            if (MySelf.HaveMemo(talker, "nerupas_request") != false && MySelf.OwnItemCount(talker, "unos_receipt") != 0)
+            {
+                _choiceN = (_choiceN + 1);
+                _code = 3;
+                MySelf.AddChoice(3, "Nerupa's Request (Continue)");
+            }
+            if (MySelf.HaveMemo(talker, "nerupas_request") != false && MySelf.OwnItemCount(talker, "cels_ticket") != 0)
+            {
+                _choiceN = (_choiceN + 1);
+                _code = 4;
+                MySelf.AddChoice(4, "Nerupa's Request (Continue)");
+            }
+            if (MySelf.HaveMemo(talker, "nerupas_request") != false && MySelf.OwnItemCount(talker, "nightshade_leaf") != 0)
+            {
+                _choiceN = (_choiceN + 1);
+                _code = 5;
+                MySelf.AddChoice(5, "Nerupa's Request (Continue)");
+            }
+            if (_choiceN > 1)
+            {
+                await MySelf.ShowChoicePage(talker, 1);
+                return;
+            }
+        }
+        if (_from_choice || _choiceN == 1)
+        {
+            switch (_code)
+            {
+                case 0:
+                    if (_from_choice == false || (MySelf.HaveMemo(talker, "blood_fiend") == false && MySelf.GetOneTimeQuestFlag(talker, "blood_fiend") == false))
+                    {
+                        await MySelf.SetCurrentQuestID("blood_fiend");
+                        if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
+                        {
+                            await MySelf.ShowSystemMessage(talker, 1118);
+                            return;
+                        }
+                        if (MySelf.GetMemoCount(talker) < 26)
+                        {
+                            if (talker.Race != 1 && talker.Race != 3 && talker.Race != 4 && talker.Race != 0)
+                            {
+                                await MySelf.ShowPage(talker, "cel_q0318_00.htm");
+                            }
+                            else if (talker.Level >= 21)
+                            {
+                                MySelf.FHTML_SetFileName(ref fhtml0, "cel_q0318_03.htm");
+                                MySelf.FHTML_SetInt(ref fhtml0, "quest_id", 164);
+                                await MySelf.ShowFHTML(talker, fhtml0);
+                            }
+                            else
+                            {
+                                await MySelf.ShowPage(talker, "cel_q0318_02.htm");
+                            }
+                        }
+                        else
+                        {
+                            await MySelf.ShowPage(talker, "fullquest.htm");
+                        }
+                    }
+                    break;
+                case 1:
+                    if (_from_choice == false || (MySelf.HaveMemo(talker, "blood_fiend") == false && MySelf.GetOneTimeQuestFlag(talker, "blood_fiend") == true))
+                    {
+                        await MySelf.SetCurrentQuestID("blood_fiend");
+                        if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
+                        {
+                            await MySelf.ShowSystemMessage(talker, 1118);
+                            return;
+                        }
+                        await MySelf.ShowPage(talker, "finishedquest.htm");
+                    }
+                    break;
+                case 2:
+                    if (_from_choice == false || MySelf.HaveMemo(talker, "blood_fiend"))
+                    {
+                        await MySelf.SetCurrentQuestID("blood_fiend");
+                        if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
+                        {
+                            await MySelf.ShowSystemMessage(talker, 1118);
+                            return;
+                        }
+                        if (MySelf.OwnItemCount(talker, "kirunak_skull") < 1)
+                        {
+                            await MySelf.ShowPage(talker, "cel_q0318_05.htm");
+                        }
+                        else if (MySelf.OwnItemCount(talker, "kirunak_skull") >= 1 && MySelf.GetOneTimeQuestFlag(talker, "blood_fiend") == false)
+                        {
+                            if ((MySelf.GetCurrentTick() - talker.quest_last_reward_time) > 1)
+                            {
+                                talker.quest_last_reward_time = MySelf.GetCurrentTick();
+                                await MySelf.ShowPage(talker, "cel_q0318_06.htm");
+                                await MySelf.GiveItem1(talker, "adena", 42130);
+                                await MySelf.DeleteItem1(talker, "kirunak_skull", 1);
+                                await MySelf.RemoveMemo(talker, "blood_fiend");
+                                MySelf.AddLog(2, talker, 164);
+                                await MySelf.SoundEffect(talker, "ItemSound.quest_finish");
+                                MySelf.SetOneTimeQuestFlag(talker, "blood_fiend", true);
+                            }
+                        }
+                    }
+                    break;
+                case 3:
+                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_request") != false && MySelf.OwnItemCount(talker, "unos_receipt") != 0))
+                    {
+                        await MySelf.SetCurrentQuestID("nerupas_request");
+                        if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
+                        {
+                            await MySelf.ShowSystemMessage(talker, 1118);
+                            return;
+                        }
+                        if ((MySelf.GetCurrentTick() - talker.quest_last_reward_time) > 1)
+                        {
+                            talker.quest_last_reward_time = MySelf.GetCurrentTick();
+                            await MySelf.DeleteItem1(talker, "unos_receipt", MySelf.OwnItemCount(talker, 1027));
+                            if (MySelf.OwnItemCount(talker, "cels_ticket") == 0)
+                            {
+                                await MySelf.GiveItem1(talker, "cels_ticket", 1);
+                            }
+                            await MySelf.ShowPage(talker, "cel_q0311_01.htm");
+                            await MySelf.SetFlagJournal(talker, 160, 3);
+                        }
+                    }
+                    break;
+                case 4:
+                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_request") != false && MySelf.OwnItemCount(talker, "cels_ticket") != 0))
+                    {
+                        await MySelf.SetCurrentQuestID("nerupas_request");
+                        if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
+                        {
+                            await MySelf.ShowSystemMessage(talker, 1118);
+                            return;
+                        }
+                        await MySelf.ShowPage(talker, "cel_q0311_02.htm");
+                    }
+                    break;
+                case 5:
+                    if (_from_choice == false || (MySelf.HaveMemo(talker, "nerupas_request") != false && MySelf.OwnItemCount(talker, "nightshade_leaf") != 0))
+                    {
+                        await MySelf.SetCurrentQuestID("nerupas_request");
+                        if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
+                        {
+                            await MySelf.ShowSystemMessage(talker, 1118);
+                            return;
+                        }
+                        await MySelf.ShowPage(talker, "cel_q0311_03.htm");
+                    }
+                    break;
+                default:
+                    return;
+            }
+            return;
+        }
+        await base.TalkSelected(fhtml0, talker, _from_choice, _code, _choiceN);
+    }
+
+    public override async Task QuestAccepted(int quest_id, Talker talker)
+    {
+        if (quest_id == 164)
+        {
+            await MySelf.SetCurrentQuestID("blood_fiend");
+            if (MySelf.GetInventoryInfo(talker, 0) >= (MySelf.GetInventoryInfo(talker, 1) * 0.800000) || MySelf.GetInventoryInfo(talker, 2) >= (MySelf.GetInventoryInfo(talker, 3) * 0.800000))
+            {
+                await MySelf.ShowSystemMessage(talker, 1118);
+                return;
+            }
+            if ((MySelf.GetCurrentTick() - talker.quest_last_reward_time) > 1)
+            {
+                talker.quest_last_reward_time = MySelf.GetCurrentTick();
+                await MySelf.ShowPage(talker, "cel_q0318_04.htm");
+                await MySelf.SetMemo(talker, "blood_fiend");
+                MySelf.AddLog(1, talker, 164);
+                await MySelf.SoundEffect(talker, "ItemSound.quest_accept");
+                await MySelf.SetFlagJournal(talker, 164, 1);
+            }
+            return;
+        }
+        await base.QuestAccepted(quest_id, talker);
+    }
 }

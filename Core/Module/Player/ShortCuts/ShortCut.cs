@@ -7,18 +7,16 @@ namespace Core.Module.Player.ShortCuts
     public class ShortCut
     {
         public int Id { get; }
-        public int Slot { get; }
-        public int Page { get; }
-        public ShortCutType Type { get; }
-        public int Level { get; set; }
+        public int SlotNum { get; }
+        public ShortCutType ShortcutType { get; }
+        public int ShortcutMacro { get; set; }
 
-        public ShortCut(int slotId, int pageId, ShortCutType shortcutType, int shortcutId, int shortcutLevel = -1)
+        public ShortCut(int slotNum, ShortCutType shortcutType, int shortcutId, int shortcutMacro = -1)
         {
-            Slot = slotId;
-            Page = pageId;
-            Type = shortcutType;
+            SlotNum = slotNum;
+            ShortcutType = shortcutType;
             Id = shortcutId;
-            Level = shortcutLevel;
+            ShortcutMacro = shortcutMacro;
         }
 
     }

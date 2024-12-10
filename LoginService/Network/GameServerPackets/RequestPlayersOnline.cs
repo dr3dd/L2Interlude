@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using LoginService.Controller;
 using Network;
 
 namespace LoginService.Network.GameServerPackets

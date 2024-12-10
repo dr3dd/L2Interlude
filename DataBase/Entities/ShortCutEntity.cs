@@ -1,15 +1,14 @@
 ﻿using Dapper.Contrib.Extensions;
 namespace DataBase.Entities
 {
-    [Table("character_shortcuts")]
+    [Table("shortcut_data")]
     public class ShortCutEntity
     {
-        public int CharacterObjectId { get; set; }
-        public int Slot { get; set; }
-        public int Page { get; set; }
-        public int Type { get; set; }
+        public int CharacterId { get; set; }
+        public int SlotNum { get; set; }
+        public int ShortcutType { get; set; }
         public int ShortcutId { get; set; }
-        public int Level { get; set; }
-        public int ClassIndex { get; set; }
+        public int ShortcutMacro { get; set; }
+        public int SubjobId { get; set; }
     }
 }

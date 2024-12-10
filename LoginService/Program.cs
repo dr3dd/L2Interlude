@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Config;
 using DataBase;
 using L2Logger;
+using LoginService.Controller;
+using LoginService.Controller.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LoginService
@@ -32,7 +34,7 @@ namespace LoginService
             LoginConfigDependencyBinder.Bind(services);
             LoginDataBaseDependencyBinder.Bind(services);
             services.AddSingleton<LoginPacketHandler>();
-            services.AddSingleton<LoginController>();
+            services.AddSingleton<ClientController>();
             services.AddSingleton<GameServerPacketHandler>();
             services.AddSingleton<GameServerClient>();
             services.AddSingleton<GameServerListener>();

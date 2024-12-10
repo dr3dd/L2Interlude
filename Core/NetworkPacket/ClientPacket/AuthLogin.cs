@@ -24,6 +24,7 @@ namespace Core.NetworkPacket.ClientPacket
             int playKey1 = packet.ReadInt();
             int loginKey1 = packet.ReadInt();
             int loginKey2 = packet.ReadInt();
+            int lang = packet.ReadInt();
             
             _key = new SessionKey(loginKey1, loginKey2, playKey1, playKey2);
         }

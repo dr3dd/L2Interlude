@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using LoginService.Controller;
 using Network;
 
 namespace LoginService.Network.ServerPackets
@@ -10,7 +11,7 @@ namespace LoginService.Network.ServerPackets
         private readonly byte[] _publicKey;
         private readonly byte[] _blowfishKey;
 
-        public Init(LoginClient client) : this(client.GetScrambledModulus(), client.BlowFishKey, client.SessionId)
+        public Init(LoginServiceController client) : this(client.GetScrambledModulus(), client.BlowFishKey, client.SessionId)
         {
 
         }

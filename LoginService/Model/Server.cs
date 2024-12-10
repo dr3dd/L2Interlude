@@ -1,4 +1,6 @@
-﻿namespace LoginService.Model
+﻿using LoginService.Controller;
+
+namespace LoginService.Model
 {
     public class Server
     {
@@ -24,7 +26,7 @@
 
         private byte[] DefaultAddress { get; set; }
 
-        public byte[] GetIp(LoginClient client)
+        public byte[] GetIp(LoginServiceController client)
         {
             if (DefaultAddress == null)
             {
