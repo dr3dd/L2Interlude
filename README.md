@@ -5,7 +5,7 @@ PTS script files are included and working with the server.
 # Technical Specification
 <ul>
 <li>DB MariaDB</li>
-<li>.Net 8 Framework</li>
+<li>.Net 9 Framework</li>
 <li>ORM Dapper</li>
 <li>DataBase Migrations</li>
 </ul>
