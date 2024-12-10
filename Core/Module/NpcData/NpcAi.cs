@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Module.CategoryData;
-using Core.Module.CharacterData;
 using Core.Module.DoorData;
 using Core.Module.ItemData;
 using Core.Module.FStringData;
@@ -17,12 +16,9 @@ using Core.Module.Player;
 using Core.Module.WorldData;
 using Core.NetworkPacket.ServerPacket;
 using Core.TaskManager;
-using Google.Protobuf.WellKnownTypes;
 using Helpers;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
-using static NLog.LayoutRenderers.Wrappers.ReplaceLayoutRendererWrapper;
-using System.Xml.Linq;
 using Core.Enums;
 
 namespace Core.Module.NpcData

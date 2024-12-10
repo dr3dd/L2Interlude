@@ -1,5 +1,4 @@
 using Core.Enums;
-using MySqlX.XDevAPI;
 using System.Threading.Tasks;
 
 namespace Core.Module.NpcAi.Ai;

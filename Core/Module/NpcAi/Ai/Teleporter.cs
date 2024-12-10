@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Enums;
 using Helpers;
-using MySqlX.XDevAPI;
 
 namespace Core.Module.NpcAi.Ai;
 
