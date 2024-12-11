@@ -3,7 +3,7 @@ using System.Data;
 using Config;
 using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace DataBase
 {

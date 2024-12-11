@@ -1,11 +1,6 @@
 ﻿using L2Logger;
-using MySqlX.XDevAPI.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 
 //CLR: 4.0.30319.42000
