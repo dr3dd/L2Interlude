@@ -1,13 +1,8 @@
-﻿using Core.Module.NpcAi.Ai.NpcMonrace;
-using Core.Module.Player.Macroses;
+﻿using Core.Module.Player.Macroses;
 using Core.Module.Player.ShortCuts;
 using Core.NetworkPacket.ServerPacket;
-using DataBase.Entities;
 using DataBase.Interfaces;
-using DataBase.Repositories;
 using L2Logger;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,7 +30,9 @@ namespace Core.Module.Player
             _playerShortCut = _playerInstance.PlayerShortCut();
             _macroses = new List<MacrosModel>();
             _userMacrosId = 1000;
-            _macrosRepository = Initializer.ServiceProvider.GetRequiredService<IUnitOfWorkGame>().Macros;
+
+            var unitOfWorkService = _playerInstance.GetUnitOfWork();
+            _macrosRepository = unitOfWorkService.Macros;
         }
 
         public IList<MacrosModel> GetAllMacroses()

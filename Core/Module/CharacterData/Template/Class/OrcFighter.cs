@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
 
 namespace Core.Module.CharacterData.Template.Class
 {
@@ -12,8 +14,9 @@ namespace Core.Module.CharacterData.Template.Class
         private readonly IDictionary<byte, float> _mpTable;
         private readonly IList<float> _collision; //collision Radius, Height
 
-        public OrcFighter(PcParameterInit pcParameter)
+        public OrcFighter(IServiceProvider serviceProvider) : base(serviceProvider)
         {
+            var pcParameter = serviceProvider.GetRequiredService<PcParameterInit>();
             var result = pcParameter.GetResult();
             var fighterCp = result[$"{ClassKey}_cp"];
             var fighterHp = result[$"{ClassKey}_hp"];

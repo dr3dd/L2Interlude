@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Core.Module.SettingData;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
 
 namespace Core.Module.CharacterData.Template.Class
 {
@@ -12,8 +15,9 @@ namespace Core.Module.CharacterData.Template.Class
         private readonly IDictionary<byte, float> _mpTable;
         private readonly IList<float> _collision; //collision Radius, Height
 
-        public DarkFighter(PcParameterInit pcParameter)
+        public DarkFighter(IServiceProvider serviceProvider) : base(serviceProvider)
         {
+            var pcParameter = serviceProvider.GetRequiredService<PcParameterInit>();
             var result = pcParameter.GetResult();
             var fighterCp = result[$"{ClassKey}_cp"];
             var fighterHp = result[$"{ClassKey}_hp"];

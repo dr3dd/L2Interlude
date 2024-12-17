@@ -1,6 +1,8 @@
 ﻿using Core.Module.CharacterData.Template.Race;
 using Core.Module.SettingData;
 using Helpers;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 
 namespace Core.Module.CharacterData.Template
@@ -49,9 +51,9 @@ namespace Core.Module.CharacterData.Template
         private IList<Location> _initialStartPoint;
         private SettingDataInit _settingDatainit;
 
-        protected DarkElfMagician()
+        protected DarkElfMagician(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            _settingDatainit = Initializer.SettingDataInit();
+            _settingDatainit = serviceProvider.GetRequiredService<SettingDataInit>();
             InitialEquipment();
             InitialStartPoint();
             InitialHpRegen();

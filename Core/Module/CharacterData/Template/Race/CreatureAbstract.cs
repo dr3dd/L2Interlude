@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Core.Module.CharacterData.Template.Race
 {
@@ -6,6 +7,7 @@ namespace Core.Module.CharacterData.Template.Race
     {
         protected IList<float> _baseHpRegen;
         
+        public CreatureAbstract(IServiceProvider serviceProvider) { }
         public float GetBaseHpRegen(int level)
         {
             return level switch
