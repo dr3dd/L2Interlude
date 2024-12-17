@@ -12,6 +12,7 @@ using Core.Module.ItemData;
 using Core.Module.ManualData;
 using Core.Module.NpcData;
 using Core.Module.QuestData;
+using Core.Module.SettingData;
 using Core.Module.SkillData;
 using Core.Module.WorldData;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +32,7 @@ namespace Core
             services.AddSingleton<CategoryPchInit>();
             services.AddSingleton<CategoryDataInit>();
             services.AddSingleton<WorldInit>();
+            services.AddSingleton<SettingDataInit>();
             services.AddSingleton<TemplateInit>();
             services.AddSingleton<ManualPchInit>();
             services.AddSingleton<FStringInit>();

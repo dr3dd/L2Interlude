@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Core.Module.CharacterData.Template.Race;
+﻿using Core.Module.CharacterData.Template.Race;
+using Core.Module.SettingData;
 using Helpers;
+using System.Collections.Generic;
 
 namespace Core.Module.CharacterData.Template
 {
     public abstract class HumanFighter : Human
     {
+        private const string BaseClass = "human_fighter";
         private const int BasePhysicalAttack = 4;
         private const int BaseCritical = 4;
         private const string BaseAttackType = "fist";
@@ -46,9 +47,11 @@ namespace Core.Module.CharacterData.Template
 
         private IList<string> _initialEquipment;
         private IList<Location> _initialStartPoint;
+        private SettingDataInit _settingDatainit;
 
         protected HumanFighter()
         {
+            _settingDatainit = Initializer.SettingDataInit();
             InitialEquipment();
             InitialStartPoint();
             InitialHpRegen();
@@ -72,14 +75,7 @@ namespace Core.Module.CharacterData.Template
 
         private void InitialEquipment()
         {
-            _initialEquipment = new List<string>
-            {
-                "squire_s_sword",
-                "dagger",
-                "squire_s_shirt",
-                "squire_s_pants",
-                "tutorial_guide"
-            };
+            _initialEquipment = _settingDatainit.GetInitialEquipment(BaseClass);
         }
 
         public byte GetInt()

@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
-using Core.Module.CharacterData.Template.Race;
+﻿using Core.Module.CharacterData.Template.Race;
+using Core.Module.SettingData;
 using Helpers;
+using System.Collections.Generic;
 
 namespace Core.Module.CharacterData.Template
 {
     public abstract class DarkElfMagician : DarkElf
     {
+        private const string BaseClass = "darkelf_magician";
         private const int BasePhysicalAttack = 3;
         private const int BaseCritical = 4;
         private const string BaseAttackType = "fist";
@@ -45,9 +47,11 @@ namespace Core.Module.CharacterData.Template
 
         private IList<string> _initialEquipment;
         private IList<Location> _initialStartPoint;
-        
+        private SettingDataInit _settingDatainit;
+
         protected DarkElfMagician()
         {
+            _settingDatainit = Initializer.SettingDataInit();
             InitialEquipment();
             InitialStartPoint();
             InitialHpRegen();
@@ -73,13 +77,7 @@ namespace Core.Module.CharacterData.Template
 
         private void InitialEquipment()
         {
-            _initialEquipment = new List<string>
-            {
-                "apprentice_s_wand",
-                "apprentice_s_tunic",
-                "apprentice_s_hose",
-                "tutorial_guide"
-            };
+            _initialEquipment = _settingDatainit.GetInitialEquipment(BaseClass);
         }
 
         public byte GetInt()
