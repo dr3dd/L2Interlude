@@ -1,4 +1,5 @@
-﻿using Core.Module.ParserEngine;
+﻿using Core.Module.CharacterData;
+using Core.Module.ParserEngine;
 using L2Logger;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace Core.Module.SettingData
         private readonly IServiceProvider _serviceProvider;
 
         private IDictionary<string, List<string>> _initialEquipment;
+        private IDictionary<string, List<Location>> _initialStartPoint;
         public SettingDataInit(IServiceProvider provider) : base(provider)
         {
             _serviceProvider = provider;
@@ -24,6 +26,7 @@ namespace Core.Module.SettingData
         }
 
         public List<string> GetInitialEquipment(string base_class) => _initialEquipment.ContainsKey(base_class) ? _initialEquipment[base_class] : new List<string>();
+        public List<Location> GetInitialStartPoint(string base_class) => _initialStartPoint.ContainsKey(base_class) ? _initialStartPoint[base_class] : new List<Location>();
 
         public override void Run()
         {
@@ -45,6 +48,10 @@ namespace Core.Module.SettingData
             if (data.ContainsKey("initial_equipment"))
             {
                 _initialEquipment = (IDictionary<string, List<string>>) data["initial_equipment"];
+            }
+            if (data.ContainsKey("initial_start_point"))
+            {
+                _initialStartPoint = (IDictionary<string, List<Location>>)data["initial_start_point"];
             }
         }
     }

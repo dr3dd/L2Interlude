@@ -21,6 +21,7 @@ namespace Core.Module.CharacterData.Template
         public PcParameterInit(IServiceProvider provider) : base(provider)
         {
             _parse = new ParsePcParameter();
+            _parse = new ParsePcParameter();
         }
 
         public float GetLevelBonus(byte level) => _levelBonus.ContainsKey(level) ? _levelBonus[level] : 0;

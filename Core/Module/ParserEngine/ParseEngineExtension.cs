@@ -8,5 +8,10 @@ namespace Core.Module.ParserEngine
         {
             return Regex.Replace(str, @"\{|\}|\[|\]", "");
         }
+
+        public static string RemoveSpaces(this string str)
+        {
+            return Regex.Replace(str, @"\s+", "");
+        }
     }
 }

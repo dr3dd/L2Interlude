@@ -66,13 +66,7 @@ namespace Core.Module.CharacterData.Template
         
         private void InitialStartPoint()
         {
-            _initialStartPoint = new List<Location>
-            {
-                new Location(-90875, 248162, -3570),
-                new Location(-90954, 248118, -3570),
-                new Location(-90918, 248070, -3570),
-                new Location(-90890, 248027, -3570),
-            };
+            _initialStartPoint = _settingDatainit.GetInitialStartPoint(BaseClass);
         }
 
         private void InitialEquipment()
