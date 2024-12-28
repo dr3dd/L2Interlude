@@ -1,4 +1,5 @@
-﻿using Core.Module.Player;
+﻿using System;
+using Core.Module.Player;
 using Xunit;
 
 namespace Test;
@@ -38,16 +39,16 @@ public class PlayerStatusTest : IClassFixture<PlayerInstanceFixture>
     {
         var status = _playerInstance.CharacterBaseStatus();
         _playerInstance.CharacterMovement().CharacterMovementStatus().SetSit();
-        Assert.Equal("14.22", status.GetHpRegenRate().ToString("F"));
+        Assert.Equal(14.22, Math.Round(status.GetHpRegenRate(), 2));
         
         _playerInstance.CharacterMovement().CharacterMovementStatus().SetStand();
-        Assert.Equal("10.43", status.GetHpRegenRate().ToString("F"));
+        Assert.Equal(10.43, Math.Round(status.GetHpRegenRate(), 2));
         
         _playerInstance.CharacterMovement().CharacterMovementStatus().SetGroundHigh();
-        Assert.Equal("6.64", status.GetHpRegenRate().ToString("F"));
+        Assert.Equal(6.64, Math.Round(status.GetHpRegenRate(), 2));
         
         _playerInstance.CharacterMovement().CharacterMovementStatus().SetGroundLow();
-        Assert.Equal("9.48", status.GetHpRegenRate().ToString("F"));
+        Assert.Equal(9.48, Math.Round(status.GetHpRegenRate(), 2));
     }
 
     [Fact]

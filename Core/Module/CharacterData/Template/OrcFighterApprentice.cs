@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
-using Core.Module.CharacterData.Template.Race;
+﻿using Core.Module.CharacterData.Template.Race;
+using Core.Module.SettingData;
 using Helpers;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
 
 namespace Core.Module.CharacterData.Template
 {
     public abstract class OrcFighterApprentice : Orc
     {
+        private const string BaseClass = "orc_fighter";
         private const int BasePhysicalAttack = 4;
         private const int BaseCritical = 4;
         private const string BaseAttackType = "fist";
@@ -45,9 +49,11 @@ namespace Core.Module.CharacterData.Template
 
         private IList<string> _initialEquipment;
         private IList<Location> _initialStartPoint;
+        private SettingDataInit _settingDatainit;
 
-        protected OrcFighterApprentice()
+        protected OrcFighterApprentice(IServiceProvider serviceProvider) : base(serviceProvider)
         {
+            _settingDatainit = serviceProvider.GetRequiredService<SettingDataInit>();
             InitialEquipment();
             InitialStartPoint();
             InitialHpRegen();
@@ -60,27 +66,12 @@ namespace Core.Module.CharacterData.Template
         
         private void InitialStartPoint()
         {
-            _initialStartPoint = new List<Location>
-            {
-                new Location(-56733, -113459, -690),
-                new Location(-56686, -113470, -690),
-                new Location(-56728, -113610, -690),
-                new Location(-56693, -113610, -690),
-                new Location(-56743, -113757, -690),
-                new Location(-56682, -113730, -690)
-            };
+            _initialStartPoint = _settingDatainit.GetInitialStartPoint(BaseClass);
         }
 
         private void InitialEquipment()
         {
-            _initialEquipment = new List<string>
-            {
-                "squire_s_sword",
-                "training_gloves",
-                "squire_s_shirt",
-                "squire_s_pants",
-                "tutorial_guide"
-            };
+            _initialEquipment = _settingDatainit.GetInitialEquipment(BaseClass);
         }
 
         public byte GetInt()

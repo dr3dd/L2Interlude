@@ -11,7 +11,7 @@ public class PlayerBaseStatus : IPlayerBaseStatus
     private readonly PlayerInstance _playerInstance;
     private readonly PcParameterInit _statBonusInit;
     private readonly CharacterMovement _characterMovement;
-    private byte _level;
+    private byte _level = 1;
     public float CurrentCp { get; set; }
 
     public byte Level

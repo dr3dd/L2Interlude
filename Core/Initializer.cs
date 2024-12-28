@@ -15,6 +15,7 @@ using Core.Module.ItemData;
 using Core.Module.ManualData;
 using Core.Module.NpcData;
 using Core.Module.QuestData;
+using Core.Module.SettingData;
 using Core.Module.SkillData;
 using Core.Module.WorldData;
 using DataBase.Interfaces;
@@ -120,7 +121,10 @@ namespace Core
         {
             await ServiceProvider.GetRequiredService<NpcServiceController>().SendMessageToNpcService(npcServerRequest);
         }
-
+        public static SettingDataInit SettingDataInit()
+        {
+            return ServiceProvider.GetService<SettingDataInit>();
+        }
         public static PcParameterInit PcParameterInit()
         {
             return ServiceProvider.GetService<PcParameterInit>();
@@ -137,6 +141,7 @@ namespace Core
             ServiceProvider.GetRequiredService<GameTimeController>().Run();
             ServiceProvider.GetRequiredService<CategoryPchInit>().Run();
             ServiceProvider.GetRequiredService<CategoryDataInit>().Run();
+            ServiceProvider.GetRequiredService<SettingDataInit>().Run();
             ServiceProvider.GetRequiredService<PcParameterInit>().Run();
             ServiceProvider.GetRequiredService<WorldInit>().Run();
             ServiceProvider.GetRequiredService<AreaDataInit>().Run();

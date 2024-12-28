@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
-using Core.Module.CharacterData.Template.Race;
+﻿using Core.Module.CharacterData.Template.Race;
+using Core.Module.SettingData;
 using Helpers;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
 
 namespace Core.Module.CharacterData.Template
 {
     public abstract class DarkElfMagician : DarkElf
     {
+        private const string BaseClass = "darkelf_magician";
         private const int BasePhysicalAttack = 3;
         private const int BaseCritical = 4;
         private const string BaseAttackType = "fist";
@@ -45,9 +49,11 @@ namespace Core.Module.CharacterData.Template
 
         private IList<string> _initialEquipment;
         private IList<Location> _initialStartPoint;
-        
-        protected DarkElfMagician()
+        private SettingDataInit _settingDatainit;
+
+        protected DarkElfMagician(IServiceProvider serviceProvider) : base(serviceProvider)
         {
+            _settingDatainit = serviceProvider.GetRequiredService<SettingDataInit>();
             InitialEquipment();
             InitialStartPoint();
             InitialHpRegen();
@@ -60,26 +66,12 @@ namespace Core.Module.CharacterData.Template
         
         private void InitialStartPoint()
         {
-            _initialStartPoint = new List<Location>
-            {
-                new Location(28295, 11063, -4224),
-                new Location(28302, 11008, -4224),
-                new Location(28377, 10916, -4224),
-                new Location(28456, 10997, -4224),
-                new Location(28461, 11044, -4224),
-                new Location(28395, 11127, -4224)
-            };
+            _initialStartPoint = _settingDatainit.GetInitialStartPoint(BaseClass);
         }
 
         private void InitialEquipment()
         {
-            _initialEquipment = new List<string>
-            {
-                "apprentice_s_wand",
-                "apprentice_s_tunic",
-                "apprentice_s_hose",
-                "tutorial_guide"
-            };
+            _initialEquipment = _settingDatainit.GetInitialEquipment(BaseClass);
         }
 
         public byte GetInt()

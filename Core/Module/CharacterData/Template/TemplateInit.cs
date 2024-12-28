@@ -14,15 +14,15 @@ namespace Core.Module.CharacterData.Template
         {
             var basicStatBonusInit = serviceProvider.GetRequiredService<PcParameterInit>();
             _handlers = new Dictionary<byte, ITemplateHandler>();
-            RegisterTemplateHandler(new Fighter(basicStatBonusInit));
-            RegisterTemplateHandler(new Mage(basicStatBonusInit));
-            RegisterTemplateHandler(new ElvenFighter(basicStatBonusInit));
-            RegisterTemplateHandler(new ElvenMage(basicStatBonusInit));
-            RegisterTemplateHandler(new DarkFighter(basicStatBonusInit));
-            RegisterTemplateHandler(new DarkMage(basicStatBonusInit));
-            RegisterTemplateHandler(new OrcFighter(basicStatBonusInit));
-            RegisterTemplateHandler(new OrcMage(basicStatBonusInit));
-            RegisterTemplateHandler(new DwarvenFighter(basicStatBonusInit));
+            RegisterTemplateHandler(new Fighter(serviceProvider));
+            RegisterTemplateHandler(new Mage(serviceProvider));
+            RegisterTemplateHandler(new ElvenFighter(serviceProvider));
+            RegisterTemplateHandler(new ElvenMage(serviceProvider));
+            RegisterTemplateHandler(new DarkFighter(serviceProvider));
+            RegisterTemplateHandler(new DarkMage(serviceProvider));
+            RegisterTemplateHandler(new OrcFighter(serviceProvider));
+            RegisterTemplateHandler(new OrcMage(serviceProvider));
+            RegisterTemplateHandler(new DwarvenFighter(serviceProvider));
         }
 
         private void RegisterTemplateHandler(ITemplateHandler templateHandler)

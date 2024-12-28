@@ -3,7 +3,6 @@ using Core.Module.Player.ShortCuts;
 using Core.NetworkPacket.ServerPacket;
 using DataBase.Entities;
 using DataBase.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,7 +25,9 @@ namespace Core.Module.Player
             _playerInstance = playerInstance;
             _characterInfo = _playerInstance.PlayerCharacterInfo();
             _shortCuts = new List<ShortCut>();
-            _shortCutRepository = Initializer.ServiceProvider.GetRequiredService<IUnitOfWorkGame>().ShortCut;
+
+            var unitOfWorkService = _playerInstance.GetUnitOfWork();
+            _shortCutRepository = unitOfWorkService.ShortCut;
         }
 
         public IList<ShortCut> GetAllShortCuts()

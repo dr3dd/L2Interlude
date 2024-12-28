@@ -13,7 +13,6 @@ namespace Core.Module.Player
     {
         private readonly ITemplateHandler _templateHandler;
         private readonly PcParameterInit _statBonusInit;
-        private readonly byte _level;
         private readonly PlayerInstance _playerInstance;
         private readonly CharacterMovement _characterMovement;
         public PlayerCombat(PlayerInstance playerInstance)
@@ -21,10 +20,11 @@ namespace Core.Module.Player
             _playerInstance = playerInstance;
             _templateHandler = playerInstance.TemplateHandler();
             _statBonusInit = playerInstance.ServiceProvider.GetRequiredService<PcParameterInit>();
-            _level = playerInstance.PlayerStatus().Level;
             _characterMovement = _playerInstance.CharacterMovement();
         }
 
+        private byte GetLevel() => _playerInstance.PlayerStatus().Level;
+        
         public ItemInstance GetWeapon()
         {
             var inventory = _playerInstance.PlayerInventory();
@@ -62,7 +62,7 @@ namespace Core.Module.Player
             var weaponPAtk = GetPhysicalWeaponDamage();
             var strStat = _templateHandler.GetStr();
             float strBonus = (_statBonusInit.GetStrBonus(strStat) + 100) / 100f;
-            float levelBonus = _statBonusInit.GetLevelBonus(_level);
+            float levelBonus = _statBonusInit.GetLevelBonus(GetLevel());
             var result = weaponPAtk * levelBonus * strBonus;
 
             var effects = GetPlayerEffects();
@@ -80,7 +80,7 @@ namespace Core.Module.Player
             var baseAttack = GetMagicalWeaponDamage();
             var intStat = _templateHandler.GetInt();
             float intBonus = (_statBonusInit.GetIntBonus(intStat) + 100) / 100f;
-            float levelBonus = _statBonusInit.GetLevelBonus(_level);
+            float levelBonus = _statBonusInit.GetLevelBonus(GetLevel());
             var result = baseAttack * (levelBonus * levelBonus) * (intBonus * intBonus); 
             return (int) result;
         }
@@ -97,7 +97,7 @@ namespace Core.Module.Player
             float result = 0;
             try
             {
-                float levelBonus = _statBonusInit.GetLevelBonus(_level);
+                float levelBonus = _statBonusInit.GetLevelBonus(GetLevel());
                 var upperBody = GetUpperBody();
                 var lowerBody = GetLowerBody();
                 var pitch = GetHead();
@@ -187,7 +187,7 @@ namespace Core.Module.Player
         /// <returns></returns>
         public int GetMagicalDefence()
         {
-            float levelBonus = _statBonusInit.GetLevelBonus(_level);
+            float levelBonus = _statBonusInit.GetLevelBonus(GetLevel());
             var leftEarning = GetLeftEarning();
             var rightEarning = GetRightEarning();
             var leftRing = GetLeftRing();
@@ -263,7 +263,7 @@ namespace Core.Module.Player
             var dexStat = _templateHandler.GetDex();
             var itemWeapon = GetWeapon();
             var weaponAccuracy = itemWeapon.UserItemId == 0 ? 0 : itemWeapon.ItemData.HitModify;
-            var result = Math.Sqrt(dexStat) * 6 + _level + weaponAccuracy;
+            var result = Math.Sqrt(dexStat) * 6 + GetLevel() + weaponAccuracy;
             var effects = GetPlayerEffects();
             //result = CalculateStats.CalculateAccuracy(effects, result);
             return (int) result;
@@ -272,7 +272,7 @@ namespace Core.Module.Player
         public int GetEvasion()
         {
             var dexStat = _templateHandler.GetDex();
-            var result = Math.Sqrt(dexStat) * 6 + _level;
+            var result = Math.Sqrt(dexStat) * 6 + GetLevel();
             return (int) result;
         }
 
