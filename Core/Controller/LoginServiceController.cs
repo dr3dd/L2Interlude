@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Config;
+using Core.Controller.Handlers;
+using Core.NetworkPacket.ServerPacket.LoginServicePacket;
+using L2Logger;
+using Microsoft.Extensions.DependencyInjection;
+using Network;
+using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Config;
-using Core.Controller.Handlers;
-using Core.NetworkPacket.ServerPacket.LoginServicePacket;
-using Microsoft.Extensions.DependencyInjection;
-using L2Logger;
-using Network;
 
 namespace Core.Controller
 {
@@ -52,6 +52,10 @@ namespace Core.Controller
 
         private async Task SendPacketAsync(ServerPacket packet)
         {
+            if(_gameConfig.DebugConfig.ShowNamePacket && _gameConfig.DebugConfig.ShowPacketToClient)
+            {
+                LoggerManager.Debug($"LoginServiceController: GAME>>AUTH name: {packet.GetType().Name}");
+            }
             await packet.WriteAsync();
             List<byte> blist = new List<byte>();
             byte[] db = packet.ToByteArray();
@@ -62,6 +66,11 @@ namespace Core.Controller
 
             await _networkStream.WriteAsync(blist.ToArray(), 0, blist.Count);
             await _networkStream.FlushAsync();
+
+            if (_gameConfig.DebugConfig.ShowPacket && _gameConfig.DebugConfig.ShowPacketToAuth) // show packet header & body 
+            {
+                printPacketBody(db);
+            }
         }
 
         private async Task ReadAsync()
@@ -75,6 +84,10 @@ namespace Core.Controller
 
                     if (bytesRead != 2)
                     {
+                        if (_gameConfig.DebugConfig.ShowPacket && _gameConfig.DebugConfig.ShowPacketToGame) // show packet header & body 
+                        {
+                            printPacketBody(buffer, "AUTH>>GAME");
+                        }
                         throw new Exception("Wrong packet");
                     }
 
@@ -85,6 +98,10 @@ namespace Core.Controller
 
                     if (bytesRead != length)
                     {
+                        if (_gameConfig.DebugConfig.ShowPacket && _gameConfig.DebugConfig.ShowPacketToGame) // show packet header & body 
+                        {
+                            printPacketBody(buffer, "AUTH>>GAME");
+                        }
                         throw new Exception("Wrong packet");
                     }
 
@@ -93,8 +110,16 @@ namespace Core.Controller
             }
             catch (Exception e)
             {
-                LoggerManager.Error($"{e.Message}");
+                LoggerManager.Error($"LoginServiceController: {e.Message}");
+                await Task.Delay(5000).ContinueWith(x => StartAsync());
             }
+        }
+        private void printPacketBody(byte[] db, string target = "GAME>>AUTH")
+        {
+            string str = "";
+            foreach (byte b in db)
+                str += b.ToString("x2") + " ";
+            LoggerManager.Debug($"LoginServiceController: {target} body: [ {str} ]");
         }
     }
 }
