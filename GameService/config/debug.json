@@ -4,6 +4,7 @@
     "ShowNamePacket": true,
     "ShowPacket": true,
     "ShowPacketToAuth": true,
+    "ShowPacketToGame": true,
     "ShowPacketToClient": true,
     "ShowPacketFromClient": true
   }
