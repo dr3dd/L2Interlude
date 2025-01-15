@@ -4,6 +4,7 @@ using Config;
 using Core.Controller;
 using Core.GeoEngine;
 using Core.Manager;
+using Core.Module.Announces;
 using Core.Module.AreaData;
 using Core.Module.CategoryData;
 using Core.Module.CharacterData.Template;
@@ -101,6 +102,10 @@ namespace Core
         {
             return ServiceProvider.GetService<AdminCommandHandler>();
         }
+        internal static Announce AnnounceManager()
+        {
+            return ServiceProvider.GetService<Announce>();
+        }
 
         public static SkillPchInit SkillPchInit()
         {
@@ -174,6 +179,7 @@ namespace Core
             //ServiceProvider.GetService<SkillHandlerInit>();
             //ServiceProvider.GetService<SkillSpellBookInit>();
             LoggerManager.Info("----World----");
+            ServiceProvider.GetRequiredService<Announce>();
             ServiceProvider.GetRequiredService<ChatHandler>();
             ServiceProvider.GetRequiredService<AdminAccessManager>();
             ServiceProvider.GetRequiredService<UserCommandHandler>();

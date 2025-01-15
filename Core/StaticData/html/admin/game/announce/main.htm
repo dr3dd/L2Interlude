@@ -1,0 +1,49 @@
+﻿<html>
+    <title>NCore [Game-Announce]</title>
+    <center>
+        <table width=270 border=0 bgcolor="444444">
+            <tr>
+                <td><button value="Main" action="bypass -h admin_admin" width=65 height=21 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+                <td><button value="Char" action="bypass -h admin_admin char/main.htm" width=65 height=21 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+                <td><button value="Game" action="bypass -h admin_admin game/main.htm" width=65 height=21 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+                <td><button value="GM" action="bypass -h admin_admin gm/main.htm" width=65 height=21 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+            </tr>
+        </table>
+    </center>
+    <br>
+    <center>
+        <table width=270 border=0 >
+            <tr>
+                <td width=125><font color="569cd6">Announce sheduler [%status%]</font></td>
+                <td><button value="Start" action="bypass -h admin_announce start" width=45 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+                <td><button value="Stop" action="bypass -h admin_announce stop" width=45 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+                <td><button value="Reload" action="bypass -h admin_announce reload" width=45 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+            </tr>
+        </table>
+        <br>
+        <MultiEdit var="text" width=270 content="0" height=30 length=255>
+        <br>
+        
+        <table width=270>
+            <tr>
+                <td><font color="569cd6">Interval (sec):</font></td>
+                <td><edit var="interval" width=60 height=12 length=4 type=number></td>
+                <td><button value="Add" action="bypass -h admin_announce add $interval $text" width=45 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+                <td><button value="Show" action="bypass -h admin_announce show $text" width=45 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+            </tr>
+        </table>
+        <font color="939393">NOTE: interval = 0 show on EnterWorld</font>
+        <br>
+        <center>
+            <table width=270 bgcolor=d6aa63>
+                <tr>
+                    <td width=270 height=1 align="center"></td>
+                </tr>
+            </table>
+        </center>
+
+        %announce_list%
+
+    </center>
+   
+</html>

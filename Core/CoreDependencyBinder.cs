@@ -1,6 +1,7 @@
 ﻿using Core.Controller;
 using Core.GeoEngine;
 using Core.Manager;
+using Core.Module.Announces;
 using Core.Module.AreaData;
 using Core.Module.CategoryData;
 using Core.Module.CharacterData.Template;
@@ -52,10 +53,11 @@ namespace Core
             services.AddSingleton<SkillDataInit>();
             services.AddSingleton<SkillAcquireInit>();
             services.AddSingleton<EffectInit>();
+            services.AddSingleton<Announce>();
             services.AddSingleton<ChatHandler>();
             services.AddSingleton<UserCommandHandler>();
             services.AddSingleton<AdminCommandHandler>();
-            services.AddSingleton<AdminAccessManager>();
+            services.AddSingleton<AdminAccessManager>();          
         }
     }
 }

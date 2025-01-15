@@ -30,6 +30,16 @@ namespace Core.NetworkPacket.ServerPacket
             stringMsgId = -1;
         }
 
+        public Say2(Character sender, string reciverName, ChatType messageType, string message)
+        {
+            _sender = sender;
+            name = reciverName;
+            objectId = sender == null ? 0 : _sender.ObjectId;
+            type = (int)messageType;
+            text = message;
+            stringMsgId = -1;
+        }
+
         public override async Task WriteAsync()
         {
             await WriteByteAsync(0x4A);

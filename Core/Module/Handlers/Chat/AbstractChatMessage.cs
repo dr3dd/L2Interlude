@@ -15,6 +15,7 @@ namespace Core.Module.Handlers.Chat
     {
         internal async Task Chatting(PlayerInstance player, ChatType chatType, string text, string paramsValue)
         {
+            if (player != null)
             LoggerManager.Debug($"{GetType().Name}: login {player.Controller.AccountName} text {text}");
 
 

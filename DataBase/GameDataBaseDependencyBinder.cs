@@ -22,6 +22,7 @@ namespace DataBase
                 config.AddMap(new ShortCutMap());
                 config.AddMap(new UserMacrosMap());
                 config.AddMap(new UserQuestMap());
+                config.AddMap(new AnnounceMap());
             });
             
             services.AddSingleton<GameConnectionFactory>();
@@ -35,6 +36,7 @@ namespace DataBase
             services.AddTransient<IShortCutRepository, ShortCutRepository>();
             services.AddTransient<IMacrosRepository, MacrosRepository>();
             services.AddTransient<IUserQuestRepository, UserQuestRepository>();
+            services.AddTransient<IAnnounceRepository, AnnounceRepository>();
             services.AddSingleton<IUnitOfWorkGame, GameUnitOfWork>();
         }
     }

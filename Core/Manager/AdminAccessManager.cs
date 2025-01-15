@@ -4,7 +4,6 @@ using L2Logger;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 
 
 //CLR: 4.0.30319.42000
@@ -18,7 +17,7 @@ namespace Core.Manager
         private AccessConfig accessConfig;
         public AdminAccessManager(IServiceProvider serviceProvider) {
             accessConfig = serviceProvider.GetService<GameConfig>().AccessConfig;
-            LoggerManager.Info($"AdminAccessManager: loaded {accessConfig.GMList.Count} GM and {accessConfig.Templates.Count} templates");
+            LoggerManager.Info($"AdminAccessManager: Loaded {accessConfig.GMList.Count} GM and {accessConfig.Templates.Count} templates");
         }
 
         private AdminAccessTemplate GetAccessTemplate(string name)
