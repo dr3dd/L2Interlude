@@ -148,6 +148,10 @@ namespace Core.Module.WorldData
         {
             return _allObjects.Values.OfType<NpcInstance>().OrderBy(d => d.NpcId).ToList();
         }
+        public IEnumerable<PlayerInstance> GetAllPlayerInstance()
+        {
+            return _allObjects.Values.OfType<PlayerInstance>().OrderBy(d => d.ObjectId).ToList();
+        }
         public IEnumerable<NpcInstance> GetAllNpcInstanceByNpcId(int npcId)
         {
             return _allObjects.Values.OfType<NpcInstance>().OrderBy(d => d.NpcId).Where(n => n.NpcId == npcId).ToList();

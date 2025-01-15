@@ -12,5 +12,6 @@
         IShortCutRepository ShortCut { get; }
         IMacrosRepository Macros { get; }
         IUserQuestRepository UserQuest { get; }
+        IAnnounceRepository Announce { get; }
     }
 }
